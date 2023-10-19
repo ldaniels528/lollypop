@@ -263,11 +263,11 @@ class ReadMeTest extends AnyFunSpec {
   }
 
   private val array_comprehensions =
-    """|['A' to 'E']
+    """|['A' to 'F'].reverse()
        |""".stripMargin
 
   private val array_literals =
-    """|['A', 'B', 'C', 'D', 'E'].reverse()
+    """|['A', 'B', 'C', 'D', 'E', 'F'].reverse()
        |""".stripMargin
 
   private val dataframe_literals =
@@ -318,6 +318,12 @@ class ReadMeTest extends AnyFunSpec {
        |    .toTable())
        |}
        |graph chart from samples
+       |""".stripMargin
+
+  private val dictionary_literals  =
+    """|response = { 'message1' : 'Hello World' }
+       |response.message2 = 'Hallo Monde'
+       |response
        |""".stripMargin
 
   private val function_literals =
@@ -410,6 +416,7 @@ class ReadMeTest extends AnyFunSpec {
     "Charts and Graphs" -> charts_and_graphs,
     "Dataframe Literals" -> dataframe_literals,
     "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
+    "Dictionary Literals" -> dictionary_literals,
     "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions,
     "Function Literals (Lambdas)" -> function_literals,
     "JSON Literals" -> json_literals,
