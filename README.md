@@ -160,7 +160,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-19T17:23:10.170Z"
+"2023-10-19T19:43:45.659Z"
 ```
 <a name="JSON_Literals"></a>
 ### JSON Literals
@@ -517,15 +517,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | SSMA   |   2.5385 | 2023-10-19T17:23:09.325Z |
-| NYSE      | RUGA   |  50.0331 | 2023-10-19T17:23:05.731Z |
-| OTCBB     | WPHK   |   1.7721 | 2023-10-19T17:22:41.100Z |
-| OTHER_OTC | EBEM   |   0.1926 | 2023-10-19T17:22:54.655Z |
-| OTCBB     | XMZH   |   4.6474 | 2023-10-19T17:23:06.728Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| OTCBB    | HKQR   |   1.0179 | 2023-10-19T19:43:09.547Z |
+| AMEX     | VO     |  16.8261 | 2023-10-19T19:43:06.517Z |
+| NASDAQ   | AXSNT  |  93.4888 | 2023-10-19T19:43:35.903Z |
+| OTCBB    | ZEVC   |   2.5374 | 2023-10-19T19:43:36.423Z |
+| OTCBB    | UQLPC  |   1.6334 | 2023-10-19T19:43:19.718Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -593,7 +593,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.327041, 720.0]
+[0.385959, 720.0]
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1508,11 +1508,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| A    | ♦    |
-| 7    | ♥    |
-| 6    | ♠    |
-| 4    | ♣    |
 | 5    | ♦    |
+| 3    | ♠    |
+| 9    | ♠    |
+| K    | ♥    |
+| 2    | ♥    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2066,7 +2066,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-19T17:23:13.267Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-19T19:43:48.792Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2442,11 +2442,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-19T17:23:13.424Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-19T17:23:13.425Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-19T19:43:48.933Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-19T19:43:48.933Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-19T17:23:13.425Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-19T19:43:48.933Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2622,7 +2622,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 |--------------------------------------------------------------------------------------------|
 | body                         | message | statusCode | responseID                           |
 |--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@34cf5a97 | OK      |        200 | ead920ca-8575-4768-bdc3-f468745e9512 |
+| java.io.PrintStream@34cf5a97 | OK      |        200 | ede878cd-1c46-4851-8301-995ca7998620 |
 |--------------------------------------------------------------------------------------------|
 ```
 ### nodeConsole (Distributed Processing &#8212; Functional)
@@ -2684,7 +2684,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[9453, 15446, 10475]
+[8272, 8553, 9435]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2694,7 +2694,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-15101
+9571
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2813,7 +2813,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@6be8ce1b
+scala.Function1$@49fe0bcd
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2862,10 +2862,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-19T17:23:15.595Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-19T17:23:15.595Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-19T17:23:15.595Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-19T17:23:15.595Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-19T19:43:51.101Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-19T19:43:51.101Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-19T19:43:51.101Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-19T19:43:51.101Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3119,7 +3119,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-19T17:23:15.744Z"
+"2023-10-19T19:43:51.267Z"
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3285,7 +3285,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-19T17:23:15.828Z"
+"2023-10-19T19:43:51.316Z"
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3516,6 +3516,33 @@ feature "Traveler information service" {
 ```sql
 {"passed": 4, "failed": 1}
 ```
+##### Console Output
+```
+Feature: Traveler information service
+   Passed: Testing that DELETE requests produce the correct result
+      [x] statusCode is 200
+   Passed: Testing that GET response contains specific field
+      [x] statusCode is 200
+      [x] body.size() >= 0
+      [x] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d0"
+   Passed: Testing that POST creates a new record
+      [x] statusCode is 200
+   Passed: Testing that we GET the record we previously created
+      [x] statusCode is 200
+      [x] body.size() >= 0
+      [x] (body[0]).id is "119ff8a6-b569-4d54-80c6-03eb1c7f795d"
+      [x] (body[0]).firstName is "CHRIS"
+      [x] (body[0]).lastName is "DANIELS"
+      [x] (body[0]).destAirportCode is "DTW"
+   Failed: Testing what happens when a response does not match the expected value
+      [x] statusCode is 200
+      [x] body.size() >= 0
+      [ ] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
+      [x] (body[0]).firstName is "SAMANTHA"
+      [x] (body[0]).lastName is "JONES"
+      [x] (body[0]).destAirportCode is "BUR"
+completed: passed: 4, failed: 1
+```
 ### http¹ (Testing &#8212; Declarative)
 *Description*: Query-native HTTP client
 
@@ -3527,7 +3554,7 @@ http get('https://example.com/')
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | body                                                                                                      | message | statusCode | responseID                           |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | 303ea68a-518e-4de0-9ca7-f7ee1dcbd010 |
+| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | df31f888-54e1-4c9d-b9bd-ee62c0514d8e |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### http² (Testing &#8212; Declarative)
@@ -3541,7 +3568,7 @@ http path('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 5d779beb-5c31-4882-81bb-24c3595759b2 |
+|      |         |        200 | 6e691642-d467-4d9a-b0fc-513ce75533e0 |
 |--------------------------------------------------------------------|
 ```
 ### http³ (Testing &#8212; Declarative)
@@ -3555,7 +3582,7 @@ http uri('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 1f53f6d6-dfd2-49c2-875b-0ba9543ec25d |
+|      |         |        200 | 7428aa19-dbe6-41ac-bd35-4976cc5f417d |
 |--------------------------------------------------------------------|
 ```
 ### scenario (Testing &#8212; Declarative)

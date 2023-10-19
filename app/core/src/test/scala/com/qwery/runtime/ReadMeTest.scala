@@ -133,25 +133,7 @@ class ReadMeTest extends AnyFunSpec {
         out.println("```")
       }
 
-      // include STDOUT
-      val consoleOut = scope1.getUniverse.system.stdOut.asString().trim
-      if (consoleOut.nonEmpty) {
-        out.println("##### Console Output")
-        out.println(
-          s"""|```
-              |$consoleOut
-              |```""".stripMargin)
-      }
-
-      // include STDERR
-      val consoleErr = scope1.getUniverse.system.stdErr.asString().trim
-      if (consoleErr.nonEmpty) {
-        out.println("##### Console Error")
-        out.println(
-          s"""|```
-              |$consoleErr
-              |```""".stripMargin)
-      }
+      showConsoleOutputs(out, scope1)
     }
   }
 
@@ -167,8 +149,8 @@ class ReadMeTest extends AnyFunSpec {
 
     // detail section
     for {
-      outcome <- Try(QweryVM.executeSQL(scope, help.example)._3).toOption.flatMap(Option.apply)
-      results <- resolve(outcome)
+      (scope1, _, result1) <- Try(QweryVM.executeSQL(scope, help.example))
+      results <- resolve(result1)
     } {
       out.println("##### Results")
       if (results.contains("<img")) out.println(results)
@@ -177,6 +159,30 @@ class ReadMeTest extends AnyFunSpec {
         out.println(results)
         out.println("```")
       }
+
+      showConsoleOutputs(out, scope1)
+    }
+  }
+
+  private def showConsoleOutputs(out: PrintWriter, scope1: Scope): Unit = {
+    // include STDOUT
+    val consoleOut = scope1.getUniverse.system.stdOut.asString().trim
+    if (consoleOut.nonEmpty) {
+      out.println("##### Console Output")
+      out.println(
+        s"""|```
+            |$consoleOut
+            |```""".stripMargin)
+    }
+
+    // include STDERR
+    val consoleErr = scope1.getUniverse.system.stdErr.asString().trim
+    if (consoleErr.nonEmpty) {
+      out.println("##### Console Error")
+      out.println(
+        s"""|```
+            |$consoleErr
+            |```""".stripMargin)
     }
   }
 
