@@ -184,7 +184,8 @@ class ReadMeTest extends AnyFunSpec {
     out.println(
       """|<a name="Introduction"></a>
          |## Introduction
-         |Qwery is a general-purpose scripting language with features that include:
+         |Qwery is a JVM-based multi-paradigm (declarative/SQL, functional, reactive and object-oriented)
+         |scripting language for Data Engineers and Data Scientists. Features include:
          |* Data-oriented types - Dataframes, BLOB/CLOB and Matrices and Vectors.
          |* Multi-paradigm programming model - declarative, functional and object-oriented.
          |* Native JSON support.
