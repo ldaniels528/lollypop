@@ -263,7 +263,11 @@ class ReadMeTest extends AnyFunSpec {
   }
 
   private val array_comprehensions =
-    """|['A' to 'Z']
+    """|['A' to 'E']
+       |""".stripMargin
+
+  private val array_literals =
+    """|['A', 'B', 'C', 'D', 'E'].reverse()
        |""".stripMargin
 
   private val dataframe_literals =
@@ -316,6 +320,12 @@ class ReadMeTest extends AnyFunSpec {
        |graph chart from samples
        |""".stripMargin
 
+  private val function_literals =
+    """|import "java.lang.Math"
+       |pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
+       |pythagoros(3, 4)
+       |""".stripMargin
+
   private val import_implicit_conversions =
     """|import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
        |DateTime().renderAsJson()
@@ -335,12 +345,12 @@ class ReadMeTest extends AnyFunSpec {
 
   private val matrices_and_vectors =
     """|vector = [2.0, 1.0, 3.0]
-       |matrixA = new Matrix([
+       |matrix = new Matrix([
        |  [1.0, 2.0, 3.0],
        |  [4.0, 5.0, 6.0],
        |  [7.0, 8.0, 9.0]
        |])
-       |matrixA * vector
+       |matrix * vector
        |""".stripMargin
 
   private val string_literals =
@@ -395,11 +405,13 @@ class ReadMeTest extends AnyFunSpec {
        |""".stripMargin
 
   private val featuredExamples = mutable.LinkedHashMap(
+    "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
     "Charts and Graphs" -> charts_and_graphs,
     "Dataframe Literals" -> dataframe_literals,
     "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
     "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions,
+    "Function Literals (Lambdas)" -> function_literals,
     "JSON Literals" -> json_literals,
     "Matrices and Vectors" -> matrices_and_vectors,
     "String Literals and Interpolation" -> string_literals,

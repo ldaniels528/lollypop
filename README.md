@@ -6,11 +6,13 @@ Qwery v0.1.1
 * <a href="#Project_Status">Project Status</a>
 * <a href="#Getting_Started">Getting Started</a>
 * <a href="#Featured_Examples">Basic Features</a>
+  * <a href="#Array_Literals">Array Literals</a>
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
   * <a href="#Charts_and_Graphs">Charts and Graphs</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
   * <a href="#Define__non_persistent__Implicit_Classes">Define (non-persistent) Implicit Classes</a>
   * <a href="#Import__Scala_compiled__Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
+  * <a href="#Function_Literals__Lambdas_">Function Literals (Lambdas)</a>
   * <a href="#JSON_Literals">JSON Literals</a>
   * <a href="#Matrices_and_Vectors">Matrices and Vectors</a>
   * <a href="#String_Literals_and_Interpolation">String Literals and Interpolation</a>
@@ -66,15 +68,25 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.1.jar
 <a name="Featured_Examples"></a>
 ## Basic Features
 
+<a name="Array_Literals"></a>
+### Array Literals
+
+```sql
+['A', 'B', 'C', 'D', 'E'].reverse()
+```
+##### Results
+```sql
+['E', 'D', 'C', 'B', 'A']
+```
 <a name="Array_Comprehensions"></a>
 ### Array Comprehensions
 
 ```sql
-['A' to 'Z']
+['A' to 'E']
 ```
 ##### Results
 ```sql
-['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+['A', 'B', 'C', 'D', 'E']
 ```
 <a name="Charts_and_Graphs"></a>
 ### Charts and Graphs
@@ -160,7 +172,19 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-19T19:43:45.659Z"
+"2023-10-19T20:53:43.685Z"
+```
+<a name="Function_Literals_(Lambdas)"></a>
+### Function Literals (Lambdas)
+
+```sql
+import "java.lang.Math"
+pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
+pythagoros(3, 4)
+```
+##### Results
+```sql
+5.0
 ```
 <a name="JSON_Literals"></a>
 ### JSON Literals
@@ -196,12 +220,12 @@ DateTime().renderAsJson()
 
 ```sql
 vector = [2.0, 1.0, 3.0]
-matrixA = new Matrix([
+matrix = new Matrix([
   [1.0, 2.0, 3.0],
   [4.0, 5.0, 6.0],
   [7.0, 8.0, 9.0]
 ])
-matrixA * vector
+matrix * vector
 ```
 ##### Results
 ```sql
@@ -430,7 +454,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@34cf5a97
+java.io.PrintStream@4b1abd11
 ```
 ### after (Control Flow &#8212; Reactive)
 *Description*: Schedules a one-time execution of command(s) after a specific delay period
@@ -517,15 +541,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------|
-| exchange | symbol | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| OTCBB    | HKQR   |   1.0179 | 2023-10-19T19:43:09.547Z |
-| AMEX     | VO     |  16.8261 | 2023-10-19T19:43:06.517Z |
-| NASDAQ   | AXSNT  |  93.4888 | 2023-10-19T19:43:35.903Z |
-| OTCBB    | ZEVC   |   2.5374 | 2023-10-19T19:43:36.423Z |
-| OTCBB    | UQLPC  |   1.6334 | 2023-10-19T19:43:19.718Z |
-|---------------------------------------------------------|
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| AMEX      | MSV    |  87.9566 | 2023-10-19T20:53:12.269Z |
+| AMEX      | BG     |  22.8977 | 2023-10-19T20:53:01.431Z |
+| OTHER_OTC | GXXWX  |   0.3044 | 2023-10-19T20:53:09.158Z |
+| NASDAQ    | HTT    |  70.9973 | 2023-10-19T20:53:12.930Z |
+| NYSE      | DRBXY  |  21.5229 | 2023-10-19T20:53:32.669Z |
+|----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -593,7 +617,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.385959, 720.0]
+[0.364709, 720.0]
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -803,7 +827,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@34cf5a97
+java.io.PrintStream@4b1abd11
 ```
 ### try¹ (Control Flow &#8212; Functional)
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
@@ -814,7 +838,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@63da207f
+java.io.PrintStream@40d10481
 ```
 ### try² (Control Flow &#8212; Functional)
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
@@ -829,7 +853,7 @@ this
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | superScope                                                                                                | aliasedRows | aliasedSources | universe                                                                                                  | currentRow | implicitMethods | imports | returned | serverMode | observables | observed | references | tracers | valueReferences                                                                                           |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Some(DefaultScope(superScope={}, aliasedRows={}, aliasedSources={}, universe={"isServerMode": false, ...  | {}          | {}             | QweryUniverse(dataTypeParsers=[BitArray(256)*, com.qwery.runtime.datatypes.BlobType$@71870da7, com.q ...  |            | []              | {}      | false    | false      | []          | false    | {}         | []      | {"e": Variable(name="e", _type={"_class": "com.qwery.runtime.errors.DivisionByZeroError"}, initialVa ...  |
+| Some(DefaultScope(superScope={}, aliasedRows={}, aliasedSources={}, universe={"isServerMode": false, ...  | {}          | {}             | QweryUniverse(dataTypeParsers=[BitArray(256)*, com.qwery.runtime.datatypes.BlobType$@45792847, com.q ...  |            | []              | {}      | false    | false      | []          | false    | {}         | []      | {"e": Variable(name="e", _type={"_class": "com.qwery.runtime.errors.DivisionByZeroError"}, initialVa ...  |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### whenever¹ (Control Flow &#8212; Reactive)
@@ -1238,7 +1262,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (DataFrame &#8212; Declarative)
@@ -1508,11 +1532,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 5    | ♦    |
-| 3    | ♠    |
-| 9    | ♠    |
-| K    | ♥    |
-| 2    | ♥    |
+| 7    | ♠    |
+| 10   | ♣    |
+| Q    | ♦    |
+| 8    | ♠    |
+| 6    | ♠    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2066,7 +2090,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-19T19:43:48.792Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-19T20:53:46.826Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2442,11 +2466,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-19T19:43:48.933Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-19T19:43:48.933Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-19T20:53:46.987Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-19T20:53:46.987Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-19T19:43:48.933Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-19T20:53:46.987Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2622,7 +2646,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 |--------------------------------------------------------------------------------------------|
 | body                         | message | statusCode | responseID                           |
 |--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@34cf5a97 | OK      |        200 | ede878cd-1c46-4851-8301-995ca7998620 |
+| java.io.PrintStream@4b1abd11 | OK      |        200 | bb362d05-ad28-491e-9ca6-75870285b368 |
 |--------------------------------------------------------------------------------------------|
 ```
 ### nodeConsole (Distributed Processing &#8212; Functional)
@@ -2684,7 +2708,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[8272, 8553, 9435]
+[9019, 10049, 15089]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2694,7 +2718,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9571
+10833
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2813,7 +2837,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@49fe0bcd
+scala.Function1$@42238078
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2862,10 +2886,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-19T19:43:51.101Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-19T19:43:51.101Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-19T19:43:51.101Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-19T19:43:51.101Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-19T20:53:49.165Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-19T20:53:49.165Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-19T20:53:49.165Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-19T20:53:49.165Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3119,7 +3143,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-19T19:43:51.267Z"
+"2023-10-19T20:53:49.341Z"
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3186,7 +3210,7 @@ this
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | superScope | aliasedRows | aliasedSources | universe                                                                                                  | currentRow | implicitMethods | imports                                                                                                   | returned | serverMode | observables | observed | references | tracers | valueReferences                                                                                           |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|            | {}          | {}             | QweryUniverse(dataTypeParsers=[BitArray(256)*, com.qwery.runtime.datatypes.BlobType$@71870da7, com.q ...  |            | []              | {"IOCost": "qwery.io.IOCost", "BitArray": "qwery.lang.BitArray", "RowIDRange": "qwery.io.RowIDRange" ...  | false    | false      | []          | false    | {}         | []      | {"Random": Variable(name="Random", _type={"_class": "qwery.lang.Random$"}, initialValue=qwery.lang.R ...  |
+|            | {}          | {}             | QweryUniverse(dataTypeParsers=[BitArray(256)*, com.qwery.runtime.datatypes.BlobType$@45792847, com.q ...  |            | []              | {"IOCost": "qwery.io.IOCost", "BitArray": "qwery.lang.BitArray", "RowIDRange": "qwery.io.RowIDRange" ...  | false    | false      | []          | false    | {}         | []      | {"Random": Variable(name="Random", _type={"_class": "qwery.lang.Random$"}, initialValue=qwery.lang.R ...  |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### val (Scope and Session &#8212; Procedural)
@@ -3216,7 +3240,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@34cf5a97
+java.io.PrintStream@4b1abd11
 ```
 ### ===> (Synchronous I/O &#8212; Declarative)
 *Description*: A declarative way to write to OutputStream or Writer resources
@@ -3285,7 +3309,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-19T19:43:51.316Z"
+"2023-10-19T20:53:49.397Z"
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3428,7 +3452,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@63da207f
+java.io.PrintStream@40d10481
 ```
 ### feature (Testing &#8212; Declarative)
 *Description*: Feature-based test declaration
@@ -3554,7 +3578,7 @@ http get('https://example.com/')
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | body                                                                                                      | message | statusCode | responseID                           |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | df31f888-54e1-4c9d-b9bd-ee62c0514d8e |
+| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | 5064dab3-e412-4a1f-a599-fefa9d7dfe64 |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### http² (Testing &#8212; Declarative)
@@ -3568,7 +3592,7 @@ http path('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 6e691642-d467-4d9a-b0fc-513ce75533e0 |
+|      |         |        200 | 63599511-bdde-4dfb-b6e2-08b18b6b1852 |
 |--------------------------------------------------------------------|
 ```
 ### http³ (Testing &#8212; Declarative)
@@ -3582,7 +3606,7 @@ http uri('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 7428aa19-dbe6-41ac-bd35-4976cc5f417d |
+|      |         |        200 | 6c80cc3e-769d-4fa9-ae3a-7f1592f36658 |
 |--------------------------------------------------------------------|
 ```
 ### scenario (Testing &#8212; Declarative)
