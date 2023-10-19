@@ -1,5 +1,6 @@
 package qwery.lang
 
+import com.qwery.AppConstants
 import com.qwery.language.QweryUniverse
 import com.qwery.runtime.RuntimeFiles.RecursiveFileList
 import com.qwery.runtime.instructions.VerificationTools
@@ -76,16 +77,16 @@ class OSTest extends AnyFunSpec with VerificationTools {
       val (_, _, results) = QweryVM.searchSQL(Scope(), "OS.read('README.md')")
       results.tabulate(5) foreach logger.info
       assert(results.tabulate(5).mkString("\n") ==
-        """||--------------------------------------------|
-           || line                                       |
-           ||--------------------------------------------|
-           || Qwery v0.1.0                               |
-           || ============                               |
-           ||                                            |
-           || ## Table of Contents                       |
-           || * <a href="#Introduction">Introduction</a> |
-           ||--------------------------------------------|
-           |""".stripMargin.trim)
+        s"""||--------------------------------------------|
+            || line                                       |
+            ||--------------------------------------------|
+            || Qwery v${AppConstants.version}                               |
+            || ============                               |
+            ||                                            |
+            || ## Table of Contents                       |
+            || * <a href="#Introduction">Introduction</a> |
+            ||--------------------------------------------|
+            |""".stripMargin.trim)
     }
 
     it("should execute: OS.sizeOf(BitArray(3, 6, 9))") {
