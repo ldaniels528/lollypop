@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<stock-quotes>
+    <stock-quote>
+        <symbol>ABC</symbol>
+        <exchange>OTCBB</exchange>
+        <lastSale>0.7654</lastSale>
+        <lastSaleTime>2023-06-27T05:17:21.096Z</lastSaleTime>
+    </stock-quote>
+    <stock-quote>
+        <symbol>HPV</symbol>
+        <exchange>NYSE</exchange>
+        <lastSale>12.76</lastSale>
+        <lastSaleTime>2023-06-27T05:17:21.111Z</lastSaleTime>
+    </stock-quote>
+</stock-quotes>

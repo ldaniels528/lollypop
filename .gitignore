@@ -1,0 +1,45 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Scala template
+.DS_Store
+*.class
+*.log
+
+# sbt specific
+.cache
+.history
+generated/
+.idea/
+.lib/
+temp/*
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# ENSIME specific
+.ensime_cache/
+.ensime
+### SBT template
+# Simple Build Tool
+# http://www.scala-sbt.org/release/docs/Getting-Started/Directories.html#configuring-version-control
+
+test*.*
+pixall-config.properties
+scratch/
+aws-s3.properties
+tmp
+node_modules/
+metastore_db/
+
+*.iml
+qwery_db/
+jdbcnav.jar
+.bsp/
+
+vin-mapping.json
