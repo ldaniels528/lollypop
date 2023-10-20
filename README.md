@@ -10,14 +10,14 @@ Qwery v0.1.1
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
   * <a href="#Charts_and_Graphs">Charts and Graphs</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
-  * <a href="#Define__non_persistent__Implicit_Classes">Define (non-persistent) Implicit Classes</a>
   * <a href="#Dictionary_Literals">Dictionary Literals</a>
-  * <a href="#Import__Scala_compiled__Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
-  * <a href="#Function_Literals__Lambdas_">Function Literals (Lambdas)</a>
+  * <a href="#Function_Literals_Lambdas_">Function Literals (Lambdas)</a>
   * <a href="#JSON_Literals">JSON Literals</a>
-  * <a href="#Matrices_and_Vectors">Matrices and Vectors</a>
+  * <a href="#Matrix_and_Vector_Literals">Matrix and Vector Literals</a>
   * <a href="#String_Literals_and_Interpolation">String Literals and Interpolation</a>
-  * <a href="#Testing___Integration_and_Unit">Testing - Integration and Unit</a>
+  * <a href="#Define_non_persistent_Implicit_Classes">Define (non-persistent) Implicit Classes</a>
+  * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
+  * <a href="#Testing__Integration_and_Unit">Testing - Integration and Unit</a>
 * <a href="#Examples">Examples By Category</a>
   * <a href="#Asynchronous_I_O">Asynchronous I/O</a> (1)
   * <a href="#Branching_Ops">Branching Ops</a> (11)
@@ -139,31 +139,6 @@ from (
 | OTCBB     | CIYBJ  |   0.6753 | 2023-10-18T18:01:43.539Z |
 |----------------------------------------------------------|
 ```
-<a name="Define_(non-persistent)_Implicit_Classes"></a>
-### Define (non-persistent) Implicit Classes
-
-```sql
-implicit class `java.lang.String` {
-    def reverseString(self: String) := {
-        import "java.lang.StringBuilder"
-        val src = self.toCharArray()
-        val dest = new StringBuilder(self.length())
-        val eol = self.length() - 1
-        var n = 0
-        while (n <= eol) {
-          dest.append(src[eol - n])
-          n += 1
-        }
-        dest.toString()
-    }
-}
-
-"Hello World".reverseString()
-```
-##### Results
-```sql
-"dlroW olleH"
-```
 <a name="Dictionary_Literals"></a>
 ### Dictionary Literals
 
@@ -176,18 +151,7 @@ response
 ```sql
 {"message1": "Hello World", "message2": "Hallo Monde"}
 ```
-<a name="Import_(Scala-compiled)_Implicit_Classes"></a>
-### Import (Scala-compiled) Implicit Classes
-
-```sql
-import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
-DateTime().renderAsJson()
-```
-##### Results
-```sql
-"2023-10-19T23:00:17.839Z"
-```
-<a name="Function_Literals_(Lambdas)"></a>
+<a name="Function_Literals_Lambdas_"></a>
 ### Function Literals (Lambdas)
 
 ```sql
@@ -228,8 +192,8 @@ pythagoros(3, 4)
 | LAX         | SHARMA   | PANKAJ    | 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 |
 |---------------------------------------------------------------------------|
 ```
-<a name="Matrices_and_Vectors"></a>
-### Matrices and Vectors
+<a name="Matrix_and_Vector_Literals"></a>
+### Matrix and Vector Literals
 
 ```sql
 vector = [2.0, 1.0, 3.0]
@@ -261,7 +225,43 @@ how are you?
 Fine, I hope!
 "
 ```
-<a name="Testing_-_Integration_and_Unit"></a>
+<a name="Define_non_persistent_Implicit_Classes"></a>
+### Define (non-persistent) Implicit Classes
+
+```sql
+implicit class `java.lang.String` {
+    def reverseString(self: String) := {
+        import "java.lang.StringBuilder"
+        val src = self.toCharArray()
+        val dest = new StringBuilder(self.length())
+        val eol = self.length() - 1
+        var n = 0
+        while (n <= eol) {
+          dest.append(src[eol - n])
+          n += 1
+        }
+        dest.toString()
+    }
+}
+
+"Hello World".reverseString()
+```
+##### Results
+```sql
+"dlroW olleH"
+```
+<a name="Import_Scala_compiled_Implicit_Classes"></a>
+### Import (Scala-compiled) Implicit Classes
+
+```sql
+import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
+DateTime().renderAsJson()
+```
+##### Results
+```sql
+"2023-10-20T01:40:00.689Z"
+```
+<a name="Testing__Integration_and_Unit"></a>
 ### Testing - Integration and Unit
 
 ```sql
@@ -554,15 +554,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| AMEX      | VCFOO  |  83.5023 | 2023-10-19T22:59:26.977Z |
-| OTHER_OTC | JPXSB  |    0.762 | 2023-10-19T22:59:53.113Z |
-| NASDAQ    | UBP    |  57.1096 | 2023-10-19T22:59:25.979Z |
-| NASDAQ    | UMKS   |  54.7207 | 2023-10-19T22:59:54.345Z |
-| AMEX      | UEE    |  86.5956 | 2023-10-19T22:59:29.889Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NYSE     | BO     |  82.5195 | 2023-10-20T01:39:52.529Z |
+| AMEX     | BRJU   |  31.5225 | 2023-10-20T01:39:44.668Z |
+| NYSE     | OUDM   |   9.8727 | 2023-10-20T01:39:26.794Z |
+| AMEX     | ZKAP   |   77.183 | 2023-10-20T01:39:44.085Z |
+| OTCBB    | ADIK   |   3.4911 | 2023-10-20T01:39:25.098Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -630,7 +630,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.333709, 720.0]
+[0.439292, 720.0]
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -745,7 +745,7 @@ n
 ```
 ##### Results
 ```sql
-51
+50
 ```
 ### if (Control Flow &#8212; Procedural)
 *Description*: If the `expression` is true, then `outcomeA` otherwise `outcomeB`
@@ -1545,11 +1545,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 3    | ♣    |
-| 6    | ♦    |
-| 8    | ♠    |
 | J    | ♥    |
-| 4    | ♦    |
+| 6    | ♣    |
+| 7    | ♠    |
+| 3    | ♠    |
+| 2    | ♦    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2103,7 +2103,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-19T23:00:21.044Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-20T01:40:03.792Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2479,11 +2479,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-19T23:00:21.201Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-19T23:00:21.201Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-20T01:40:03.954Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-20T01:40:03.955Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-19T23:00:21.201Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-20T01:40:03.955Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2659,7 +2659,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 |--------------------------------------------------------------------------------------------|
 | body                         | message | statusCode | responseID                           |
 |--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@67a056f1 | OK      |        200 | a4a833df-8fe6-4224-93da-e52cc65861a1 |
+| java.io.PrintStream@67a056f1 | OK      |        200 | d78ec31d-9f4b-4028-9159-fa1d983cabfa |
 |--------------------------------------------------------------------------------------------|
 ```
 ### nodeConsole (Distributed Processing &#8212; Functional)
@@ -2721,7 +2721,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[9061, 15621, 10083]
+[15623, 11834, 10244]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2731,7 +2731,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9330
+10279
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2850,7 +2850,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@6be8ce1b
+scala.Function1$@e3c36d
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2899,10 +2899,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-19T23:00:23.451Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-19T23:00:23.451Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-19T23:00:23.451Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-19T23:00:23.451Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-20T01:40:06.138Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-20T01:40:06.138Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-20T01:40:06.138Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-20T01:40:06.138Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3156,7 +3156,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-19T23:00:23.630Z"
+"2023-10-20T01:40:06.310Z"
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3322,7 +3322,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-19T23:00:23.685Z"
+"2023-10-20T01:40:06.366Z"
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3591,7 +3591,7 @@ http get('https://example.com/')
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | body                                                                                                      | message | statusCode | responseID                           |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | de266320-e3d0-4e8b-a717-559f7c324d57 |
+| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | 9122fb8a-99f0-4eba-b6e1-7437f4e0fdb7 |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### http² (Testing &#8212; Declarative)
@@ -3605,7 +3605,7 @@ http path('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 0c24c086-5702-49a8-bfed-6e8e6fd18842 |
+|      |         |        200 | 2b8c1881-e734-4818-a36d-de34aeb5c8c1 |
 |--------------------------------------------------------------------|
 ```
 ### http³ (Testing &#8212; Declarative)
@@ -3619,7 +3619,7 @@ http uri('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | d409e0e5-1e1a-4464-92bf-57c548a5e925 |
+|      |         |        200 | 3beb27ec-6012-40c7-befc-9037433a72aa |
 |--------------------------------------------------------------------|
 ```
 ### scenario (Testing &#8212; Declarative)

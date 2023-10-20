@@ -50,14 +50,14 @@ class ReadMeTest extends AnyFunSpec {
         // include the featured examples in the ToC
         for {
           (title, _) <- featuredExamples
-        } out.println(s"""  * <a href="#${href(title)}">$title</a>""")
+        } out.println(s"""  * <a href="#${toAnchor(title)}">$title</a>""")
 
         // include the instruction examples in the ToC
         out.println("""* <a href="#Examples">Examples By Category</a>""")
         val categoryMappings = ctx.helpDocs.groupBy(_.category).toList.sortBy(_._1.toLowerCase())
         for {
           (category, instructions) <- categoryMappings
-        } out.println(s"""  * <a href="#${href(category)}">$category</a> (${instructions.size})""")
+        } out.println(s"""  * <a href="#${toAnchor(category)}">$category</a> (${instructions.size})""")
 
         // include the introduction and project status
         introduction(out)
@@ -89,7 +89,7 @@ class ReadMeTest extends AnyFunSpec {
 
   private def processCategory(out: PrintWriter, category: String, instructions: Seq[HelpDoc]): Unit = {
     out.println(
-      s"""|<a name="${href(category)}"></a>
+      s"""|<a name="${toAnchor(category)}"></a>
           |## $category Examples
           |<hr>
           |""".stripMargin)
@@ -113,7 +113,7 @@ class ReadMeTest extends AnyFunSpec {
   private def invoke(out: PrintWriter, title: String, example: String)(implicit scope: Scope): Unit = {
     // header section
     out.println(
-      s"""|<a name="${title.replace(' ', '_')}"></a>
+      s"""|<a name="${toAnchor(title)}"></a>
           |### $title
           |""".stripMargin)
     out.println("```sql")
@@ -234,11 +234,6 @@ class ReadMeTest extends AnyFunSpec {
          |""".stripMargin)
   }
 
-  private def href(name: String): String = name.map {
-    case c if c.isLetterOrDigit => c
-    case _ => '_'
-  }
-
   @tailrec
   private def resolve(outcome: Any)(implicit scope: Scope): Option[String] = {
     outcome match {
@@ -260,6 +255,13 @@ class ReadMeTest extends AnyFunSpec {
       case s: String if s.isQuoted => Some(s)
       case xx => Some(xx.renderAsJson)
     }
+  }
+
+  private def toAnchor(name: String): String = {
+    name.map {
+      case c if c.isLetterOrDigit => c
+      case _ => '_'
+    }.replace("__", "_")
   }
 
   private val array_comprehensions =
@@ -415,13 +417,13 @@ class ReadMeTest extends AnyFunSpec {
     "Array Comprehensions" -> array_comprehensions,
     "Charts and Graphs" -> charts_and_graphs,
     "Dataframe Literals" -> dataframe_literals,
-    "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
     "Dictionary Literals" -> dictionary_literals,
-    "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions,
     "Function Literals (Lambdas)" -> function_literals,
     "JSON Literals" -> json_literals,
-    "Matrices and Vectors" -> matrices_and_vectors,
+    "Matrix and Vector Literals" -> matrices_and_vectors,
     "String Literals and Interpolation" -> string_literals,
+    "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
+    "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions,
     "Testing - Integration and Unit" -> unit_testing
   )
 
