@@ -371,49 +371,6 @@ class ReadMeTest extends AnyFunSpec {
        |   |'''.stripMargin('|')
        |""".stripMargin
 
-  private val unit_testing =
-    """|include('./app/notebooks/server/src/main/qwery/notebooks.sql')
-       |
-       |feature 'Qwery Notebooks services' {
-       |
-       |    // log all calls to the `http` instruction
-       |    whenever '^http (delete|get|post|put) (.*)' {
-       |        logger.info('{{__INSTRUCTION__}}')
-       |        logger.info('response = {{__RETURNED__.toJsonPretty()}}')
-       |    }
-       |
-       |    scenario 'Create a new notebook' {
-       |        val responseA = http post 'http://{{host}}:{{port}}/api/notebooks/notebooks' <~ { name: 'ShockTrade' }
-       |        val notebook_id = responseA.body.id
-       |        verify responseA.statusCode is 200
-       |               ^^^ 'Notebook created: {{notebook_id}}'
-       |    }
-       |
-       |    scenario 'Retrieve a notebook' extends 'Create a new notebook' {
-       |        val responseB = http get 'http://{{host}}:{{port}}/api/notebooks/notebooks?id={{notebook_id}}'
-       |        verify responseB.statusCode is 200
-       |            and responseB.body matches [{
-       |                'isStdOutVisible': true,
-       |                'name': 'ShockTrade',
-       |                'notebook_id': @notebook_id,
-       |                'isStdErrVisible': true,
-       |                'isAutoSave': true,
-       |                'isChartVisible': true,
-       |                'isSharedSession': false
-       |           }]
-       |           ^^^ 'Notebook retrieved: {{notebook_id}}'
-       |    }
-       |
-       |    scenario 'Update a new notebook' extends 'Create a new notebook' {
-       |        val newName = url_encode('ShockTrade Simulation')
-       |        val responseB = http put 'http://{{host}}:{{port}}/api/notebooks/notebooks?id={{notebook_id}}&newName={{newName}}'
-       |        verify responseB.statusCode is 200
-       |            and responseB.body matches { success: true }
-       |            ^^^ 'Notebook updated: {{notebook_id}}'
-       |    }
-       |}
-       |""".stripMargin
-
   private val featuredExamples = mutable.LinkedHashMap(
     "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
@@ -425,8 +382,7 @@ class ReadMeTest extends AnyFunSpec {
     "Matrix and Vector Literals" -> matrices_and_vectors,
     "String Literals and Interpolation" -> string_literals,
     "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
-    "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions,
-    "Testing - Integration and Unit" -> unit_testing
+    "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions
   )
 
 }
