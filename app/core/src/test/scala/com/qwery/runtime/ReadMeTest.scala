@@ -165,7 +165,7 @@ class ReadMeTest extends AnyFunSpec {
   }
 
   private def showConsoleOutputs(out: PrintWriter, scope: Scope): Unit = {
-    val system  = scope.getUniverse.system
+    val system = scope.getUniverse.system
 
     // include STDOUT
     val consoleOut = system.stdOut.asString().trim
@@ -251,6 +251,7 @@ class ReadMeTest extends AnyFunSpec {
       case fu: Future[_] => resolve(Try(Await.result(fu, 10.seconds)).toOption)
       case in: Instruction => Some(in.toSQL)
       case rc: RowCollection => if (rc.nonEmpty) Some(rc.tabulate().mkString("\n")) else None
+      case sc: Scope => resolve(sc.toRowCollection)
       case tr: TableRendering => resolve(tr.toTable)
       case pr: Product => resolve(pr.toRowCollection)
       case s: String if s.trim.isEmpty => None
@@ -324,7 +325,7 @@ class ReadMeTest extends AnyFunSpec {
        |graph chart from samples
        |""".stripMargin
 
-  private val dictionary_literals  =
+  private val dictionary_literals =
     """|response = { 'message1' : 'Hello World' }
        |response.message2 = 'Hallo Monde'
        |response
