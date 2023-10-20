@@ -26,7 +26,7 @@ import scala.util.Try
  * Qwery README.md generator
  */
 class ReadMeTest extends AnyFunSpec {
-  private implicit val ctx: QweryUniverse = QweryUniverse()
+  private implicit val ctx: QweryUniverse = QweryUniverse(isServerMode = true)
   private val baseDirectory = new File(".") / "docs"
   private val imageDirectory = baseDirectory / "images"
   private val mdFile = new File("./README.md")
@@ -35,7 +35,7 @@ class ReadMeTest extends AnyFunSpec {
 
     it("should generate a file containing examples for all documented instructions") {
       new PrintWriter(new FileWriter(mdFile)) use { out =>
-        implicit val scope: Scope = Scope()
+        implicit val scope: Scope = ctx.createRootScope()
         out.println(
           s"""|Qwery v${AppConstants.version}
               |============
@@ -104,7 +104,7 @@ class ReadMeTest extends AnyFunSpec {
         } else ""
 
         // execute and produce results
-        implicit val scope: Scope = Scope()
+        implicit val scope: Scope = ctx.createRootScope()
         invoke(out, help, nth)
       }
     }
@@ -164,9 +164,11 @@ class ReadMeTest extends AnyFunSpec {
     }
   }
 
-  private def showConsoleOutputs(out: PrintWriter, scope1: Scope): Unit = {
+  private def showConsoleOutputs(out: PrintWriter, scope: Scope): Unit = {
+    val system  = scope.getUniverse.system
+
     // include STDOUT
-    val consoleOut = scope1.getUniverse.system.stdOut.asString().trim
+    val consoleOut = system.stdOut.asString().trim
     if (consoleOut.nonEmpty) {
       out.println("##### Console Output")
       out.println(
@@ -176,7 +178,7 @@ class ReadMeTest extends AnyFunSpec {
     }
 
     // include STDERR
-    val consoleErr = scope1.getUniverse.system.stdErr.asString().trim
+    val consoleErr = system.stdErr.asString().trim
     if (consoleErr.nonEmpty) {
       out.println("##### Console Error")
       out.println(
