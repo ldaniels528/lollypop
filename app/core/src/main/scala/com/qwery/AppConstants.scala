@@ -9,7 +9,7 @@ trait AppConstants {
 
   val MAJOR_VERSION: Int = 0
   val MINOR_VERSION: Int = 1
-  val MINI_VERSION: Int = 1
+  val MINI_VERSION: Int = 2
 
   val version = s"$MAJOR_VERSION.$MINOR_VERSION.$MINI_VERSION"
 

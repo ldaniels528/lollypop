@@ -103,7 +103,6 @@ object RuntimeCondition {
         case NEQ(a, b) => NEQ(f(a), f(b))
         case Not(c) => Not(c.transform(f))
         case OR(a, b) => OR(a.transform(f), b.transform(f))
-        case RLike(a, b) => RLike(f(a), f(b))
         case WhereIn(expr, c) => WhereIn(f(expr), c.transform(f))
         case cond => cond
       }

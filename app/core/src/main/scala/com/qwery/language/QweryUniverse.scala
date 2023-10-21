@@ -18,8 +18,6 @@ import com.qwery.runtime.instructions.queryables._
 import qwery.io._
 import qwery.lang._
 
-import scala.util.Try
-
 /**
  * Qwery Universe - repository for long-lived state
  * @param dataTypeParsers the [[DataTypeParser data type parser]]
@@ -158,17 +156,6 @@ case class QweryUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypePa
     !ts.isBackticks && !ts.isQuoted && (antiFunctionParsers.exists(_.understands(ts)) || MacroLanguageParser.understands(ts))
   }
 
-  def loadLanguageParser(className: String): Try[LanguageParser] = Try {
-    val parser = RuntimeClass.getObjectByName(className)(classLoader).asInstanceOf[LanguageParser]
-    withLanguageParsers(parser)
-    parser
-  }
-
-  def withLanguageParsers(parsers: LanguageParser*): QweryUniverse = {
-    languageParsers = (parsers.toList ::: this.languageParsers).distinct
-    this
-  }
-
   private def antiFunctionParsers: List[LanguageParser] = languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
 
   private def matchType[A](ts: TokenStream)(f: PartialFunction[LanguageParser, Option[A]])(implicit compiler: SQLCompiler): Option[A] = {
@@ -205,9 +192,8 @@ object QweryUniverse {
   private val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
     Bar, BarBar, Between, Betwixt, BooleanType,
-    Case, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, CommentOn, Contains, Count, CountUnique,
-    CreateExternalTable, CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType,
-    CreateUniqueIndex, CreateView,
+    Case, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
+    CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
     DeclareClass, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy, Div, DoWhile, Drop,
     Each, ElementAt, EOL, EQ, Every, Exists, Explode, Expose,
     Feature, From,
@@ -222,13 +208,13 @@ object QweryUniverse {
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
     Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall,
-    Require, Reset, Return, RLike, RowsOfValues,
+    Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf, Synchronized,
     Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     TryCatch, Truncate, TupleLiteral, TypeOf,
-    UnDelete, Union, Unique, Unlike, UnNest, Up, Update, UpsertInto,
+    UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
-    WhileDo, WhenEver, Where, WhereIn, Whoami, With,
+    WhileDo, WhenEver, Where, WhereIn, With,
     ZipWith
   )
 

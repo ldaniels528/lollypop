@@ -5,12 +5,13 @@ import com.qwery.language.TemplateProcessor.tags._
 import com.qwery.language.models.Column
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.qwery.runtime.instructions.VerificationTools
-import com.qwery.runtime.instructions.infrastructure.AlterTable.{AddColumn, AppendColumn, DropColumn, PrependColumn, RenameColumn}
+import com.qwery.runtime.instructions.infrastructure.AlterTable.{AddColumn, AppendColumn, DropColumn, PrependColumn, RenameColumn, SetLabel}
 import com.qwery.runtime.{DatabaseObjectRef, QweryCompiler, QweryVM, Scope}
 import com.qwery.util.DateHelper
 import com.qwery.util.StringHelper.StringEnrichment
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
+import qwery.io.{IOCost, RowIDRange}
 
 class AlterTableTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -75,8 +76,13 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support compiling alter table .. rename column") {
-      val model = compiler.compile("alter table stocks rename column comments as remarks")
+      val model = compiler.compile("alter table stocks rename column comments to remarks")
       assert(model == AlterTable(DatabaseObjectRef("stocks"), RenameColumn(oldName = "comments", newName = "remarks")))
+    }
+
+    it("should support compiling alter table .. set description") {
+      val model = compiler.compile("alter table stocks label 'This is a test'")
+      assert(model == AlterTable(DatabaseObjectRef("stocks"), SetLabel(description = "This is a test")))
     }
 
     it("should support compiling alter table .. add column/drop column") {
@@ -124,7 +130,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
       val model = AlterTable(DatabaseObjectRef("stocks"), Seq(RenameColumn("comments", "remarks")))
       assert(model.toSQL ==
         """|alter table stocks
-           |rename column comments as remarks
+           |rename column comments to remarks
            |""".stripMargin.singleLine)
     }
 
@@ -202,7 +208,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
 
       val (_, _, device1) = QweryVM.searchSQL(scope0,
         """|alter table StockData
-           |  rename column exchange as market
+           |  rename column exchange to market
            |  add column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
            |from ns('StockData')
            |""".stripMargin)
@@ -244,7 +250,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
         """|alter table StockData
            |  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
            |  append column beta: Double = 0.5
-           |  rename column symbol as ticker
+           |  rename column symbol to ticker
            |from ns('StockData')
            |""".stripMargin)
       device1.tabulate().foreach(logger.info)
@@ -286,7 +292,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
            |  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
            |  append column beta: Double = 1.0
            |  drop column lastSale
-           |  rename column symbol as ticker
+           |  rename column symbol to ticker
            |from ns('StockData')
            |""".stripMargin)
       device1.tabulate().foreach(logger.info)
@@ -324,7 +330,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
       val (_, _, device1) = QweryVM.searchSQL(scope0,
         """|alter table @@stocks
            |  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
-           |  rename column symbol as ticker
+           |  rename column symbol to ticker
            |stocks
            |""".stripMargin)
       device1.tabulate().foreach(logger.info)
@@ -334,6 +340,33 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
         Map("ticker" -> "QED", "exchange" -> "NASDAQ", "saleDate" -> DateHelper("2023-06-20T03:52:14.543Z")),
         Map("ticker" -> "JUNK", "exchange" -> "AMEX", "lastSale" -> 97.61, "saleDate" -> DateHelper("2023-06-20T03:52:14.543Z"))
       ))
+    }
+
+    it("should execute an alter table to prepend, rename columns and label a durable collection") {
+      val xStockQuotes = DatabaseObjectRef("StockQuotes")
+      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+        s"""|namespace "temp.examples"
+            |drop if exists $xStockQuotes
+            |create table $xStockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (
+            ||----------------------------------------------------------|
+            || exchange  | symbol | lastSale | lastSaleTime             |
+            ||----------------------------------------------------------|
+            || OTCBB     | YSZUY  |   0.2355 | 2023-10-19T23:25:32.886Z |
+            || NASDAQ    | DMZH   | 183.1636 | 2023-10-19T23:26:03.509Z |
+            || OTCBB     | VV     |          |                          |
+            || NYSE      | TGPNF  |  51.6171 | 2023-10-19T23:25:32.166Z |
+            || OTHER_OTC | RIZA   |   0.2766 | 2023-10-19T23:25:42.020Z |
+            || NASDAQ    | JXMLB  |  91.6028 | 2023-10-19T23:26:08.951Z |
+            ||----------------------------------------------------------|
+            |)
+            |alter table $xStockQuotes
+            |  prepend column saleDate: DateTime = DateTime()
+            |  rename column symbol to ticker
+            |  label 'Stock quotes staging table'
+            |""".stripMargin)
+      val ns = xStockQuotes.toNS(scope)
+      assert(ns.getConfig.description contains "Stock quotes staging table")
+      assert(cost == IOCost(created = 1, destroyed = 1, inserted = 12, rowIDs = RowIDRange(0L to 5L: _*)))
     }
 
   }

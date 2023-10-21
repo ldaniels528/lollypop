@@ -16,7 +16,6 @@ import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{File, FileWriter, PrintWriter}
 import scala.annotation.tailrec
-import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 import scala.language.reflectiveCalls
@@ -249,10 +248,10 @@ class ReadMeTest extends AnyFunSpec {
               |</div>
               |""".stripMargin)
       case fu: Future[_] => resolve(Try(Await.result(fu, 10.seconds)).toOption)
-      case in: Instruction => Some(in.toSQL)
       case rc: RowCollection => if (rc.nonEmpty) Some(rc.tabulate().mkString("\n")) else None
       case sc: Scope => resolve(sc.toRowCollection)
       case tr: TableRendering => resolve(tr.toTable)
+      case in: Instruction => Some(in.toSQL)
       case pr: Product => resolve(pr.toRowCollection)
       case s: String if s.trim.isEmpty => None
       case s: String if s.isQuoted => Some(s)
@@ -372,7 +371,7 @@ class ReadMeTest extends AnyFunSpec {
        |   |'''.stripMargin('|')
        |""".stripMargin
 
-  private val featuredExamples = mutable.LinkedHashMap(
+  private val featuredExamples = List(
     "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
     "Charts and Graphs" -> charts_and_graphs,

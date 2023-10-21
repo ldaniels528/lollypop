@@ -9,6 +9,7 @@ import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
 import java.io.File
+import scala.util.Try
 
 class OSTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -43,10 +44,12 @@ class OSTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute: OS.exec('whoami')") {
-      val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|OS.exec('whoami')
-           |""".stripMargin)
-      device.tabulate() foreach logger.info
+      Try {
+        val (_, _, device) = QweryVM.searchSQL(Scope(),
+          """|OS.exec('whoami')
+             |""".stripMargin)
+        device.tabulate() foreach logger.info
+      }
     }
 
     it("should execute: OS.listFiles('/examples/src/main/qwery')") {

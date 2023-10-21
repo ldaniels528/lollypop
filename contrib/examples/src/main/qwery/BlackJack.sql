@@ -105,7 +105,7 @@ while(isAlive) {
     def showSeparator(out) := {
         separator = ("¤" * 120) + "\n"
         out <=== ("\n" + separator)
-        out <=== " Player: {{whoami}} \t Credit: ${{money}} \t Bet: ${{bet}} \t Round: {{level}} \n"
+        out <=== " Player: {{__userName__}} \t Credit: ${{money}} \t Bet: ${{bet}} \t Round: {{level}} \n"
         out <=== (separator + "\n")
     }
 
@@ -132,7 +132,7 @@ while(isAlive) {
         flag = iff(betFactor == 2.0, "2x ", "")
         "DEALER - {{dealerScore()}}/21" ===> out
         showHand(out, dealer)
-        "YOU ({{whoami}}) - {{flag}}{{playerScore()}}/21" ===> out
+        "YOU ({{__userName__}}) - {{flag}}{{playerScore()}}/21" ===> out
         showHand(out, player)
     }
 

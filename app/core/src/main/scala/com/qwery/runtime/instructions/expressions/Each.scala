@@ -106,7 +106,7 @@ object Each extends ExpressionParser {
     category = CATEGORY_CONTROL_FLOW,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
-    description = "Iterates a dataframe executing applying a function to each entry",
+    description = "Iterates over a dataframe applying a function to each entry",
     example =
       """|stocks =
          ||---------------------------------------------------------|
