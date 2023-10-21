@@ -18,8 +18,6 @@ import com.qwery.runtime.instructions.queryables._
 import qwery.io._
 import qwery.lang._
 
-import scala.util.Try
-
 /**
  * Qwery Universe - repository for long-lived state
  * @param dataTypeParsers the [[DataTypeParser data type parser]]
@@ -156,17 +154,6 @@ case class QweryUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypePa
 
   def isInstruction(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
     !ts.isBackticks && !ts.isQuoted && (antiFunctionParsers.exists(_.understands(ts)) || MacroLanguageParser.understands(ts))
-  }
-
-  def loadLanguageParser(className: String): Try[LanguageParser] = Try {
-    val parser = RuntimeClass.getObjectByName(className)(classLoader).asInstanceOf[LanguageParser]
-    withLanguageParsers(parser)
-    parser
-  }
-
-  def withLanguageParsers(parsers: LanguageParser*): QweryUniverse = {
-    languageParsers = (parsers.toList ::: this.languageParsers).distinct
-    this
   }
 
   private def antiFunctionParsers: List[LanguageParser] = languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
