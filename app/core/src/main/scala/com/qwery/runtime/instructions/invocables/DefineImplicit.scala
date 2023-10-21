@@ -64,7 +64,7 @@ object DefineImplicit extends InvokableParser {
     description = "Binds a virtual method to a class",
     example =
       """|implicit class `java.lang.String` {
-         |    def reverseString(self: String) := {
+         |    def reverseString(self) := {
          |        import "java.lang.StringBuilder"
          |        val src = self.toCharArray()
          |        val dest = new StringBuilder(self.length())
