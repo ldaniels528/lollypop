@@ -242,7 +242,7 @@ class QweryVMTest extends AnyFunSpec {
         s"""|namespace 'temp.stocks'
             |select symbol, exchange
             |from stocks_C
-            |where exchange rlike 'NY.E'
+            |where exchange.matches("NY.E")
             |order by symbol asc
             |""".stripMargin)
       device.tabulate() foreach logger.info

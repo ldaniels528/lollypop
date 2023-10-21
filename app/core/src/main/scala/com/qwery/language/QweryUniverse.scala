@@ -221,7 +221,7 @@ object QweryUniverse {
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
     Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall,
-    Require, Reset, Return, RLike, RowsOfValues,
+    Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf, Synchronized,
     Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     TryCatch, Truncate, TupleLiteral, TypeOf,
