@@ -282,7 +282,7 @@ trait Scope extends TableExpression {
 
   override def toString: String = {
     val m = getAliasedRows ++ getAliasedSources ++ getValueReferences
-    s"${this.getClass.getSimpleName}(${m.mkString(",")})"
+    s"${this.getClass.getSimpleName}(${m.size})"
   }
 
   //////////////////////////////////////////////////////////////////////////////////
