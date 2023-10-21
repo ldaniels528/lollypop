@@ -225,7 +225,7 @@ object QweryUniverse {
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf, Synchronized,
     Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     TryCatch, Truncate, TupleLiteral, TypeOf,
-    UnDelete, Union, Unique, Unlike, UnNest, Up, Update, UpsertInto,
+    UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
     WhileDo, WhenEver, Where, WhereIn, Whoami, With,
     ZipWith
