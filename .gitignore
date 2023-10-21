@@ -43,3 +43,4 @@ jdbcnav.jar
 .bsp/
 
 vin-mapping.json
+rebuild.sh
