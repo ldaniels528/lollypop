@@ -1,14 +1,16 @@
-Qwery v0.1.2
+Qwery v0.1.3
 ============
 
 ## Table of Contents
 * <a href="#Introduction">Introduction</a>
 * <a href="#Project_Status">Project Status</a>
 * <a href="#Getting_Started">Getting Started</a>
-* <a href="#Featured_Examples">Basic Features</a>
+* <a href="#Basic_Examples">Basic Features</a>
   * <a href="#Array_Literals">Array Literals</a>
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
+  * <a href="#Fluent_Arrays_supports_map_filter_fold_etc_">Fluent Arrays (supports map, filter, fold, etc.)</a>
   * <a href="#Charts_and_Graphs">Charts and Graphs</a>
+  * <a href="#Instantiate_JVM_classes">Instantiate JVM classes</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
   * <a href="#Dictionary_Literals">Dictionary Literals</a>
   * <a href="#Function_Literals_Lambdas_">Function Literals (Lambdas)</a>
@@ -17,7 +19,7 @@ Qwery v0.1.2
   * <a href="#String_Literals_and_Interpolation">String Literals and Interpolation</a>
   * <a href="#Define_non_persistent_Implicit_Classes">Define (non-persistent) Implicit Classes</a>
   * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
-* <a href="#Examples">Examples By Category</a>
+* <a href="#Examples">Featured Examples By Category</a>
   * <a href="#Asynchronous_I_O">Asynchronous I/O</a> (1)
   * <a href="#Branching_Ops">Branching Ops</a> (11)
   * <a href="#Control_Flow">Control Flow</a> (25)
@@ -33,18 +35,18 @@ Qwery v0.1.2
   * <a href="#Testing">Testing</a> (8)
 <a name="Introduction"></a>
 ## Introduction
-Qwery is a JVM-based multi-paradigm (declarative/SQL, functional, reactive and object-oriented)
-scripting language for Data Engineers and Data Scientists. Features include:
+Qwery is a general-purpose programming/scripting language for the JVM.
+Features include:
+* Native support for Scala and Java classes, objects and packages.
+* Native support for JSON (arrays, dictionaries and objects).
+* Native support for Maven package repositories.
 * Data-oriented types - Dataframes, BLOB/CLOB and Matrices and Vectors.
-* Multi-paradigm programming model - declarative, functional and object-oriented.
-* Native JSON support.
-* Native support for Scala and Java objects.
-* Testing Automation support.
+* Multi-paradigm programming model - declarative/SQL, functional and object-oriented.
 
 <a name="Project_Status"></a>
 ## Project Status
 
-Alpha/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
+Unstable/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
 
 <a name="Getting_Started"></a>
 ## Getting Started
@@ -52,20 +54,20 @@ Alpha/Preview &#8212; actively addressing bugs and (re-)implementing missing or 
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.2.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.3.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.2.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.3.jar`
 
 ### Run Query CLI
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.2.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.3.jar
 ```
 
-<a name="Featured_Examples"></a>
+<a name="Basic_Examples"></a>
 ## Basic Features
 
 <a name="Array_Literals"></a>
@@ -88,6 +90,17 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.2.jar
 ```sql
 ['F', 'E', 'D', 'C', 'B', 'A']
 ```
+<a name="Fluent_Arrays_supports_map_filter_fold_etc_"></a>
+### Fluent Arrays (supports map, filter, fold, etc.)
+
+```sql
+abc = [n => 2 * n, n => 3 * n, n => n * n]
+[0 until abc.length()].map(x => abc(x)(4))
+```
+##### Results
+```sql
+[8, 12, 16]
+```
 <a name="Charts_and_Graphs"></a>
 ### Charts and Graphs
 
@@ -95,7 +108,7 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.2.jar
 chart = { shape: "scatter", title: "Scatter Demo" }
 samples = {
   import "java.lang.Math"
-  def series(x: Int) := "Series {{ (x % 2) + 1 }}"
+  def series(x) := "Series {{ (x % 2) + 1 }}"
   select w, x, y from ([0 to 500]
     .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
     .toTable())
@@ -107,6 +120,28 @@ graph chart from samples
 <img src="./docs/images/Scatter_Demo.png">
 </div>
 
+<a name="Instantiate_JVM_classes"></a>
+### Instantiate JVM classes
+
+```sql
+// package com.github.ldaniels528.qwery
+// case class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Long)
+
+new `com.github.ldaniels528.qwery.StockQuote`(
+    "ABC",
+    "OTCBB",
+    0.0231,
+    DateTime().getTime()
+)
+```
+##### Results
+```sql
+|----------------------------------------------|
+| symbol | exchange | lastSale | lastSaleTime  |
+|----------------------------------------------|
+| ABC    | OTCBB    |   0.0231 | 1697915657606 |
+|----------------------------------------------|
+```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
 
@@ -258,10 +293,9 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-21T04:06:42.866Z"
+"2023-10-21T19:14:17.726Z"
 ```
 <a name="Examples"></a>
-## Examples By Category
 
 <a name="Asynchronous_I_O"></a>
 ## Asynchronous I/O Examples
@@ -421,7 +455,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5eeedb60
+java.io.PrintStream@38cf3ae1
 ```
 ##### Console Output
 ```
@@ -515,11 +549,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| AMEX      | MOWV   |  11.3455 | 2023-10-21T04:06:18.646Z |
-| NYSE      | TT     |   1.9531 | 2023-10-21T04:05:44.894Z |
-| NASDAQ    | UOTH   |  51.1686 | 2023-10-21T04:05:43.765Z |
-| OTHER_OTC | AAWXJ  |   0.1983 | 2023-10-21T04:06:42.273Z |
-| OTHER_OTC | EOVV   |   0.8732 | 2023-10-21T04:06:34.388Z |
+| OTHER_OTC | BOQM   |   0.0354 | 2023-10-21T19:14:05.189Z |
+| AMEX      | FTD    |   6.4971 | 2023-10-21T19:13:52.500Z |
+| OTCBB     | IDPC   |   0.5276 | 2023-10-21T19:13:57.440Z |
+| OTCBB     | NDJPY  |   3.4873 | 2023-10-21T19:13:29.495Z |
+| NYSE      | KFOAK  |  79.6925 | 2023-10-21T19:14:09.690Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -588,7 +622,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.434, 720.0]
+[0.258042, 720.0]
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -703,7 +737,7 @@ n
 ```
 ##### Results
 ```sql
-50
+51
 ```
 ### if (Control Flow &#8212; Procedural)
 *Description*: If the `expression` is true, then `outcomeA` otherwise `outcomeB`
@@ -807,7 +841,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5eeedb60
+java.io.PrintStream@38cf3ae1
 ```
 ##### Console Output
 ```
@@ -822,7 +856,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e9456ae
+java.io.PrintStream@2e159116
 ```
 ##### Console Error
 ```
@@ -842,9 +876,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| out    | PrintStream         | java.io.PrintStream@5eeedb60                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@1dcca8d3                                       |
-| err    | PrintStream         | java.io.PrintStream@5e9456ae                                          |
+| out    | PrintStream         | java.io.PrintStream@38cf3ae1                                          |
+| stdin  | BufferedReader      | java.io.BufferedReader@43b6cb1c                                       |
+| err    | PrintStream         | java.io.PrintStream@2e159116                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -991,12 +1025,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-21T04:06:44.724Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-21T04:06:44.724Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-21T04:06:44.724Z | VV     | OTCBB     |          |
-| 2023-10-21T04:06:44.724Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-21T04:06:44.725Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-21T04:06:44.725Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-21T19:14:19.354Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-21T19:14:19.354Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-21T19:14:19.354Z | VV     | OTCBB     |          |
+| 2023-10-21T19:14:19.354Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-21T19:14:19.354Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-21T19:14:19.354Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### avg¹ (DataFrame &#8212; Functional)
@@ -1260,7 +1294,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (DataFrame &#8212; Declarative)
@@ -1530,11 +1564,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
+| 3    | ♥    |
 | 9    | ♥    |
-| J    | ♥    |
-| 7    | ♥    |
-| 3    | ♣    |
-| Q    | ♠    |
+| 5    | ♣    |
+| 10   | ♦    |
+| 2    | ♥    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2078,7 +2112,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-21T04:06:46.194Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-21T19:14:20.308Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2444,11 +2478,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-21T04:06:46.355Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-21T04:06:46.356Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-21T19:14:20.454Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-21T19:14:20.454Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-21T04:06:46.356Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-21T19:14:20.454Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2624,7 +2658,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 |--------------------------------------------------------------------------------------------|
 | body                         | message | statusCode | responseID                           |
 |--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@5eeedb60 | OK      |        200 | 2a682629-149b-4800-8c1d-ff6b56952e5a |
+| java.io.PrintStream@38cf3ae1 | OK      |        200 | 0b1f9843-06b6-4faf-9b4f-e537ea25407b |
 |--------------------------------------------------------------------------------------------|
 ```
 ##### Console Output
@@ -2690,7 +2724,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[14179, 11003, 9175]
+[12076, 8433, 9217, 15028, 9083, 10103, 13438, 12891, 12927, 13032, 13475, 14666, 11807, 15349, 13644, 14323, 9389, 8812, 9865, 8301, 15583]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2700,7 +2734,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-14589
+12657
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2819,7 +2853,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@e8c84eb
+scala.Function1$@7b4619a3
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2868,10 +2902,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-21T04:06:48.584Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-21T04:06:48.584Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-21T04:06:48.584Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-21T04:06:48.584Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-21T19:14:21.870Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-21T19:14:21.870Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-21T19:14:21.870Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-21T19:14:21.870Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3125,7 +3159,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-21T04:06:48.745Z"
+"2023-10-21T19:14:22.015Z"
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3193,9 +3227,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| out    | PrintStream    | java.io.PrintStream@5eeedb60    |
-| stdin  | BufferedReader | java.io.BufferedReader@1dcca8d3 |
-| err    | PrintStream    | java.io.PrintStream@5e9456ae    |
+| out    | PrintStream    | java.io.PrintStream@38cf3ae1    |
+| stdin  | BufferedReader | java.io.BufferedReader@43b6cb1c |
+| err    | PrintStream    | java.io.PrintStream@2e159116    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3227,7 +3261,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5eeedb60
+java.io.PrintStream@38cf3ae1
 ```
 ##### Console Output
 ```
@@ -3300,7 +3334,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-21T04:06:48.807Z"
+"2023-10-21T19:14:22.068Z"
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3423,8 +3457,8 @@ true
 ```
 ##### Console Error
 ```
-[0.001084ms] AnyLiteral 1 ~> 1 <Integer>
-[0.302834ms] SetAnyVariable set x = 1 ~> null <null>
+[0.001958ms] AnyLiteral 1 ~> 1 <Integer>
+[0.389209ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3438,7 +3472,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e9456ae
+java.io.PrintStream@2e159116
 ```
 ##### Console Error
 ```
@@ -3568,7 +3602,7 @@ http get('https://example.com/')
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | body                                                                                                      | message | statusCode | responseID                           |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | 94a7b586-30fe-4223-8e14-3b4886d7db0e |
+| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | e26e9d7f-806d-4ac8-9b77-8edc01515d8d |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### http² (Testing &#8212; Declarative)
@@ -3582,7 +3616,7 @@ http path('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | 26d12f06-c7e4-41cb-a50f-3b06b9674ded |
+|      |         |        200 | 0680bf9e-f87b-4555-b22d-d35157c14068 |
 |--------------------------------------------------------------------|
 ```
 ### http³ (Testing &#8212; Declarative)
@@ -3596,7 +3630,7 @@ http uri('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | d35c61a7-8c67-49cb-a13b-2a4c557e2ec5 |
+|      |         |        200 | 76931c7b-790c-4fc7-b9df-2c724ee34d07 |
 |--------------------------------------------------------------------|
 ```
 ### scenario (Testing &#8212; Declarative)

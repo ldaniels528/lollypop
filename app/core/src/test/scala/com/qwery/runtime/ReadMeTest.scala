@@ -30,7 +30,7 @@ class ReadMeTest extends AnyFunSpec {
   private val imageDirectory = baseDirectory / "images"
   private val mdFile = new File("./README.md")
 
-  describe(classOf[HelpDoc].getSimpleName) {
+  describe(classOf[ReadMeTest].getSimpleName) {
 
     it("should generate a file containing examples for all documented instructions") {
       new PrintWriter(new FileWriter(mdFile)) use { out =>
@@ -43,7 +43,7 @@ class ReadMeTest extends AnyFunSpec {
               |* <a href="#Introduction">Introduction</a>
               |* <a href="#Project_Status">Project Status</a>
               |* <a href="#Getting_Started">Getting Started</a>
-              |* <a href="#Featured_Examples">Basic Features</a>
+              |* <a href="#Basic_Examples">Basic Features</a>
               |""".stripMargin.trim)
 
         // include the featured examples in the ToC
@@ -52,7 +52,7 @@ class ReadMeTest extends AnyFunSpec {
         } out.println(s"""  * <a href="#${toAnchor(title)}">$title</a>""")
 
         // include the instruction examples in the ToC
-        out.println("""* <a href="#Examples">Examples By Category</a>""")
+        out.println("""* <a href="#Examples">Featured Examples By Category</a>""")
         val categoryMappings = ctx.helpDocs.groupBy(_.category).toList.sortBy(_._1.toLowerCase())
         for {
           (category, instructions) <- categoryMappings
@@ -65,7 +65,7 @@ class ReadMeTest extends AnyFunSpec {
 
         // include featured examples
         out.println(
-          """|<a name="Featured_Examples"></a>
+          """|<a name="Basic_Examples"></a>
              |## Basic Features
              |""".stripMargin)
         for {
@@ -75,7 +75,6 @@ class ReadMeTest extends AnyFunSpec {
         // include examples by category
         out.println(
           """|<a name="Examples"></a>
-             |## Examples By Category
              |""".stripMargin)
         for {
           (category, instructions) <- categoryMappings
@@ -191,13 +190,13 @@ class ReadMeTest extends AnyFunSpec {
     out.println(
       """|<a name="Introduction"></a>
          |## Introduction
-         |Qwery is a JVM-based multi-paradigm (declarative/SQL, functional, reactive and object-oriented)
-         |scripting language for Data Engineers and Data Scientists. Features include:
+         |Qwery is a general-purpose programming/scripting language for the JVM.
+         |Features include:
+         |* Native support for Scala and Java classes, objects and packages.
+         |* Native support for JSON (arrays, dictionaries and objects).
+         |* Native support for Maven package repositories.
          |* Data-oriented types - Dataframes, BLOB/CLOB and Matrices and Vectors.
-         |* Multi-paradigm programming model - declarative, functional and object-oriented.
-         |* Native JSON support.
-         |* Native support for Scala and Java objects.
-         |* Testing Automation support.
+         |* Multi-paradigm programming model - declarative/SQL, functional and object-oriented.
          |""".stripMargin)
   }
 
@@ -231,7 +230,7 @@ class ReadMeTest extends AnyFunSpec {
       """|<a name="Project_Status"></a>
          |## Project Status
          |
-         |Alpha/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
+         |Unstable/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
          |""".stripMargin)
   }
 
@@ -316,7 +315,7 @@ class ReadMeTest extends AnyFunSpec {
     """|chart = { shape: "scatter", title: "Scatter Demo" }
        |samples = {
        |  import "java.lang.Math"
-       |  def series(x: Int) := "Series {{ (x % 2) + 1 }}"
+       |  def series(x) := "Series {{ (x % 2) + 1 }}"
        |  select w, x, y from ([0 to 500]
        |    .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
        |    .toTable())
@@ -328,6 +327,11 @@ class ReadMeTest extends AnyFunSpec {
     """|response = { 'message1' : 'Hello World' }
        |response.message2 = 'Hallo Monde'
        |response
+       |""".stripMargin
+
+  private val fluent_collections =
+    """|abc = [n => 2 * n, n => 3 * n, n => n * n]
+       |[0 until abc.length()].map(x => abc(x)(4))
        |""".stripMargin
 
   private val function_literals =
@@ -371,10 +375,24 @@ class ReadMeTest extends AnyFunSpec {
        |   |'''.stripMargin('|')
        |""".stripMargin
 
+  private val instantiate_jvm_classes =
+    """|// package com.github.ldaniels528.qwery
+       |// case class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Long)
+       |
+       |new `com.github.ldaniels528.qwery.StockQuote`(
+       |    "ABC",
+       |    "OTCBB",
+       |    0.0231,
+       |    DateTime().getTime()
+       |)
+       |""".stripMargin
+
   private val featuredExamples = List(
     "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
+    "Fluent Arrays (supports map, filter, fold, etc.)" -> fluent_collections,
     "Charts and Graphs" -> charts_and_graphs,
+    "Instantiate JVM classes" -> instantiate_jvm_classes,
     "Dataframe Literals" -> dataframe_literals,
     "Dictionary Literals" -> dictionary_literals,
     "Function Literals (Lambdas)" -> function_literals,
