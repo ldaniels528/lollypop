@@ -1,12 +1,16 @@
 package qwery.lang
 
 import com.qwery.AppConstants
+import com.qwery.database.QueryResponse
 import com.qwery.language.QweryUniverse
 import com.qwery.runtime.RuntimeFiles.RecursiveFileList
+import com.qwery.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.qwery.runtime.instructions.VerificationTools
 import com.qwery.runtime.{QweryVM, Scope}
+import com.qwery.util.JSONSupport.JSONStringConversion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
+import spray.json.enrichAny
 
 import java.io.File
 import scala.util.Try
@@ -275,6 +279,63 @@ class OSTest extends AnyFunSpec with VerificationTools {
       ctx.system.stdOut.writer.println("Hello World")
       val message = ctx.system.stdOut.reader.readLine()
       assert(message == "Hello World")
+    }
+
+    it("should return a result as a QueryResponse") {
+      val (_, _, outcome) = QweryVM.executeSQL(Scope(),
+        """|OS.execQL("select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111")
+           |""".stripMargin)
+      val results = outcome match {
+        case q: QueryResponse => q.toRowCollection.toMapGraph
+        case _ => Nil
+      }
+      assert(results == List(Map("symbol" -> "GMTQ", "exchange" -> "OTCBB", "lastSale" -> 0.1111)))
+    }
+
+    it("should return a result as a JSON object graph") {
+      implicit val scope: Scope = Scope()
+      val response = OS.execQL("select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111")
+      assert(response.toJson ==
+        """|{
+           |  "columns": [
+           |    {
+           |      "name": "symbol",
+           |      "type": "String(4)"
+           |    },
+           |    {
+           |      "name": "exchange",
+           |      "type": "String(5)"
+           |    },
+           |    {
+           |      "name": "lastSale",
+           |      "type": "Double"
+           |    }
+           |  ],
+           |  "cost": {
+           |    "shuffled": 0,
+           |    "rowIdStart": 0,
+           |    "matched": 0,
+           |    "updated": 0,
+           |    "destroyed": 0,
+           |    "scanned": 0,
+           |    "inserted": 0,
+           |    "altered": 0,
+           |    "deleted": 0,
+           |    "created": 0
+           |  },
+           |  "ns": "qwery.public.???",
+           |  "resultType": "ROWS",
+           |  "rows": [
+           |    [
+           |      "GMTQ",
+           |      "OTCBB",
+           |      0.1111
+           |    ]
+           |  ],
+           |  "stdErr": "",
+           |  "stdOut": ""
+           |}
+           |""".stripMargin.parseJSON)
     }
 
   }

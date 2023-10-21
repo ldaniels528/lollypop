@@ -1,5 +1,7 @@
 package qwery.lang
 
+import com.qwery.database.QueryResponse
+import com.qwery.database.QueryResponse.QueryResultConversion
 import com.qwery.implicits.MagicImplicits
 import com.qwery.language.models.{Expression, FunctionCall, Instruction}
 import com.qwery.language.{QweryUniverse, dieFileNotDirectory}
@@ -13,6 +15,7 @@ import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.qwery.runtime.devices._
+import com.qwery.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.qwery.util.DateHelper
 import com.qwery.util.JVMSupport.NormalizeAny
 import com.qwery.util.OptionHelper.OptionEnrichment
@@ -157,6 +160,13 @@ class OS(ctx: QweryUniverse) {
   }
 
   /**
+   * Execute a SQL statement returning the results as a [[QueryResponse response]] object.
+   * @param sql the SQL code (e.g. '''OS.execQL("select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111")''')
+   * @return the [[QueryResponse]]
+   */
+  def execQL(sql: String): QueryResponse = OS.execQL(sql)(ctx.createRootScope())
+
+  /**
    * Retrieves a collection of files matching a path expression
    * @param fileOrDirectory the [[File file or directory]]
    * @return a collection of files matching a path expression
@@ -229,6 +239,18 @@ object OS {
       TableColumn(name = "isFile", `type` = BooleanType),
       TableColumn(name = "isHidden", `type` = BooleanType)
     ))
+  }
+
+  /**
+   * Execute a SQL statement returning the results as a [[QueryResponse]] object.
+   * @param sql the SQL code
+   * @return the [[QueryResponse]]
+   */
+  def execQL(sql: String)(implicit scope: Scope): QueryResponse = {
+    val compiledCode = scope.getCompiler.compile(sql)
+    val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS }
+    val (_, _, result1) = QweryVM.execute(scope, compiledCode)
+    result1.toQueryResponse(ns_?, limit = None)
   }
 
   def generateFileList(fileOrDirectory: File, f: File => LazyList[File]): RowCollection = {
