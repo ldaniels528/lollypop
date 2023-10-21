@@ -49,7 +49,7 @@ object DefineFunction extends ExpressionParser with InvokableParser {
     syntax = template1,
     description = "Defines a named user-defined function",
     example =
-      """|def msec(op: Any) := {
+      """|def msec(op) := {
          |    import ["java.lang.System"]
          |    val startTime = System.nanoTime()
          |    val result = op()
