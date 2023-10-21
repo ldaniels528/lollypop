@@ -41,45 +41,45 @@ trait RuntimeExpression extends Expression with RuntimeInstruction {
       // array(5) | ['A' to 'Z'](8, 19)
       case array: Array[_] =>
         values match {
-          case List(n: Number) => array(n.intValue())
-          case List(a: Number, b: Number) => array.slice(a.intValue(), b.intValue())
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 2)
+          case List(a) => array(Int32Type.convert(a))
+          case List(a, b) => array.slice(Int32Type.convert(a), Int32Type.convert(b))
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // device(9875) | device(9500, 9875)
       case rc: RowCollection =>
         values match {
-          case List(n: Number) => rc.apply(n.longValue())
-          case List(a: Number, b: Number) => rc.slice(a.longValue(), b.longValue())
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 2)
+          case List(a) => rc.apply(Int64Type.convert(a))
+          case List(a, b) => rc.slice(Int64Type.convert(a), Int64Type.convert(b))
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // anonymousFx('a', 'b', 'c')
       case fx: LambdaFunction => QweryVM.execute(scope, fx.call(args))._3
       // ({ symbol: 'T', exchange: 'NYSE', lastSale: 22.77 })(0)
       case row: Row =>
         values match {
-          case List(n: Number) => row.fields(n.intValue()).value.orNull
-          case List(a: Number, b: Number) => row.fields.slice(a.intValue(), b.intValue()).map(_.value.orNull).toArray
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 2)
+          case List(a) => row.fields(Int32Type.convert(a)).value.orNull
+          case List(a, b) => row.fields.slice(Int32Type.convert(a), Int32Type.convert(b)).map(_.value.orNull).toArray
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // mapping(8)
       case mapping: QMap[_, _] =>
         values match {
-          case List(n: Number) => mapping.toSeq(n.intValue())
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 1)
+          case List(a) => mapping.toSeq(Int32Type.convert(a))
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // list(80) | list(1, 5)
       case seq: Seq[_] =>
         values match {
-          case List(n: Number) => seq(n.intValue())
-          case List(a: Number, b: Number) => seq.slice(a.intValue(), b.intValue())
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 2)
+          case List(a) => seq(Int32Type.convert(a))
+          case List(a, b) => seq.slice(Int32Type.convert(a), Int32Type.convert(b))
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // 'Hello World'(4) | 'Hello World'(2, 6)
-      case s: String =>
+      case string: String =>
         values match {
-          case List(n: Number) => s.charAt(n.intValue())
-          case List(a: Number, b: Number) => s.slice(a.intValue(), b.intValue())
-          case _ => tuple.dieArgumentMismatch(args = values.size, minArgs = 1, maxArgs = 2)
+          case List(a) => string.charAt(Int32Type.convert(a))
+          case List(a, b) => string.slice(Int32Type.convert(a), Int32Type.convert(b))
+          case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // instance.apply(1, 78, 'H')
       case inst => inst.invokeMethod(name = "apply", params = args)
