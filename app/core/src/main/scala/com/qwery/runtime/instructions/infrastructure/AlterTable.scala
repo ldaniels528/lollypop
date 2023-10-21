@@ -8,16 +8,18 @@ import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._
 import com.qwery.runtime.devices.TableColumn
 import com.qwery.runtime.devices.TableColumn.implicits.{SQLToColumnConversion, TableColumnSeq}
+import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.qwery.runtime.instructions.infrastructure.AlterTable.Alteration
 import com.qwery.runtime.instructions.queryables.TableVariableRef
 import com.qwery.runtime.{DatabaseObjectRef, ROWID_NAME, ResourceManager, Scope}
+import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
 
 import java.io.{File, FileInputStream, FileOutputStream}
 import scala.language.postfixOps
 
 /**
- * Represents an alter table
+ * Represents an alter table statement
  * @example {{{
  * alter table stocks add column comments: String = ""
  * }}}
@@ -48,6 +50,7 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
       case (columns, PrependColumn(column)) => column.toTableColumn :: columns
       case (columns, RenameColumn(oldName, newName)) =>
         columns.getIndexByName(oldName) ~> (n => columns.slice(0, n) ::: columns(n).copy(name = newName) :: columns.slice(n + 1, columns.length))
+      case (columns, _: SetLabel) => columns
       case (_, alteration) => dieUnsupportedEntity(alteration, entityName = "alteration")
     }
 
@@ -76,7 +79,10 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
         assert(overwrite(tempFile, srcFile), this.die("File overwrite failure"))
 
         // update the table's configuration
-        host.ns.writeConfig(newDevice.ns.getConfig)
+        val cfg = newDevice.ns.getConfig
+        host.ns.writeConfig(alterations.collectFirst {
+          case SetLabel(description) => cfg.copy(description = description.asString)
+        } || cfg)
 
         // delete the temporary file
         ResourceManager.close(newDevice.ns)
@@ -109,7 +115,8 @@ object AlterTable extends ModifiableParser {
        |?append +?column +?%P:append_col
        |?drop +?column +?%a:drop_col
        |?prepend +?column +?%P:prepend_col
-       |?rename +?column +?%a:old_name +?as +?%a:new_name
+       |?rename +?column +?%a:old_name +?to +?%a:new_name
+       |?label +?%a:description
        |}}
        |""".stripMargin
 
@@ -126,6 +133,7 @@ object AlterTable extends ModifiableParser {
     val alterations: List[Alteration] =
       params.parameters.get("add_col").map(columns => AddColumn(columns.onlyOne(ts).toColumn)).toList :::
         params.parameters.get("append_col").map(columns => AppendColumn(columns.onlyOne(ts).toColumn)).toList :::
+        params.atoms.get("description").map(SetLabel).toList :::
         params.atoms.get("drop_col").map { case Atom(name) => DropColumn(name) }.toList :::
         params.parameters.get("prepend_col").map(columns => PrependColumn(columns.onlyOne(ts).toColumn)).toList ::: (
         for {
@@ -143,20 +151,25 @@ object AlterTable extends ModifiableParser {
     syntax = templateCard,
     description = "Modifies the structure of a table",
     example =
-      """|declare table stocks(symbol: String(5), exchange: String(6), lastSale: Double) containing (
-         |  |------------------------------|
-         |  | symbol | exchange | lastSale |
-         |  |------------------------------|
-         |  | XYZ    | AMEX     |    31.95 |
-         |  | AAXX   | NYSE     |    56.12 |
-         |  | QED    | NASDAQ   |          |
-         |  | JUNK   | AMEX     |    97.61 |
-         |  |------------------------------|
+      """|namespace "temp.examples"
+         |drop if exists StockQuotes
+         |create table StockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (
+         ||----------------------------------------------------------|
+         || exchange  | symbol | lastSale | lastSaleTime             |
+         ||----------------------------------------------------------|
+         || OTCBB     | YSZUY  |   0.2355 | 2023-10-19T23:25:32.886Z |
+         || NASDAQ    | DMZH   | 183.1636 | 2023-10-19T23:26:03.509Z |
+         || OTCBB     | VV     |          |                          |
+         || NYSE      | TGPNF  |  51.6171 | 2023-10-19T23:25:32.166Z |
+         || OTHER_OTC | RIZA   |   0.2766 | 2023-10-19T23:25:42.020Z |
+         || NASDAQ    | JXMLB  |  91.6028 | 2023-10-19T23:26:08.951Z |
+         ||----------------------------------------------------------|
          |)
-         |alter table @@stocks
-         |  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
-         |  rename column symbol as ticker
-         |stocks
+         |alter table StockQuotes
+         |  prepend column saleDate: DateTime = DateTime()
+         |  rename column symbol to ticker
+         |  label 'Stock quotes staging table'
+         |ns('StockQuotes')
          |""".stripMargin
   ))
 
@@ -205,7 +218,15 @@ object AlterTable extends ModifiableParser {
    * @param newName the new/replacement column name
    */
   case class RenameColumn(oldName: String, newName: String) extends Alteration {
-    override def toSQL: String = s"rename column $oldName as $newName"
+    override def toSQL: String = s"rename column $oldName to $newName"
+  }
+
+  /**
+   * Represents an alteration to set the table description
+   * @param description the [[Atom description]] to set
+   */
+  case class SetLabel(description: Atom) extends Alteration {
+    override def toSQL: String = s"label ${description.toSQL}"
   }
 
   /**
