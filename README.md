@@ -1,4 +1,4 @@
-Qwery v0.1.1
+Qwery v0.1.2
 ============
 
 ## Table of Contents
@@ -21,7 +21,7 @@ Qwery v0.1.1
   * <a href="#Asynchronous_I_O">Asynchronous I/O</a> (1)
   * <a href="#Branching_Ops">Branching Ops</a> (11)
   * <a href="#Control_Flow">Control Flow</a> (25)
-  * <a href="#DataFrame">DataFrame</a> (70)
+  * <a href="#DataFrame">DataFrame</a> (67)
   * <a href="#Distributed_Processing">Distributed Processing</a> (7)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (9)
   * <a href="#Miscellaneous">Miscellaneous</a> (3)
@@ -29,7 +29,7 @@ Qwery v0.1.1
   * <a href="#Science_and_Mathematics">Science and Mathematics</a> (2)
   * <a href="#Scope_and_Session">Scope and Session</a> (19)
   * <a href="#Synchronous_I_O">Synchronous I/O</a> (4)
-  * <a href="#System_Tools">System Tools</a> (10)
+  * <a href="#System_Tools">System Tools</a> (9)
   * <a href="#Testing">Testing</a> (8)
 <a name="Introduction"></a>
 ## Introduction
@@ -52,17 +52,17 @@ Alpha/Preview &#8212; actively addressing bugs and (re-)implementing missing or 
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.1.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.2.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.1.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.2.jar`
 
 ### Run Query CLI
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.1.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.2.jar
 ```
 
 <a name="Featured_Examples"></a>
@@ -258,7 +258,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-20T03:01:02.668Z"
+"2023-10-21T04:06:42.866Z"
 ```
 <a name="Examples"></a>
 ## Examples By Category
@@ -421,7 +421,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@61d01788
+java.io.PrintStream@5eeedb60
 ```
 ##### Console Output
 ```
@@ -515,11 +515,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| OTCBB     | JICT   |   4.1263 | 2023-10-20T03:00:17.796Z |
-| NASDAQ    | CZ     |  50.2275 | 2023-10-20T03:00:37.326Z |
-| OTHER_OTC | BHSB   |   0.8291 | 2023-10-20T03:00:53.566Z |
-| OTCBB     | INSZF  |   1.2648 | 2023-10-20T03:00:22.106Z |
-| NYSE      | KWF    |  68.7554 | 2023-10-20T03:00:24.158Z |
+| AMEX      | MOWV   |  11.3455 | 2023-10-21T04:06:18.646Z |
+| NYSE      | TT     |   1.9531 | 2023-10-21T04:05:44.894Z |
+| NASDAQ    | UOTH   |  51.1686 | 2023-10-21T04:05:43.765Z |
+| OTHER_OTC | AAWXJ  |   0.1983 | 2023-10-21T04:06:42.273Z |
+| OTHER_OTC | EOVV   |   0.8732 | 2023-10-21T04:06:34.388Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -588,7 +588,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.421417, 720.0]
+[0.434, 720.0]
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -628,7 +628,7 @@ y
 120
 ```
 ### each¹ (Control Flow &#8212; Declarative)
-*Description*: Iterates a dataframe executing applying a function to each entry
+*Description*: Iterates over a dataframe applying a function to each entry
 
 ```sql
 stocks =
@@ -703,7 +703,7 @@ n
 ```
 ##### Results
 ```sql
-51
+50
 ```
 ### if (Control Flow &#8212; Procedural)
 *Description*: If the `expression` is true, then `outcomeA` otherwise `outcomeB`
@@ -807,7 +807,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@61d01788
+java.io.PrintStream@5eeedb60
 ```
 ##### Console Output
 ```
@@ -822,7 +822,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@215a34b4
+java.io.PrintStream@5e9456ae
 ```
 ##### Console Error
 ```
@@ -842,9 +842,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| out    | PrintStream         | java.io.PrintStream@61d01788                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@6e1f8469                                       |
-| err    | PrintStream         | java.io.PrintStream@215a34b4                                          |
+| out    | PrintStream         | java.io.PrintStream@5eeedb60                                          |
+| stdin  | BufferedReader      | java.io.BufferedReader@1dcca8d3                                       |
+| err    | PrintStream         | java.io.PrintStream@5e9456ae                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -966,31 +966,38 @@ c
 *Description*: Modifies the structure of a table
 
 ```sql
-declare table stocks(symbol: String(5), exchange: String(6), lastSale: Double) containing (
-  |------------------------------|
-  | symbol | exchange | lastSale |
-  |------------------------------|
-  | XYZ    | AMEX     |    31.95 |
-  | AAXX   | NYSE     |    56.12 |
-  | QED    | NASDAQ   |          |
-  | JUNK   | AMEX     |    97.61 |
-  |------------------------------|
+namespace "temp.examples"
+drop if exists StockQuotes
+create table StockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | YSZUY  |   0.2355 | 2023-10-19T23:25:32.886Z |
+| NASDAQ    | DMZH   | 183.1636 | 2023-10-19T23:26:03.509Z |
+| OTCBB     | VV     |          |                          |
+| NYSE      | TGPNF  |  51.6171 | 2023-10-19T23:25:32.166Z |
+| OTHER_OTC | RIZA   |   0.2766 | 2023-10-19T23:25:42.020Z |
+| NASDAQ    | JXMLB  |  91.6028 | 2023-10-19T23:26:08.951Z |
+|----------------------------------------------------------|
 )
-alter table @@stocks
-  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
-  rename column symbol as ticker
-stocks
+alter table StockQuotes
+  prepend column saleDate: DateTime = DateTime()
+  rename column symbol to ticker
+  label 'Stock quotes staging table'
+ns('StockQuotes')
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------|
-| saleDate                 | ticker | exchange | lastSale |
-|---------------------------------------------------------|
-| 2023-06-20T03:52:14.543Z | XYZ    | AMEX     |    31.95 |
-| 2023-06-20T03:52:14.543Z | AAXX   | NYSE     |    56.12 |
-| 2023-06-20T03:52:14.543Z | QED    | NASDAQ   |          |
-| 2023-06-20T03:52:14.543Z | JUNK   | AMEX     |    97.61 |
-|---------------------------------------------------------|
+|----------------------------------------------------------|
+| saleDate                 | ticker | exchange  | lastSale |
+|----------------------------------------------------------|
+| 2023-10-21T04:06:44.724Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-21T04:06:44.724Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-21T04:06:44.724Z | VV     | OTCBB     |          |
+| 2023-10-21T04:06:44.724Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-21T04:06:44.725Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-21T04:06:44.725Z | JXMLB  | NASDAQ    |  91.6028 |
+|----------------------------------------------------------|
 ```
 ### avg¹ (DataFrame &#8212; Functional)
 *Description*: Computes the average of a numeric expression.
@@ -1082,20 +1089,6 @@ from (
 |-------------------------------------------------------------------------|
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
-```
-### comment (DataFrame &#8212; Declarative)
-*Description*: Sets remarks (comments) on a database object
-
-```sql
-comment on if exists stocks := 'just a staging table'
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       0 |        0 |       0 |       0 |        0 |       1 | []     |
-|------------------------------------------------------------------------------------------------------|
 ```
 ### count¹ (DataFrame &#8212; Functional)
 *Description*: Returns the number of rows matching the query criteria.
@@ -1267,7 +1260,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (DataFrame &#8212; Declarative)
@@ -1537,11 +1530,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 6    | ♠    |
-| 2    | ♦    |
-| K    | ♠    |
-| 5    | ♦    |
-| 10   | ♥    |
+| 9    | ♥    |
+| J    | ♥    |
+| 7    | ♥    |
+| 3    | ♣    |
+| Q    | ♠    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2074,16 +2067,6 @@ stocksP.next(5)
 | NASDAQ   | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
 |---------------------------------------------------------|
 ```
-### rlike (DataFrame &#8212; Procedural)
-*Description*: determines whether the `value` matches the regular `expression`
-
-```sql
-"Lawrence" rlike "Lawr(.*)"
-```
-##### Results
-```sql
-true
-```
 ### select (DataFrame &#8212; Declarative)
 *Description*: Returns row(s) of data based on the expression and options
 
@@ -2095,7 +2078,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-20T03:01:05.715Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-21T04:06:46.194Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2415,16 +2398,6 @@ select exchange: unique(exchange) from @@stocks
 | ["AMEX", "NYSE"] |
 |------------------|
 ```
-### unlike (DataFrame &#8212; Procedural)
-*Description*: determines whether the `value` does not match the `expression`
-
-```sql
-"Chris" unlike "h%s"
-```
-##### Results
-```sql
-true
-```
 ### unnest (DataFrame &#8212; Functional)
 *Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
 
@@ -2471,11 +2444,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-20T03:01:05.873Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-20T03:01:05.873Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-21T04:06:46.355Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-21T04:06:46.356Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-20T03:01:05.873Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-21T04:06:46.356Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2651,7 +2624,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 |--------------------------------------------------------------------------------------------|
 | body                         | message | statusCode | responseID                           |
 |--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@61d01788 | OK      |        200 | 541bcfe1-6bef-41aa-9cee-fa92e289b9ed |
+| java.io.PrintStream@5eeedb60 | OK      |        200 | 2a682629-149b-4800-8c1d-ff6b56952e5a |
 |--------------------------------------------------------------------------------------------|
 ```
 ##### Console Output
@@ -2717,7 +2690,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[13888, 9769, 10475]
+[14179, 11003, 9175]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2727,7 +2700,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-15285
+14589
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2846,7 +2819,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@6644bdf5
+scala.Function1$@e8c84eb
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2895,10 +2868,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-20T03:01:08.097Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-20T03:01:08.097Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-20T03:01:08.097Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-20T03:01:08.097Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-21T04:06:48.584Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-21T04:06:48.584Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-21T04:06:48.584Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-21T04:06:48.584Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3152,7 +3125,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-20T03:01:08.239Z"
+"2023-10-21T04:06:48.745Z"
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3220,9 +3193,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| out    | PrintStream    | java.io.PrintStream@61d01788    |
-| stdin  | BufferedReader | java.io.BufferedReader@6e1f8469 |
-| err    | PrintStream    | java.io.PrintStream@215a34b4    |
+| out    | PrintStream    | java.io.PrintStream@5eeedb60    |
+| stdin  | BufferedReader | java.io.BufferedReader@1dcca8d3 |
+| err    | PrintStream    | java.io.PrintStream@5e9456ae    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3254,7 +3227,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@61d01788
+java.io.PrintStream@5eeedb60
 ```
 ##### Console Output
 ```
@@ -3327,7 +3300,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-20T03:01:08.299Z"
+"2023-10-21T04:06:48.807Z"
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3433,21 +3406,6 @@ require ['org.apache.spark:spark-core_2.13:3.3.0']
 ```sql
 trace set x = 1
 ```
-### whoami (System Tools &#8212; Procedural)
-*Description*: Returns the name of the current user
-
-```sql
-whoami
-```
-##### Results
-```sql
-"ldaniels"
-```
-##### Console Error
-```
-[0.000792ms] AnyLiteral 1 ~> 1 <Integer>
-[0.317750ms] SetAnyVariable set x = 1 ~> null <null>
-```
 <a name="Testing"></a>
 ## Testing Examples
 <hr>
@@ -3463,6 +3421,11 @@ assert(total < 100, 'total must be less than 100')
 ```sql
 true
 ```
+##### Console Error
+```
+[0.001084ms] AnyLiteral 1 ~> 1 <Integer>
+[0.302834ms] SetAnyVariable set x = 1 ~> null <null>
+```
 ### assert² (Testing &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
 
@@ -3475,7 +3438,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@215a34b4
+java.io.PrintStream@5e9456ae
 ```
 ##### Console Error
 ```
@@ -3605,7 +3568,7 @@ http get('https://example.com/')
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | body                                                                                                      | message | statusCode | responseID                           |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | ba1dfa07-7415-49f6-a678-73773661c4c7 |
+| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | 94a7b586-30fe-4223-8e14-3b4886d7db0e |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### http² (Testing &#8212; Declarative)
@@ -3619,7 +3582,7 @@ http path('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | aa215797-418e-4e85-b4d9-693f78f1c9ad |
+|      |         |        200 | 26d12f06-c7e4-41cb-a50f-3b06b9674ded |
 |--------------------------------------------------------------------|
 ```
 ### http³ (Testing &#8212; Declarative)
@@ -3633,7 +3596,7 @@ http uri('users')
 |--------------------------------------------------------------------|
 | body | message | statusCode | responseID                           |
 |--------------------------------------------------------------------|
-|      |         |        200 | b715a5b0-e1a0-4fc3-bfec-38519ed23f27 |
+|      |         |        200 | d35c61a7-8c67-49cb-a13b-2a4c557e2ec5 |
 |--------------------------------------------------------------------|
 ```
 ### scenario (Testing &#8212; Declarative)
