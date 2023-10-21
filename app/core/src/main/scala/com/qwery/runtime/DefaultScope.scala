@@ -53,6 +53,8 @@ case class DefaultScope(superScope: Option[Scope] = None,
     "__loaded__" -> { () => getUniverse.system.getReferencedEntities },
     __namespace__ -> { () => (apply(__database__) || DEFAULT_DATABASE) + "." + (apply(__schema__) || DEFAULT_SCHEMA) },
     "__resources__" -> { () => ResourceManager.getResources },
+    "__userHome__" -> { () => scala.util.Properties.userHome },
+    "__userName__" -> { () => scala.util.Properties.userName },
     "__version__" -> { () => version }
   )
 

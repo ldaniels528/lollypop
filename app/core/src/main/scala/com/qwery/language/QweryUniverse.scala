@@ -227,7 +227,7 @@ object QweryUniverse {
     TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
-    WhileDo, WhenEver, Where, WhereIn, Whoami, With,
+    WhileDo, WhenEver, Where, WhereIn, With,
     ZipWith
   )
 
