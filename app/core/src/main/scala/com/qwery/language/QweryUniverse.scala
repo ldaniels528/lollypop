@@ -205,9 +205,8 @@ object QweryUniverse {
   private val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
     Bar, BarBar, Between, Betwixt, BooleanType,
-    Case, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, CommentOn, Contains, Count, CountUnique,
-    CreateExternalTable, CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType,
-    CreateUniqueIndex, CreateView,
+    Case, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
+    CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
     DeclareClass, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy, Div, DoWhile, Drop,
     Each, ElementAt, EOL, EQ, Every, Exists, Explode, Expose,
     Feature, From,
