@@ -153,7 +153,9 @@ object StringRenderHelper {
 
     private def escapeString(text: String, ql: Boolean): String = {
       if (ql) {
-        if (text.contains('"')) s"'$text'" else s"\"$text\""
+        if (text.contains("\"\"\"")) s"'''$text'''"
+        else if (text.contains('"')) s"'$text'"
+        else s"\"$text\""
       } else text
     }
 
