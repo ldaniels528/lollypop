@@ -29,7 +29,7 @@ class ProcedureCallTest extends AnyFunSpec with VerificationTools {
             |
             |drop if exists temp.jdbc.getStockQuote
             |create procedure temp.jdbc.getStockQuote(theExchange String) := {
-            |    out.println('Selected Exchange: "{{ @theExchange }}"')
+            |    out <=== 'Selected Exchange: "{{ @theExchange }}"'
             |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
             |    from @@results
             |    where exchange is @theExchange
@@ -51,7 +51,7 @@ class ProcedureCallTest extends AnyFunSpec with VerificationTools {
             |
             |drop if exists temp.jdbc.getStockQuote
             |create procedure temp.jdbc.getStockQuote(theExchange String) := {
-            |    out.println('Selected Exchange: "{{ @theExchange }}"')
+            |    out <=== 'Selected Exchange: "{{ @theExchange }}"'
             |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
             |    from @@results
             |    where exchange is @theExchange

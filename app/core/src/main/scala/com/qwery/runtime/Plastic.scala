@@ -44,7 +44,7 @@ object Plastic {
         case "clone" if isEmpty(args) => newTypedInstance(className, fieldNames, fieldValues)
         case "equals" => args.headOption.exists(_.hashCode() == proxy.hashCode())
         case "hashCode" if isEmpty(args) => fields.hashCode()
-        case "toString" if isEmpty(args) => s"$className${fieldValues.map(_.renderToString).mkString("(", ", ", ")")}"
+        case "toString" if isEmpty(args) => s"$className${fieldValues.map(_.renderAsJson).mkString("(", ", ", ")")}"
         // myObject.$name(args)
         case name =>
           val (s, _, r) = QweryVM.execute(scope, name.fx(args.map(_.v): _*))

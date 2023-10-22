@@ -49,7 +49,7 @@ class DeclareClassTest extends AnyFunSpec {
         """|class YStock(symbol: String, exchange: String, lastSale: Double, lastSaleTime: DateTime)
            |new YStock("AAPL", "NASDAQ", 31.23, DateTime("2021-08-05T14:18:30.000Z"))
            |""".stripMargin)
-      assert(stock.toString == """YStock(AAPL, NASDAQ, 31.23, Thu Aug 05 07:18:30 PDT 2021)""")
+      assert(stock.toString == """YStock("AAPL", "NASDAQ", 31.23, "2021-08-05T14:18:30.000Z")""")
     }
 
     it("should create plastic instances") {

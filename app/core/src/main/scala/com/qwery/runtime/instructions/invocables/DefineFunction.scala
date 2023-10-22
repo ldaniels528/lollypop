@@ -54,7 +54,7 @@ object DefineFunction extends ExpressionParser with InvokableParser {
          |    val startTime = System.nanoTime()
          |    val result = op()
          |    val elapsedTime = (System.nanoTime() - startTime) / 1000000.0
-         |    [elapsedTime, result]
+         |    (elapsedTime, result)
          |}
          |
          |def ¡(n: Double) := iff(n <= 1.0, 1.0, n * ¡(n - 1.0))

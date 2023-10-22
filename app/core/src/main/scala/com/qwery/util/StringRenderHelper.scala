@@ -68,11 +68,6 @@ object StringRenderHelper {
 
     @inline def render: String = _render(quotedLiterals = false)
 
-    def renderToString: String = item match {
-      case l: Instruction => l.toSQL
-      case x => x.toString
-    }
-
     @tailrec
     def renderAsJson: String = item match {
       case _: Seq[_] => _render(quotedLiterals = true)
@@ -106,7 +101,7 @@ object StringRenderHelper {
         case r: Row => StringRenderHelper.toRowString(r)
         case r: RowCollection => r.toList.map(_.toMap.map { case (k, v) => k -> StringType.convert(v) }).toJson.compactPrint
         case s: Seq[_] => s.renderFriendly
-        case p: Product => StringRenderHelper.toProductString(p)
+        case p: Product => toProductString(p)
         case x => x.renderFriendly
       }
     }
@@ -137,9 +132,7 @@ object StringRenderHelper {
           case s: Seq[_] => s.map(recurse(_, ql = true)).mkString("[", ", ", "]")
           case s: Set[_] => s.map(recurse(_, ql = true)).mkString("(", ", ", ")")
           case s: java.sql.SQLXML => recurse(s.getBinaryStream.readAllBytes(), ql)
-          case s: String if s.contains("\"") & s.contains("'") => if (ql) s"'''$s'''" else s
-          case s: String if s.contains("\"") => if (ql) s"'$s'" else s
-          case s: String => if (ql) s"\"$s\"" else s
+          case s: String => escapeString(s, ql)
           case u: UUID => recurse(u.toString, ql)
           case z =>
             // it is a tuple?
@@ -156,6 +149,12 @@ object StringRenderHelper {
       }
 
       f(recurse(item, quotedLiterals))
+    }
+
+    private def escapeString(text: String, ql: Boolean): String = {
+      if (ql) {
+        if (text.contains('"')) s"'$text'" else s"\"$text\""
+      } else text
     }
 
   }

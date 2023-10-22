@@ -10,7 +10,7 @@ Qwery v0.1.3
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
   * <a href="#Monadic_Arrays_supports_map_filter_fold_etc_">Monadic Arrays (supports map, filter, fold, etc.)</a>
   * <a href="#Charts_and_Graphs">Charts and Graphs</a>
-  * <a href="#Instantiate_JVM_classes">Instantiate JVM classes</a>
+  * <a href="#Define_and_Instantiate_JVM_classes">Define and Instantiate JVM classes</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
   * <a href="#Dictionary_Literals">Dictionary Literals</a>
   * <a href="#Function_Literals_Lambdas_">Function Literals (Lambdas)</a>
@@ -46,7 +46,7 @@ Features include:
 <a name="Project_Status"></a>
 ## Project Status
 
-Unstable/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
+Unstable/Preview &#8212; it works... but the language parser is a little temperamental.
 
 <a name="Getting_Started"></a>
 ## Getting Started
@@ -120,27 +120,17 @@ graph chart from samples
 <img src="./docs/images/Scatter_Demo.png">
 </div>
 
-<a name="Instantiate_JVM_classes"></a>
-### Instantiate JVM classes
+<a name="Define_and_Instantiate_JVM_classes"></a>
+### Define and Instantiate JVM classes
 
 ```sql
-// package com.github.ldaniels528.qwery
-// case class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Long)
-
-new `com.github.ldaniels528.qwery.StockQuote`(
-    "ABC",
-    "OTCBB",
-    0.0231,
-    DateTime().getTime()
-)
+class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+stock.toString()
 ```
 ##### Results
 ```sql
-|----------------------------------------------|
-| symbol | exchange | lastSale | lastSaleTime  |
-|----------------------------------------------|
-| ABC    | OTCBB    |   0.0231 | 1697932786217 |
-|----------------------------------------------|
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-22T18:06:52.921Z")
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
@@ -254,10 +244,10 @@ item = { name : "Larry" }
 ```
 ##### Results
 ```sql
-"Hello Larry,
+Hello Larry,
 how are you?
 Fine, I hope!
-"
+
 ```
 <a name="Define_non_persistent_Implicit_Classes"></a>
 ### Define (non-persistent) Implicit Classes
@@ -282,7 +272,7 @@ implicit class `java.lang.String` {
 ```
 ##### Results
 ```sql
-"dlroW olleH"
+dlroW olleH
 ```
 <a name="Import_Scala_compiled_Implicit_Classes"></a>
 ### Import (Scala-compiled) Implicit Classes
@@ -293,7 +283,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-21T23:59:46.355Z"
+"2023-10-22T18:06:53.056Z"
 ```
 <a name="Examples"></a>
 
@@ -455,7 +445,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4392362c
+java.io.PrintStream@1e8bccfb
 ```
 ##### Console Output
 ```
@@ -546,15 +536,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTHER_OTC | QKDE   |   0.0191 | 2023-10-21T23:59:01.525Z |
-| NASDAQ    | SO     |  93.1427 | 2023-10-21T23:59:37.948Z |
-| NASDAQ    | XQKXP  |  32.8156 | 2023-10-21T23:59:42.035Z |
-| NYSE      | XVFJI  |  48.0235 | 2023-10-21T23:59:17.472Z |
-| NYSE      | VTZY   |  91.0093 | 2023-10-21T23:59:21.169Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NYSE     | YKQ    |    86.78 | 2023-10-22T18:06:32.611Z |
+| NASDAQ   | DNNWA  |  60.8258 | 2023-10-22T18:06:29.048Z |
+| OTCBB    | CLCJF  |   3.4664 | 2023-10-22T18:06:20.346Z |
+| OTCBB    | VBRD   |   3.9833 | 2023-10-22T18:06:43.985Z |
+| NYSE     | RE     |  55.5368 | 2023-10-22T18:06:36.279Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -613,7 +603,7 @@ def msec(op) := {
     val startTime = System.nanoTime()
     val result = op()
     val elapsedTime = (System.nanoTime() - startTime) / 1000000.0
-    [elapsedTime, result]
+    (elapsedTime, result)
 }
 
 def ¡(n: Double) := iff(n <= 1.0, 1.0, n * ¡(n - 1.0))
@@ -622,7 +612,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-[0.281291, 720.0]
+Tuple2(_1=0.322917, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -646,7 +636,7 @@ roman(1023)
 ```
 ##### Results
 ```sql
-"MXXIII"
+MXXIII
 ```
 ### do (Control Flow &#8212; Procedural)
 *Description*: Creates a loop that executes enclosed statement(s) until the test condition evaluates to false
@@ -748,7 +738,7 @@ if(value > 99) "Yes!" else "No."
 ```
 ##### Results
 ```sql
-"Yes!"
+Yes!
 ```
 ### iff (Control Flow &#8212; Functional)
 *Description*: If the `condition` is true, then `trueValue` otherwise `falseValue`
@@ -759,7 +749,7 @@ iff(value > 99, 'Yes!', 'No.')
 ```
 ##### Results
 ```sql
-"Yes!"
+Yes!
 ```
 ### macro (Control Flow &#8212; Declarative)
 *Description*: Creates a user-defined instruction
@@ -773,7 +763,7 @@ out <=== drawCircle(100)@(80, 650)
 ```
 ##### Results
 ```sql
-"Circle(100) <- (160, 325)"
+Circle(100) <- (160, 325)
 ```
 ### once (Control Flow &#8212; Reactive)
 *Description*: Invokes an instruction or set of instructions one-time only
@@ -805,7 +795,7 @@ return 'Hello World'
 ```
 ##### Results
 ```sql
-"Hello World"
+Hello World
 ```
 ### throw (Control Flow &#8212; Procedural)
 *Description*: Throws a JVM exception
@@ -817,7 +807,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4392362c
+java.io.PrintStream@1e8bccfb
 ```
 ##### Console Output
 ```
@@ -832,7 +822,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@55b62db8
+java.io.PrintStream@49d543a9
 ```
 ##### Console Error
 ```
@@ -852,9 +842,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| out    | PrintStream         | java.io.PrintStream@4392362c                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@762da62b                                       |
-| err    | PrintStream         | java.io.PrintStream@55b62db8                                          |
+| out    | PrintStream         | java.io.PrintStream@1e8bccfb                                          |
+| stdin  | BufferedReader      | java.io.BufferedReader@772f3a3f                                       |
+| err    | PrintStream         | java.io.PrintStream@49d543a9                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -876,7 +866,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4392362c
+java.io.PrintStream@1e8bccfb
 ```
 ##### Console Output
 ```
@@ -896,7 +886,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4392362c
+java.io.PrintStream@1e8bccfb
 ```
 ##### Console Output
 ```
@@ -962,11 +952,7 @@ c
 ```
 ##### Results
 ```sql
-|-------|
-| value |
-|-------|
-|   150 |
-|-------|
+Success(value=150)
 ```
 ### =>>² (DataFrame &#8212; Declarative)
 *Description*: Monadic comprehension
@@ -981,11 +967,7 @@ c
 ```
 ##### Results
 ```sql
-|--------------------|
-| value              |
-|--------------------|
-| Success(value=100) |
-|--------------------|
+Success(value={"value": 100})
 ```
 ### alter (DataFrame &#8212; Declarative)
 *Description*: Modifies the structure of a table
@@ -1016,12 +998,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-21T23:59:48.054Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-21T23:59:48.054Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-21T23:59:48.054Z | VV     | OTCBB     |          |
-| 2023-10-21T23:59:48.055Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-21T23:59:48.055Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-21T23:59:48.055Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-22T18:06:54.742Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-22T18:06:54.742Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-22T18:06:54.742Z | VV     | OTCBB     |          |
+| 2023-10-22T18:06:54.742Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-22T18:06:54.743Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-22T18:06:54.743Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### avg¹ (DataFrame &#8212; Functional)
@@ -1555,11 +1537,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 10   | ♥    |
-| K    | ♣    |
+| 8    | ♥    |
+| 4    | ♥    |
 | 2    | ♠    |
-| 9    | ♥    |
-| A    | ♠    |
+| 7    | ♥    |
+| 3    | ♥    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -2103,7 +2085,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-21T23:59:49.334Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-22T18:06:56.015Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2469,11 +2451,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-21T23:59:49.513Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-21T23:59:49.513Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-22T18:06:56.197Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-22T18:06:56.198Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-21T23:59:49.513Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-22T18:06:56.198Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2646,11 +2628,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-|--------------------------------------------------------------------------------------------|
-| body                         | message | statusCode | responseID                           |
-|--------------------------------------------------------------------------------------------|
-| java.io.PrintStream@4392362c | OK      |        200 | 56832347-7ba6-4c88-91d2-2035548df3cd |
-|--------------------------------------------------------------------------------------------|
+HttpResponse(body="java.io.PrintStream@1e8bccfb", message="OK", statusCode=200, responseID="226b22a4-e3a7-465e-9e52-3b94384665be")
 ```
 ##### Console Output
 ```
@@ -2715,7 +2693,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[12378, 12854, 15594, 15576, 14353, 10510, 14506, 14285, 8343, 13741, 11083, 10057, 10470, 14920, 9229, 10946, 11374, 9484, 12819, 9347, 8160]
+[15321, 14708, 8189, 9819, 14233, 8955, 13312, 10549, 15319, 14045, 8854, 10589, 9348, 11911, 9665, 10180, 15850, 10608, 9669, 12801, 11949]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2725,7 +2703,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9006
+13206
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2806,7 +2784,7 @@ codecOf(counter)
 ```
 ##### Results
 ```sql
-"Int"
+Int
 ```
 ### interfacesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the interfaces implemented by a class or instance
@@ -2844,7 +2822,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@578d472a
+scala.Function1$@5e7e7a7e
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2865,7 +2843,7 @@ typeOf(counter)
 ```
 ##### Results
 ```sql
-"java.lang.Integer"
+java.lang.Integer
 ```
 <a name="Miscellaneous"></a>
 ## Miscellaneous Examples
@@ -2893,10 +2871,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-21T23:59:51.115Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-21T23:59:51.115Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-21T23:59:51.115Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-21T23:59:51.115Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-22T18:06:57.686Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-22T18:06:57.686Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-22T18:06:57.686Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-22T18:06:57.686Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -2909,11 +2887,7 @@ p3d([ x: 123, y:13, z: 67 ]...)
 ```
 ##### Results
 ```sql
-|---------------|
-| _1  | _2 | _3 |
-|---------------|
-| 123 | 13 | 67 |
-|---------------|
+Tuple3(_1=123, _2=13, _3=67)
 ```
 ### ...² (Miscellaneous &#8212; Declarative)
 *Description*: The argument spread operator: can convert a dictionary into individual arguments
@@ -2925,11 +2899,7 @@ p3d({ x: 123, y:13, z: 67 }...)
 ```
 ##### Results
 ```sql
-|---------------|
-| _1  | _2 | _3 |
-|---------------|
-| 123 | 13 | 67 |
-|---------------|
+Tuple3(_1=123, _2=13, _3=67)
 ```
 <a name="Pattern_Matching"></a>
 ## Pattern Matching Examples
@@ -2949,7 +2919,7 @@ end
 ```
 ##### Results
 ```sql
-"Oil-Gas"
+Oil-Gas
 ```
 ### expose (Pattern Matching &#8212; Declarative)
 *Description*: Exposes the components of a `matches` expression
@@ -3140,7 +3110,7 @@ __namespace__
 ```
 ##### Results
 ```sql
-"stocks_demo.public"
+stocks_demo.public
 ```
 ### new¹ (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate JVM classes.
@@ -3150,7 +3120,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-"2023-10-21T23:59:51.279Z"
+2023-10-22T18:06:57.849Z
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3218,9 +3188,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| out    | PrintStream    | java.io.PrintStream@4392362c    |
-| stdin  | BufferedReader | java.io.BufferedReader@762da62b |
-| err    | PrintStream    | java.io.PrintStream@55b62db8    |
+| out    | PrintStream    | java.io.PrintStream@1e8bccfb    |
+| stdin  | BufferedReader | java.io.BufferedReader@772f3a3f |
+| err    | PrintStream    | java.io.PrintStream@49d543a9    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3252,7 +3222,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4392362c
+java.io.PrintStream@1e8bccfb
 ```
 ##### Console Output
 ```
@@ -3325,7 +3295,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-"2023-10-21T23:59:51.342Z"
+2023-10-22T18:06:57.913Z
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3396,7 +3366,7 @@ implicit class `java.lang.String` {
 ```
 ##### Results
 ```sql
-"dlroW olleH"
+dlroW olleH
 ```
 ### import (System Tools &#8212; Object-Oriented)
 *Description*: Imports a JVM class
@@ -3406,7 +3376,7 @@ import 'java.util.Date'
 ```
 ##### Results
 ```sql
-"java.util.Date"
+java.util.Date
 ```
 ### import implicit (System Tools &#8212; Object-Oriented)
 *Description*: Imports the methods of a Scala implicit class
@@ -3448,8 +3418,8 @@ true
 ```
 ##### Console Error
 ```
-[0.001291ms] AnyLiteral 1 ~> 1 <Integer>
-[0.502292ms] SetAnyVariable set x = 1 ~> null <null>
+[0.002000ms] AnyLiteral 1 ~> 1 <Integer>
+[0.287708ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3463,7 +3433,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@55b62db8
+java.io.PrintStream@49d543a9
 ```
 ##### Console Error
 ```
@@ -3590,11 +3560,53 @@ http get('https://example.com/')
 ```
 ##### Results
 ```sql
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| body                                                                                                      | message | statusCode | responseID                           |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n ...  | OK      |        200 | f7642603-4e08-42c4-aae5-7f4223aab720 |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+HttpResponse(body='<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+', message="OK", statusCode=200, responseID="3bdbb452-4cc9-4466-84ca-9196ea787895")
 ```
 ### http² (Testing &#8212; Declarative)
 *Description*: Returns a URL based on a relative path.
@@ -3604,11 +3616,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-|--------------------------------------------------------------------|
-| body | message | statusCode | responseID                           |
-|--------------------------------------------------------------------|
-|      |         |        200 | 964b2795-d8fb-4d6c-a342-e90805173481 |
-|--------------------------------------------------------------------|
+HttpResponse(body=null, message=null, statusCode=200, responseID="8d9fd8cd-6533-497a-92f6-86de78bd9ef7")
 ```
 ### http³ (Testing &#8212; Declarative)
 *Description*: Returns a URL based on a relative path.
@@ -3618,11 +3626,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-|--------------------------------------------------------------------|
-| body | message | statusCode | responseID                           |
-|--------------------------------------------------------------------|
-|      |         |        200 | 36a94f29-e167-4574-a929-dbfd657bdc0c |
-|--------------------------------------------------------------------|
+HttpResponse(body=null, message=null, statusCode=200, responseID="dd191ba7-8cd7-4800-bfab-6c99e440021a")
 ```
 ### scenario (Testing &#8212; Declarative)
 *Description*: scenario-based test declaration

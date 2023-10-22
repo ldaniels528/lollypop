@@ -257,8 +257,8 @@ class ScopeTest extends AnyFunSpec {
       val result = scope.resolve("__implicit_imports__").orNull
       assert(result == Map(
         "com.qwery.util.StringRenderHelper$StringRenderer" -> Set(
-          "_render$default$2", "renderPretty", "renderFriendly", "renderAsJson", "renderTable", "renderToString",
-          "render", "_render", "collapse", "item"
+          "_render$default$2", "renderPretty", "renderFriendly", "renderAsJson", "renderTable", "render", "_render",
+          "escapeString", "collapse", "item"
         )))
     }
 

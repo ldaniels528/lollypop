@@ -1,17 +1,17 @@
 package com.qwery.runtime
 
 import com.qwery.AppConstants
+import com.qwery.database.QueryResponse
 import com.qwery.database.server.QweryChartGenerator
 import com.qwery.language.models.Instruction
 import com.qwery.language.{HelpDoc, QweryUniverse}
 import com.qwery.runtime.RuntimeFiles.RecursiveFileList
 import com.qwery.runtime.devices.RowCollection
-import com.qwery.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.qwery.runtime.instructions.expressions.GraphResult
 import com.qwery.runtime.instructions.queryables.TableRendering
 import com.qwery.util.ResourceHelper.AutoClose
 import com.qwery.util.StringHelper.StringEnrichment
-import com.qwery.util.StringRenderHelper.StringRenderer
+import com.qwery.util.StringRenderHelper.{StringRenderer, toProductString}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{File, FileWriter, PrintWriter}
@@ -230,7 +230,7 @@ class ReadMeTest extends AnyFunSpec {
       """|<a name="Project_Status"></a>
          |## Project Status
          |
-         |Unstable/Preview &#8212; actively addressing bugs and (re-)implementing missing or broken features.
+         |Unstable/Preview &#8212; it works... but the language parser is a little temperamental.
          |""".stripMargin)
   }
 
@@ -248,13 +248,14 @@ class ReadMeTest extends AnyFunSpec {
               |""".stripMargin)
       case fu: Future[_] => resolve(Try(Await.result(fu, 10.seconds)).toOption)
       case rc: RowCollection => if (rc.nonEmpty) Some(rc.tabulate().mkString("\n")) else None
+      case qr: QueryResponse => Some(qr.tabulate().mkString("\n"))
       case sc: Scope => resolve(sc.toRowCollection)
       case tr: TableRendering => resolve(tr.toTable)
       case in: Instruction => Some(in.toSQL)
-      case pr: Product => resolve(pr.toRowCollection)
+      case pr: Product => Some(toProductString(pr))
       case s: String if s.trim.isEmpty => None
       case s: String if s.isQuoted => Some(s)
-      case xx => Some(xx.renderAsJson)
+      case xx => Some(xx.render)
     }
   }
 
@@ -376,15 +377,9 @@ class ReadMeTest extends AnyFunSpec {
        |""".stripMargin
 
   private val instantiate_jvm_classes =
-    """|// package com.github.ldaniels528.qwery
-       |// case class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Long)
-       |
-       |new `com.github.ldaniels528.qwery.StockQuote`(
-       |    "ABC",
-       |    "OTCBB",
-       |    0.0231,
-       |    DateTime().getTime()
-       |)
+    """|class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+       |stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+       |stock.toString()
        |""".stripMargin
 
   private val featuredExamples = List(
@@ -392,7 +387,7 @@ class ReadMeTest extends AnyFunSpec {
     "Array Comprehensions" -> array_comprehensions,
     "Monadic Arrays (supports map, filter, fold, etc.)" -> monadic_arrays,
     "Charts and Graphs" -> charts_and_graphs,
-    "Instantiate JVM classes" -> instantiate_jvm_classes,
+    "Define and Instantiate JVM classes" -> instantiate_jvm_classes,
     "Dataframe Literals" -> dataframe_literals,
     "Dictionary Literals" -> dictionary_literals,
     "Function Literals (Lambdas)" -> function_literals,
