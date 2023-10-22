@@ -294,7 +294,7 @@ class ReadMeTest extends AnyFunSpec {
 
   private val define_implicit_conversions =
     """|implicit class `java.lang.String` {
-       |    def reverseString(self: String) := {
+       |    def reverseString(self) := {
        |        import "java.lang.StringBuilder"
        |        val src = self.toCharArray()
        |        val dest = new StringBuilder(self.length())
@@ -329,9 +329,9 @@ class ReadMeTest extends AnyFunSpec {
        |response
        |""".stripMargin
 
-  private val fluent_collections =
+  private val monadic_arrays =
     """|abc = [n => 2 * n, n => 3 * n, n => n * n]
-       |[0 until abc.length()].map(x => abc(x)(4))
+       |abc.map(f => f(4))
        |""".stripMargin
 
   private val function_literals =
@@ -390,7 +390,7 @@ class ReadMeTest extends AnyFunSpec {
   private val featuredExamples = List(
     "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
-    "Fluent Arrays (supports map, filter, fold, etc.)" -> fluent_collections,
+    "Monadic Arrays (supports map, filter, fold, etc.)" -> monadic_arrays,
     "Charts and Graphs" -> charts_and_graphs,
     "Instantiate JVM classes" -> instantiate_jvm_classes,
     "Dataframe Literals" -> dataframe_literals,
