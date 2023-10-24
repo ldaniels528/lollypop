@@ -1,5 +1,7 @@
 package com.qwery.util
 
+import org.slf4j.LoggerFactory
+
 import scala.language.reflectiveCalls
 
 /**
@@ -7,6 +9,7 @@ import scala.language.reflectiveCalls
  * @author lawrence.daniels@gmail.com
  */
 object ResourceHelper {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   /**
    * Executes the block capturing the execution time
@@ -29,7 +32,8 @@ object ResourceHelper {
     @inline
     def use[S](block: T => S): S = try block(resource) finally {
       try resource.close() catch {
-        case _: Exception =>
+        case e: Exception =>
+          logger.error(s"Failure occurred while closing resource $resource", e)
       }
     }
 
