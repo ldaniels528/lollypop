@@ -145,6 +145,12 @@ class ReadMeTest extends AnyFunSpec {
     out.println(help.example.trim)
     out.println("```")
 
+    if (help.isExperimental) {
+      out.println(
+        s"""|<img src="docs/images/experimental.png" alt="${help.name} is marked as experimental">
+            |""".stripMargin)
+    }
+
     // detail section
     for {
       (scope1, _, result1) <- Try(QweryVM.executeSQL(scope, help.example))

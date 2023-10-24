@@ -61,7 +61,8 @@ object Monadic extends ExpressionChainParser {
          |b = Success(25)
          |c = a =>> i => i * 2
          |c
-         |""".stripMargin
+         |""".stripMargin,
+    isExperimental = true
   ), HelpDoc(
     name = __symbol,
     category = CATEGORY_DATAFRAME,
@@ -75,7 +76,8 @@ object Monadic extends ExpressionChainParser {
          |c = a =>> i =>
          |    b =>> j => i + j
          |c
-         |""".stripMargin
+         |""".stripMargin,
+    isExperimental = true
   ))
 
   override def parseExpressionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Expression] = {

@@ -4,19 +4,22 @@ import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_IMPERATIVE}
 
 /**
  * Represents an integrated help document
- * @param name        the name of the instruction
- * @param category    the category of the instruction
- * @param paradigm    the paradigm of the instruction
- * @param syntax      the syntax of the instruction
- * @param description the description of the instruction
- * @param example     an example of the instruction in-use.
+ * @param name           the name of the instruction
+ * @param category       the category of the instruction
+ * @param paradigm       the paradigm of the instruction
+ * @param syntax         the syntax of the instruction
+ * @param description    the description of the instruction
+ * @param example        an example of the instruction in-use.
+ * @param isExperimental indicates whether the referenced instruction is to be considered "experimental"
+ *                       meaning not for general use.
  */
 case class HelpDoc(name: String,
                    category: String = CATEGORY_MISC,
                    paradigm: String = PARADIGM_IMPERATIVE,
-                   syntax: String,
+                   syntax: String = "",
                    description: String,
-                   example: String)
+                   example: String,
+                   isExperimental: Boolean = false)
 
 object HelpDoc {
   // Declarative Paradigms
