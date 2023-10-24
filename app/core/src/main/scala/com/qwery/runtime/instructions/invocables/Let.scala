@@ -39,7 +39,8 @@ object Let extends InvokableParser {
       """|base64 = (value: String) => value.getBytes().base64()
          |let b64 : base64 = "Hello"
          |b64
-         |""".stripMargin
+         |""".stripMargin,
+    isExperimental = true
   ))
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Let = {
