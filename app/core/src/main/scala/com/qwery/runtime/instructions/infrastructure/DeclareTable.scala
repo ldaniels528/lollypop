@@ -28,11 +28,12 @@ import scala.collection.mutable
  */
 case class DeclareTable(ref: Atom, tableModel: TableModel, ifNotExists: Boolean) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val _type = tableModel.toTableType
     val ns = createTempNS(_type.columns)
     val out = readPhysicalTable(ns)
-    scope.withVariable(Variable(name = ref.name, _type, initialValue = out)) -> IOCost(created = 1)
+    val cost = IOCost(created = 1)
+    (scope.withVariable(Variable(name = ref.name, _type, initialValue = out)), cost, cost)
   }
 
   override def toSQL: String = {

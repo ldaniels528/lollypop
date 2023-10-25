@@ -16,7 +16,7 @@ import qwery.io.IOCost
  */
 case class With(resource: Instruction, code: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // execute the resource and code reference
     val (_, costR, valueR) = QweryVM.execute(scope, resource)
     val (scopeF, costF, valueF) = QweryVM.execute(scope, code)

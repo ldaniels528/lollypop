@@ -12,7 +12,7 @@ import qwery.io.IOCost
  */
 case class DeclarePackage(packageName: Atom) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.withVariable("__package__", packageName.name), IOCost.empty, packageName.name)
   }
 

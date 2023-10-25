@@ -31,7 +31,7 @@ import qwery.io.IOCost
  */
 case class DefineImplicit(className: Atom, methods: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
 
     def expand(instruction: Instruction): List[NamedFunction] = instruction match {
       case CodeBlock(instructions) => instructions.flatMap(expand)

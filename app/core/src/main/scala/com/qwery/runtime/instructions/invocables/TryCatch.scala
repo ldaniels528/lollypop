@@ -17,7 +17,7 @@ import qwery.io.IOCost
 case class TryCatch(code: Instruction, onError: Instruction, `finally`: Option[Instruction] = None)
   extends RuntimeInvokable with Expression with Queryable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     try QweryVM.execute(scope, code) catch {
       case t: Throwable =>
         QweryVM.execute(scope, onError) match {

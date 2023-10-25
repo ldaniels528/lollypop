@@ -13,7 +13,7 @@ class NodeAPITest extends AnyFunSpec with VerificationTools {
   describe(classOf[NodeAPI].getSimpleName) {
 
     it("should setup and execute a REST endpoint") {
-      val (scopeA, responseA) = QweryVM.infrastructureSQL(Scope(),
+      val (scopeA, responseA, _) = QweryVM.executeSQL(Scope(),
         """|namespace 'demo.subscriptions'
            |
            |val port = nodeStart()

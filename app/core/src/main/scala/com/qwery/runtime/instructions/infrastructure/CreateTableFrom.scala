@@ -21,7 +21,7 @@ import scala.collection.mutable
 case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
   extends RuntimeModifiable with ReferenceInstruction {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to create the table
     val cost0 = DatabaseManagementSystem.createPhysicalTable(ref.toNS, tableModel.toTableType, ifNotExists)
 
@@ -39,7 +39,8 @@ case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from:
         cost2 ++ device.insert(device1)
     }
 
-    scope -> (cost0 ++ cost1)
+    val cc = cost0 ++ cost1
+    (scope, cc, cc)
   }
 
   override def toSQL: String = {

@@ -79,7 +79,7 @@ class CreateTypeTest extends AnyFunSpec with VerificationTools {
       val ref = DatabaseObjectRef(getClass.getSimpleName)
 
       // create a type
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(), sql =
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(), sql =
         s"""|namespace 'samples.stocks'
             |drop if exists Transactions &&
             |create type Transactions as Table (
@@ -90,7 +90,7 @@ class CreateTypeTest extends AnyFunSpec with VerificationTools {
       assert(cost0 == IOCost(destroyed = 1, created = 1))
 
       // create a table using our type
-      val (scope1, cost1) = QweryVM.infrastructureSQL(scope0, sql =
+      val (scope1, cost1, _) = QweryVM.executeSQL(scope0, sql =
         s"""|drop if exists $ref &&
             |create table $ref (
             |   symbol: String(8),

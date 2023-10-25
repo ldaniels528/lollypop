@@ -21,7 +21,7 @@ import qwery.io.IOCost
 case class Feature(title: Expression, scenarios: Seq[Instruction]) extends RuntimeInvokable {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val fs0 = FeatureState(scope)
     title.asString.foreach(title => fs0.println(s"Feature: $title"))
     val featureState = scenarios.foldLeft[FeatureState](fs0) {

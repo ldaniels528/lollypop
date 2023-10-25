@@ -10,7 +10,7 @@ class UpsertIntoTest extends AnyFunSpec with VerificationTools {
   describe(classOf[UpsertInto].getSimpleName) {
 
     it("should insert/update rows from values") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref &&
             |create table $ref (symbol: String(8), exchange: String(8), lastSale: Double) &&
             |create index $ref#symbol &&
@@ -26,18 +26,18 @@ class UpsertIntoTest extends AnyFunSpec with VerificationTools {
             |""".stripMargin)
       assert(cost0.inserted == 4)
 
-      val (scope1, cost1) = QweryVM.infrastructureSQL(scope0.reset(),
-       s"""|upsert into $ref (symbol, exchange, lastSale)
-           |values ('AAPL', 'NASDAQ', 156.39)
-           |where symbol is 'AAPL'
-           |""".stripMargin)
+      val (scope1, cost1, _) = QweryVM.executeSQL(scope0.reset(),
+        s"""|upsert into $ref (symbol, exchange, lastSale)
+            |values ('AAPL', 'NASDAQ', 156.39)
+            |where symbol is 'AAPL'
+            |""".stripMargin)
       assert(cost1.scanned == 0 && cost1.inserted == 1 && cost1.updated == 0)
 
-      val (scope2, cost2) = QweryVM.infrastructureSQL(scope1.reset(),
-       s"""|upsert into $ref (symbol, exchange, lastSale)
-           |values ('AAPL', 'NASDAQ', 82.33)
-           |where symbol is 'AAPL'
-           |""".stripMargin)
+      val (scope2, cost2, _) = QweryVM.executeSQL(scope1.reset(),
+        s"""|upsert into $ref (symbol, exchange, lastSale)
+            |values ('AAPL', 'NASDAQ', 82.33)
+            |where symbol is 'AAPL'
+            |""".stripMargin)
       assert(cost1.scanned == 0 && cost2.inserted == 0 && cost2.updated == 1)
 
       val device = scope2.getRowCollection(ref)

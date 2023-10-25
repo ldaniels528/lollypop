@@ -54,7 +54,7 @@ class UpdateTest extends AnyFunSpec with VerificationTools {
 
     it("should update rows from a clustered inner-table") {
       val ref = DatabaseObjectRef("stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),
@@ -145,7 +145,7 @@ class UpdateTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support execution using set") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         """|declare table travelers(
            |  id RowNumber,
            |  position Int,
@@ -177,7 +177,7 @@ class UpdateTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support execution using -=") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         """|declare table travelers(
            |  id RowNumber,
            |  position Int,

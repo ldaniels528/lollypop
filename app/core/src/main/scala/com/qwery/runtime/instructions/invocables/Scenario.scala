@@ -21,7 +21,7 @@ case class Scenario(title: Expression,
                     verifications: Seq[Instruction],
                     inherits: Option[Expression] = None) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope0: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     val accum = verifications.foldLeft[Accumulator](Accumulator(scope0)) {
       case (acc, verification: Verification) => validate(acc, verification)
       case (acc, instruction) => run(acc, instruction)

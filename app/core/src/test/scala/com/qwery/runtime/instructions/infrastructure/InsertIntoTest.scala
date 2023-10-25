@@ -58,7 +58,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
 
     it("should execute insert instructions referencing inner-tables") {
       val table = DatabaseObjectRef("injectTest")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $table
             |create table $table (symbol: String(8), exchange: String(8), transactions: Table(price: Double, transactionTime: DateTime))
             |insert into $table (symbol, exchange, transactions)
@@ -194,7 +194,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
 
     it(s"should insert JSON data into a nested table on disk") {
       val stocks = DatabaseObjectRef("temp.jdbc.StocksDemoTestA")
-      val (scope0, res0_?) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, res0_?, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $stocks
             |create table $stocks (
             |   symbol: String(4),
@@ -204,7 +204,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
             |""".stripMargin)
       assert(res0_?.inserted == 0)
 
-      val (scope1, res1_?) = QweryVM.infrastructureSQL(scope0,
+      val (scope1, cost, _) = QweryVM.executeSQL(scope0,
         s"""|insert into $stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', '{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
             |       ('AMD', 'NASDAQ', '{"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
@@ -213,7 +213,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
             |       ('SHMN', 'OTCBB', '[{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
             |                           {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}]')
             |""".stripMargin)
-      assert(res1_?.inserted == 5)
+      assert(cost.inserted == 5)
 
       // verify the count
       val (_, _, res2) = QweryVM.searchSQL(scope1, s"select total: count(*) from $stocks")
@@ -222,7 +222,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
 
     it(s"should insert objects into a nested table on disk") {
       val stocks = DatabaseObjectRef("temp.jdbc.StocksDemoTestB")
-      val (scope0, res0_?) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, res0_?, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $stocks
             |create table $stocks (
             |   symbol: String(4),
@@ -232,7 +232,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
             |""".stripMargin)
       assert(res0_?.inserted == 0)
 
-      val (scope1, res1_?) = QweryVM.infrastructureSQL(scope0,
+      val (scope1, res1_?, _) = QweryVM.executeSQL(scope0,
         s"""|insert into $stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', [{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}]),
             |       ('AMD', 'NASDAQ', [{"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}]),
@@ -249,7 +249,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
     }
 
     it(s"should insert JSON data into a nested table in memory") {
-      val (scope0, result0) = QweryVM.infrastructureSQL(Scope(), sql =
+      val (scope0, result0, _) = QweryVM.executeSQL(Scope(), sql =
         s"""|declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price Double, transactionTime DateTime)[2])
             |insert into @@stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', '{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
@@ -267,7 +267,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should insert objects into a nested table in memory") {
-      val (scope0, result0) = QweryVM.infrastructureSQL(Scope(), sql =
+      val (scope0, result0, _) = QweryVM.executeSQL(Scope(), sql =
         s"""|declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[2])
             |insert into @@stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', [{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}]),

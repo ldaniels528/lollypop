@@ -62,8 +62,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
       val (scope2, hashIndex) = insertDataWithHashIndex(ref)(scope1)
 
       // update a row
-      val (_, cost3) = QweryVM.infrastructureSQL(
-        scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
+      val (_, cost3, _) = QweryVM.executeSQL(scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
         s"""|update @@stocks set symbol = 'XXX' where symbol is 'ZZY'
             |""".stripMargin)
       assert(cost3.updated == 1)
@@ -101,8 +100,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
       val (scope2, hashIndex) = insertDataWithHashIndex(ref)(scope1)
 
       // update a row
-      val (_, cost3) = QweryVM.infrastructureSQL(
-        scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
+      val (_, cost3, _) = QweryVM.executeSQL(scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
         s"""|update @@stocks set exchange = 'NASDAQ' where symbol is 'ZZY'
             |""".stripMargin)
       assert(cost3.updated == 1)
@@ -258,7 +256,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
 
   private def createStocksTable()(implicit scope0: Scope): (Scope, IOCost) = {
     val ref = DatabaseObjectRef(getTestTableName)
-    val (scope1, cost1) = QweryVM.infrastructureSQL(scope0,
+    val (scope1, cost1, _) = QweryVM.executeSQL(scope0,
       s"""|drop if exists $ref
           |create table $ref (symbol: String(8), exchange: String(8), lastSale: Double)
           |""".stripMargin)
@@ -268,8 +266,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
 
   private def insertData[A <: RowCollection](rc: A)(implicit scope1: Scope): (Scope, A) = {
     // insert some data
-    val (scope2, cost2) = QweryVM.infrastructureSQL(
-      scope1.withVariable(name = "stocks", value = Some(rc), isReadOnly = true),
+    val (scope2, cost2, _) = QweryVM.executeSQL(scope1.withVariable(name = "stocks", value = Some(rc), isReadOnly = true),
       s"""|insert into @@stocks (symbol, exchange, lastSale)
           |from
           |    |------------------------------|
