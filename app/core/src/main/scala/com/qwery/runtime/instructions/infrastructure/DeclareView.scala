@@ -29,11 +29,11 @@ import scala.collection.mutable
  */
 case class DeclareView(ref: Atom, view: View, ifNotExists: Boolean) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     val ns = createTempNS()
     val cost0 = createVirtualTable(ns, view, ifNotExists)
     val vtbl = readVirtualTable(ns)
-    scope.withVariable(ref.name, vtbl) -> cost0
+    (scope.withVariable(ref.name, vtbl), cost0, true)
   }
 
   override def toSQL: String = {

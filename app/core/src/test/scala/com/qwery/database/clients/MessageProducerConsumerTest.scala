@@ -36,7 +36,7 @@ class MessageProducerConsumerTest extends AnyFunSpec with VerificationTools {
             |)
             |""".stripMargin, limit = None)
       response.tabulate().foreach(logger.info)
-      assert(response.getUpdateCount == 1)
+      assert(response.getUpdateCount == 2)
     }
   }
 

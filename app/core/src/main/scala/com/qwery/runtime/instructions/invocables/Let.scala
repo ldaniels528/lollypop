@@ -18,7 +18,7 @@ import qwery.io.IOCost
  * }}}
  */
 case class Let(ref: Atom, codec: LambdaFunction, initialValue: Instruction) extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val s = scope.withVariable(ref.name, codec, initialValue)
     (s, IOCost.empty, null)
   }

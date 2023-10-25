@@ -26,7 +26,7 @@ import scala.language.postfixOps
 case class Delete(ref: DatabaseObjectRef, condition: Option[Condition], limit: Option[Expression])
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     val cost = ref match {
       // is it an inner table reference? (e.g. 'stocks#transactions')
       case st: DatabaseObjectRef if st.isSubTable =>
@@ -36,7 +36,7 @@ case class Delete(ref: DatabaseObjectRef, condition: Option[Condition], limit: O
       // must be a standard table reference (e.g. 'stocks')
       case _ => scope.getRowCollection(ref).deleteWhere(condition, limit)
     }
-    scope -> cost
+    (scope, cost, true)
   }
 
   override def toSQL: String = {

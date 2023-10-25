@@ -14,8 +14,8 @@ import qwery.io.IOCost
 case class Drop(ref: DatabaseObjectRef, ifExists: Boolean) extends RuntimeModifiable
   with ReferenceInstruction {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> DatabaseManagementSystem.dropObject(ref.toNS, ifExists)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, DatabaseManagementSystem.dropObject(ref.toNS, ifExists), true)
   }
 
   override def toSQL: String = {

@@ -17,7 +17,7 @@ class DeleteTest extends AnyFunSpec with VerificationTools {
 
     it("should delete a row and confirm get conformation via its metadata") {
       // create a new table && insert some records
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         """|drop if exists `tickers` &&
            |create table `tickers` (
            |    symbol: String(4),
@@ -51,7 +51,7 @@ class DeleteTest extends AnyFunSpec with VerificationTools {
       ))
 
       // delete a record
-      val (scope2, cost2) = QweryVM.infrastructureSQL(scope1,
+      val (scope2, cost2, _) = QweryVM.executeSQL(scope1,
         """|delete from `tickers` where symbol is 'AAXX'
            |""".stripMargin)
       assert(cost2 == IOCost(deleted = 1, matched = 1, scanned = 5))
@@ -92,7 +92,7 @@ class DeleteTest extends AnyFunSpec with VerificationTools {
 
     it("should delete rows from a clustered inner-table") {
       val ref = DatabaseObjectRef("stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref &&
             |create table $ref (
             |   symbol: String(8),

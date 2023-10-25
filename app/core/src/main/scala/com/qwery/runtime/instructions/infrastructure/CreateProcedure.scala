@@ -30,8 +30,8 @@ import scala.collection.mutable
 case class CreateProcedure(ref: DatabaseObjectRef, procedure: Procedure, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> createProcedure(ref.toNS, procedure, ifNotExists)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, createProcedure(ref.toNS, procedure, ifNotExists), true)
   }
 
   override def toSQL: String = {

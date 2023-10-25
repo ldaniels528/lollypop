@@ -22,7 +22,7 @@ class PartitionedRowCollectionTest extends AnyFunSpec {
         TableColumn(name = "lastSale", `type` = Float64Type),
         TableColumn(name = "lastSaleTime", `type` = DateTimeType)),
         partitionColumnIndex = 1)
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope().withVariable("stocks", device),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope().withVariable("stocks", device),
         """|insert into @@stocks (symbol, exchange, lastSale, lastSaleTime)
            |from (
            |    |---------------------------------------------------------|
@@ -118,7 +118,7 @@ class PartitionedRowCollectionTest extends AnyFunSpec {
     }
 
     it("should perform CRUD operations on durable partitioned tables") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         """|namespace "temp.partitions"
            |drop if exists Stocks
            |create table Stocks (

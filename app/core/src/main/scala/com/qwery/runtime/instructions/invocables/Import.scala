@@ -21,7 +21,7 @@ import scala.annotation.tailrec
  */
 case class Import(target: Expression) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope0: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec
     def recurse(scope: Scope, value: Any): (Scope, Any) = value match {
       case null => scope -> null

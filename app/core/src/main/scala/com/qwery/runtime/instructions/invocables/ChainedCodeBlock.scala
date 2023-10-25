@@ -10,7 +10,7 @@ import qwery.io.IOCost
  * @param instructions one or more [[Instruction instructions]] to execute
  */
 case class ChainedCodeBlock(instructions: List[Instruction]) extends CodeBlock with RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = summarize(scope, instructions)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = summarize(scope, instructions)
 
   override def toSQL: String = instructions.map(_.toSQL).mkString(" && ")
 }

@@ -233,7 +233,7 @@ class JDBCResultSetTest extends AnyFunSpec with JDBCTestServer with Verification
               ||---------------------------------------------------------|
               |)
               |""".stripMargin)
-        assert(count == 5)
+        assert(count == 6)
       }
     }
 

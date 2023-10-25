@@ -25,7 +25,7 @@ import com.qwery.runtime.devices._
 import com.qwery.runtime.instructions.conditions.{AND, EQ}
 import com.qwery.runtime.instructions.functions.AnonymousFunction
 import com.qwery.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
-import com.qwery.runtime.instructions.queryables.Select
+import com.qwery.runtime.instructions.queryables.{Select, TableRendering}
 import com.qwery.util.CodecHelper.EnrichedByteString
 import com.qwery.util.JSONSupport.JsValueConversion
 import com.qwery.util.OptionHelper.OptionEnrichment
@@ -481,7 +481,13 @@ class QweryServer(port: Int, ctx: QweryUniverse = QweryUniverse())(implicit syst
     result1 match {
       case jsValue: JsValue => (scope2, complete(jsValue))
       case _ =>
-        val outcome = Option(result1).map(_.toQueryResponse(ns_?, limit)(scope2))
+        val result2 = result1 match {
+          case rc: RowCollection => rc
+          case tr: TableRendering => tr.toTable(scope2)
+          case _ if cost1.getUpdateCount > 0 => cost1
+          case zz => zz
+        }
+        val outcome = Option(result2).map(_.toQueryResponse(ns_?, limit)(scope2))
         outcome match {
           case Some(results) => (scope2, complete(results))
           case None =>

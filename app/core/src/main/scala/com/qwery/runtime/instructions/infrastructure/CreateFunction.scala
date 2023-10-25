@@ -17,8 +17,8 @@ import qwery.io.IOCost
 case class CreateFunction(ref: DatabaseObjectRef, function: TypicalFunction, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> createDurableFunction(ref.toNS, function, ifNotExists)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, createDurableFunction(ref.toNS, function, ifNotExists), true)
   }
 
   override def toSQL: String = {

@@ -13,7 +13,7 @@ import qwery.io.IOCost
  * @param expression the implicit class name
  */
 case class ImportImplicitClass(expression: Expression) extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val s = scope.importImplicitClass(RuntimeClass.getClassByName(expression.asString || expression.dieIllegalType()))
     (s, IOCost.empty, null)
   }

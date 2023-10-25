@@ -12,7 +12,7 @@ import qwery.io.IOCost
  */
 case class ComputeAndSet(operation: BinaryOperation) extends RuntimeInvokable with ModificationExpression {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     scope.resolveReferenceName(ref) ~> { name => (scope.setVariable(name, operation), IOCost.empty, null) }
   }
 

@@ -75,7 +75,7 @@ class JDBCDatabaseMetaDataTest extends AnyFunSpec with JDBCTestServer {
               |       ('AMD',  'NASDAQ', 98.76, DateTime('2022-09-04T23:36:47.975Z')),
               |       ('YHOO', 'NYSE',   23.89, DateTime('2022-09-04T23:36:47.979Z'))
               |""".stripMargin)
-        assert(count == 3)
+        assert(count == 5)
         val columns = Set("TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "COLUMN_NAME", "TYPE_NAME", "COLUMN_SIZE")
         val results = conn.getMetaData.getColumns(null, null, ref.toSQL, null).toRowCollection
         results.tabulate() foreach logger.info

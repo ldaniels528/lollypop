@@ -31,11 +31,7 @@ import scala.language.postfixOps
  */
 case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = alterTable(ref)
-
-  override def toSQL: String = s"alter table ${ref.toSQL} ${alterations map (_.toSQL) mkString " "}"
-
-  private def alterTable(ref: DatabaseObjectRef)(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     import AlterTable._
 
     // lookup the table
@@ -71,7 +67,7 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
     // is the host an in-memory table?
     ref match {
       case TableVariableRef(name) =>
-        (scope.withVariable(name, newDevice.returnType, newDevice, isReadOnly = false), cost)
+        (scope.withVariable(name, newDevice.returnType, newDevice, isReadOnly = false), cost, true)
       case _ =>
         // swap the files
         val srcFile = host.ns.tableDataFile
@@ -87,9 +83,11 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
         // delete the temporary file
         ResourceManager.close(newDevice.ns)
         ResourceManager.close(host.ns)
-        scope -> cost
+        (scope, cost, true)
     }
   }
+
+  override def toSQL: String = s"alter table ${ref.toSQL} ${alterations map (_.toSQL) mkString " "}"
 
   private def overwrite(src: File, dest: File): Boolean = {
     import com.qwery.util.ResourceHelper.AutoClose

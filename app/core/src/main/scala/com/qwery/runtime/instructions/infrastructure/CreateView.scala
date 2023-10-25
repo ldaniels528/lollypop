@@ -28,8 +28,8 @@ import scala.collection.mutable
  */
 case class CreateView(ref: DatabaseObjectRef, view: View, ifNotExists: Boolean) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> createVirtualTable(ref.toNS, view, ifNotExists)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, createVirtualTable(ref.toNS, view, ifNotExists), true)
   }
 
   override def toSQL: String = {

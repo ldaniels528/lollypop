@@ -14,7 +14,7 @@ class RowCollectionZooTest extends AnyFunSpec with VerificationTools {
     val ref = DatabaseObjectRef(getTestTableName)
 
     it("should convert a product instance (RowSummary) into a table or table type") {
-      val (scope0, _) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, _, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (symbol: String(8), exchange: String(8), lastSale: Double)
             |insert into $ref (symbol, exchange, lastSale)

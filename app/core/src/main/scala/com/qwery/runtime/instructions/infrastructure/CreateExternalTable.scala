@@ -22,8 +22,8 @@ import qwery.io.IOCost
  */
 case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifNotExists: Boolean) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> createExternalTable(ref.toNS, declaration = parseExternalTableDeclaration())
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, createExternalTable(ref.toNS, declaration = parseExternalTableDeclaration()), true)
   }
 
   override def toSQL: String = {

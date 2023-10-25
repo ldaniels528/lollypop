@@ -13,9 +13,9 @@ import qwery.io.IOCost
 
 case class Macro(template: String, code: Instruction) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     MacroLanguageParser.registerMacro(this)
-    scope -> IOCost(created = 1)
+    (scope, IOCost(created = 1), true)
   }
 
   override def toSQL: String = List("macro", s"\"$template\"", ":=", code.toSQL).mkString(" ")

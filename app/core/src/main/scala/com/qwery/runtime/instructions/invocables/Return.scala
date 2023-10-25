@@ -15,7 +15,7 @@ import qwery.io.IOCost
  */
 case class Return(value: Option[Instruction] = None) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val (s, c, r) = value.map(op => QweryVM.execute(scope, op)) || (scope, IOCost.empty, null)
     (s.withReturned(isReturned = true), c, r)
   }

@@ -44,7 +44,7 @@ class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
   describe(classOf[HashIndexRowCollection].getSimpleName) {
 
     it("should create a new table with a unique index") {
-      val (_, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $tableRef &&
             |create table $tableRef (
             |   symbol: String(5),
@@ -76,7 +76,7 @@ class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
 
     it("should fail to insert a record with a duplicate key") {
       assertThrows[UniqueKeyAlreadyExistsError] {
-        QweryVM.infrastructureSQL(Scope(),
+        QweryVM.executeSQL(Scope(),
           s"""|insert into $tableRef (symbol, exchange, lastSale)
               |values ("AMZN", "NYSE", 1187.33)
               |""".stripMargin)
@@ -105,7 +105,7 @@ class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
 
     it("should fail to perform a row update that results in a duplicate key violation") {
       assertThrows[UniqueKeyAlreadyExistsError] {
-        QweryVM.infrastructureSQL(Scope(),
+        QweryVM.executeSQL(Scope(),
           s"""|update $tableRef set symbol = 'AMZN'
               |where symbol is 'INTC'
               |""".stripMargin)
@@ -113,7 +113,7 @@ class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should perform a row update that does not result in a duplicate key violation") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|update $tableRef set symbol = 'XXX'
             |where symbol is 'INTC'
             |""".stripMargin)
@@ -129,7 +129,7 @@ class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should replace (delete then update) an existing record") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|delete from $tableRef where symbol is 'GE' &&
             |update $tableRef set symbol = 'GE', exchange = 'AMEX', lastSale = 89.55 where symbol is 'PEREZ'
             |""".stripMargin)

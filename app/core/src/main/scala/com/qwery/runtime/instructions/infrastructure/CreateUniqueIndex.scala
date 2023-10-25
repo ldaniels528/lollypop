@@ -14,8 +14,8 @@ import qwery.io.IOCost
  */
 case class CreateUniqueIndex(ref: DatabaseObjectRef, ifNotExists: Boolean) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> (IOCost(created = 1) ++ createUniqueIndex(ref.toNS, ifNotExists))
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, IOCost(created = 1) ++ createUniqueIndex(ref.toNS, ifNotExists), true)
   }
 
   override def toSQL: String = {

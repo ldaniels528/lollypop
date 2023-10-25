@@ -100,7 +100,7 @@ class CursorIteratorTest extends AnyFunSpec with VerificationTools {
   }
 
   private def createTestTable(ref: DatabaseObjectRef): RowCollection = {
-    val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+    val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
       s"""|drop if exists $ref
           |create table $ref (
           |  symbol: String(8),

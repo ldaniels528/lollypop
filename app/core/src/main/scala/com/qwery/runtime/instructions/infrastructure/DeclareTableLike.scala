@@ -21,13 +21,13 @@ import scala.collection.mutable
 case class DeclareTableLike(ref: Atom, tableModel: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     val tableColumnNames = tableModel.columns.map(_.name).toSet
     val templateColumns = scope.getRowCollection(template).use(_.columns.filterNot(c => tableColumnNames.contains(c.name)))
     val aggColumns = tableModel.columns ::: templateColumns.map(_.toColumn).toList
     val _type = tableModel.copy(columns = aggColumns).toTableType
     val out = createTempTable(_type.columns)
-    scope.withVariable(Variable(name = ref.name, _type, initialValue = out)) -> IOCost()
+    (scope.withVariable(Variable(name = ref.name, _type, initialValue = out)), IOCost.empty, true)
   }
 
   override def toSQL: String = {

@@ -18,7 +18,7 @@ case class UnDelete(ref: DatabaseObjectRef,
                     limit: Option[Expression])
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Int) = {
     val cost = ref match {
       // is it an inner table reference? (e.g. 'stocks#transactions')
       case st: DatabaseObjectRef if st.isSubTable =>
@@ -28,7 +28,7 @@ case class UnDelete(ref: DatabaseObjectRef,
       // must be a standard table reference (e.g. 'stocks')
       case _ => scope.getRowCollection(ref).undeleteWhere(condition, limit)
     }
-    scope -> cost
+    (scope, cost, cost.inserted)
   }
 
   override def toSQL: String = {

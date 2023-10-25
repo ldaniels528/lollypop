@@ -39,7 +39,7 @@ case class QueryResponse(ns: DatabaseObjectNS,
 
   def get: Either[RowCollection, IOCost] = {
     // is it a row collection?
-    if (columns.isEmpty) Right(cost || IOCost()) else {
+    if (columns.isEmpty) Right(cost || IOCost.empty) else {
       val out = createQueryResultTable(columns)
       for {row <- rows} {
         val mapping = Map(columns.map(_.name) zip row: _*)

@@ -44,7 +44,7 @@ case class InsertInto(ref: DatabaseObjectRef,
                       limit: Option[Expression] = None)
   extends RuntimeModifiable with ReferenceInstruction {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Int) = {
     val cost = ref match {
       // is it an inner table reference? (e.g. 'stocks#transactions')
       case st: DatabaseObjectRef if st.isSubTable =>
@@ -72,7 +72,7 @@ case class InsertInto(ref: DatabaseObjectRef,
             device.insert(result1) ~> { io => cost1 ++ io.copy(rowIDs = RowIDRange(io.rowIDs.toList ::: rowIDs)) }
         }
     }
-    scope -> cost
+    (scope, cost, cost.inserted)
   }
 
   override def toSQL: String = {

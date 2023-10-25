@@ -38,7 +38,7 @@ class ModelRowCollectionTest extends AnyFunSpec {
     }
 
     it("should support updating rows") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope().withVariable("stocks", createTestTable),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope().withVariable("stocks", createTestTable),
         """|update @@stocks set lastSale = 358.21 where symbol is 'KNOW'
            |""".stripMargin)
       assert(cost.updated == 1)
@@ -51,7 +51,7 @@ class ModelRowCollectionTest extends AnyFunSpec {
     }
 
     it("should support deleting rows") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope().withVariable("stocks", createTestTable),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope().withVariable("stocks", createTestTable),
         """|delete from @@stocks where symbol is 'KFFQ'
            |""".stripMargin)
       assert(cost.deleted == 1)

@@ -22,8 +22,8 @@ import scala.collection.mutable
 case class CreateType(ref: DatabaseObjectRef, userType: ColumnType, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> createUserType(ref.toNS, userType, ifNotExists)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, createUserType(ref.toNS, userType, ifNotExists), true)
   }
 
   override def toSQL: String = {
