@@ -15,6 +15,7 @@ import com.qwery.runtime.instructions.invocables._
 import com.qwery.runtime.instructions.jvm._
 import com.qwery.runtime.instructions.operators._
 import com.qwery.runtime.instructions.queryables._
+import com.qwery.runtime.plastics.RuntimePlatform
 import qwery.io._
 import qwery.lang._
 

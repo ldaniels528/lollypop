@@ -1,12 +1,13 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models._
 import com.qwery.language.{LanguageParser, QweryUniverse}
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes.DataTypeParser
 import com.qwery.runtime.instructions.ScalaConversion
 import com.qwery.runtime.instructions.expressions.NamedFunctionCall
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import com.qwery.{QweryException, die}
 import dev.jeka.core.api.depmanagement.resolution.JkDependencyResolver

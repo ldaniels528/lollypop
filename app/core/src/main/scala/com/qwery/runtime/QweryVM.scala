@@ -14,6 +14,7 @@ import com.qwery.runtime.instructions.infrastructure.Macro
 import com.qwery.runtime.instructions.invocables.{SetAnyVariable, WhenEver}
 import com.qwery.runtime.instructions.queryables.TableRendering
 import com.qwery.runtime.instructions.{MacroLanguageParser, RuntimeInstruction}
+import com.qwery.runtime.plastics.RuntimeClass
 import com.qwery.{QweryException, die}
 import qwery.io.IOCost
 

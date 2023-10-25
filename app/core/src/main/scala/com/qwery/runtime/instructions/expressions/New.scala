@@ -3,10 +3,11 @@ package com.qwery.runtime.instructions.expressions
 import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.{Atom, Expression}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
 import com.qwery.runtime.instructions.functions.{AnonymousFunction, FunctionArguments}
 import com.qwery.runtime.instructions.jvm.DeclareClass
-import com.qwery.runtime.{QweryVM, RuntimeClass, Scope}
+import com.qwery.runtime.plastics.RuntimeClass
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
+import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 
 /**

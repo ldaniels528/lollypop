@@ -2,14 +2,11 @@ package com.qwery.runtime
 
 import com.qwery.language._
 import com.qwery.language.models._
-import com.qwery.runtime.Plastic.proxyOf
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.Scope._
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices._
 import com.qwery.runtime.instructions.expressions.TableExpression
 import com.qwery.runtime.instructions.queryables.TableVariableRef
-import org.slf4j.LoggerFactory
 
 import java.io._
 import java.lang.reflect.{Constructor, Method}
@@ -337,16 +334,6 @@ object Scope {
    * @return the new [[Scope scope]]
    */
   def apply(ctx: QweryUniverse): Scope = ctx.createRootScope()
-
-  def watch(scope: Scope): Scope = {
-    val logger = LoggerFactory.getLogger(getClass)
-    proxyOf(scope) {
-      case (inst, method, args) =>
-        if (method.getReturnType.isDescendantOf(classOf[Scope]))
-          logger.info(s"${method.getName}${Option(args).toList.flatMap(_.toList).mkString("(", ", ", ")")}")
-        if (args == null) method.invoke(inst) else method.invoke(inst, args: _*)
-    }
-  }
 
   case class ImplicitMethod(constructor: Constructor[_], method: Method, params: Seq[Parameter], returnType: Class[_])
 
