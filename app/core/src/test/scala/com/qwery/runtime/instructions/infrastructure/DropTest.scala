@@ -37,14 +37,14 @@ class DropTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute: drop if exists") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         """|drop if exists @@stocks
            |""".stripMargin)
       assert(cost.destroyed == 1)
     }
 
     it("should execute: drop") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         """|create table if not exists dummyTable(id: Int)
            |drop dummyTable
            |""".stripMargin)

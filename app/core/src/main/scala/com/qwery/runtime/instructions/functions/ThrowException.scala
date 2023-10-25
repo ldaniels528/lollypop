@@ -14,7 +14,7 @@ import qwery.io.IOCost
  */
 case class ThrowException(error: Expression) extends RuntimeInvokable with Expression {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     QweryVM.execute(scope, error)._3 match {
       case cause: Throwable => throw cause
       case cause: String => this.die(cause)

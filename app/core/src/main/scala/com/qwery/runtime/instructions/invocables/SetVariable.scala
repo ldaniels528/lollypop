@@ -50,7 +50,7 @@ object SetVariable extends InvokableParser {
  * @example {{{ set customers = ( select * from Customers where deptId = 31 ) }}}
  */
 case class SetAnyVariable(ref: Expression, instruction: Instruction) extends SetVariable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.setVariable(ref.getNameOrDie, instruction), IOCost.empty, null)
   }
 
@@ -69,7 +69,7 @@ case class SetAnyVariable(ref: Expression, instruction: Instruction) extends Set
  */
 case class ScopeModificationBlock(instructions: List[ScopeModification]) extends CodeBlock
   with SetVariable with ScopeModification {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val s = instructions.foldLeft[Scope](scope) {
       case (aggScope, SetAnyVariable(name, instruction)) =>
         aggScope.setVariable(name.getNameOrDie, instruction)
@@ -87,7 +87,7 @@ object ScopeModificationBlock {
 }
 
 case class SetVariableExpression(ref: Expression, expression: Expression) extends SetVariable with ModificationExpression {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     ref match {
       case FieldRef(name) => (scope.setVariable(name, expression), IOCost.empty, null)
       case VariableRef(name) => (scope.setVariable(name, expression), IOCost.empty, null)

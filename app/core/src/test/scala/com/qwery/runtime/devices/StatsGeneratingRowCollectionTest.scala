@@ -13,7 +13,7 @@ class StatsGeneratingRowCollectionTest extends AnyFunSpec with VerificationTools
   describe(classOf[StatsGeneratingRowCollection].getSimpleName) {
 
     it("should prepare a sample data table") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $tableRef
             |create table $tableRef (
             |   symbol: String(5),
@@ -35,7 +35,7 @@ class StatsGeneratingRowCollectionTest extends AnyFunSpec with VerificationTools
       lines foreach { line =>
         if (line.trim.nonEmpty) {
           val Array(symbol, exchange, lastSale, lastSaleTime) = line.split("[,]")
-          val (_, cost) = QweryVM.infrastructureSQL(scope1,
+          val (_, cost, _) = QweryVM.executeSQL(scope1,
             s"""|insert into @@stocks (symbol, exchange, lastSale, lastSaleTime)
                 |values ($symbol, $exchange, $lastSale, $lastSaleTime)
                 |""".stripMargin)

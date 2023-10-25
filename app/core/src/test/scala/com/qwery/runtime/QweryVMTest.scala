@@ -179,7 +179,7 @@ class QweryVMTest extends AnyFunSpec {
     ////////////////////////////////////////////////////////////////////////////
 
     it("should insert test data into a new Table") {
-      val (_, stat) = QweryVM.infrastructureSQL(Scope(),
+      val (_, stat, _) = QweryVM.executeSQL(Scope(),
         s"""|namespace 'temp.stocks'
             |drop if exists stocks_C
             |create table stocks_C (
@@ -300,7 +300,7 @@ class QweryVMTest extends AnyFunSpec {
     }
 
     it("should use .compact() to remove deleted rows from a table") {
-      val (_, result) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         """|set stocks = {
            |    set total = 1000
            |    declare table myQuotes(symbol: String(5), exchange: String(6), lastSale: Float, lastSaleTime: DateTime)[1000]
@@ -323,8 +323,8 @@ class QweryVMTest extends AnyFunSpec {
            |
            |stocks.compact()
            |""".stripMargin)
-      result.toRowCollection.tabulate().foreach(logger.info)
-      assert(result == IOCost())
+      cost.toRowCollection.tabulate().foreach(logger.info)
+      assert(cost == IOCost.empty)
     }
 
     it("should use .swap() to swap the contents of two rows in a table") {

@@ -52,7 +52,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
         .withVariable("viewB", Some(viewB), isReadOnly = true)
 
       // insert a new row
-      val (_, cost) = QweryVM.infrastructureSQL(scope1,
+      val (_, cost, _) = QweryVM.executeSQL(scope1,
         """|insert into @@viewA (symbol, exchange, lastSale) values ("PMP", "AMEX", 137.80), ("TNT", "NASDAQ", 45.11) &&
            |insert into @@viewB (symbol, exchange, lastSale) values ("XL", "OTCBB", 1.80), ("GMS", "NYSE", 123.45)
            |""".stripMargin)
@@ -115,7 +115,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
         .withVariable("viewA", Some(viewA), isReadOnly = true)
         .withVariable("viewB", Some(viewB), isReadOnly = true)
 
-      QweryVM.infrastructureSQL(scope1,
+      QweryVM.executeSQL(scope1,
         """|delete from @@viewA where symbol is "UPEX"
            |delete from @@viewA where symbol is "XYZ"
            |delete from @@viewB where symbol is "ZZY"
@@ -220,7 +220,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
       // put the resources in the scope
       val source = scope0.getRowCollection(@@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0, 1, 3, 7))
-      QweryVM.infrastructureSQL(scope0.withVariable("viewA", Some(viewA), isReadOnly = true),
+      QweryVM.executeSQL(scope0.withVariable("viewA", Some(viewA), isReadOnly = true),
         """|update @@viewA set lastSale = 14.07 where symbol is "GABY"
            |""".stripMargin)
       assert(viewA.toMapGraph == List(

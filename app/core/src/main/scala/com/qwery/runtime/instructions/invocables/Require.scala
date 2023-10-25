@@ -14,7 +14,7 @@ import qwery.io.IOCost
  */
 case class Require(target: Expression) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // download the dependencies as jars
     val (s, c, r) = QweryVM.execute(scope, target)
     val files_? = Option(r) map {

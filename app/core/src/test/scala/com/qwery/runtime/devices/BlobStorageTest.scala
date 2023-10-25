@@ -12,7 +12,7 @@ class BlobStorageTest extends AnyFunSpec {
     val ref = DatabaseObjectRef("BlobStorageTest")
 
     it("should update (overwrite) columns in BLOB storage") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(), createPassengerDataSQL(ref))
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(), createPassengerDataSQL(ref))
       assert((cost0.created == 1) & (cost0.inserted == 4))
       LogicalTableRowCollection(ref)(scope0) use { table =>
         assert(table.clustered.toMapGraph == List(
@@ -42,7 +42,7 @@ class BlobStorageTest extends AnyFunSpec {
     }
 
     it("should update (replace) columns in BLOB storage") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(), createPassengerDataSQL(ref))
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(), createPassengerDataSQL(ref))
       assert((cost0.created == 1) & (cost0.inserted == 4))
       LogicalTableRowCollection(ref)(scope0) use { table =>
         assert(table.clustered.toMapGraph == List(
@@ -72,7 +72,7 @@ class BlobStorageTest extends AnyFunSpec {
     }
 
     it("should delete columns from BLOB storage") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(), createPassengerDataSQL(ref))
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(), createPassengerDataSQL(ref))
       assert((cost0.created == 1) & (cost0.inserted == 4))
       LogicalTableRowCollection(ref)(scope0) use { table =>
         // delete a column

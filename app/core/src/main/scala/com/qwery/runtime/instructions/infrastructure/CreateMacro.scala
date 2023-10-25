@@ -1,5 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
+import com.qwery.implicits.MagicImplicits
 import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.runtime.DatabaseManagementSystem.createMACRO
@@ -17,9 +18,9 @@ import qwery.io.IOCost
 case class CreateMacro(ref: DatabaseObjectRef, `macro`: Macro, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     MacroLanguageParser.registerMacro(`macro`)
-    scope -> createMACRO(ref.toNS, `macro`, ifNotExists)
+    createMACRO(ref.toNS, `macro`, ifNotExists) ~> { cost => (scope, cost, cost) }
   }
 
   override def toSQL: String = {

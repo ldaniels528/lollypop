@@ -14,7 +14,7 @@ import qwery.io.IOCost
  */
 case class Synchronized(value: Expression, code: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     value.asAny match {
       case Some(lock) =>
        lock.asInstanceOf[AnyRef].synchronized {

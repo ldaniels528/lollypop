@@ -17,7 +17,7 @@ import qwery.io.IOCost
 case class IF(condition: Condition, onTrue: Instruction, onFalse: Option[Instruction])
   extends RuntimeInvokable with Expression {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     @inline def run(op: Instruction): (Scope, IOCost, Any) = QweryVM.execute(scope, op)
 
     if (isTrue(condition)) run(onTrue) else onFalse.map(run).getOrElse((scope, IOCost.empty, null))

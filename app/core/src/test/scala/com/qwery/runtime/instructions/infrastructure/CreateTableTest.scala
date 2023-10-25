@@ -111,7 +111,7 @@ class CreateTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing create table w/an inner-table") {
       val ref = DatabaseObjectRef(getTestTableName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),
@@ -129,7 +129,7 @@ class CreateTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing create table w/a BLOB inner-table") {
       val ref = DatabaseObjectRef(getTestTableName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),
@@ -147,7 +147,7 @@ class CreateTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing create table w/a multi-tenant inner-table") {
       val ref = DatabaseObjectRef(getTestTableName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),

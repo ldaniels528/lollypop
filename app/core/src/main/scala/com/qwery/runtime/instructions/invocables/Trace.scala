@@ -9,7 +9,7 @@ import qwery.io.IOCost
 
 case class Trace(instruction: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val scope1 = scope.withTrace({ (op, scope, result, elapsedTime) =>
 
       def friendlyType(result: Any): String = Option(result).map(_.getClass.getSimpleName).orNull
