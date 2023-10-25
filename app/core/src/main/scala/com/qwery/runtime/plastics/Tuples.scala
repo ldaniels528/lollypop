@@ -1,75 +1,10 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
-import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.qwery.runtime.RuntimeClass.resolveClass
-import com.qwery.util.StringRenderHelper.StringRenderer
+import RuntimeClass.resolveClass
 
-import java.lang.reflect.{InvocationHandler, Method, Proxy}
 import scala.annotation.tailrec
-import scala.reflect.{ClassTag, classTag}
 
-/**
- * Plastic polymorphic data object
- */
-trait Plastic extends Product
-
-/**
- * Plastic - data object shaping utilities
- */
-object Plastic {
-
-  def newInstance(className: String, fieldNames: Seq[String], fieldValues: Seq[Any])(implicit classLoader: ClassLoader): Plastic = {
-    newTypedInstance[Plastic](className, fieldNames, fieldValues)
-  }
-
-  def newTypedInstance[A <: Product : ClassTag](className: String, fieldNames: Seq[String], fieldValues: Seq[Any])(implicit classLoader: ClassLoader): A = {
-    val fields = fieldNames zip fieldValues
-    val `class` = classTag[A].runtimeClass
-    Proxy.newProxyInstance(classLoader, Array(`class`), new InvocationHandler {
-      var scope: Scope = Scope()
-      val isEmpty: Seq[_] => Boolean = args => args == null || args.isEmpty
-      val elementName: (Seq[_], Int) => String = (args, index) =>
-        if (!isEmpty(args) && index < args.size) fieldNames(index) else null
-
-      override def invoke(proxy: Any, method: Method, args: Array[AnyRef]): Any = method.getName match {
-        // Product
-        case name if isEmpty(args) && fieldNames.contains(name) => fieldValues(fieldNames.indexOf(name))
-        case "copy" => newTypedInstance(className, fieldNames, fieldValues)
-        case "productArity" if isEmpty(args) => fields.size
-        case "productElementName" => elementName(args, 0)
-        case "productElementNames" if isEmpty(args) => fieldNames.iterator
-        case "productIterator" if isEmpty(args) => fieldValues.iterator
-        case "productPrefix" if isEmpty(args) => className
-        // Object
-        case "clone" if isEmpty(args) => newTypedInstance(className, fieldNames, fieldValues)
-        case "equals" => args.headOption.exists(_.hashCode() == proxy.hashCode())
-        case "hashCode" if isEmpty(args) => fields.hashCode()
-        case "toString" if isEmpty(args) => s"$className${fieldValues.map(_.renderAsJson).mkString("(", ", ", ")")}"
-        // myObject.$name(args)
-        case name =>
-          val (s, _, r) = QweryVM.execute(scope, name.fx(args.map(_.v): _*))
-          scope = s
-          r
-      }
-    }).asInstanceOf[A]
-  }
-
-  /**
-   * Creates a proxy for the given instance making it possible to intercept method calls on the host instance.
-   * @param instance the host instance.
-   * @param f        the interceptor function
-   * @param classTag the [[ClassTag]] of the type
-   * @tparam T the type
-   * @return the proxy
-   */
-  def proxyOf[T](instance: T)(f: PartialFunction[(T, Method, Array[AnyRef]), Any])(implicit classTag: ClassTag[T]): T = {
-    val _class = classTag.runtimeClass
-    Proxy.newProxyInstance(_class.getClassLoader, Array(_class), new InvocationHandler {
-      override def invoke(proxy: Any, method: Method, args: Array[AnyRef]): Any = {
-        if (f.isDefinedAt((instance, method, args))) f(instance, method, args) else method.invoke(instance, args: _*)
-      }
-    }).asInstanceOf[T]
-  }
+object Tuples {
 
   /**
    * Creates and populates a new array via reflection
@@ -83,7 +18,8 @@ object Plastic {
     array.asInstanceOf[Array[_]]
   }
 
-  @tailrec def seqToTuple(value: Any): Option[Any] = {
+  @tailrec
+  def seqToTuple(value: Any): Option[Any] = {
     import com.qwery.util.OptionHelper.implicits.risky._
     value match {
       case array: Array[_] => seqToTuple(array.toSeq)
@@ -138,44 +74,6 @@ object Plastic {
       case (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) => List(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v)
       case _ => None
     }
-  }
-
-  object implicits {
-    private val methodDecodeExtras = Seq(
-      "$anonfun$" -> "",
-      "$this" -> "this")
-    private val methodCodes = Seq(
-      "$amp" -> "&",
-      "$bang" -> "!",
-      "$bar" -> "|",
-      "$div" -> "/",
-      "$eq" -> "=",
-      "$greater" -> ">",
-      "$less" -> "<",
-      "$minus" -> "-",
-      "$percent" -> "%",
-      "$plus" -> "+",
-      "$qmark" -> "?",
-      "$times" -> "*",
-      "$up" -> "^")
-
-    final implicit class MethodNameConverter(val methodName: String) extends AnyVal {
-
-      def decodeName: String = (methodDecodeExtras ++ methodCodes).foldLeft(methodName) {
-        case (name, (code, symbol)) => name.replace(code, symbol)
-      }
-
-      def encodeName: String = methodCodes.foldLeft(methodName) {
-        case (name, (code, symbol)) => name.replace(symbol, code)
-      }
-
-    }
-
-    final implicit class ProductToMap(val product: Product) extends AnyVal {
-      @inline
-      def toMap: Map[String, Any] = Map(product.productElementNames.zip(product.productIterator).toSeq: _*)
-    }
-
   }
 
 }

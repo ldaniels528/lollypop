@@ -3,7 +3,7 @@ package com.qwery.runtime.datatypes
 import com.qwery.language.dieUnsupportedConversion
 import com.qwery.language.models.ColumnType
 import com.qwery.runtime.INT_BYTES
-import com.qwery.runtime.Plastic.seqToArray
+import com.qwery.runtime.plastics.Tuples.seqToArray
 import com.qwery.runtime.devices.FieldMetadata
 import com.qwery.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import com.qwery.util.OptionHelper.OptionEnrichment

@@ -14,7 +14,7 @@ class DeclareClassTest extends AnyFunSpec {
       val model = QweryCompiler().compile(
         """|class Stock(symbol: String, exchange: String, lastSale: Double, lastSaleTime: DateTime)
            |""".stripMargin)
-      assert(model == DeclareClass(classRef = "Stock", fields = List(
+      assert(model == DeclareClass(className = "Stock", fields = List(
         Column(name = "symbol", `type` = "String".ct),
         Column(name = "exchange", `type` = "String".ct),
         Column(name = "lastSale", `type` = "Double".ct),
@@ -23,7 +23,7 @@ class DeclareClassTest extends AnyFunSpec {
     }
 
     it("should decompile a model into SQL") {
-      val model = DeclareClass(classRef = "Stock", fields = List(
+      val model = DeclareClass(className = "Stock", fields = List(
         Parameter(name = "symbol", `type` = "String".ct),
         Parameter(name = "exchange", `type` = "String".ct),
         Parameter(name = "lastSale", `type` = "Double".ct),
@@ -33,10 +33,10 @@ class DeclareClassTest extends AnyFunSpec {
     }
 
     it("should declare a new class") {
-     val (_, _, classDef) = QweryVM.executeSQL(Scope(),
+     val (scope, _, _) = QweryVM.executeSQL(Scope(),
         """|class Stock(symbol: String, exchange: String, lastSale: Double, lastSaleTime: DateTime)
            |""".stripMargin)
-      assert(classDef == DeclareClass(classRef = "Stock", fields = List(
+      assert(scope.resolve("Stock") contains DeclareClass(className = "Stock", fields = List(
         Column(name = "symbol", `type` = "String".ct),
         Column(name = "exchange", `type` = "String".ct),
         Column(name = "lastSale", `type` = "Double".ct),

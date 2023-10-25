@@ -3,7 +3,7 @@ package com.qwery.runtime.instructions.invocables
 import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.qwery.runtime.RuntimeClass.{downloadDependencies, loadJarFiles}
+import com.qwery.runtime.plastics.RuntimeClass.{downloadDependencies, loadJarFiles}
 import com.qwery.runtime.{QweryVM, Scope}
 import qwery.io.IOCost
 

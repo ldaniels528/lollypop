@@ -3,7 +3,7 @@ package com.qwery.runtime.instructions.conditions
 import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassExpressionSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassExpressionSugar
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.conditions.IsJavaMember.__name
 

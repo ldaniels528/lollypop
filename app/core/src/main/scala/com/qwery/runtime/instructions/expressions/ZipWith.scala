@@ -3,7 +3,7 @@ package com.qwery.runtime.instructions.expressions
 import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.qwery.runtime.Plastic.tupleToSeq
+import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.qwery.runtime.instructions.expressions.ZipWith.keyword

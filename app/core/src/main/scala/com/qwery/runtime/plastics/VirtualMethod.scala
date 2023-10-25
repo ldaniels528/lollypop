@@ -1,7 +1,7 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.instructions.functions.NamedFunction
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 
 /**
  * Represents a Virtual Method

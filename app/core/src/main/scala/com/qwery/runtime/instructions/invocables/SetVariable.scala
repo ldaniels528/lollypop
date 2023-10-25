@@ -4,7 +4,7 @@ import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.qwery.language.models._
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassInstanceSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.qwery.runtime.devices.{QMap, Row}
 import com.qwery.runtime.instructions.expressions.Infix
 import com.qwery.runtime.{QweryVM, Scope}
