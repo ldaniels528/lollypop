@@ -5,7 +5,7 @@ import com.qwery.language.models.Expression.implicits.LifestyleExpressions
 import com.qwery.language.models._
 import com.qwery.language.{QweryUniverse, dieIllegalType, dieNoSuchColumnOrVariable, dieNoSuchFunction, dieObjectIsNotADatabaseDevice, dieUnsupportedType}
 import com.qwery.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.Scope._
 import com.qwery.runtime.datatypes.Inferences.fromValue
 import com.qwery.runtime.datatypes._

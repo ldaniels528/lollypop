@@ -1,13 +1,14 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
 import com.github.ldaniels528.qwery.FakeModel
 import com.qwery.language.QweryUniverse
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.qwery.runtime.RuntimeClass._
-import com.qwery.runtime.RuntimeClass.implicits.{RuntimeClassConstructorSugar, RuntimeClassInstanceSugar}
 import com.qwery.runtime.devices._
 import com.qwery.runtime.instructions.expressions.TableExpression
 import com.qwery.runtime.instructions.queryables.TableRendering
+import com.qwery.runtime.plastics.RuntimeClass._
+import com.qwery.runtime.plastics.RuntimeClass.implicits.{RuntimeClassConstructorSugar, RuntimeClassInstanceSugar}
+import com.qwery.runtime.{DataObject, DynamicClassLoader, QweryNative, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import qwery.io.Encodable
 

@@ -3,7 +3,7 @@ package com.qwery.runtime.instructions.queryables
 import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.models.Expression.implicits.RichAliasable
-import com.qwery.runtime.Plastic.tupleToSeq
+import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._

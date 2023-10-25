@@ -2,7 +2,7 @@ package com.qwery.runtime.datatypes
 
 import com.qwery.language.dieUnsupportedConversion
 import com.qwery.language.models.ColumnType
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.devices.FieldMetadata
 import com.qwery.runtime.{INT_BYTES, Scope}
 import com.qwery.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
