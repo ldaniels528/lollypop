@@ -33,7 +33,7 @@ import qwery.io.IOCost
 case class Update(ref: DatabaseObjectRef, modification: ScopeModification, condition: Option[Condition], limit: Option[Expression])
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = ref match {
       // is it an inner table reference? (e.g. 'stocks#transactions')
       case st: DatabaseObjectRef if st.isSubTable =>
@@ -43,7 +43,7 @@ case class Update(ref: DatabaseObjectRef, modification: ScopeModification, condi
       // must be a standard table reference (e.g. 'stocks')
       case _ => scope.getRowCollection(ref).updateWhere(modification, condition, limit)
     }
-    scope -> cost
+    (scope, cost, cost)
   }
 
   override def toSQL: String = {

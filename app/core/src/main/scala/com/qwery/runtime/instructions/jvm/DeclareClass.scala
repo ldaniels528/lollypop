@@ -5,7 +5,8 @@ import com.qwery.language.models.Expression.implicits.AsFunctionArguments
 import com.qwery.language.models.{Atom, Expression, ParameterLike}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.invocables.RuntimeInvokable
-import com.qwery.runtime.{Plastic, QweryVM, Scope}
+import com.qwery.runtime.plastics.Plastic
+import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
 import qwery.lang.Null
@@ -18,11 +19,10 @@ import qwery.lang.Null
  * }}}
  * @author lawrence.daniels@gmail.com
  */
-case class DeclareClass(classRef: Atom, fields: List[ParameterLike]) extends RuntimeInvokable {
+case class DeclareClass(className: Atom, fields: List[ParameterLike]) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, DeclareClass) = {
-    val _class = this
-    (scope.withVariable(classRef.name, value = _class, isReadOnly = true), IOCost.empty, _class)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    (scope.withVariable(className.name, value = this, isReadOnly = true), IOCost.empty, ())
   }
 
   def newInstance(args: Expression)(implicit scope: Scope): Plastic = {
@@ -32,12 +32,12 @@ case class DeclareClass(classRef: Atom, fields: List[ParameterLike]) extends Run
       if (n < _args.size) field.name -> _args(n) else field.name -> (field.defaultValue || Null())
     }
     // return the new scope and constructed object
-    val (names, exprs) = (nameValues.map(_._1), nameValues.map(_._2))
-    val values = QweryVM.transform(scope, exprs)._3
-    Plastic.newInstance(classRef.name, names, values)(scope.getUniverse.classLoader)
+    val (names, ops) = (nameValues.map(_._1), nameValues.map(_._2))
+    val values = QweryVM.transform(scope, ops)._3
+    Plastic(this, names, values)
   }
 
-  override def toSQL: String = List("class", " ", classRef.toSQL, fields.map(_.toSQL).mkString("(", ", ", ")")).mkString
+  override def toSQL: String = List("class", " ", className.toSQL, fields.map(_.toSQL).mkString("(", ", ", ")")).mkString
 
 }
 
@@ -46,7 +46,7 @@ object DeclareClass extends InvokableParser {
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DeclareClass = {
     val params = SQLTemplateParams(ts, templateCard)
-    DeclareClass(classRef = params.atoms("name"), fields = params.parameters("fields"))
+    DeclareClass(className = params.atoms("name"), fields = params.parameters("fields"))
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
@@ -56,8 +56,7 @@ object DeclareClass extends InvokableParser {
     description = "Creates a new ephemeral (in-memory) JVM-compatible class",
     syntax = templateCard,
     example =
-      """|import "java.util.Date"
-         |class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+      """|class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
          |""".stripMargin
   ))
 

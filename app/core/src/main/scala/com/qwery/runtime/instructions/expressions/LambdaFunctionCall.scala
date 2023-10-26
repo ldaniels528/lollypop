@@ -15,7 +15,7 @@ import qwery.io.IOCost
 case class LambdaFunctionCall(fx: LambdaFunction, args: List[Expression]) extends FunctionCall
   with RuntimeInvokable with Expression with Queryable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     fx match {
       case af@AnonymousFunction(params, code, origin_?) =>
         val fxScope = origin_?.getOrElse(Scope(parentScope = scope)).withParameters(params, args)

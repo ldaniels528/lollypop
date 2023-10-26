@@ -3,7 +3,7 @@ package com.qwery.runtime.instructions.invocables
 import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.qwery.runtime.RuntimeClass.{downloadDependencies, loadJarFiles}
+import com.qwery.runtime.plastics.RuntimeClass.{downloadDependencies, loadJarFiles}
 import com.qwery.runtime.{QweryVM, Scope}
 import qwery.io.IOCost
 
@@ -14,7 +14,7 @@ import qwery.io.IOCost
  */
 case class Require(target: Expression) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // download the dependencies as jars
     val (s, c, r) = QweryVM.execute(scope, target)
     val files_? = Option(r) map {

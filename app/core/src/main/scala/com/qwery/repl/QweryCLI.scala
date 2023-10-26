@@ -6,7 +6,7 @@ import com.qwery.language.QweryUniverse
 import com.qwery.repl.QweryCLI.logger
 import com.qwery.repl.REPLTools.getResourceFile
 import com.qwery.runtime.QweryCodeDebugger.createInteractiveConsoleReader
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo._
 import com.qwery.runtime.devices.RowCollectionZoo.ProductToRowCollection
@@ -223,6 +223,7 @@ trait QweryCLI extends QweryCodeDebugger {
       case t: TableRendering if isTable => t.toTable(scope).tabulate().foreach(Console.println)
       case p: Product if isTable => p.toRowCollection.tabulate().foreach(Console.println)
       case p: Product => Console.println(StringRenderHelper.toProductString(p))
+      case () => Console.println("Ok")
       case x => Console.println(x.render)
     }
     scope

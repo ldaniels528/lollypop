@@ -16,8 +16,8 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
 
     it("should create a table containing only clustered data types") {
       val ref = DatabaseObjectRef("passengersClustered")
-      val (scope, outcome) = QweryVM.infrastructureSQL(Scope(), show(createPassengerData(ref, textType = "String(64)")))
-      assert(outcome.inserted == 6)
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(createPassengerData(ref, textType = "String(64)")))
+      assert(cost.inserted == 6)
 
       LogicalTableRowCollection(ref)(scope) use { implicit device =>
         assert(device.recordSize == 161)
@@ -38,7 +38,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
 
     it("should create a table containing clustered and BLOB data types") {
       val ref = DatabaseObjectRef("passengersBlob")
-      val (scope, outcome) = QweryVM.infrastructureSQL(Scope(), show(createPassengerData(ref, textType = "CLOB")))
+      val (scope, outcome, _) = QweryVM.executeSQL(Scope(), show(createPassengerData(ref, textType = "CLOB")))
       assert(outcome.inserted == 6)
 
       LogicalTableRowCollection(ref)(scope) use { implicit device =>
@@ -110,7 +110,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should update rows of a clustered inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(clusteredRef, capacity = 10)}
             |update $clusteredRef
             |set transactions = [
@@ -145,7 +145,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should insert embedded rows into a clustered inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(clusteredRef, capacity = 10)}
             |insert into $clusteredRef#transactions (price, transactionTime)
             |values (35.11, "2021-08-05T19:23:12.000Z"),
@@ -178,7 +178,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should modify embedded rows from a clustered inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(clusteredRef, capacity = 10)}
             |update $clusteredRef#transactions
             |set price = 0.0012
@@ -208,7 +208,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should remove embedded rows from a clustered inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(clusteredRef, capacity = 10)}
             |delete from $clusteredRef#transactions
             |where symbol is 'SHMN'
@@ -324,7 +324,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should delete rows from a BLOB inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref, isPointer = true, capacity = 10)}
             |delete from $ref where __id is 1
             |""".stripMargin))
@@ -347,7 +347,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should update rows of a BLOB inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref, isPointer = true, capacity = 10)}
             |update $ref
             |set transactions = [
@@ -381,7 +381,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should insert embedded rows into a BLOB inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref, isPointer = true, capacity = 10)}
             |insert into $ref#transactions (price, transactionTime)
             |values (35.11, "2021-08-05T19:23:12.000Z"),
@@ -414,7 +414,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should modify embedded rows from a BLOB inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref, capacity = 10, isPointer = true)}
             |update $ref#transactions
             |set price = 0.0012
@@ -444,7 +444,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should remove embedded rows from a BLOB inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref, capacity = 10, isPointer = true)}
             |delete from $ref#transactions
             |where symbol is 'SHMN'
@@ -528,7 +528,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should delete rows from a multi-tenant inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref)}
             |delete from $ref where __id is 1
             |""".stripMargin))
@@ -551,7 +551,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should update rows of a multi-tenant inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref)}
             |update $ref
             |set transactions = [
@@ -585,7 +585,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should insert embedded rows into a multi-tenant inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref)}
             |insert into $ref#transactions (price, transactionTime)
             |values (35.11, "2021-08-05T19:23:12.000Z"),
@@ -618,7 +618,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should modify embedded rows from a multi-tenant inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref)}
             |update $ref#transactions
             |set price = 0.0012
@@ -648,7 +648,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
     }
 
     it("should remove embedded rows from a multi-tenant inner-table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|${createStockDataSQL(ref)}
             |delete from $ref#transactions
             |where symbol is 'SHMN'
@@ -676,7 +676,7 @@ class LogicalTableRowCollectionTest extends AnyFunSpec {
 
     it("should tables with multiple inner-tables") {
       val ref = DatabaseObjectRef("multiInnerTables")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(), show(
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(), show(
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),

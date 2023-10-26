@@ -26,7 +26,7 @@ class UnDeleteTest extends AnyFunSpec with VerificationTools {
     it("should restore deleted rows") {
       val ref = DatabaseObjectRef(getTestTableName)
       // create a table and insert some data
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(), sql =
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(), sql =
         s"""|drop if exists $ref &&
             |create table $ref (
             |   symbol: String(8),
@@ -47,7 +47,7 @@ class UnDeleteTest extends AnyFunSpec with VerificationTools {
       assert((cost0.created contains 1) && (cost0.inserted == 5))
 
       // delete a row
-      val (scope1, cost1) = QweryVM.infrastructureSQL(scope0, sql =
+      val (scope1, cost1, _) = QweryVM.executeSQL(scope0, sql =
         s"""|delete from $ref where symbol is "AAPL"
             |""".stripMargin)
       assert(cost1.deleted == 1)
@@ -66,7 +66,7 @@ class UnDeleteTest extends AnyFunSpec with VerificationTools {
       ))
 
       // restore the deleted row
-      val (scope2, cost2) = QweryVM.infrastructureSQL(scope1, sql =
+      val (scope2, cost2, _) = QweryVM.executeSQL(scope1, sql =
         s"""|undelete from $ref where symbol is "AAPL"
             |""".stripMargin)
       assert(cost2.updated == 1)
@@ -89,7 +89,7 @@ class UnDeleteTest extends AnyFunSpec with VerificationTools {
 
     it("should restore rows from a clustered inner-table") {
       val ref = DatabaseObjectRef("stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |   symbol: String(8),
@@ -132,7 +132,7 @@ class UnDeleteTest extends AnyFunSpec with VerificationTools {
       ))
 
       // restore the deleted inner row
-      val (_, cost2) = QweryVM.infrastructureSQL(scope, sql =
+      val (_, cost2, _) = QweryVM.executeSQL(scope, sql =
         s"""|undelete from $ref#transactions
             |where symbol is 'SHMN'
             |and transactions wherein (price is 0.001)

@@ -1,6 +1,7 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
 import com.qwery.language.QweryUniverse
+import com.qwery.runtime.{QweryCompiler, QweryVM, Scope, safeCast}
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 

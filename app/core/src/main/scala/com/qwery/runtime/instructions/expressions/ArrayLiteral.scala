@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.expressions
 
 import com.qwery.language.models.{ArrayExpression, Expression, Literal}
-import com.qwery.runtime.Plastic.seqToArray
+import com.qwery.runtime.plastics.Tuples.seqToArray
 import com.qwery.runtime.datatypes.{ArrayType, DataType, Inferences}
 import com.qwery.runtime.{QweryVM, Scope}
 

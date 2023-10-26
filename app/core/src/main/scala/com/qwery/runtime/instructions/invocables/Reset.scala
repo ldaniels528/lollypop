@@ -6,7 +6,7 @@ import com.qwery.runtime.Scope
 import qwery.io.IOCost
 
 case class Reset() extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.getUniverse.createRootScope(), IOCost.empty, null)
   }
 

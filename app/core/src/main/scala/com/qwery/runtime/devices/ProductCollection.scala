@@ -1,7 +1,7 @@
 package com.qwery.runtime.devices
 
 import com.qwery.language.{ColumnTypeParser, TokenStream, dieNoSuchConstructor}
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes.DataType
 import com.qwery.runtime.datatypes.Inferences.fromClass
 import com.qwery.runtime.devices.ProductCollection.{KeyValue, toColumns}

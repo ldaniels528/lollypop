@@ -7,7 +7,7 @@ import com.qwery.runtime.Scope
 import qwery.io.IOCost
 
 case class Destroy(ref: Expression) extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val s = ref match {
       case VariableRef(name) => scope.removeVariable(name)
       case FieldRef(name) => scope.removeVariable(name)

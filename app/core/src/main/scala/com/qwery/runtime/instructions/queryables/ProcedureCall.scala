@@ -22,7 +22,7 @@ import qwery.io.IOCost
 case class ProcedureCall(ref: DatabaseObjectRef, args: List[Expression]) extends RuntimeInvokable
   with Queryable with FunctionCall {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // get the procedure and in and OUT parameters
     val procedure = readProcedure(ref.toNS)
     val (paramsOUT, paramsIN) = procedure.params.partition(_.isOutput)

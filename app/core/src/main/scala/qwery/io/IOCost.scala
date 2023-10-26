@@ -50,6 +50,13 @@ case class IOCost(altered: Int = 0,
 
   def getUpdateCount: Int = List(altered, created, deleted, destroyed, inserted, updated).sum
 
+  def isEmpty: Boolean = {
+    rowIDs.isEmpty &&
+      Seq(altered, created, destroyed, deleted, inserted, matched, scanned, shuffled, updated).forall(_ == 0)
+  }
+
+  def nonEmpty: Boolean = !isEmpty
+
   override def returnType: TableType = toTableType
 
   def toMap: Map[String, Long] = {

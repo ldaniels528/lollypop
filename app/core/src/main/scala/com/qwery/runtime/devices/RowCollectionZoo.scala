@@ -4,7 +4,7 @@ import com.qwery.database.QueryResponse
 import com.qwery.implicits.MagicImplicits
 import com.qwery.language.{dieIllegalType, dieNoResultSet}
 import com.qwery.runtime.DatabaseManagementSystem.readPhysicalTable
-import com.qwery.runtime.RuntimeClass.implicits.{RuntimeClassConstructorSugar, RuntimeClassProduct}
+import com.qwery.runtime.plastics.RuntimeClass.implicits.{RuntimeClassConstructorSugar, RuntimeClassProduct}
 import com.qwery.runtime.datatypes.Inferences.fromClass
 import com.qwery.runtime.datatypes.{AnyType, Int64Type, StringType, TableType}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow

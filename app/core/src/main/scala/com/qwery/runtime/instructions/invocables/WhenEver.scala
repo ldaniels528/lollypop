@@ -13,7 +13,7 @@ import qwery.io.IOCost
  * @example {{{ whenever n_bricks is 0 { out.println('n_bricks is empty') } }}}
  */
 case class WhenEver(expression: Expression, code: Instruction) extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.withObservable(Observable(expression, code)), IOCost.empty, null)
   }
 

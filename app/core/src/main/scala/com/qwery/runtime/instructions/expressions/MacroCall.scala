@@ -19,7 +19,7 @@ import scala.language.postfixOps
 case class MacroCall(_macro: Macro, params: Map[String, Any]) extends RuntimeInvokable
   with Expression with Modifiable with Queryable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val scope1 = params.foldLeft(scope) {
       case (agg, (key, instruction: Instruction)) => agg.withVariable(key, instruction, isReadOnly = true)
       case (agg, (key, value)) => agg.withVariable(key, value, isReadOnly = true)

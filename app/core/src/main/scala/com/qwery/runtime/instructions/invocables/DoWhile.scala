@@ -24,7 +24,7 @@ import scala.annotation.tailrec
  */
 case class DoWhile(code: Instruction, condition: Condition) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope0: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec
     def recurse(scope: Scope): (Scope, IOCost, Any) = {
       val _code = code match {

@@ -31,7 +31,7 @@ import scala.annotation.tailrec
  */
 case class WhileDo(condition: Condition, code: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope0: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec
     def recurse(s: Scope, c: IOCost, r: Any): (Scope, IOCost, Any) = {
       if (!s.isReturned && RuntimeCondition.isTrue(condition)(s)) {

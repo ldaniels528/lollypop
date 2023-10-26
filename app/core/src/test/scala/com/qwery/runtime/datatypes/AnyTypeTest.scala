@@ -68,7 +68,7 @@ class AnyTypeTest extends DataTypeFunSpec with VerificationTools {
 
     it("should serialize/deserialize objects within a table") {
       val ref = DatabaseObjectRef(getTestTableName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref
             |create table $ref (
             |  symbol: String(6),
@@ -92,7 +92,7 @@ class AnyTypeTest extends DataTypeFunSpec with VerificationTools {
 
     it("should serialize/deserialize objects within a table without specifying fields") {
       val ref = DatabaseObjectRef(getTestTableName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|import "java.math.BigDecimal"
             |drop if exists $ref
             |create table $ref (

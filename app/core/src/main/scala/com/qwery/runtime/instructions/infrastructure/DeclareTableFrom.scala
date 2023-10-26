@@ -21,7 +21,7 @@ import scala.collection.mutable
 case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
   extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to declare the table
     val _type = tableModel.toTableType
     val out = createTempTable(_type.columns)
@@ -36,7 +36,7 @@ case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, 
         cost2 ++ out.insert(device1)
     }
 
-    scope.withVariable(Variable(name = ref.name, _type, initialValue = out)) -> cost1
+    (scope.withVariable(Variable(name = ref.name, _type, initialValue = out)), cost1, cost1)
   }
 
   override def toSQL: String = {

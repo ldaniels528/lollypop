@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassProduct
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassProduct
 import com.qwery.runtime.Scope
 import com.qwery.runtime.datatypes.Inferences.fromClass
 import com.qwery.runtime.datatypes.TableType

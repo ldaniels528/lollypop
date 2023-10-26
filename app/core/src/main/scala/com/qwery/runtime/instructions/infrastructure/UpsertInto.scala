@@ -31,7 +31,7 @@ case class UpsertInto(ref: DatabaseObjectRef,
                       condition: Condition)
   extends RuntimeModifiable with ReferenceInstruction {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val rc = scope.getRowCollection(ref)
     val cost = source match {
       case RowsOfValues(rowValues) => rc.upsert(row = extractRow(rc, rowValues), condition)
@@ -46,7 +46,7 @@ case class UpsertInto(ref: DatabaseObjectRef,
         //        }
         dieIllegalType(queryable)
     }
-    scope -> cost
+    (scope, cost, cost)
   }
 
   override def toSQL: String = {

@@ -9,7 +9,7 @@ case object EOL extends RuntimeInvokable with InvokableParser {
 
   override def help: List[HelpDoc] = Nil
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = (scope, IOCost.empty, null)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = (scope, IOCost.empty, null)
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Invokable = {
     ts.expect(";")

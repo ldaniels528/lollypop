@@ -1,13 +1,10 @@
-package com.qwery.runtime
+package com.qwery.runtime.plastics
 
 import com.qwery.implicits.MagicImplicits
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.qwery.language.models._
 import com.qwery.language.{dieExpectedArray, dieIllegalType}
-import com.qwery.runtime.Plastic.seqToArray
 import com.qwery.runtime.QweryVM.convertToTable
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.qwery.runtime.RuntimeClass.registerVirtualMethod
 import com.qwery.runtime.datatypes.Inferences
 import com.qwery.runtime.devices.RowCollectionZoo.{MapToTableType, ProductToRowCollection}
 import com.qwery.runtime.devices.{QMap, RowCollection}
@@ -15,6 +12,10 @@ import com.qwery.runtime.instructions.expressions.RuntimeExpression
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.qwery.runtime.instructions.functions.{AnonymousFunction, NamedFunction}
 import com.qwery.runtime.instructions.queryables.{RuntimeQueryable, TableRendering}
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.registerVirtualMethod
+import com.qwery.runtime.plastics.Tuples.seqToArray
+import com.qwery.runtime.{QweryVM, Scope, safeCast}
 import com.qwery.util.CalendarHelper.CalendarUtilities
 import com.qwery.util.CodecHelper._
 import com.qwery.util.DateHelper

@@ -11,8 +11,9 @@ import qwery.io.IOCost
  */
 case class Truncate(ref: DatabaseObjectRef) extends RuntimeModifiable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
-    scope -> scope.getRowCollection(ref).setLength(newSize = 0)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
+    val cost = scope.getRowCollection(ref).setLength(newSize = 0)
+    (scope, cost, cost)
   }
 
   override def toSQL: String = s"truncate ${ref.toSQL}"

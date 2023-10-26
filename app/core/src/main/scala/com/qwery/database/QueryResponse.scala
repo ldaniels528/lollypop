@@ -7,6 +7,7 @@ import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
 import com.qwery.runtime.devices.{RowCollection, TableColumn}
 import com.qwery.runtime.instructions.expressions.GraphResult
+import com.qwery.runtime.instructions.queryables.TableRendering
 import com.qwery.runtime.{DataObject, DatabaseObjectNS, ROWID, SRC_ROWID_NAME, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.{IOCost, RowIDRange}
@@ -39,7 +40,7 @@ case class QueryResponse(ns: DatabaseObjectNS,
 
   def get: Either[RowCollection, IOCost] = {
     // is it a row collection?
-    if (columns.isEmpty) Right(cost || IOCost()) else {
+    if (columns.isEmpty) Right(cost || IOCost.empty) else {
       val out = createQueryResultTable(columns)
       for {row <- rows} {
         val mapping = Map(columns.map(_.name) zip row: _*)
@@ -76,13 +77,13 @@ object QueryResponse {
 
   final implicit class QueryResultConversion(val result: Any) extends AnyVal {
 
-    @inline
     def toQueryResponse(ref: Option[DatabaseObjectNS], limit: Option[Int])(implicit scope: Scope): QueryResponse = {
       val ns = getSource(ref)
       result match {
+        case cost: IOCost => toQueryResponse(ns, cost)
         case rc: RowCollection => toQueryResponse(ns, rc, limit)
         case drawing: GraphResult => toQueryResponse(ns, rc = drawing.data, limit = None).copy(resultType = RESULT_DRAWING)
-        case cost: IOCost => toQueryResponse(ns, cost)
+        case tr: TableRendering => toQueryResponse(ns, tr.toTable, limit)
         case _ids: Seq[_] if _ids.forall(_.isInstanceOf[ROWID]) =>
           val rowIds = _ids.collect { case n: ROWID => n }
           toQueryResponse(ns, IOCost(inserted = rowIds.size, rowIDs = RowIDRange(rowIds: _*)))
