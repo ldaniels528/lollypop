@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 case class Once(code: Instruction) extends RuntimeInvokable {
   private val invoked = new AtomicBoolean(false)
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     if (invoked.compareAndSet(false, true)) QweryVM.execute(scope, code) else (scope, IOCost.empty, null)
   }
 

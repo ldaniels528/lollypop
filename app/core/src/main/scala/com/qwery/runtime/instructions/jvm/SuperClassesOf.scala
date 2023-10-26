@@ -4,7 +4,8 @@ import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_OBJECT_ORIENTED
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
-import com.qwery.runtime.{QweryVM, RuntimeClass, Scope}
+import com.qwery.runtime.plastics.RuntimeClass
+import com.qwery.runtime.{QweryVM, Scope}
 
 /**
  * SuperClassesOf() function - returns the super-classes extended by a class or instance

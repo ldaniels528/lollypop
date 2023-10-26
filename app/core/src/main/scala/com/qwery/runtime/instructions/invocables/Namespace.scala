@@ -12,7 +12,7 @@ import qwery.io.IOCost
  */
 case class Namespace(expression: Expression) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val (s, c, r) = QweryVM.execute(scope, expression)
     val s1 = r match {
       case null => scope

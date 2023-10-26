@@ -4,7 +4,7 @@ import com.qwery.implicits.MagicImplicits
 import com.qwery.language.models._
 import com.qwery.language.{dieUnsupportedConversion, dieUnsupportedType}
 import com.qwery.runtime.QweryVM.execute
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassInstanceSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.qwery.runtime.RuntimeFiles.RecursiveFileList
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.{QMap, Row, RowCollection}

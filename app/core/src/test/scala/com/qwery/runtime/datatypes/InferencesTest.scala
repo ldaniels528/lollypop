@@ -1,6 +1,6 @@
 package com.qwery.runtime.datatypes
 
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes.Inferences.resolveType
 import com.qwery.runtime.devices.{ExternalFilesTableRowCollection, RowCollection}
 import org.scalatest.funspec.AnyFunSpec

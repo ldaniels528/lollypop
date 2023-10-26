@@ -312,7 +312,7 @@ class ProductCollectionTest extends AnyFunSpec {
 
     it(s"should read an existing table as a ${classOf[ProductCollection[_]].getSimpleName}") {
       val ref = DatabaseObjectRef(getClass.getSimpleName)
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $ref &&
             |create table $ref (
             |   symbol: String(5),

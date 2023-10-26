@@ -20,7 +20,7 @@ import qwery.io.IOCost
  */
 case class ScopedCodeBlock(instructions: List[Instruction]) extends CodeBlock with RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val scope0 = Scope(scope)
     summarize(scope0, instructions) ~> { case (_, c, r) => (scope, c, r) }
   }

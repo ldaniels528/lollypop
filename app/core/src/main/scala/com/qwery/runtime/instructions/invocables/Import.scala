@@ -5,7 +5,8 @@ import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.datatypes.AnyType
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.qwery.runtime.{QweryVM, RuntimeClass, Scope}
+import com.qwery.runtime.plastics.RuntimeClass
+import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
 
@@ -21,7 +22,7 @@ import scala.annotation.tailrec
  */
 case class Import(target: Expression) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope0: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec
     def recurse(scope: Scope, value: Any): (Scope, Any) = value match {
       case null => scope -> null

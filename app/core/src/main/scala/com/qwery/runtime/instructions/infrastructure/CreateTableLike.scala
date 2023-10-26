@@ -21,11 +21,12 @@ import scala.collection.mutable
 case class CreateTableLike(ref: DatabaseObjectRef, tableModel: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean)
   extends RuntimeModifiable with ReferenceInstruction {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val tableColumnNames = tableModel.columns.map(_.name).toSet
     val templateColumns = scope.getRowCollection(template).use(_.columns.filterNot(c => tableColumnNames.contains(c.name)))
     val aggColumns = tableModel.columns ::: templateColumns.map(_.toColumn).toList
-    scope -> DatabaseManagementSystem.createPhysicalTable(ref.toNS, tableModel.copy(columns = aggColumns).toTableType, ifNotExists)
+    val cost = DatabaseManagementSystem.createPhysicalTable(ref.toNS, tableModel.copy(columns = aggColumns).toTableType, ifNotExists)
+    (scope, cost, cost)
   }
 
   override def toSQL: String = {

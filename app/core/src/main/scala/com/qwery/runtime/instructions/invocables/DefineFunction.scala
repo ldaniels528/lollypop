@@ -14,7 +14,7 @@ import qwery.io.IOCost
  */
 case class DefineFunction(function: TypicalFunction) extends RuntimeInvokable with Expression {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = QweryVM.execute(scope, function)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = QweryVM.execute(scope, function)
 
   override def toSQL: String = {
     function match {

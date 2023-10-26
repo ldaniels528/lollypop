@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SYNC_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Atom, Expression}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream, dieIllegalType}
 import com.qwery.runtime.devices.QMap
@@ -74,7 +74,7 @@ object Http extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "http",
-    category = CATEGORY_TESTING,
+    category = CATEGORY_SYNC_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Query-native HTTP client",
@@ -83,7 +83,7 @@ object Http extends ExpressionParser {
          |""".stripMargin
   ), HelpDoc(
     name = "http",
-    category = CATEGORY_TESTING,
+    category = CATEGORY_SYNC_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Returns a URL based on a relative path.",
@@ -92,7 +92,7 @@ object Http extends ExpressionParser {
          |""".stripMargin
   ), HelpDoc(
     name = "http",
-    category = CATEGORY_TESTING,
+    category = CATEGORY_SYNC_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Returns a URL based on a relative path.",

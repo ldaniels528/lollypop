@@ -15,6 +15,7 @@ import com.qwery.runtime.instructions.invocables._
 import com.qwery.runtime.instructions.jvm._
 import com.qwery.runtime.instructions.operators._
 import com.qwery.runtime.instructions.queryables._
+import com.qwery.runtime.plastics.RuntimePlatform
 import qwery.io._
 import qwery.lang._
 
@@ -194,7 +195,8 @@ object QweryUniverse {
     Bar, BarBar, Between, Betwixt, BooleanType,
     Case, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
-    DeclareClass, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy, Div, DoWhile, Drop,
+    DeclareClass, DeclarePackage, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy,
+    Div, DoWhile, Drop,
     Each, ElementAt, EOL, EQ, Every, Exists, Explode, Expose,
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
@@ -203,7 +205,7 @@ object QweryUniverse {
     Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
     LessLess, LessLessLess, Let, Like, Limit, LT, LTE,
-    Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
+    Macro, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
     Namespace, NEG, NEQ, New, NodeAPI, NodeConsole, NodeExec, NodeScan, NodeStart, NodeStop, NodeWWW, Not,
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,

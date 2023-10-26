@@ -344,7 +344,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
 
     it("should execute an alter table to prepend, rename columns and label a durable collection") {
       val xStockQuotes = DatabaseObjectRef("StockQuotes")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|namespace "temp.examples"
             |drop if exists $xStockQuotes
             |create table $xStockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (

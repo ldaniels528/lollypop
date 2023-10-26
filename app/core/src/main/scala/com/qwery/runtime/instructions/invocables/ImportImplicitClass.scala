@@ -4,7 +4,8 @@ import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.qwery.runtime.{RuntimeClass, Scope}
+import com.qwery.runtime.{Scope}
+import com.qwery.runtime.plastics.RuntimeClass
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
 
@@ -13,7 +14,7 @@ import qwery.io.IOCost
  * @param expression the implicit class name
  */
 case class ImportImplicitClass(expression: Expression) extends RuntimeInvokable {
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val s = scope.importImplicitClass(RuntimeClass.getClassByName(expression.asString || expression.dieIllegalType()))
     (s, IOCost.empty, null)
   }

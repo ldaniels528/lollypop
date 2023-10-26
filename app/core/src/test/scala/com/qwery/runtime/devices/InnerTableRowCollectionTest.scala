@@ -160,7 +160,7 @@ class InnerTableRowCollectionTest extends AnyFunSpec with VerificationTools {
   }
 
   private def createTable(ref: DatabaseObjectRef, rowID: ROWID): (Scope, FileRowCollection, TableColumn, TableType, ROWID, Int) = {
-    implicit val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+    implicit val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
       s"""|drop if exists $ref
           |create table $ref (
           |   symbol: String(8),

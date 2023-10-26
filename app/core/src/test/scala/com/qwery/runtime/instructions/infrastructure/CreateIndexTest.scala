@@ -47,7 +47,7 @@ class CreateIndexTest extends AnyFunSpec with VerificationTools {
     it("should execute create index statements") {
       val tableRef = DatabaseObjectRef(getTestTableName) // CreateIndexTest
       val indexRef = DatabaseObjectRef.InnerTable(tableRef, "exchange") // CreateIndexTest#exchange
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $tableRef &&
             |create table $tableRef (symbol: String(8), exchange: String(8), lastSale: Double) containing values
             |       ("AMD", "NASDAQ", 67.55),
@@ -84,7 +84,7 @@ class CreateIndexTest extends AnyFunSpec with VerificationTools {
 
     it("should execute create index statements with multiple indices") {
       val tableRef = DatabaseObjectRef(getTestTableName + "2") // CreateIndexTest2
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $tableRef &&
             |create table $tableRef (
             |   symbol: String(8),

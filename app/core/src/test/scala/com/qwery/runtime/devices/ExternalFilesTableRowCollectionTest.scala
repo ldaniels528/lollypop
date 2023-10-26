@@ -26,8 +26,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
   describe(classOf[ExternalFilesTableRowCollection].getSimpleName) {
 
     it("should support indexed searches") {
-      val (scope0, cost0) = QweryVM.infrastructureSQL(Scope(),
-        // create an external table to represent the input data
+      val (scope0, cost0, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $refIS &&
             |create external table $refIS (
             |   symbol: String(6),
@@ -49,7 +48,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
       assert(cost3 == IOCost(matched = 1, scanned = 10001))
 
       // create an index for faster reading
-      val (_, cost4) = QweryVM.infrastructureSQL(scope0,
+      val (_, cost4, _) = QweryVM.executeSQL(scope0,
         s"""|create index $refIS#symbol
             |""".stripMargin)
       assert(cost4 == IOCost(created = 1, shuffled = 10001))
@@ -68,7 +67,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
     }
 
     it("should create an external table") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $refCL
             |create external table $refCL (
             |   Symbol: String(10),

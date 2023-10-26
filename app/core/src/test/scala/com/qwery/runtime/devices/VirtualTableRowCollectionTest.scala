@@ -19,7 +19,7 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
   describe(classOf[VirtualTableRowCollection].getName) {
 
     it("should prepare a sample data table") {
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $tableRef
             |create table $tableRef (
             |   symbol: String(5),
@@ -37,7 +37,7 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
       lines foreach { line =>
         if (line.trim.nonEmpty) {
           val Array(symbol, exchange, lastSale, lastSaleTime) = line.split("[,]")
-          val (_, cost) = QweryVM.infrastructureSQL(scope,
+          val (_, cost, _) = QweryVM.executeSQL(scope,
             s"""|insert into $tableRef (symbol, exchange, lastSale, lastSaleTime)
                 |values ($symbol, $exchange, $lastSale, $lastSaleTime)
                 |""".stripMargin)
@@ -48,7 +48,7 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should perform create view") {
-      val (_, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (_, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|drop if exists $viewRef &&
             |create view $viewRef
             |as
@@ -80,7 +80,7 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
       // remove the view from cache
       ResourceManager.close(viewRef.toNS)
 
-      val (_, cost1) = QweryVM.infrastructureSQL(scope,
+      val (_, cost1, _) = QweryVM.executeSQL(scope,
         s"""|drop if exists $viewRef#symbol
             |create index $viewRef#symbol
             |""".stripMargin)

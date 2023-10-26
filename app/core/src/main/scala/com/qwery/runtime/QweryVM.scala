@@ -14,6 +14,7 @@ import com.qwery.runtime.instructions.infrastructure.Macro
 import com.qwery.runtime.instructions.invocables.{SetAnyVariable, WhenEver}
 import com.qwery.runtime.instructions.queryables.TableRendering
 import com.qwery.runtime.instructions.{MacroLanguageParser, RuntimeInstruction}
+import com.qwery.runtime.plastics.RuntimeClass
 import com.qwery.{QweryException, die}
 import qwery.io.IOCost
 
@@ -89,26 +90,6 @@ object QweryVM {
    */
   def executeSQL(scope: Scope, sql: String): (Scope, IOCost, Any) = {
     execute(scope, scope.getCompiler.compile(sql))
-  }
-
-  /**
-   * Evaluates an [[Modifiable infrastructure instruction]]
-   * @param scope       the [[Scope scope]]
-   * @param instruction the [[Instruction instruction]] to evaluate
-   * @return the resulting [[IOCost I/O cost]]
-   */
-  def infrastructure(scope: Scope, instruction: Instruction): (Scope, IOCost) = {
-    execute(scope, instruction) ~> { case (s, c, _) => (s, c) }
-  }
-
-  /**
-   * Executes an SQL query
-   * @param scope the [[Scope scope]]
-   * @param sql   the query string
-   * @return the potentially updated [[Scope scope]] and the resulting [[IOCost]]
-   */
-  def infrastructureSQL(scope: Scope, sql: String): (Scope, IOCost) = {
-    infrastructure(scope, scope.getCompiler.compile(sql))
   }
 
   /**

@@ -1,7 +1,7 @@
 package com.qwery.language.models
 
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.qwery.runtime.RuntimeClass.implicits.RuntimeClassInstanceSugar
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.qwery.runtime.datatypes.Inferences.fastTypeResolve
 import com.qwery.runtime.datatypes.Matrix
 import com.qwery.runtime.instructions.RuntimeInstruction

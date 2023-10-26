@@ -27,7 +27,7 @@ import qwery.io.IOCost
 case class ValVar(ref: Atom, `type`: Option[ColumnType], initialValue: Option[Instruction], isReadOnly: Boolean = false)
   extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val (scopeR, costR, resultR) = initialValue.map(QweryVM.execute(scope, _)) || (scope, IOCost.empty, None)
     val dataType = `type`.map(_type => DataType.load(_type)(scope)) || AnyType
     (scopeR.withVariable(ref.name, `type` = dataType, resultR, isReadOnly), costR, null)

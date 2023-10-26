@@ -19,7 +19,7 @@ import java.util.{Timer, TimerTask}
 case class After(delay: Expression, instruction: Instruction) extends RuntimeInvokable {
   private val timer = new Timer()
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     timer.schedule(new TimerTask {
       override def run(): Unit = QweryVM.execute(scope, instruction)
     }, (delay.asInterval || dieExpectedInterval()).toMillis)

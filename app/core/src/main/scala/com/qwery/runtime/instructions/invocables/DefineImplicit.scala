@@ -4,7 +4,8 @@ import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.{Atom, CodeBlock, Instruction}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.functions.NamedFunction
-import com.qwery.runtime.{RuntimeClass, Scope, VirtualMethod}
+import com.qwery.runtime.plastics.{RuntimeClass, VirtualMethod}
+import com.qwery.runtime.Scope
 import com.qwery.util.LogUtil
 import qwery.io.IOCost
 
@@ -31,7 +32,7 @@ import qwery.io.IOCost
  */
 case class DefineImplicit(className: Atom, methods: Instruction) extends RuntimeInvokable {
 
-  override def invoke()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
 
     def expand(instruction: Instruction): List[NamedFunction] = instruction match {
       case CodeBlock(instructions) => instructions.flatMap(expand)

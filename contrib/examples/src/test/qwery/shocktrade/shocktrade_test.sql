@@ -34,7 +34,7 @@ feature 'ShockTrade services' {
         val responseB = http get 'http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}'
         verify responseB.statusCode is 200
             and responseB.body.size() is 1
-            and responseB.body[0] matches { contest_id: @contest_id, name: "Winter is coming", funds: 2000.0, creationTime: isNotNull }
+            and responseB.body[0] like { contest_id: @contest_id, name: "Winter is coming", funds: 2000.0, creationTime: isNotNull }
                 ^^^ "Retrieved contest: {{contest_id}}"
     }
             
@@ -56,8 +56,8 @@ feature 'ShockTrade services' {
         val responseE = http post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }
         verify responseE.statusCode is 200
             and responseE.body.size() is 2
-            and responseE.body[0] matches { contest_id: isUUID, name: "Winter is coming", funds: 2000.0, creationTime: isDateTime }
-            and responseE.body[1] matches { contest_id: isUUID, name: "Winter has come!!!", funds: 2000.0, creationTime: isDateTime }
+            and responseE.body[0] like { contest_id: isUUID, name: "Winter is coming", funds: 2000.0, creationTime: isDateTime }
+            and responseE.body[1] like { contest_id: isUUID, name: "Winter has come!!!", funds: 2000.0, creationTime: isDateTime }
                 ^^^ "Retrieved contests: {{responseE.body[0].contest_id}}, {{responseE.body[1].contest_id}}"
     }
 
@@ -76,7 +76,7 @@ feature 'ShockTrade services' {
         val responseG = http get 'http://{{host}}:{{port}}/api/shocktrade/members?id={{memberID}}'
         verify responseG.statusCode is 200
             and responseG.body.size() is 1
-            and responseG.body[0] matches { member_id: memberID, name: "fugitive528", funds: 100000, creationTime: isDateTime }
+            and responseG.body[0] like { member_id: memberID, name: "fugitive528", funds: 100000, creationTime: isDateTime }
                 ^^^ "Retrieved member: {{memberID}}"
     }
 
@@ -96,7 +96,7 @@ feature 'ShockTrade services' {
         val responseI = http get 'http://{{host}}:{{port}}/api/shocktrade/participants?id={{participant_id}}'
         verify responseI.statusCode is 200
             and responseI.body.size() is 1
-            and responseI.body[0] matches {
+            and responseI.body[0] like {
                 contest_id: @contest_id, member_id: memberID, participant_id: @participant_id,
                 funds: 2000, creationTime: isDateTime
             } ^^^ "Retrieved participant: {{participant_id}}"
@@ -119,7 +119,7 @@ feature 'ShockTrade services' {
        val responseK = http get 'http://{{host}}:{{port}}/api/shocktrade/orders?id={{order_id}}'
        verify responseK.statusCode is 200
            and responseK.body.size() is 1
-           and responseK.body[0] matches {
+           and responseK.body[0] like {
                 contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id,
                 symbol: 'AAPL', exchange: 'NYSE', order_type: 'BUY', order_terms: 'LIMIT', price: 95.67,
                 price: 95.67, creationTime: isDateTime, expirationTime: isDateTime
@@ -143,7 +143,7 @@ feature 'ShockTrade services' {
        val responseM = http get 'http://{{host}}:{{port}}/api/shocktrade/positions?id={{position_id}}'
        verify responseM.statusCode is 200
            and responseM.body.size() is 1
-           and responseM.body[0] matches {
+           and responseM.body[0] like {
                 contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id, position_id: @position_id,
                 symbol: 'AAPL', exchange: 'NYSE', pricePaid: 95.11, creationTime: isDateTime
            } ^^^ "Retrieved position: {{position_id}}"
@@ -153,7 +153,7 @@ feature 'ShockTrade services' {
         val responseN = http get 'http://{{host}}:{{port}}/api/shocktrade/positions/by/participant?id={{participant_id}}'
         verify responseN.statusCode is 200
             and responseN.body.size() is 1
-            and responseN.body[0] matches {
+            and responseN.body[0] like {
                 contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id, position_id: @position_id,
                 symbol: 'AAPL', exchange: 'NYSE', pricePaid: 95.11, creationTime: isDateTime
             } ^^^ "Retrieved position: {{position_id}}"

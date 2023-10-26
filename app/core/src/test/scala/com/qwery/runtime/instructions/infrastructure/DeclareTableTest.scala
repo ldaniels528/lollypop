@@ -129,16 +129,16 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing declare table w/an inner-table") {
       val ref = @@@("stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
-         """|declare table stocks (
-            |   symbol: String(8),
-            |   exchange: String(8),
-            |   history Table (
-            |       price Double,
-            |       transactionTime DateTime
-            |   )[10]
-            |)
-            |""".stripMargin)
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
+        """|declare table stocks (
+           |   symbol: String(8),
+           |   exchange: String(8),
+           |   history Table (
+           |       price Double,
+           |       transactionTime DateTime
+           |   )[10]
+           |)
+           |""".stripMargin)
       assert(cost.created == 1)
       val rc = scope.getRowCollection(ref)
       assert(getStorageType(rc, "history")(_.isClustered))
@@ -146,7 +146,7 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing declare table w/a BLOB inner-table") {
       val ref = @@@("stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|declare table ${ref.name} (
             |   symbol: String(8),
             |   exchange: String(8),
@@ -163,7 +163,7 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
 
     it("should support executing declare table w/a multi-tenant inner-table") {
       val ref = @@@("Stocks")
-      val (scope, cost) = QweryVM.infrastructureSQL(Scope(),
+      val (scope, cost, _) = QweryVM.executeSQL(Scope(),
         s"""|declare table ${ref.name} (
             |   symbol: String(8),
             |   exchange: String(8),
