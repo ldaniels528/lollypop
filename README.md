@@ -1,4 +1,4 @@
-Qwery v0.1.3
+Qwery v0.1.4
 ============
 
 ## Table of Contents
@@ -23,16 +23,16 @@ Qwery v0.1.3
   * <a href="#Asynchronous_I_O">Asynchronous I/O</a> (1)
   * <a href="#Branching_Ops">Branching Ops</a> (11)
   * <a href="#Control_Flow">Control Flow</a> (24)
-  * <a href="#DataFrame">DataFrame</a> (67)
+  * <a href="#DataFrame">DataFrame</a> (69)
   * <a href="#Distributed_Processing">Distributed Processing</a> (7)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (9)
   * <a href="#Miscellaneous">Miscellaneous</a> (3)
-  * <a href="#Pattern_Matching">Pattern Matching</a> (3)
+  * <a href="#Pattern_Matching">Pattern Matching</a> (2)
   * <a href="#Science_and_Mathematics">Science and Mathematics</a> (2)
-  * <a href="#Scope_and_Session">Scope and Session</a> (19)
-  * <a href="#Synchronous_I_O">Synchronous I/O</a> (4)
+  * <a href="#Scope_and_Session">Scope and Session</a> (20)
+  * <a href="#Synchronous_I_O">Synchronous I/O</a> (7)
   * <a href="#System_Tools">System Tools</a> (9)
-  * <a href="#Testing">Testing</a> (8)
+  * <a href="#Testing">Testing</a> (5)
 <a name="Introduction"></a>
 ## Introduction
 Qwery is a general-purpose programming/scripting language for the JVM.
@@ -54,17 +54,17 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.3.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.4.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.3.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.4.jar`
 
 ### Run Query CLI
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.3.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.4.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -130,7 +130,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-24T17:29:13.323Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-26T19:38:39.562Z")
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
@@ -283,7 +283,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-24T17:29:13.463Z"
+"2023-10-26T19:38:39.703Z"
 ```
 <a name="Examples"></a>
 
@@ -445,7 +445,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@cf08c97
 ```
 ##### Console Output
 ```
@@ -539,11 +539,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| NYSE      | EW     |  87.8948 | 2023-10-24T17:28:32.512Z |
-| NYSE      | BH     |  51.9879 | 2023-10-24T17:28:29.980Z |
-| OTHER_OTC | TLHL   |   0.0833 | 2023-10-24T17:29:09.628Z |
-| AMEX      | XT     |  77.0169 | 2023-10-24T17:29:09.948Z |
-| NYSE      | LFU    |  89.2916 | 2023-10-24T17:28:31.441Z |
+| OTHER_OTC | QMVP   |   0.8197 | 2023-10-26T19:38:13.523Z |
+| OTCBB     | FGCQ   |   1.6879 | 2023-10-26T19:37:44.624Z |
+| NYSE      | XZ     |  33.9382 | 2023-10-26T19:38:24.584Z |
+| AMEX      | SOUT   |  14.7039 | 2023-10-26T19:38:13.227Z |
+| OTCBB     | BTDF   |   0.5156 | 2023-10-26T19:37:58.203Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -612,7 +612,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.286583, _2=720.0)
+Tuple2(_1=0.28725, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -807,7 +807,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@cf08c97
 ```
 ##### Console Output
 ```
@@ -822,7 +822,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4ac19bc6
+java.io.PrintStream@5342eec5
 ```
 ##### Console Error
 ```
@@ -842,9 +842,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| out    | PrintStream         | java.io.PrintStream@1f1fbc9f                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@356fa0d1                                       |
-| err    | PrintStream         | java.io.PrintStream@4ac19bc6                                          |
+| out    | PrintStream         | java.io.PrintStream@cf08c97                                           |
+| stdin  | BufferedReader      | java.io.BufferedReader@4e85dcb2                                       |
+| err    | PrintStream         | java.io.PrintStream@5342eec5                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -866,7 +866,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@cf08c97
 ```
 ##### Console Output
 ```
@@ -886,7 +886,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@cf08c97
 ```
 ##### Console Output
 ```
@@ -1002,12 +1002,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-24T17:29:15.163Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-24T17:29:15.163Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-24T17:29:15.163Z | VV     | OTCBB     |          |
-| 2023-10-24T17:29:15.163Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-24T17:29:15.163Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-24T17:29:15.163Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-26T19:38:41.390Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-26T19:38:41.390Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-26T19:38:41.390Z | VV     | OTCBB     |          |
+| 2023-10-26T19:38:41.390Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-26T19:38:41.390Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-26T19:38:41.390Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### avg¹ (DataFrame &#8212; Functional)
@@ -1542,10 +1542,10 @@ deck.shuffle()
 | face | suit |
 |-------------|
 | K    | ♠    |
-| 10   | ♠    |
-| 7    | ♠    |
-| 10   | ♦    |
-| A    | ♣    |
+| J    | ♥    |
+| 5    | ♥    |
+| 8    | ♠    |
+| 9    | ♦    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -1814,11 +1814,36 @@ from (
 | CAVY   | OTCBB     |   0.0047 | 2023-09-21T04:57:43.503Z |
 |----------------------------------------------------------|
 ```
-### like (DataFrame &#8212; Procedural)
+### like¹ (DataFrame &#8212; Procedural)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-"Chris" like "Ch%s"
+"Hello World" like "H% W%"
+```
+##### Results
+```sql
+true
+```
+### like² (DataFrame &#8212; Procedural)
+*Description*: determines whether the `value` matches the `expression`
+
+```sql
+isNumeric = (o: object) => o.isNumber()
+5678 like isNumeric
+```
+##### Results
+```sql
+true
+```
+### like³ (DataFrame &#8212; Procedural)
+*Description*: determines whether the `value` matches the `expression`
+
+```sql
+response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
+isExchange = (s: String) => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+isNumber = (o: Any) => o.isNumber()
+isString = (o: Any) => o.isString()
+response like { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
 ```
 ##### Results
 ```sql
@@ -2089,7 +2114,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-24T17:29:16.460Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-26T19:38:42.708Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2455,11 +2480,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-24T17:29:16.656Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-24T17:29:16.656Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-26T19:38:42.884Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-26T19:38:42.884Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-24T17:29:16.657Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-26T19:38:42.884Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2632,7 +2657,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@1f1fbc9f", message="OK", statusCode=200, responseID="386b9ade-4c1c-4cb8-85a3-236a61b9cd18")
+HttpResponse(body="java.io.PrintStream@cf08c97", message="OK", statusCode=200, responseID="96d6c439-42ca-40fe-99d0-88e3a184b87b")
 ```
 ##### Console Output
 ```
@@ -2697,7 +2722,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[14334, 8502, 15016, 13043, 12430, 8626, 15562, 14611, 15254, 9025, 8783, 10554, 9995, 14427, 10659, 13132, 9505, 12699, 12032, 10690, 12871]
+[10766, 14890, 15249, 10973, 9819, 8832, 10103, 9511, 8590, 10735, 13119, 11828, 12420, 11484, 13832, 8638, 8907, 12039, 9865, 13630, 10123]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2707,7 +2732,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9061
+13270
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2826,7 +2851,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@1c610f
+scala.Function1$@5abc5854
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2875,10 +2900,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-24T17:29:18.174Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-24T17:29:18.174Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-24T17:29:18.174Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-24T17:29:18.174Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-26T19:38:44.388Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-26T19:38:44.388Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-26T19:38:44.388Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-26T19:38:44.388Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -2933,7 +2958,7 @@ isString = v => v.isString()
 isUUID = v => v.isUUID()
 isNumber = v => v.isNumber()
 response = { id: "a891ee9b-6667-40fc-9ed1-a129d04c8b6d", symbol: "ABC", exchange: "NYSE", lastSale: "35.76" }
-expose(response matches { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber })
+expose(response like { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber })
 ```
 ##### Results
 ```sql
@@ -2945,19 +2970,6 @@ expose(response matches { id: isUUID, symbol: isString, exchange: isString, last
 | (v: Any) => v.isString() | "NYSE"                                 | true   |
 | (v: Any) => v.isNumber() | "35.76"                                | false  |
 |----------------------------------------------------------------------------|
-```
-### matches (Pattern Matching &#8212; Declarative)
-*Description*: determines whether the `value` matches the `expression`
-
-```sql
-response = [{ id: 5678, symbol: "DOG", exchange: "NYSE", "lastSale": 90.67 }]
-isNumber = x => x.isNumber()
-isString = x => x.isString()
-response matches [{ id: isNumber, symbol: isString, exchange: isString, lastSale: isNumber }]
-```
-##### Results
-```sql
-true
 ```
 <a name="Science_and_Mathematics"></a>
 ## Science and Mathematics Examples
@@ -3074,12 +3086,11 @@ from @@stocks
 *Description*: Creates a new ephemeral (in-memory) JVM-compatible class
 
 ```sql
-import "java.util.Date"
 class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
 ```
 ##### Results
 ```sql
-class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+()
 ```
 ### destroy (Scope and Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3101,6 +3112,8 @@ base64 = (value: String) => value.getBytes().base64()
 let b64 : base64 = "Hello"
 b64
 ```
+<img src="docs/images/experimental.png" alt="let is marked as experimental">
+
 ##### Results
 ```sql
 SGVsbG8=
@@ -3124,7 +3137,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-24T17:29:18.336Z
+2023-10-26T19:38:44.527Z
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3163,6 +3176,26 @@ new MouseListener() { mouseClicked: (e: MouseEvent) => out <=== "mouseClicked", 
 ```sql
 from ns('examples.shocktrade.Contests') limit 5
 ```
+##### Results
+```sql
+|-----------------------------------------------------------------------------------------------|
+| contest_id                           | name               | funds  | creationTime             |
+|-----------------------------------------------------------------------------------------------|
+| dc59d5ef-322c-40fc-8714-471084940967 | Winter is coming   | 2000.0 | 2023-10-26T19:21:47.222Z |
+| 73558c93-c172-488a-8e6e-e2ff25788f8f | Winter has come!!! | 2000.0 | 2023-10-26T19:21:47.272Z |
+|-----------------------------------------------------------------------------------------------|
+```
+### package (Scope and Session &#8212; Declarative)
+*Description*: Declares the default JVM package namespace
+
+```sql
+package "com.acme.skunkworks"
+__package__
+```
+##### Results
+```sql
+com.acme.skunkworks
+```
 ### reset (Scope and Session &#8212; Procedural)
 *Description*: Resets the scope; wiping out all state
 
@@ -3192,9 +3225,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| out    | PrintStream    | java.io.PrintStream@1f1fbc9f    |
-| stdin  | BufferedReader | java.io.BufferedReader@356fa0d1 |
-| err    | PrintStream    | java.io.PrintStream@4ac19bc6    |
+| out    | PrintStream    | java.io.PrintStream@cf08c97     |
+| stdin  | BufferedReader | java.io.BufferedReader@4e85dcb2 |
+| err    | PrintStream    | java.io.PrintStream@5342eec5    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3226,7 +3259,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@cf08c97
 ```
 ##### Console Output
 ```
@@ -3239,6 +3272,82 @@ Hello World
 import "java.io.File"
 f = new File("./test.json")
 f ===> out
+```
+### http¹ (Synchronous I/O &#8212; Declarative)
+*Description*: Query-native HTTP client
+
+```sql
+http get('https://example.com/')
+```
+##### Results
+```sql
+HttpResponse(body='<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+', message="OK", statusCode=200, responseID="3fbfcc74-b71e-45c9-8888-f3fdfc087b0e")
+```
+### http² (Synchronous I/O &#8212; Declarative)
+*Description*: Returns a URL based on a relative path.
+
+```sql
+http path('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID="059a7849-c296-4662-9d21-4e2ba394247e")
+```
+### http³ (Synchronous I/O &#8212; Declarative)
+*Description*: Returns a URL based on a relative path.
+
+```sql
+http uri('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID="05d23146-4f8c-4382-b9d1-a111a1e8b2a1")
 ```
 ### synchronized (Synchronous I/O &#8212; Procedural)
 *Description*: Synchronizes access to an object; providing an exclusive read/write lock over it
@@ -3299,7 +3408,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-24T17:29:18.398Z
+2023-10-26T19:38:44.713Z
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3422,8 +3531,8 @@ true
 ```
 ##### Console Error
 ```
-[0.001458ms] AnyLiteral 1 ~> 1 <Integer>
-[0.318083ms] SetAnyVariable set x = 1 ~> null <null>
+[0.001291ms] AnyLiteral 1 ~> 1 <Integer>
+[0.266458ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3437,7 +3546,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4ac19bc6
+java.io.PrintStream@5342eec5
 ```
 ##### Console Error
 ```
@@ -3555,82 +3664,6 @@ Feature: Traveler information service
       [x] (body[0]).lastName is "JONES"
       [x] (body[0]).destAirportCode is "BUR"
 completed: passed: 4, failed: 1
-```
-### http¹ (Testing &#8212; Declarative)
-*Description*: Query-native HTTP client
-
-```sql
-http get('https://example.com/')
-```
-##### Results
-```sql
-HttpResponse(body='<!doctype html>
-<html>
-<head>
-    <title>Example Domain</title>
-
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type="text/css">
-    body {
-        background-color: #f0f0f2;
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        
-    }
-    div {
-        width: 600px;
-        margin: 5em auto;
-        padding: 2em;
-        background-color: #fdfdff;
-        border-radius: 0.5em;
-        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
-    }
-    a:link, a:visited {
-        color: #38488f;
-        text-decoration: none;
-    }
-    @media (max-width: 700px) {
-        div {
-            margin: 0 auto;
-            width: auto;
-        }
-    }
-    </style>    
-</head>
-
-<body>
-<div>
-    <h1>Example Domain</h1>
-    <p>This domain is for use in illustrative examples in documents. You may use this
-    domain in literature without prior coordination or asking for permission.</p>
-    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
-</div>
-</body>
-</html>
-', message="OK", statusCode=200, responseID="ada3a26b-9cc9-4f18-95f1-74dabd85ef4b")
-```
-### http² (Testing &#8212; Declarative)
-*Description*: Returns a URL based on a relative path.
-
-```sql
-http path('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="09de528d-20da-4017-a33b-42aba66d32fb")
-```
-### http³ (Testing &#8212; Declarative)
-*Description*: Returns a URL based on a relative path.
-
-```sql
-http uri('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="cc427568-6759-4722-8a20-e2fb77b179de")
 ```
 ### scenario (Testing &#8212; Declarative)
 *Description*: scenario-based test declaration
