@@ -1,4 +1,4 @@
-Qwery v0.1.3
+Qwery v0.1.4
 ============
 
 ## Table of Contents
@@ -29,10 +29,10 @@ Qwery v0.1.3
   * <a href="#Miscellaneous">Miscellaneous</a> (3)
   * <a href="#Pattern_Matching">Pattern Matching</a> (3)
   * <a href="#Science_and_Mathematics">Science and Mathematics</a> (2)
-  * <a href="#Scope_and_Session">Scope and Session</a> (19)
-  * <a href="#Synchronous_I_O">Synchronous I/O</a> (4)
+  * <a href="#Scope_and_Session">Scope and Session</a> (20)
+  * <a href="#Synchronous_I_O">Synchronous I/O</a> (7)
   * <a href="#System_Tools">System Tools</a> (9)
-  * <a href="#Testing">Testing</a> (8)
+  * <a href="#Testing">Testing</a> (5)
 <a name="Introduction"></a>
 ## Introduction
 Qwery is a general-purpose programming/scripting language for the JVM.
@@ -54,17 +54,17 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.3.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.4.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.3.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.4.jar`
 
 ### Run Query CLI
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.3.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.4.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -130,7 +130,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-24T17:29:13.323Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-26T00:47:39.097Z")
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
@@ -283,7 +283,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-24T17:29:13.463Z"
+"2023-10-26T00:47:39.249Z"
 ```
 <a name="Examples"></a>
 
@@ -445,7 +445,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@2f879bab
 ```
 ##### Console Output
 ```
@@ -509,11 +509,7 @@ create function if not exists calc_add(a: Int, b: Int) := a + b
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### create macro (Control Flow &#8212; Declarative)
 *Description*: Creates a persistent macro
@@ -539,11 +535,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| NYSE      | EW     |  87.8948 | 2023-10-24T17:28:32.512Z |
-| NYSE      | BH     |  51.9879 | 2023-10-24T17:28:29.980Z |
-| OTHER_OTC | TLHL   |   0.0833 | 2023-10-24T17:29:09.628Z |
-| AMEX      | XT     |  77.0169 | 2023-10-24T17:29:09.948Z |
-| NYSE      | LFU    |  89.2916 | 2023-10-24T17:28:31.441Z |
+| AMEX      | LYNS   |  81.6458 | 2023-10-26T00:46:50.317Z |
+| AMEX      | DKGOM  |  15.2661 | 2023-10-26T00:47:34.175Z |
+| OTHER_OTC | NZER   |   0.6133 | 2023-10-26T00:47:05.934Z |
+| NYSE      | KOG    |  78.7726 | 2023-10-26T00:47:26.753Z |
+| NYSE      | DFXQ   |  63.8024 | 2023-10-26T00:47:23.179Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -612,7 +608,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.286583, _2=720.0)
+Tuple2(_1=0.601584, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -807,7 +803,7 @@ catch e => out <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@2f879bab
 ```
 ##### Console Output
 ```
@@ -822,7 +818,7 @@ try connect() catch e => err <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4ac19bc6
+java.io.PrintStream@23e44287
 ```
 ##### Console Error
 ```
@@ -842,9 +838,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| out    | PrintStream         | java.io.PrintStream@1f1fbc9f                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@356fa0d1                                       |
-| err    | PrintStream         | java.io.PrintStream@4ac19bc6                                          |
+| out    | PrintStream         | java.io.PrintStream@2f879bab                                          |
+| stdin  | BufferedReader      | java.io.BufferedReader@1f1cae23                                       |
+| err    | PrintStream         | java.io.PrintStream@23e44287                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -866,7 +862,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@2f879bab
 ```
 ##### Console Output
 ```
@@ -886,7 +882,7 @@ out <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@2f879bab
 ```
 ##### Console Output
 ```
@@ -1002,12 +998,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-24T17:29:15.163Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-24T17:29:15.163Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-24T17:29:15.163Z | VV     | OTCBB     |          |
-| 2023-10-24T17:29:15.163Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-24T17:29:15.163Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-24T17:29:15.163Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-26T00:47:41.697Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-26T00:47:41.698Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-26T00:47:41.698Z | VV     | OTCBB     |          |
+| 2023-10-26T00:47:41.698Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-26T00:47:41.698Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-26T00:47:41.698Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### avg¹ (DataFrame &#8212; Functional)
@@ -1254,11 +1250,7 @@ create external table if not exists customers (
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### create index (DataFrame &#8212; Declarative)
 *Description*: Creates a table index
@@ -1268,11 +1260,7 @@ create index if not exists stocks#symbol
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### create table (DataFrame &#8212; Declarative)
 *Description*: Creates a persistent database table
@@ -1312,11 +1300,7 @@ create type mood := Enum (sad, okay, happy)
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### create unique index (DataFrame &#8212; Declarative)
 *Description*: Creates a unique index
@@ -1334,11 +1318,7 @@ create unique index Stocks#symbol
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### create view (DataFrame &#8212; Declarative)
 *Description*: Creates a view
@@ -1382,11 +1362,7 @@ lastSaleTime: DateTime)
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### declare view (DataFrame &#8212; Declarative)
 *Description*: Creates a view
@@ -1475,11 +1451,7 @@ drop Stocks
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         1 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### exists (DataFrame &#8212; Declarative)
 *Description*: determines whether at least one row is found within the query
@@ -1541,11 +1513,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| K    | ♠    |
+| A    | ♥    |
 | 10   | ♠    |
-| 7    | ♠    |
-| 10   | ♦    |
-| A    | ♣    |
+| 4    | ♦    |
+| 8    | ♦    |
+| 5    | ♦    |
 |-------------|
 ```
 ### from (DataFrame &#8212; Declarative)
@@ -1738,11 +1710,7 @@ where symbol is 'AMD'
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs    |
-|---------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       0 |        3 |       1 |       5 |        0 |       0 | [6, 7, 8] |
-|---------------------------------------------------------------------------------------------------------|
+3
 ```
 ### intersect (DataFrame &#8212; Declarative)
 *Description*: Computes the intersection of two queries
@@ -2089,7 +2057,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-24T17:29:16.460Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-26T00:47:42.903Z |
 |---------------------------------------------------------|
 ```
 ### subtract (DataFrame &#8212; Declarative)
@@ -2287,11 +2255,7 @@ truncate @@stocks
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       5 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
+true
 ```
 ### undelete (DataFrame &#8212; Declarative)
 *Description*: Restores rows matching an expression from a table
@@ -2312,11 +2276,7 @@ undelete from @@stocks where symbol is "CMHA"
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       0 |        0 |       1 |       1 |        0 |       1 | []     |
-|------------------------------------------------------------------------------------------------------|
+0
 ```
 ### union (DataFrame &#8212; Declarative)
 *Description*: Combines two (or more) result sets (vertically)
@@ -2455,11 +2415,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-24T17:29:16.656Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-24T17:29:16.656Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-26T00:47:43.062Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-26T00:47:43.062Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-24T17:29:16.657Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-26T00:47:43.062Z |
 |---------------------------------------------------------|
 ```
 ### update² (DataFrame &#8212; Declarative)
@@ -2632,7 +2592,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@1f1fbc9f", message="OK", statusCode=200, responseID="386b9ade-4c1c-4cb8-85a3-236a61b9cd18")
+HttpResponse(body="java.io.PrintStream@2f879bab", message="OK", statusCode=200, responseID="fd4fa758-6b50-439e-9174-34a869b0bbe7")
 ```
 ##### Console Output
 ```
@@ -2697,7 +2657,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[14334, 8502, 15016, 13043, 12430, 8626, 15562, 14611, 15254, 9025, 8783, 10554, 9995, 14427, 10659, 13132, 9505, 12699, 12032, 10690, 12871]
+[8505, 12386, 8224]
 ```
 ### nodeStart (Distributed Processing &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -2707,7 +2667,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9061
+8778
 ```
 ### nodeStop (Distributed Processing &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -2826,7 +2786,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@1c610f
+scala.Function1$@5876bed9
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2875,10 +2835,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-24T17:29:18.174Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-24T17:29:18.174Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-24T17:29:18.174Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-24T17:29:18.174Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-26T00:47:45.227Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-26T00:47:45.227Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-26T00:47:45.227Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-26T00:47:45.227Z |
 |--------------------------------------------------------------------|
 ```
 ### ...¹ (Miscellaneous &#8212; Declarative)
@@ -3074,12 +3034,11 @@ from @@stocks
 *Description*: Creates a new ephemeral (in-memory) JVM-compatible class
 
 ```sql
-import "java.util.Date"
 class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
 ```
 ##### Results
 ```sql
-class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+()
 ```
 ### destroy (Scope and Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3101,6 +3060,8 @@ base64 = (value: String) => value.getBytes().base64()
 let b64 : base64 = "Hello"
 b64
 ```
+<img src="docs/images/experimental.png" alt="let is marked as experimental">
+
 ##### Results
 ```sql
 SGVsbG8=
@@ -3124,7 +3085,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-24T17:29:18.336Z
+2023-10-26T00:47:45.372Z
 ```
 ### new² (Scope and Session &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3163,6 +3124,17 @@ new MouseListener() { mouseClicked: (e: MouseEvent) => out <=== "mouseClicked", 
 ```sql
 from ns('examples.shocktrade.Contests') limit 5
 ```
+### package (Scope and Session &#8212; Declarative)
+*Description*: Declares the default JVM package namespace
+
+```sql
+package "com.acme.skunkworks"
+__package__
+```
+##### Results
+```sql
+com.acme.skunkworks
+```
 ### reset (Scope and Session &#8212; Procedural)
 *Description*: Resets the scope; wiping out all state
 
@@ -3192,9 +3164,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| out    | PrintStream    | java.io.PrintStream@1f1fbc9f    |
-| stdin  | BufferedReader | java.io.BufferedReader@356fa0d1 |
-| err    | PrintStream    | java.io.PrintStream@4ac19bc6    |
+| out    | PrintStream    | java.io.PrintStream@2f879bab    |
+| stdin  | BufferedReader | java.io.BufferedReader@1f1cae23 |
+| err    | PrintStream    | java.io.PrintStream@23e44287    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3226,7 +3198,7 @@ f ===> out
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1f1fbc9f
+java.io.PrintStream@2f879bab
 ```
 ##### Console Output
 ```
@@ -3239,6 +3211,82 @@ Hello World
 import "java.io.File"
 f = new File("./test.json")
 f ===> out
+```
+### http¹ (Synchronous I/O &#8212; Declarative)
+*Description*: Query-native HTTP client
+
+```sql
+http get('https://example.com/')
+```
+##### Results
+```sql
+HttpResponse(body='<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+', message="OK", statusCode=200, responseID="ae308c92-ed3b-4ef2-8e89-368497262586")
+```
+### http² (Synchronous I/O &#8212; Declarative)
+*Description*: Returns a URL based on a relative path.
+
+```sql
+http path('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID="a5dad602-579f-491b-bd4b-f565189c7506")
+```
+### http³ (Synchronous I/O &#8212; Declarative)
+*Description*: Returns a URL based on a relative path.
+
+```sql
+http uri('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID="2bfef87a-36dd-4436-8d15-ace8d3f1c68a")
 ```
 ### synchronized (Synchronous I/O &#8212; Procedural)
 *Description*: Synchronizes access to an object; providing an exclusive read/write lock over it
@@ -3299,7 +3347,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-24T17:29:18.398Z
+2023-10-26T00:47:45.538Z
 ```
 ### help¹ (System Tools &#8212; Procedural)
 *Description*: Provides offline manual pages for instructions
@@ -3422,8 +3470,8 @@ true
 ```
 ##### Console Error
 ```
-[0.001458ms] AnyLiteral 1 ~> 1 <Integer>
-[0.318083ms] SetAnyVariable set x = 1 ~> null <null>
+[0.001500ms] AnyLiteral 1 ~> 1 <Integer>
+[0.389875ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3437,7 +3485,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@4ac19bc6
+java.io.PrintStream@23e44287
 ```
 ##### Console Error
 ```
@@ -3555,82 +3603,6 @@ Feature: Traveler information service
       [x] (body[0]).lastName is "JONES"
       [x] (body[0]).destAirportCode is "BUR"
 completed: passed: 4, failed: 1
-```
-### http¹ (Testing &#8212; Declarative)
-*Description*: Query-native HTTP client
-
-```sql
-http get('https://example.com/')
-```
-##### Results
-```sql
-HttpResponse(body='<!doctype html>
-<html>
-<head>
-    <title>Example Domain</title>
-
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type="text/css">
-    body {
-        background-color: #f0f0f2;
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        
-    }
-    div {
-        width: 600px;
-        margin: 5em auto;
-        padding: 2em;
-        background-color: #fdfdff;
-        border-radius: 0.5em;
-        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
-    }
-    a:link, a:visited {
-        color: #38488f;
-        text-decoration: none;
-    }
-    @media (max-width: 700px) {
-        div {
-            margin: 0 auto;
-            width: auto;
-        }
-    }
-    </style>    
-</head>
-
-<body>
-<div>
-    <h1>Example Domain</h1>
-    <p>This domain is for use in illustrative examples in documents. You may use this
-    domain in literature without prior coordination or asking for permission.</p>
-    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
-</div>
-</body>
-</html>
-', message="OK", statusCode=200, responseID="ada3a26b-9cc9-4f18-95f1-74dabd85ef4b")
-```
-### http² (Testing &#8212; Declarative)
-*Description*: Returns a URL based on a relative path.
-
-```sql
-http path('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="09de528d-20da-4017-a33b-42aba66d32fb")
-```
-### http³ (Testing &#8212; Declarative)
-*Description*: Returns a URL based on a relative path.
-
-```sql
-http uri('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="cc427568-6759-4722-8a20-e2fb77b179de")
 ```
 ### scenario (Testing &#8212; Declarative)
 *Description*: scenario-based test declaration
