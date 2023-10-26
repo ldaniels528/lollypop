@@ -205,7 +205,7 @@ object QweryUniverse {
     Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
     LessLess, LessLessLess, Let, Like, Limit, LT, LTE,
-    Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
+    Macro, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
     Namespace, NEG, NEQ, New, NodeAPI, NodeConsole, NodeExec, NodeScan, NodeStart, NodeStop, NodeWWW, Not,
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
