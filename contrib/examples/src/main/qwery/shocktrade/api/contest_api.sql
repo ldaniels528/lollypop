@@ -39,6 +39,6 @@ nodeAPI(port, '/api/shocktrade/contests/by/name', {
     // http post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (searchText: String) => {
-        from ns('Contests') where name like '%{{searchText}}%'
+        from ns('Contests') where name matches '.*{{searchText}}.*'
     }
 })

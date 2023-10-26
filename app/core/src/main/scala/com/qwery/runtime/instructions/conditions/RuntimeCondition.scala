@@ -95,7 +95,7 @@ object RuntimeCondition {
         case GTE(a, b) => GTE(f(a), f(b))
         case Is(a, b) => Is(f(a), f(b))
         case Isnt(a, b) => Isnt(f(a), f(b))
-        case Like(a, b) => Like(f(a), f(b))
+        case Matches(a, b) => Matches(f(a), f(b))
         case LT(a, b) => LT(f(a), f(b))
         case LTE(a, b) => LTE(f(a), f(b))
         case IsNotNull(a) => IsNotNull(f(a))

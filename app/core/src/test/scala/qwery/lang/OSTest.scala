@@ -58,7 +58,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.listFiles('/examples/src/main/qwery')") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/main/qwery') where name like '%.sql'
+        """|from OS.listFiles('./contrib/examples/src/main/qwery') where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
@@ -69,7 +69,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.listFiles('/examples/src/main/qwery', true)") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/', true) where name like '%.sql'
+        """|from OS.listFiles('./contrib/examples/src/', true) where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(

@@ -194,8 +194,8 @@ class QweryCompilerTest extends AnyFunSpec {
     }
 
     it("""should parse expressions containing 'and' and 'or'""") {
-      verify("Sector == 'Basic Industries' and (Industry like '%Gas%' or Industry like '%Oil%')",
-        AND("Sector".f === "Basic Industries", OR(Like("Industry".f, "%Gas%"), Like("Industry".f, "%Oil%"))))
+      verify("Sector == 'Basic Industries' and (Industry matches '%Gas%' or Industry matches '%Oil%')",
+        AND("Sector".f === "Basic Industries", OR(Matches("Industry".f, "%Gas%"), Matches("Industry".f, "%Oil%"))))
     }
 
     it("""should parse "(x + 3) * 2" (quantities)""") {

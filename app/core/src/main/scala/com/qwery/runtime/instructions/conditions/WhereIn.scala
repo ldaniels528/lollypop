@@ -17,7 +17,7 @@ import com.qwery.util.OptionHelper.implicits.risky._
  * select * from Stocks
  * where symbol is 'AAPL'
  * and transactions wherein (id < 5)
- * and keyStatistics wherein (beta >= 0.5 and warrants wherein (message like '%clear%'))
+ * and keyStatistics wherein (beta >= 0.5 and warrants wherein (message matches '%clear%'))
  * }}}
  */
 case class WhereIn(field: Expression, condition: Condition) extends RuntimeCondition {

@@ -1,53 +1,53 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_PATTERN_MATCHING, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Expression, LambdaFunction}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.QMap
-import com.qwery.runtime.instructions.conditions.Like.__name
+import com.qwery.runtime.instructions.conditions.Matches.keyword
 import com.qwery.runtime.instructions.functions.{AnonymousFunction, AnonymousNamedFunction}
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.JVMSupport.NormalizeAny
 
 /**
- * Like: Advanced Pattern Matching Operator
- * @param a the [[Expression expression]] to evaluate
- * @param b the pattern [[Expression expression]]
+ * Matches: Advanced Pattern Matching Operator
+ * @param expression the [[Expression expression]] to evaluate
+ * @param pattern the pattern [[Expression expression]]
  * @example {{{
- *   "Hello World" like "H% W%"
+ *   "Hello World" matches "H% W%"
  * }}}
  * @example {{{
- *   isNumeric = (o: object) => o.isNumber()
- *   5678 like isNumeric
+ *   isNumeric = x => x.isNumber()
+ *   5678 matches isNumeric
  * }}}
  * @example {{{
  *   response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
- *   isExchange = (s: String) => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
- *   isNumber = (o: Any) => o.isNumber()
- *   isString = (o: Any) => o.isString()
- *   response like { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
+ *   isExchange = s => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+ *   isNumber = x => x.isNumber()
+ *   isString = x => x.isString()
+ *   response matches { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
  * }}}
  */
-case class Like(a: Expression, b: Expression) extends RuntimeCondition {
+case class Matches(expression: Expression, pattern: Expression) extends RuntimeCondition {
   override def isTrue(implicit scope: Scope): Boolean = {
-    val (_, _, subject) = QweryVM.execute(scope, a)
-    val (_, _, target) = QweryVM.execute(scope, b)
-    target match {
-      // "Hello World" like "H% W%"
-      case pattern: String =>
-        subject match {
-          case text: String => text.matches(pattern.replace("%", ".*"))
-          case z => b.dieIllegalType(z)
+    val (_, _, aValue) = QweryVM.execute(scope, expression)
+    val (_, _, aPattern) = QweryVM.execute(scope, pattern)
+    aPattern match {
+      // "Hello World" matches "H.* W.*"
+      case textPattern: String =>
+        aValue match {
+          case text: String => text.matches(textPattern)
+          case z => pattern.dieIllegalType(z)
         }
-      // 5678 like isNumeric
-      case function: LambdaFunction => isMatch(src = subject, pattern = function)
-      // response like { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
-      case pattern => isMatch(src = subject, pattern = pattern)
+      // 5678 matches isNumeric
+      case function: LambdaFunction => isMatch(src = aValue, pattern = function)
+      // response matches { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
+      case objectPattern => isMatch(src = aValue, pattern = objectPattern)
     }
   }
 
-  override def toSQL: String = s"${a.toSQL} ${__name} ${b.toSQL}"
+  override def toSQL: String = s"${expression.toSQL} ${keyword} ${pattern.toSQL}"
 
   private def isMatch(src: Any, pattern: Any)(implicit scope: Scope): Boolean = {
     (src.normalizeArrays, pattern.normalizeArrays) match {
@@ -84,48 +84,48 @@ case class Like(a: Expression, b: Expression) extends RuntimeCondition {
 
 }
 
-object Like extends ExpressionToConditionPostParser {
-  private val __name = "like"
-  private val templateCard = "%e:source like %e:target"
+object Matches extends ExpressionToConditionPostParser {
+  private val keyword = "matches"
+  private val templateCard = s"%e:source $keyword %e:target"
 
-  override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Like] = {
-    if (ts.nextIf(__name)) compiler.nextExpression(ts).map(Like(host, _)) else None
+  override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Matches] = {
+    if (ts.nextIf(keyword)) compiler.nextExpression(ts).map(Matches(host, _)) else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
-    category = CATEGORY_DATAFRAME,
+    name = keyword,
+    category = CATEGORY_PATTERN_MATCHING,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
     example =
-      """|"Hello World" like "H% W%"
+      """|"Hello World" matches "H.* W.*"
          |""".stripMargin
   ), HelpDoc(
-    name = __name,
-    category = CATEGORY_DATAFRAME,
+    name = keyword,
+    category = CATEGORY_PATTERN_MATCHING,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
     example =
-      """|isNumeric = (o: object) => o.isNumber()
-         |5678 like isNumeric
+      """|isNumeric = x => x.isNumber()
+         |5678 matches isNumeric
          |""".stripMargin
   ), HelpDoc(
-    name = __name,
-    category = CATEGORY_DATAFRAME,
+    name = keyword,
+    category = CATEGORY_PATTERN_MATCHING,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
     example =
       """|response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
-         |isExchange = (s: String) => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
-         |isNumber = (o: Any) => o.isNumber()
-         |isString = (o: Any) => o.isString()
-         |response like { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
+         |isExchange = s => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+         |isNumber = x => x.isNumber()
+         |isString = x => x.isString()
+         |response matches { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }
