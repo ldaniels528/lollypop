@@ -7,7 +7,7 @@ namespace 'demo.stocks'
 // create a macro to generate random stock quotes
 drop if exists `tickers`
 create macro `tickers` := 'tickers %e:total' {
-    out <=== 'Generating {{total}} random stock quotes...\n'
+    stdout <=== 'Generating {{total}} random stock quotes...\n'
     declare table myQuotes(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
     [1 to total].foreach((n: Int) => {
         insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
@@ -24,5 +24,5 @@ create macro `tickers` := 'tickers %e:total' {
 stocks = tickers 10
 
 // display a limit of 5 rows
-out <=== 'Sampling 5 quotes:\n'
+stdout <=== 'Sampling 5 quotes:\n'
 stocks.show(5)

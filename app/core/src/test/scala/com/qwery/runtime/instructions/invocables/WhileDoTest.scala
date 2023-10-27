@@ -81,7 +81,7 @@ class WhileDoTest extends AnyFunSpec with VerificationTools {
            |
            |let cnt: Int = 1
            |while cnt < 5 do {
-           |   out.println('{{ roman(cnt) }}. Hallo Monde')
+           |   stdout.println('{{ roman(cnt) }}. Hallo Monde')
            |   cnt += 1
            |}
            |cnt

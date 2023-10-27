@@ -74,21 +74,21 @@ def faceDown() := """
 └─────────┘
 """
 
-def showTitle(out) := {
+def showTitle(stdout) := {
   """|        _             _                                 _
      |  _ __ | | __ _ _   _(_)_ __   __ _    ___ __ _ _ __ __| |___
      | | '_ \| |/ _` | | | | | '_ \ / _` |  / __/ _` | '__/ _` / __|
      | | |_) | | (_| | |_| | | | | | (_| | | (_| (_| | | | (_| \__ \
      | | .__/|_|\__,_|\__, |_|_| |_|\__, |  \___\__,_|_|  \__,_|___/
      | |_|            |___/         |___/
-     |""".stripMargin('|') ===> out
+     |""".stripMargin('|') ===> stdout
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 //      MAIN PROGRAM
 //////////////////////////////////////////////////////////////////////////////////////
 
-showTitle(out)
+showTitle(stdout)
 
 isAlive = true
 while(isAlive) {
@@ -102,14 +102,14 @@ while(isAlive) {
     isJousting = true
     betFactor = 1.0
 
-    def showSeparator(out) := {
+    def showSeparator(stdout) := {
         separator = ("¤" * 120) + "\n"
-        out <=== ("\n" + separator)
-        out <=== " Player: {{__userName__}} \t Credit: ${{money}} \t Bet: ${{bet}} \t Round: {{level}} \n"
-        out <=== (separator + "\n")
+        stdout <=== ("\n" + separator)
+        stdout <=== " Player: {{__userName__}} \t Credit: ${{money}} \t Bet: ${{bet}} \t Round: {{level}} \n"
+        stdout <=== (separator + "\n")
     }
 
-    def showHand(out, cards) := {
+    def showHand(stdout, cards) := {
         var lines = []
         each card in cards {
             isVisible = true
@@ -125,19 +125,19 @@ while(isAlive) {
         }
 
         // write to STDOUT
-        (lines.join("\n") + "\n") ===> out
+        (lines.join("\n") + "\n") ===> stdout
     }
 
-    def showGameTable(out) := {
+    def showGameTable(stdout) := {
         flag = iff(betFactor == 2.0, "2x ", "")
-        "DEALER - {{dealerScore()}}/21" ===> out
-        showHand(out, dealer)
-        "YOU ({{__userName__}}) - {{flag}}{{playerScore()}}/21" ===> out
-        showHand(out, player)
+        "DEALER - {{dealerScore()}}/21" ===> stdout
+        showHand(stdout, dealer)
+        "YOU ({{__userName__}}) - {{flag}}{{playerScore()}}/21" ===> stdout
+        showHand(stdout, player)
     }
 
     // display the hands of the player and dealer
-    showSeparator(out); showGameTable(out)
+    showSeparator(stdout); showGameTable(stdout)
 
     // main loop
     loop = 0
@@ -147,7 +147,7 @@ while(isAlive) {
         // check the game status
         if ((dealerScore() > 21) or (playerScore() >= 21)) isJousting = false
         else {
-            out <=== """Choose {{ iff(loop == 0, "[D]ouble-down, ", "") }}[H]it, [S]tand or [Q]uit? """
+            stdout <=== """Choose {{ iff(loop == 0, "[D]ouble-down, ", "") }}[H]it, [S]tand or [Q]uit? """
             choice = stdin.readLine().trim().toUpperCase()
             if ((choice.startsWith("D") is true) and (loop == 0)) betFactor = 2.0
             else if(choice.startsWith("H")) { hit(player); showCards = true }
@@ -157,26 +157,26 @@ while(isAlive) {
 
         // allow the dealer to respond && compute the scores
         if (dealerIntelligence()) showCards = true
-        if (showCards) showGameTable(out)
+        if (showCards) showGameTable(stdout)
         loop += 1
     }
 
-    def roundCompleted(out, message: String, betDelta: Double) := {
-        out <=== (message + "\n")
+    def roundCompleted(stdout, message: String, betDelta: Double) := {
+        stdout <=== (message + "\n")
         if (isDefined(bet)) money += betFactor * betDelta
     }
 
     // allow the AI one last turn
-    if (dealerIntelligence(true)) showGameTable(out)
+    if (dealerIntelligence(true)) showGameTable(stdout)
 
     // decide who won - https://www.officialgamerules.org/blackjack
-    if (dealerScore() == playerScore()) roundCompleted(out, "Draw.", 0)
-    else if (playerScore() == 21) roundCompleted(out, "You Win!! - Player BlackJack!", 1.5 * bet)
-    else if (dealerScore() == 21) roundCompleted(out, "You Lose - Dealer BlackJack!", -bet)
-    else if (dealerScore() > 21) roundCompleted(out, "You Win!! - Dealer Busts: {{dealerScore()}}", bet)
-    else if (playerScore() > 21) roundCompleted(out, "You Lose - Player Busts: {{playerScore()}}", -bet)
-    else if (playerScore() > dealerScore()) roundCompleted(out, "You Win!! - {{playerScore()}} vs. {{dealerScore()}}", -bet)
-    else roundCompleted(out, "You Lose - {{dealerScore()}} vs. {{playerScore()}}", -bet)
+    if (dealerScore() == playerScore()) roundCompleted(stdout, "Draw.", 0)
+    else if (playerScore() == 21) roundCompleted(stdout, "You Win!! - Player BlackJack!", 1.5 * bet)
+    else if (dealerScore() == 21) roundCompleted(stdout, "You Lose - Dealer BlackJack!", -bet)
+    else if (dealerScore() > 21) roundCompleted(stdout, "You Win!! - Dealer Busts: {{dealerScore()}}", bet)
+    else if (playerScore() > 21) roundCompleted(stdout, "You Lose - Player Busts: {{playerScore()}}", -bet)
+    else if (playerScore() > dealerScore()) roundCompleted(stdout, "You Win!! - {{playerScore()}} vs. {{dealerScore()}}", -bet)
+    else roundCompleted(stdout, "You Lose - {{dealerScore()}} vs. {{playerScore()}}", -bet)
     level += 1
 }
 

@@ -114,8 +114,8 @@ class ScopeTest extends AnyFunSpec {
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph.filterNot(_.exists {
         case ("name", "π") => true
-        case ("name", "out") => true
-        case ("name", "err") => true
+        case ("name", "stdout") => true
+        case ("name", "stderr") => true
         case ("name", "stdin") => true
         case ("name", "OS") => true
         case ("name", "Random") => true

@@ -48,7 +48,7 @@ class ReturnTest extends AnyFunSpec with VerificationTools {
            |  set @a = 3
            |  return @a * 2
            |}
-           |out.println('@x = {{x}}')
+           |stdout <=== '@x = {{x}}'
            |return @x
            |""".stripMargin)
       assert(returned contains 6.0)

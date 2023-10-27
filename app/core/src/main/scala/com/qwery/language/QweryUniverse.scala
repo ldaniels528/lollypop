@@ -44,8 +44,8 @@ case class QweryUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypePa
       .withVariable("π", Math.PI)
       .withVariable("OS", system)
       .withVariable("Random", qwery.lang.Random)
-      .withVariable("err", system.stdErr.writer)
-      .withVariable("out", system.stdOut.writer)
+      .withVariable("stderr", system.stdErr.writer)
+      .withVariable("stdout", system.stdOut.writer)
       .withVariable("stdin", system.stdIn.reader)
       .withImports(Map(Seq(
         classOf[BitArray], classOf[ComplexNumber], classOf[java.util.Date], classOf[IOCost],
