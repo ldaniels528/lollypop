@@ -6,8 +6,8 @@
 
 import "java.lang.Math"
 
-faces = explode(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
-suits = explode(suit: ["♠", "♦", "♥", "♣"])
+faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
+suits = transpose(suit: ["♠", "♦", "♥", "♣"])
 deck = faces * suits
 player = tableLike(deck)
 dealer = tableLike(deck)

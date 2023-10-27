@@ -41,7 +41,7 @@ object Help extends FunctionCallParserE0Or1(
        |Additionally, it's an internal database containing information about every loaded instruction.
        |""".stripMargin,
   examples = List(
-    "explode(help('select'))",
+    "transpose(help('select'))",
     """|select paradigm, total: count(*)
        |from (help())
        |group by paradigm

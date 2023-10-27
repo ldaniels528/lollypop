@@ -8,30 +8,30 @@ import com.qwery.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
-class ExplodeTest extends AnyFunSpec with VerificationTools {
+class TransposeTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  describe(classOf[Explode].getSimpleName) {
+  describe(classOf[Transpose].getSimpleName) {
 
     it("should compile SQL to a model") {
-      val model = QweryCompiler().compile("explode(items: [1 to 5])")
-      assert(model == Explode(ArrayFromRange.Inclusive(1.v, 5.v).as("items")))
+      val model = QweryCompiler().compile("transpose(items: [1 to 5])")
+      assert(model == Transpose(ArrayFromRange.Inclusive(1.v, 5.v).as("items")))
     }
 
     it("should decompile a model to SQL") {
-      val model = Explode(ArrayFromRange.Inclusive(1.v, 5.v).as("items"))
-      assert(model.toSQL == "explode([1 to 5])")
+      val model = Transpose(ArrayFromRange.Inclusive(1.v, 5.v).as("items"))
+      assert(model.toSQL == "transpose([1 to 5])")
     }
 
-    it("should explode an Array") {
+    it("should transpose an Array") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|explode(items: [1 to 5])
+        """|transpose(items: [1 to 5])
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(Map("items" -> 1), Map("items" -> 2), Map("items" -> 3), Map("items" -> 4), Map("items" -> 5)))
     }
 
-    it("should explode a Row") {
+    it("should transpose a Row") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
         """|val rows = (
            |   |------------------------------|
@@ -43,25 +43,25 @@ class ExplodeTest extends AnyFunSpec with VerificationTools {
            |   | JUNK   | AMEX     |    97.61 |
            |   |------------------------------|
            |)
-           |explode(@@rows[0])
+           |transpose(@@rows[0])
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
-        Map("key" -> "symbol", "value" -> "XYZ"),
-        Map("key" -> "exchange", "value" -> "AMEX"),
-        Map("key" -> "lastSale", "value" -> 31.95)
+        Map("name" -> "symbol", "value" -> "XYZ"),
+        Map("name" -> "exchange", "value" -> "AMEX"),
+        Map("name" -> "lastSale", "value" -> "31.95")
       ))
     }
 
-    it("should explode a Product instance") {
+    it("should transpose a Product instance") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|set @quote = new `com.qwery.runtime.instructions.queryables.ExplodeTest$ProductStockQuote`(
+        """|set @quote = new `com.qwery.runtime.instructions.queryables.TransposeTest$ProductStockQuote`(
            |    "ABC",
            |    "OTCBB",
            |    0.0231,
            |    DateTime(1592215200000)
            |)
-           |explode(@quote)
+           |transpose(@quote)
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
@@ -72,19 +72,19 @@ class ExplodeTest extends AnyFunSpec with VerificationTools {
       ))
     }
 
-    it("should explode a POJO") {
+    it("should transpose a POJO") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|set @quote = new `com.qwery.runtime.instructions.queryables.ExplodeTest$PojoStockQuote`(
+        """|set @quote = new `com.qwery.runtime.instructions.queryables.TransposeTest$PojoStockQuote`(
            |    "ABC",
            |    "OTCBB",
            |    0.0231,
            |    DateTime(1592215200000)
            |)
-           |explode(@quote)
+           |transpose(@quote)
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
-        Map("key" -> "_class", "value" -> Class.forName("com.qwery.runtime.instructions.queryables.ExplodeTest$PojoStockQuote")),
+        Map("key" -> "_class", "value" -> Class.forName("com.qwery.runtime.instructions.queryables.TransposeTest$PojoStockQuote")),
         Map("key" -> "exchange", "value" -> "OTCBB"),
         Map("key" -> "symbol", "value" -> "ABC"),
         Map("key" -> "lastSale", "value" -> 0.0231),
@@ -96,7 +96,7 @@ class ExplodeTest extends AnyFunSpec with VerificationTools {
 
 }
 
-object ExplodeTest {
+object TransposeTest {
 
   import java.util.Date
   import scala.beans.BeanProperty
