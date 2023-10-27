@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.instructions.conditions.Between.__name
@@ -39,7 +39,7 @@ object Between extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`value` ${__name} `to` and `from`",
     description = "determines whether the `value` is between the `to` and `from` (inclusive)",

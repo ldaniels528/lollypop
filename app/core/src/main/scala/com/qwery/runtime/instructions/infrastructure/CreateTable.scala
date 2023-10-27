@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models._
 import com.qwery.runtime.DatabaseManagementSystem.createPhysicalTable
@@ -54,7 +54,7 @@ object CreateTable extends ModifiableParser with IfNotExists {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "create table",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Creates a persistent database table",

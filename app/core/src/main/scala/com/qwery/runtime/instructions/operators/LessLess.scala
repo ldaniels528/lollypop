@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.operators
 
-import com.qwery.language.models.{Expression, BinaryOperation}
+import com.qwery.language.models.{BinaryOperation, Expression}
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.instructions.operators.ComputeAndSet.ComputeAndSetSugar
 

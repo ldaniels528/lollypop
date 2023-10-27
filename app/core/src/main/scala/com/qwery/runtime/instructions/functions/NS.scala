@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.CATEGORY_SESSION
+import com.qwery.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
 import com.qwery.language.models.{Expression, Queryable}
 import com.qwery.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.qwery.runtime.devices.RemoteRowCollection.getRemoteCollection
@@ -32,7 +32,7 @@ case class NS(expression: Expression) extends ScalarFunctionCall with RuntimeExp
 
 object NS extends FunctionCallParserE1(
   name = "ns",
-  category = CATEGORY_SESSION,
+  category = CATEGORY_SYSTEM_TOOLS,
   description =
     """|Returns a persistent object (e.g. table, view, et al) from disk via a namespace
        |""".stripMargin,

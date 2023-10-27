@@ -1,11 +1,11 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassExpressionSugar
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.conditions.IsJavaMember.__name
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassExpressionSugar
 
 /**
  * Tests the existence of a JVM member (Method/Field)
@@ -31,7 +31,7 @@ object IsJavaMember extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_REFLECTION,
+    category = CATEGORY_JVM_REFLECTION,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     syntax = s"`instance`${__name}`methodName`",
     description = "determines whether the method exists within the instance",

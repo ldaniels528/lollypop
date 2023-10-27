@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.database.server.QweryServers
-import com.qwery.language.HelpDoc.CATEGORY_DISTRIBUTED
+import com.qwery.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
 import com.qwery.language.models.Expression
 import com.qwery.runtime.datatypes.Int32Type
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
@@ -45,7 +45,7 @@ case class NodeConsole(portExpr: Expression, commandsExpr: Option[Expression])
 
 object NodeConsole extends FunctionCallParserE1Or2(
   name = "nodeConsole",
-  category = CATEGORY_DISTRIBUTED,
+  category = CATEGORY_ASYNC_REACTIVE,
   description =
     """|Opens a commandline interface to a remote Qwery peer node.
        |""".stripMargin,

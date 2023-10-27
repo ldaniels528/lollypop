@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_PATTERN_MATCHING, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Inequality.InequalityExtensions
 import com.qwery.language.models.{Condition, Expression, Instruction}
@@ -56,7 +56,7 @@ object Case extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "case",
-    category = CATEGORY_PATTERN_MATCHING,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateExpression,
     description = "An if-else alternative",

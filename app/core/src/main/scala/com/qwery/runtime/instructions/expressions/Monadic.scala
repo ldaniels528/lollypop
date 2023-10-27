@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Expression, LambdaFunction}
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
@@ -51,8 +51,8 @@ object Monadic extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __symbol,
-    category = CATEGORY_DATAFRAME,
-    paradigm = PARADIGM_DECLARATIVE,
+    category = CATEGORY_TRANSFORMATION,
+    paradigm = PARADIGM_FUNCTIONAL,
     syntax = "",
     description = "Monadic comprehension",
     example =
@@ -65,8 +65,8 @@ object Monadic extends ExpressionChainParser {
     isExperimental = true
   ), HelpDoc(
     name = __symbol,
-    category = CATEGORY_DATAFRAME,
-    paradigm = PARADIGM_DECLARATIVE,
+    category = CATEGORY_TRANSFORMATION,
+    paradigm = PARADIGM_FUNCTIONAL,
     syntax = "",
     description = "Monadic comprehension",
     example =

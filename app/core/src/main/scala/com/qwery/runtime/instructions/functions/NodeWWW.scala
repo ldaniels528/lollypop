@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.database.server.QweryServers
-import com.qwery.language.HelpDoc.CATEGORY_DISTRIBUTED
+import com.qwery.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
 import com.qwery.language.models.Expression
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.conditions.RuntimeCondition
@@ -32,7 +32,7 @@ case class NodeWWW(port: Expression, url: Expression, files: Expression)
 
 object NodeWWW extends FunctionCallParserE3(
   name = "nodeWWW",
-  category = CATEGORY_DISTRIBUTED,
+  category = CATEGORY_ASYNC_REACTIVE,
   description = "Creates a new HTML/CSS/File endpoint",
   example =
     """|import "java.lang.Thread"

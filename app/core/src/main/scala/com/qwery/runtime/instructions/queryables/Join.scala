@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Expression.implicits.RichAliasable
 import com.qwery.language.models.{Condition, Queryable}
@@ -40,7 +40,7 @@ object Join extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "inner join",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Computes the inner join of two queries",

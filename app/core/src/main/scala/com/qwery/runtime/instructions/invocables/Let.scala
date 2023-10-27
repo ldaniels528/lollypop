@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Atom, Instruction, LambdaFunction}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.Scope
@@ -31,7 +31,7 @@ object Let extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "let",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_FUNCTIONAL,
     syntax = template,
     description = "Creates a variable that automatically applies a CODEC function when mutated.",

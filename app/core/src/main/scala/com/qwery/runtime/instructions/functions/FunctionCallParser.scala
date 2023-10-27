@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Expression, FunctionCall}
 import com.qwery.language.{HelpDoc, LanguageParser, SQLCompiler, TokenStream}
 
@@ -17,7 +17,7 @@ abstract class FunctionCallParser(val name: String,
                                   val description: String,
                                   val examples: List[String],
                                   val template: String,
-                                  val category: String = CATEGORY_MISC,
+                                  val category: String = CATEGORY_UNCLASSIFIED,
                                   val paradigm: String = PARADIGM_FUNCTIONAL)
   extends LanguageParser {
 

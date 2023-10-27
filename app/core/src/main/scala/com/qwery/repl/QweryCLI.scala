@@ -6,13 +6,13 @@ import com.qwery.language.QweryUniverse
 import com.qwery.repl.QweryCLI.logger
 import com.qwery.repl.REPLTools.getResourceFile
 import com.qwery.runtime.QweryCodeDebugger.createInteractiveConsoleReader
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo._
 import com.qwery.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.qwery.runtime.devices.{Row, RowCollection, TableColumn}
 import com.qwery.runtime.instructions.expressions.GraphResult
 import com.qwery.runtime.instructions.queryables.TableRendering
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, QweryCodeDebugger, QweryCompiler, QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import com.qwery.util.ResourceHelper._

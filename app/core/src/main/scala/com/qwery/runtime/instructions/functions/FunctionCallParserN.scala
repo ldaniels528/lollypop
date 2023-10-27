@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Expression, FunctionCall}
 import com.qwery.language.{SQLCompiler, SQLTemplateParams, TokenStream}
 
@@ -19,7 +19,7 @@ abstract class FunctionCallParserN(name: String,
                                    paradigm: String)
   extends FunctionCallParser(name, description, examples, template = s"$name %A:args", category, paradigm) {
 
-  def this(name: String, description: String, example: String, category: String = CATEGORY_MISC, paradigm: String = PARADIGM_FUNCTIONAL) =
+  def this(name: String, description: String, example: String, category: String = CATEGORY_UNCLASSIFIED, paradigm: String = PARADIGM_FUNCTIONAL) =
     this(name, description, List(example), category, paradigm)
 
   def apply(expressions: List[Expression]): InternalFunctionCall

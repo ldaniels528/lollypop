@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableParser, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.{PaginationSupport, RowCollection}
@@ -29,7 +29,7 @@ case class Pagination(queryable: Queryable) extends RuntimeQueryable {
 object Pagination extends QueryableParser {
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "pagination",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "pagination(query)",
     description = "Setups a pagination query",
@@ -59,7 +59,7 @@ object Pagination extends QueryableParser {
          |""".stripMargin
   ), HelpDoc(
     name = "pagination",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "pagination(query)",
     description = "Setups a pagination query",
@@ -89,7 +89,7 @@ object Pagination extends QueryableParser {
          |""".stripMargin
   ), HelpDoc(
     name = "pagination",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "pagination(query)",
     description = "Setups a pagination query",

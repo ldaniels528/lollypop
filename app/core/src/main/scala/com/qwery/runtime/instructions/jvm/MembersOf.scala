@@ -1,19 +1,19 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Expression, ParameterLike}
-import com.qwery.runtime.plastics.Plastic.implicits.MethodNameConverter
-import com.qwery.runtime.plastics.RuntimeClass.decodeModifiers
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes.{AnyType, DataType, StringType, TableType}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._
 import com.qwery.runtime.devices.{RowCollection, TableColumn}
 import com.qwery.runtime.instructions.expressions.TableExpression
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
-import com.qwery.runtime.instructions.queryables.RuntimeQueryable
 import com.qwery.runtime.instructions.jvm.MembersOf.ParameterLikeToScalaCode
+import com.qwery.runtime.instructions.queryables.RuntimeQueryable
+import com.qwery.runtime.plastics.Plastic.implicits.MethodNameConverter
 import com.qwery.runtime.plastics.RuntimeClass
+import com.qwery.runtime.plastics.RuntimeClass.decodeModifiers
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
@@ -90,7 +90,7 @@ case class MembersOf(expression: Expression) extends ScalarFunctionCall with Run
 
 object MembersOf extends FunctionCallParserE1(
   name = "membersOf",
-  category = CATEGORY_REFLECTION,
+  category = CATEGORY_JVM_REFLECTION,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns the members (constructors, fields and methods) of a JVM Class as a Table",
   example = "from membersOf(new `java.util.Date`()) limit 5") {

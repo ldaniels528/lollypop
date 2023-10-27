@@ -4,9 +4,9 @@ import com.qwery.language.models.Expression.implicits.RichAliasable
 import com.qwery.language.models._
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.QweryVM.implicits.RichScalaAny
-import com.qwery.runtime.plastics.RuntimeClass.implicits.{RuntimeClassExpressionSugar, RuntimeClassInstanceSugar}
 import com.qwery.runtime.devices.QMap
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
+import com.qwery.runtime.plastics.RuntimeClass.implicits.{RuntimeClassExpressionSugar, RuntimeClassInstanceSugar}
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.JSONSupport._
 import com.qwery.util.JVMSupport.NormalizeAny

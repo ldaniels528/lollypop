@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.CATEGORY_SYNC_IO
+import com.qwery.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
 import com.qwery.language.models.{Expression, Instruction}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -32,7 +32,7 @@ object Synchronized extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "synchronized",
-    category = CATEGORY_SYNC_IO,
+    category = CATEGORY_SYSTEM_TOOLS,
     syntax = templateCard,
     description = "Synchronizes access to an object; providing an exclusive read/write lock over it",
     example =

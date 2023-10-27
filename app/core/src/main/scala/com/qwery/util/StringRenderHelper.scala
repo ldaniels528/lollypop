@@ -2,9 +2,9 @@ package com.qwery.util
 
 import com.qwery.implicits.MagicImplicits
 import com.qwery.language.models.Instruction
-import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.datatypes.{DataType, StringType}
 import com.qwery.runtime.devices.{QMap, Row, RowCollection}
+import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.util.JVMSupport.NormalizeAny
 import qwery.io.RowIDRange
 import qwery.lang.BitArray

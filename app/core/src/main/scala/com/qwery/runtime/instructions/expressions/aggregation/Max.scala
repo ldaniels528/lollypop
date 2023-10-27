@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.devices.RowCollection
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
@@ -61,7 +61,7 @@ case class Max(expression: Expression) extends AggregateFunctionCall with Column
 
 object Max extends FunctionCallParserE1(
   name = "max",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns the maximum value of a numeric expression.",
   examples = List(

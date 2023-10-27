@@ -226,6 +226,10 @@ class ReadMeTest extends AnyFunSpec {
           |
           |### Run Query CLI
           |```bash
+          |sbt "project core" run
+          |```
+          |OR
+          |```bash
           |java -jar ./app/core/target/scala-2.13/$coreAssembly
           |```
           |""".stripMargin)
@@ -281,22 +285,17 @@ class ReadMeTest extends AnyFunSpec {
        |""".stripMargin
 
   private val dataframe_literals =
-    """|from (
-       ||----------------------------------------------------------|
-       || exchange  | symbol | lastSale | lastSaleTime             |
-       ||----------------------------------------------------------|
-       || OTCBB     | SLZO   |   0.7004 | 2023-10-18T18:01:33.706Z |
-       || NASDAQ    | BKM    |  43.1125 | 2023-10-18T18:01:05.769Z |
-       || OTCBB     | POQF   |   0.7018 | 2023-10-18T18:01:45.085Z |
-       || OTHER_OTC | EJDE   |   0.2156 | 2023-10-18T18:01:47.917Z |
-       || OTCBB     | TZON   |   0.4941 | 2023-10-18T18:01:42.107Z |
-       || NYSE      | BCM    |  79.8245 | 2023-10-18T18:01:06.778Z |
-       || OTHER_OTC | JOXT   |   0.8961 | 2023-10-18T18:01:39.511Z |
-       || OTHER_OTC | KFMP   |   0.8475 | 2023-10-18T18:01:16.714Z |
-       || OTHER_OTC | UAWEN  |   0.7074 | 2023-10-18T18:01:57.225Z |
-       || OTCBB     | CIYBJ  |   0.6753 | 2023-10-18T18:01:43.539Z |
-       ||----------------------------------------------------------|
-       |) where lastSale < 0.7 order by lastSale
+    """|graph { shape: "ring", title: "Ring Demo" } from (
+       |  |------------------|
+       |  | exchange | total |
+       |  |------------------|
+       |  | NASDAQ   |    24 |
+       |  | AMEX     |     5 |
+       |  | NYSE     |    28 |
+       |  | OTCBB    |    32 |
+       |  | OTHEROTC |     7 |
+       |  |------------------|
+       |)
        |""".stripMargin
 
   private val define_implicit_conversions =
@@ -316,18 +315,6 @@ class ReadMeTest extends AnyFunSpec {
        |}
        |
        |"Hello World".reverseString()
-       |""".stripMargin
-
-  private val charts_and_graphs =
-    """|chart = { shape: "scatter", title: "Scatter Demo" }
-       |samples = {
-       |  import "java.lang.Math"
-       |  def series(x) := "Series {{ (x % 2) + 1 }}"
-       |  select w, x, y from ([0 to 500]
-       |    .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
-       |    .toTable())
-       |}
-       |graph chart from samples
        |""".stripMargin
 
   private val dictionary_literals =
@@ -392,7 +379,6 @@ class ReadMeTest extends AnyFunSpec {
     "Array Literals" -> array_literals,
     "Array Comprehensions" -> array_comprehensions,
     "Monadic Arrays (supports map, filter, fold, etc.)" -> monadic_arrays,
-    "Charts and Graphs" -> charts_and_graphs,
     "Define and Instantiate JVM classes" -> instantiate_jvm_classes,
     "Dataframe Literals" -> dataframe_literals,
     "Dictionary Literals" -> dictionary_literals,

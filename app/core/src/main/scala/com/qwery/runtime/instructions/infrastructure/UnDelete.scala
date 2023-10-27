@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Condition, Expression}
 import com.qwery.language.{HelpDoc, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
@@ -43,7 +43,7 @@ object UnDelete extends ModifiableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "undelete",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Restores rows matching an expression from a table",

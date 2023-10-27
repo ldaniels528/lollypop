@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_REACTIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Expression, Instruction}
 import com.qwery.runtime.{Observable, Scope}
@@ -26,7 +26,7 @@ object WhenEver extends InvokableParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "whenever",
-      category = CATEGORY_CONTROL_FLOW,
+      category = CATEGORY_ASYNC_REACTIVE,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
       description = "Executes an instruction at the moment the expression evaluates as true",
@@ -38,7 +38,7 @@ object WhenEver extends InvokableParser {
            |""".stripMargin
     ), HelpDoc(
       name = "whenever",
-      category = CATEGORY_CONTROL_FLOW,
+      category = CATEGORY_ASYNC_REACTIVE,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
       description = "Executes an instruction at the moment the expression evaluates as true",

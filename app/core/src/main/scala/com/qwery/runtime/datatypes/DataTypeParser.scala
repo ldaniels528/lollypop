@@ -1,7 +1,7 @@
 package com.qwery.runtime.datatypes
 
-import com.qwery.language.{HelpDoc, LanguageParser, SQLCompiler, TokenStream}
 import com.qwery.language.models.ColumnType
+import com.qwery.language.{HelpDoc, LanguageParser, SQLCompiler, TokenStream}
 import com.qwery.runtime.Scope
 
 /**

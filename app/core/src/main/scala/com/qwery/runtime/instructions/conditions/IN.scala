@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.conditions
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.{ArrayExpression, Expression, Instruction, Queryable}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedEntity}
 import com.qwery.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
@@ -48,7 +48,7 @@ object IN extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` matches the `expression`",

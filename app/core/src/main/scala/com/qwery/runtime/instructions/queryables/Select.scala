@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Instruction.DecompilerAliasHelper
 import com.qwery.language.models._
@@ -63,7 +63,7 @@ object Select extends QueryableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "select",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Returns row(s) of data based on the expression and options",

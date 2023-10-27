@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_BRANCHING_OPS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.{Condition, Expression}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.instructions.conditions.Is.__name
@@ -33,7 +33,7 @@ object Is extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "is",
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = "`value` is `expression`",
     description = "returns true if the `value` is exactly the `expression`; otherwise false",
@@ -43,7 +43,7 @@ object Is extends ExpressionToConditionPostParser {
          |""".stripMargin
   ), HelpDoc(
     name = "is",
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = "`value` is `expression`",
     description = "returns true if the `value` is exactly the `expression`; otherwise false",

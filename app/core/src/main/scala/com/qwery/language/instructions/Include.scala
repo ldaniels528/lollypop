@@ -1,6 +1,6 @@
 package com.qwery.language.instructions
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.SourceCodeInstruction.RichSourceCodeInstruction
 import com.qwery.language.models.{Instruction, Literal}
 import com.qwery.language.{DirectiveParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
@@ -17,8 +17,8 @@ object Include extends DirectiveParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "include",
-    category = CATEGORY_SESSION,
-    paradigm = PARADIGM_IMPERATIVE,
+    category = CATEGORY_SYSTEM_TOOLS,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = "include `file`" ,
     description = "incorporates the contents of an external file into current scope",
     example =

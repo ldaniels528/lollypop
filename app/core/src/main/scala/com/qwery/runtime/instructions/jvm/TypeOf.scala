@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.CATEGORY_REFLECTION
+import com.qwery.language.HelpDoc.CATEGORY_JVM_REFLECTION
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.expressions.{RuntimeExpression, StringExpression}
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
@@ -25,7 +25,7 @@ case class TypeOf(expression: Expression) extends ScalarFunctionCall with Runtim
 
 object TypeOf extends FunctionCallParserE1(
   name = "typeOf",
-  category = CATEGORY_REFLECTION,
+  category = CATEGORY_JVM_REFLECTION,
   description =
     """|Returns the type of an expression.
        |""".stripMargin,

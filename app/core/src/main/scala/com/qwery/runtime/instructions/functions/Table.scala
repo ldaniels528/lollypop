@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Column
 import com.qwery.runtime.Scope
 import com.qwery.runtime.devices.RowCollection
@@ -34,7 +34,7 @@ case class Table(columns: List[Column]) extends ScalarFunctionCall with RuntimeQ
 
 object Table extends FunctionCallParserP(
   name = "Table",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_TRANSFORMATION,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns a new transient table",
   example =

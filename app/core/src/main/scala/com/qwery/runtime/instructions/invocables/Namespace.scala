@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Expression
 import com.qwery.runtime.{QweryVM, Scope}
@@ -35,7 +35,7 @@ object Namespace extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "namespace",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = template,
     description = "Sets the active database",

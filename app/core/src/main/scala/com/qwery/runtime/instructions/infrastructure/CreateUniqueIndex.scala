@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.{HelpDoc, IfNotExists, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.DatabaseManagementSystem.createUniqueIndex
 import com.qwery.runtime.{DatabaseObjectRef, Scope}
@@ -30,7 +30,7 @@ object CreateUniqueIndex extends ModifiableParser with IfNotExists {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "create unique index",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Creates a unique index",

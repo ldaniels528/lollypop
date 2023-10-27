@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Expression, Queryable}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -34,7 +34,7 @@ object Graph extends ExpressionParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "graph",
-      category = CATEGORY_DATAFRAME,
+      category = CATEGORY_AGG_SORT_OPS,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
       description = "Produces graphical charts",
@@ -50,6 +50,36 @@ object Graph extends ExpressionParser {
            |  | OTHEROTC |     7 |
            |  |------------------|
            |)
+           |""".stripMargin
+    ), HelpDoc(
+      name = "graph",
+      category = CATEGORY_AGG_SORT_OPS,
+      paradigm = PARADIGM_DECLARATIVE,
+      syntax = template,
+      description = "Produces graphical charts",
+      example =
+        """|chart = { shape: "pie", title: "Member Types of OS" }
+           |graph chart from (
+           |  select memberType, total: count(*) from (membersOf(OS))
+           |  group by memberType
+           |)
+           |""".stripMargin
+    ), HelpDoc(
+      name = "graph",
+      category = CATEGORY_AGG_SORT_OPS,
+      paradigm = PARADIGM_DECLARATIVE,
+      syntax = template,
+      description = "Produces graphical charts",
+      example =
+        """|chart = { shape: "scatter", title: "Scatter Demo" }
+           |samples = {
+           |  import "java.lang.Math"
+           |  def series(x) := "Series {{ (x % 2) + 1 }}"
+           |  select w, x, y from ([0 to 500]
+           |    .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
+           |    .toTable())
+           |}
+           |graph chart from samples
            |""".stripMargin
     ))
 

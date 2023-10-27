@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.database.server.QweryServers
-import com.qwery.language.HelpDoc.CATEGORY_DISTRIBUTED
+import com.qwery.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
 import com.qwery.language.models.{Expression, Queryable}
 import com.qwery.runtime.datatypes.{Int32Type, StringType}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
@@ -34,7 +34,7 @@ case class NodeExec(portExpr: Expression, sqlExpr: Expression) extends ScalarFun
 
 object NodeExec extends FunctionCallParserE2(
   name = "nodeExec",
-  category = CATEGORY_DISTRIBUTED,
+  category = CATEGORY_ASYNC_REACTIVE,
   description = "Executes a query on a running Qwery peer node.",
   example =
     """|val port = nodeStart()

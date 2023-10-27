@@ -1,7 +1,7 @@
 package com.qwery.runtime.datatypes
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_SCIENCE, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{ColumnType, Expression}
 import com.qwery.language.{HelpDoc, dieArgumentMismatch, dieUnsupportedConversion}
 import com.qwery.runtime.datatypes.Vector.Vector
@@ -70,8 +70,8 @@ object MatrixType extends DataTypeParser with ConstructorSupport[Matrix] {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "Matrix",
-    category = CATEGORY_SCIENCE,
-    paradigm = PARADIGM_IMPERATIVE,
+    category = CATEGORY_TRANSFORMATION,
+    paradigm = PARADIGM_FUNCTIONAL,
     syntax = "new Matrix([ ... ])",
     description = "Creates a new matrix",
     example =

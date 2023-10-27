@@ -22,11 +22,11 @@ class NewTest extends AnyFunSpec with VerificationTools {
         """|import "java.awt.event.MouseListener"
            |import "java.awt.event.MouseEvent"
            |val m = new MouseListener() {
-           |    mouseClicked: (e: MouseEvent) => out.println("mouseClicked")
-           |    mousePressed: (e: MouseEvent) => out.println("mousePressed")
-           |    mouseReleased: (e: MouseEvent) => out.println("mouseReleased")
-           |    mouseEntered: (e: MouseEvent) => out.println("mouseEntered")
-           |    mouseExited: (e: MouseEvent) => out.println("mouseExited")
+           |    mouseClicked: (e: MouseEvent) => stdout.println("mouseClicked")
+           |    mousePressed: (e: MouseEvent) => stdout.println("mousePressed")
+           |    mouseReleased: (e: MouseEvent) => stdout.println("mouseReleased")
+           |    mouseEntered: (e: MouseEvent) => stdout.println("mouseEntered")
+           |    mouseExited: (e: MouseEvent) => stdout.println("mouseExited")
            |}
            |m.mouseClicked(null)
            |""".stripMargin)
@@ -39,11 +39,11 @@ class NewTest extends AnyFunSpec with VerificationTools {
           """|import "java.awt.event.MouseListener"
              |import "java.awt.event.MouseEvent"
              |new MouseListener('Hello World') {
-             |    mouseClicked: (e: MouseEvent) => out.println("mouseClicked")
-             |    mousePressed: (e: MouseEvent) => out.println("mousePressed")
-             |    mouseReleased: (e: MouseEvent) => out.println("mouseReleased")
-             |    mouseEntered: (e: MouseEvent) => out.println("mouseEntered")
-             |    mouseExited: (e: MouseEvent) => out.println("mouseExited")
+             |    mouseClicked: (e: MouseEvent) => stdout.println("mouseClicked")
+             |    mousePressed: (e: MouseEvent) => stdout.println("mousePressed")
+             |    mouseReleased: (e: MouseEvent) => stdout.println("mouseReleased")
+             |    mouseEntered: (e: MouseEvent) => stdout.println("mouseEntered")
+             |    mouseExited: (e: MouseEvent) => stdout.println("mouseExited")
              |}
              |""".stripMargin)
       }

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Instruction
 import com.qwery.runtime.datatypes.{BooleanType, StringType, TableType}
@@ -47,7 +47,7 @@ object Describe extends QueryableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "describe",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Returns a table representing the layout of the query expression",

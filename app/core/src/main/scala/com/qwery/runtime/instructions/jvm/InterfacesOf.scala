@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
@@ -25,7 +25,7 @@ case class InterfacesOf(expression: Expression) extends ScalarFunctionCall with 
 
 object InterfacesOf extends FunctionCallParserE1(
   name = "interfacesOf",
-  category = CATEGORY_REFLECTION,
+  category = CATEGORY_JVM_REFLECTION,
   paradigm = PARADIGM_OBJECT_ORIENTED,
   description =
     """|Returns the interfaces implemented by a class or instance

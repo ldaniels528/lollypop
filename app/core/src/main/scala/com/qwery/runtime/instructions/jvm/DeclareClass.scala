@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression.implicits.AsFunctionArguments
 import com.qwery.language.models.{Atom, Expression, ParameterLike}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
@@ -51,7 +51,7 @@ object DeclareClass extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "class",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     description = "Creates a new ephemeral (in-memory) JVM-compatible class",
     syntax = templateCard,

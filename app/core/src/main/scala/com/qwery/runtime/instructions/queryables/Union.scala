@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.SQLTemplateParams.MappedParameters
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
@@ -38,7 +38,7 @@ object Union extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "union",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "%q:query0 union ?%C(mode|all|distinct) %q:query1",
     description = "Combines two (or more) result sets (vertically)",
@@ -62,7 +62,7 @@ object Union extends QueryableChainParser {
          |""".stripMargin
   ), HelpDoc(
     name = "union distinct",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "%q:query0 union distinct distinct %q:query1",
     description = "Combines two (or more) result sets (vertically) retaining only distinct rows",

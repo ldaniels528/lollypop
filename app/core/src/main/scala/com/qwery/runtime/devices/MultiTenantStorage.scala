@@ -4,8 +4,8 @@ import com.qwery.die
 import com.qwery.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.qwery.runtime.datatypes.TableType
 import com.qwery.runtime.{DatabaseObjectConfig, DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
-import com.qwery.util.OptionHelper.OptionEnrichment
 import com.qwery.util.LogUtil
+import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
 import qwery.lang.BitArray
 

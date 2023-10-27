@@ -2,8 +2,8 @@ package com.qwery.runtime.datatypes
 
 import com.qwery.implicits.MagicImplicits
 import com.qwery.language.models.{ColumnType, Instruction}
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.devices.{FieldMetadata, QMap, RowCollection}
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.{INT_BYTES, Scope}
 import com.qwery.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import com.qwery.util.CodecHelper.RichInputStream

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{AllFields, Expression}
 import com.qwery.runtime.devices.RowCollection
 import com.qwery.runtime.instructions.expressions.{LongIntExpression, RuntimeExpression}
@@ -46,7 +46,7 @@ case class Count(expression: Expression) extends AggregateFunctionCall
 
 object Count extends FunctionCallParserE1(
   name = "count",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns the number of rows matching the query criteria.",
   examples = List(

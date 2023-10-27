@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
 
@@ -21,7 +21,7 @@ object OrderBy extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "order by",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_AGG_SORT_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Sorts a result set by a column",
