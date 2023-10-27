@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
-import com.qwery.language.models.{Instruction, Queryable}
+import com.qwery.language.models.{Instruction, Modifiable, Queryable}
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.devices.RowCollection
 import com.qwery.runtime.{DatabaseObjectRef, QweryVM, Scope}
@@ -13,7 +13,8 @@ import qwery.io.IOCost
  * @param target the appendable [[DatabaseObjectRef target]]
  * @example {{{ from @@stocks where lastSale < 1.0 into @@pennyStocks }}}
  */
-case class Into(source: Instruction, target: DatabaseObjectRef) extends RuntimeQueryable {
+case class Into(source: Instruction, target: DatabaseObjectRef)
+  extends RuntimeQueryable with Modifiable {
 
   override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope1, cost0, in) = QweryVM.search(scope, source)
