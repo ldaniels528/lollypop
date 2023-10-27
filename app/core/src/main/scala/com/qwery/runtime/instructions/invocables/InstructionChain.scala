@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.qwery.language.TemplateProcessor.TagInstructionWithLineNumbers
 import com.qwery.language.models.Instruction
 import com.qwery.language.{HelpDoc, InstructionPostfixParser, SQLCompiler, TokenStream}
@@ -26,7 +26,7 @@ object InstructionChain extends InstructionPostfixParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = _symbol,
-    category = CATEGORY_MISC,
+    category = CATEGORY_CONTROL_FLOW,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = _symbol,
     description = "Binds multiple statements together",

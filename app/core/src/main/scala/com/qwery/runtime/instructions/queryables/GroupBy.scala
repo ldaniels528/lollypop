@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
 
@@ -18,18 +18,29 @@ object GroupBy extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "group by",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_AGG_SORT_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Aggregates a result set by a column",
     example =
-      s"""|chart = { shape: "ring", title: "Types in Session" }
-         |graph chart from (
-         |    select kind, total: count(*)
-         |    from (this.toTable())
-         |    group by kind
-         |)
-         |""".stripMargin
+      s"""|select kind, total: count(*)
+          |from (this.toTable())
+          |group by kind
+          |""".stripMargin
+  ), HelpDoc(
+    name = "group by",
+    category = CATEGORY_AGG_SORT_OPS,
+    paradigm = PARADIGM_DECLARATIVE,
+    syntax = templateCard,
+    description = "Aggregates a result set by a column",
+    example =
+      s"""|chart = { shape: "bar", title: "Types in Session" }
+          |graph chart from (
+          |    select kind, total: count(*)
+          |    from (this.toTable())
+          |    group by kind
+          |)
+          |""".stripMargin
   ))
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "group by"

@@ -1,15 +1,15 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.models.Expression.implicits.RichAliasable
-import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._
 import com.qwery.runtime.devices.{QMap, RowCollection, TableColumn}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
+import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.JVMSupport.NormalizeAny
 import qwery.io.IOCost
@@ -82,7 +82,7 @@ case class Explode(expression: Expression) extends ScalarFunctionCall with Runti
 
 object Explode extends FunctionCallParserE1(
   name = "explode",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_DECLARATIVE,
   description = "Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.",
   examples = List(

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.Scope
 import com.qwery.runtime.datatypes.{DataType, Float64Type, Inferences}
@@ -59,7 +59,7 @@ case class Avg(expression: Expression) extends AggregateFunctionCall
 
 object Avg extends FunctionCallParserE1(
   name = "avg",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Computes the average of a numeric expression.",
   examples = List(

@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.implicits.MagicBoolImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Expression, FunctionCall}
 import com.qwery.language.{SQLCompiler, SQLTemplateParams, TokenStream}
 
@@ -24,7 +24,7 @@ abstract class FunctionCallParserE0(name: String, description: String, examples:
    * @param category    the instruction category (e.g. "Default")
    * @param paradigm    the instruction paradigm (e.g. "Declarative")
    */
-  def this(name: String, description: String, example: String, category: String = CATEGORY_MISC, paradigm: String = PARADIGM_FUNCTIONAL) = {
+  def this(name: String, description: String, example: String, category: String = CATEGORY_UNCLASSIFIED, paradigm: String = PARADIGM_FUNCTIONAL) = {
     this(name, description, List(example), category, paradigm)
   }
 

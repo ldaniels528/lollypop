@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, QweryUniverse}
 import com.qwery.runtime.Scope
@@ -34,17 +34,17 @@ case class Help(name: Option[Expression]) extends ScalarFunctionCall with Runtim
 
 object Help extends FunctionCallParserE0Or1(
   name = "help",
-  category = CATEGORY_SYSTEMS,
-  paradigm = PARADIGM_IMPERATIVE,
-  description = "Provides offline manual pages for instructions",
+  category = CATEGORY_SYSTEM_TOOLS,
+  paradigm = PARADIGM_DECLARATIVE,
+  description =
+    """|Provides offline manual pages for instructions.
+       |Additionally, it's an internal database containing information about every loaded instruction.
+       |""".stripMargin,
   examples = List(
-    "help('select')",
-    """|chart = { shape: "ring", title: "Help By Paradigm" }
-       |graph chart from (
-       |    select paradigm, total: count(*)
-       |    from (help())
-       |    group by paradigm
-       |)
+    "explode(help('select'))",
+    """|select paradigm, total: count(*)
+       |from (help())
+       |group by paradigm
        |""".stripMargin,
     """|chart = { shape: "ring", title: "Help By Category" }
        |graph chart from (

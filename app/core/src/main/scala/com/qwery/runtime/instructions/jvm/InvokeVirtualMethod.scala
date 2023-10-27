@@ -1,10 +1,10 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.qwery.runtime.instructions.expressions.{NamedFunctionCall, RuntimeExpression}
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 
@@ -35,7 +35,7 @@ object InvokeVirtualMethod extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_REFLECTION,
+    category = CATEGORY_JVM_REFLECTION,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     syntax = "",
     description = "Invokes a virtual method",

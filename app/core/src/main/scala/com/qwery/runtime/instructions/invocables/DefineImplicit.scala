@@ -1,11 +1,11 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.{Atom, CodeBlock, Instruction}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.functions.NamedFunction
 import com.qwery.runtime.plastics.{RuntimeClass, VirtualMethod}
-import com.qwery.runtime.Scope
 import com.qwery.util.LogUtil
 import qwery.io.IOCost
 
@@ -59,7 +59,7 @@ object DefineImplicit extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "implicit",
-    category = CATEGORY_SYSTEMS,
+    category = CATEGORY_SYSTEM_TOOLS,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     syntax = template,
     description = "Binds a virtual method to a class",

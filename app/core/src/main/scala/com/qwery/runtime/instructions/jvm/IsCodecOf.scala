@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.jvm
 
 import com.qwery.language.ColumnTypeParser.nextColumnType
-import com.qwery.language.HelpDoc.{CATEGORY_BRANCHING_OPS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.{ColumnType, Condition, Expression}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.datatypes.{DataType, Inferences}
@@ -34,7 +34,7 @@ object IsCodecOf extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`expression` ${__name} `CODEC`",
     description = "determines whether the `expression` is compatible with the `CODEC`",

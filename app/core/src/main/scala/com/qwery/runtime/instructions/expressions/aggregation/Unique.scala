@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.CATEGORY_DATAFRAME
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.functions.FunctionCallParserN
 import com.qwery.runtime.{QweryVM, Scope}
@@ -35,7 +35,8 @@ case class Unique(expressions: List[Expression]) extends AggregateFunctionCall {
  */
 object Unique extends FunctionCallParserN(
   name = "unique",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
+  paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns a unique collection of elements based on the query criteria.",
   example =
     """|val stocks =

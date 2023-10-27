@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Instruction, Queryable}
 import com.qwery.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieNoResultSet}
 import com.qwery.runtime.QweryVM.convertToTable
@@ -36,7 +36,7 @@ object From extends QueryableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "from",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Retrieves rows from a datasource",

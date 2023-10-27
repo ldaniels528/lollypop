@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.die
-import com.qwery.language.HelpDoc.{CATEGORY_PATTERN_MATCHING, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Expression, Instruction}
 import com.qwery.runtime.datatypes.{BooleanType, StringType, TableType}
@@ -48,7 +48,7 @@ case class Expose(expression: Expression) extends ScalarFunctionCall with Runtim
 
 object Expose extends FunctionCallParserE1(
   name = "expose",
-  category = CATEGORY_PATTERN_MATCHING,
+  category = CATEGORY_FILTER_MATCH_OPS,
   paradigm = PARADIGM_DECLARATIVE,
   description = "Exposes the components of a `matches` expression",
   example =

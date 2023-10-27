@@ -1,6 +1,6 @@
 package com.qwery.language
 
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_IMPERATIVE}
 
 /**
  * Represents an integrated help document
@@ -14,7 +14,7 @@ import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_IMPERATIVE}
  *                       meaning not for general use.
  */
 case class HelpDoc(name: String,
-                   category: String = CATEGORY_MISC,
+                   category: String = CATEGORY_UNCLASSIFIED,
                    paradigm: String = PARADIGM_IMPERATIVE,
                    syntax: String = "",
                    description: String,
@@ -32,18 +32,15 @@ object HelpDoc {
   val PARADIGM_OBJECT_ORIENTED = "Object-Oriented"
 
   // Categories
-  val CATEGORY_MISC = "Miscellaneous"
-  val CATEGORY_ASYNC_IO = "Asynchronous I/O"
-  val CATEGORY_BRANCHING_OPS = "Branching Ops"
+  val CATEGORY_AGG_SORT_OPS = "Aggregation/Sorting"
+  val CATEGORY_ASYNC_REACTIVE = "Asynchronous/Distributed/Reactive"
+  val CATEGORY_FILTER_MATCH_OPS = "Filtering/Pattern Matching"
   val CATEGORY_CONTROL_FLOW = "Control Flow"
-  val CATEGORY_DATAFRAME = "DataFrame"
-  val CATEGORY_DISTRIBUTED = "Distributed Processing"
-  val CATEGORY_PATTERN_MATCHING = "Pattern Matching"
-  val CATEGORY_REFLECTION = "JVM and Reflection"
-  val CATEGORY_SCIENCE = "Science and Mathematics"
-  val CATEGORY_SESSION = "Scope and Session"
-  val CATEGORY_SYNC_IO = "Synchronous I/O"
-  val CATEGORY_SYSTEMS = "System Tools"
-  val CATEGORY_TESTING = "Testing"
+  val CATEGORY_TRANSFORMATION = "Transformation"
+  val CATEGORY_JVM_REFLECTION = "JVM and Reflection"
+  val CATEGORY_SCOPE_SESSION = "Scope/Session"
+  val CATEGORY_SYSTEM_TOOLS = "System Tools"
+  val CATEGORY_TESTING = "Testing - Unit/Integration"
+  val CATEGORY_UNCLASSIFIED = "Unclassified"
 
 }

@@ -1,12 +1,12 @@
 package com.qwery.runtime.devices
 
 import com.qwery.language.{ColumnTypeParser, TokenStream, dieNoSuchConstructor}
-import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.datatypes.DataType
 import com.qwery.runtime.datatypes.Inferences.fromClass
 import com.qwery.runtime.devices.ProductCollection.{KeyValue, toColumns}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._
+import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.{ColumnInfo, QweryCompiler, ROWID, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost

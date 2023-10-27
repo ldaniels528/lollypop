@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.invocables
 
 import com.qwery.language.ColumnTypeParser.nextColumnType
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Atom, ColumnType, Instruction}
 import com.qwery.runtime.datatypes.{AnyType, DataType}
@@ -49,14 +49,14 @@ object ValVar extends InvokableParser with InsertValues {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "val",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = template,
     description = "Creates a read-only variable",
     example = "val greeting: String = 'Hello World'"
   ), HelpDoc(
     name = "var",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = template,
     description = "Creates a variable",

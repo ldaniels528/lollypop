@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Condition, Expression, FieldRef, Queryable}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
@@ -69,10 +69,11 @@ object UpsertInto extends ModifiableParser with InsertValues {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "upsert",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Inserts (or updates) new row(s) into a table",
+    isExperimental = true,
     example =
       """|namespace "temp.examples"
          |drop if exists Stocks &&
@@ -92,10 +93,11 @@ object UpsertInto extends ModifiableParser with InsertValues {
          |""".stripMargin
   ), HelpDoc(
     name = "upsert",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Inserts (or updates) new row(s) into a table",
+    isExperimental = true,
     example =
       """|namespace "temp.examples"
          |drop if exists Stocks &&

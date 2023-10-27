@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_PATTERN_MATCHING, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Expression, LambdaFunction}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
@@ -94,7 +94,7 @@ object Matches extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = keyword,
-    category = CATEGORY_PATTERN_MATCHING,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
@@ -103,7 +103,7 @@ object Matches extends ExpressionToConditionPostParser {
          |""".stripMargin
   ), HelpDoc(
     name = keyword,
-    category = CATEGORY_PATTERN_MATCHING,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
@@ -113,7 +113,7 @@ object Matches extends ExpressionToConditionPostParser {
          |""".stripMargin
   ), HelpDoc(
     name = keyword,
-    category = CATEGORY_PATTERN_MATCHING,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",

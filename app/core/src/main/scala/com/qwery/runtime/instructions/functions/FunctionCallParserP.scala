@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.implicits.{MagicBoolImplicits, MagicImplicits}
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.{Column, Expression, FunctionCall}
 import com.qwery.language.{SQLCompiler, SQLTemplateParams, TokenStream, dieIllegalType}
 import com.qwery.runtime.instructions.functions.ScalarFunctionCall.ArgumentExtraction
@@ -21,7 +21,7 @@ abstract class FunctionCallParserP(name: String,
                                    paradigm: String)
   extends FunctionCallParser(name, description, examples, template = s"$name %FP:params", category, paradigm) {
 
-  def this(name: String, description: String, example: String, category: String = CATEGORY_MISC, paradigm: String = PARADIGM_FUNCTIONAL) =
+  def this(name: String, description: String, example: String, category: String = CATEGORY_UNCLASSIFIED, paradigm: String = PARADIGM_FUNCTIONAL) =
     this(name, description, List(example), category, paradigm)
 
   def apply(params: List[Column]): InternalFunctionCall

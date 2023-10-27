@@ -1,6 +1,6 @@
 package com.qwery.runtime.plastics
 
-import RuntimeClass.resolveClass
+import com.qwery.runtime.plastics.RuntimeClass.resolveClass
 
 import scala.annotation.tailrec
 

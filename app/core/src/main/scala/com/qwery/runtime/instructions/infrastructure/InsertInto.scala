@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.infrastructure
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Condition, Expression, FieldRef, Queryable}
 import com.qwery.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
@@ -89,7 +89,7 @@ object InsertInto extends ModifiableParser with InsertValues {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "insert",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Appends new row(s) to a table",
@@ -112,7 +112,7 @@ object InsertInto extends ModifiableParser with InsertValues {
          |""".stripMargin
   ), HelpDoc(
     name = "insert",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Appends new row(s) to a table",

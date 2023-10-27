@@ -1,6 +1,6 @@
 package com.qwery.runtime.datatypes
 
-import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.ColumnType
 import com.qwery.language.{ColumnTypeParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedConversion}
 import com.qwery.runtime.{ISO_8601_DATE_FORMAT, LONG_BYTES, Scope}
@@ -75,7 +75,7 @@ object DateTimeType extends DateTimeType(ISO_8601_DATE_FORMAT) with ConstructorS
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = name,
-    category = CATEGORY_SYSTEMS,
+    category = CATEGORY_SYSTEM_TOOLS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"DateTime()",
     description = "Creates new date instance",

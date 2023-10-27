@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.qwery.language.models._
@@ -20,7 +20,7 @@ object SetVariable extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "set",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Sets the value of a variable",

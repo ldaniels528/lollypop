@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Atom
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.Scope
@@ -25,10 +25,11 @@ object DeclarePackage extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "package",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Declares the default JVM package namespace",
+    isExperimental = true,
     example =
       """|package "com.acme.skunkworks"
          |__package__

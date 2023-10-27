@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.runtime.instructions.ReferenceInstruction
 import com.qwery.runtime.{DatabaseManagementSystem, DatabaseObjectRef, Scope}
@@ -31,7 +31,7 @@ object Drop extends ModifiableParser with IfExists {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "drop",
-      category = CATEGORY_DATAFRAME,
+      category = CATEGORY_TRANSFORMATION,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = "drop ?%IFE:exists %L:ref",
       description = "Deletes a database object",

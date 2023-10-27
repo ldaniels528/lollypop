@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.ColumnType
 import com.qwery.runtime.DatabaseManagementSystem.createUserType
@@ -41,7 +41,7 @@ object CreateType extends ModifiableParser with IfNotExists {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "create type",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Creates a database type",

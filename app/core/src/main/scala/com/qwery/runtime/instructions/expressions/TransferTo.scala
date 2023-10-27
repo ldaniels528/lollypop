@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.expressions
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_SYNC_IO, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.Scope
@@ -51,7 +51,7 @@ object TransferTo extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = _symbol,
-    category = CATEGORY_SYNC_IO,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = s"a ${_symbol} b",
     description = "A declarative way to write to OutputStream or Writer resources",

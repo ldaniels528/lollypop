@@ -4,8 +4,8 @@ import com.qwery.language.dieUnsupportedConversion
 import com.qwery.language.models.ColumnType
 import com.qwery.runtime.devices.FieldMetadata
 import com.qwery.runtime.{INT_BYTES, Scope}
-import com.qwery.util.CodecHelper
 import com.qwery.util.ByteBufferHelper.DataTypeBuffer
+import com.qwery.util.CodecHelper
 import com.qwery.util.OptionHelper.OptionEnrichment
 
 import java.nio.ByteBuffer

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_REFLECTION, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.datatypes.Inferences
 import com.qwery.runtime.instructions.expressions.{RuntimeExpression, StringExpression}
@@ -24,7 +24,7 @@ case class CodecOf(expression: Expression) extends ScalarFunctionCall with Runti
 
 object CodecOf extends FunctionCallParserE1(
   name = "codecOf",
-  category = CATEGORY_REFLECTION,
+  category = CATEGORY_JVM_REFLECTION,
   paradigm = PARADIGM_FUNCTIONAL,
   description =
     """|Returns the CODEC (encoder/decoder) of an expression.

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SYNC_IO, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Instruction, LambdaFunction}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
@@ -46,7 +46,7 @@ object With extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "with",
-    category = CATEGORY_SYNC_IO,
+    category = CATEGORY_CONTROL_FLOW,
     paradigm = PARADIGM_FUNCTIONAL,
     syntax = templateCard,
     description = "Provides a closure over a resource; closing it upon completion.",

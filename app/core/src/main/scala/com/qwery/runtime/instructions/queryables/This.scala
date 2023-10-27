@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.implicits.MagicBoolImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.runtime.Scope
 import com.qwery.runtime.datatypes.{StringType, TableType}
@@ -34,8 +34,8 @@ object This extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "this",
-    category = CATEGORY_SESSION,
-    paradigm = PARADIGM_OBJECT_ORIENTED,
+    category = CATEGORY_SCOPE_SESSION,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Table representation of the current scope",
     example = "this"

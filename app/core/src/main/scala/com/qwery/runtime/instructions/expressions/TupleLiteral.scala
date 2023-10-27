@@ -3,9 +3,9 @@ package com.qwery.runtime.instructions.expressions
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.qwery.language.models._
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.qwery.runtime.plastics.Tuples.seqToTuple
 import com.qwery.runtime.datatypes.{AnyType, DataType}
 import com.qwery.runtime.instructions.functions.ArgumentBlock
+import com.qwery.runtime.plastics.Tuples.seqToTuple
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.OptionHelper.OptionEnrichment
 
