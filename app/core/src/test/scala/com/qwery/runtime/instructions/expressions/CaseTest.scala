@@ -5,7 +5,7 @@ import com.qwery.language.models.Inequality.InequalityExtensions
 import com.qwery.language.models.{@@, Expression}
 import com.qwery.language.{SQLTemplateParams, Template}
 import com.qwery.runtime.instructions.VerificationTools
-import com.qwery.runtime.instructions.conditions.{Like, Not}
+import com.qwery.runtime.instructions.conditions.{Matches, Not}
 import com.qwery.runtime.instructions.queryables.Select
 import com.qwery.runtime.{QweryCompiler, QweryVM, Scope}
 import com.qwery.util.OptionHelper.implicits.risky._
@@ -122,13 +122,13 @@ class CaseTest extends AnyFunSpec with VerificationTools {
            |""".stripMargin)
     }
 
-    it("""should parse "case when field not like '%.%' then 'yes' else 'No' end" """) {
+    it("""should parse "case when not (field matches '.*[.].*') then 'yes' else 'No' end" """) {
       verify(
         """|case
-           |  when not field like '%.%' then 'Yes' else 'No'
+           |  when not field matches '.*[.].*' then 'Yes' else 'No'
            |end
            |""".stripMargin,
-        Case(conditions = List(Case.When(Not(Like("field".f, "%.%")), "Yes": Expression)), otherwise = Some("No": Expression)))
+        Case(conditions = List(Case.When(Not(Matches("field".f, ".*[.].*")), "Yes": Expression)), otherwise = Some("No": Expression)))
     }
 
   }

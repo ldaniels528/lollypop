@@ -713,7 +713,7 @@ class JDBCDatabaseMetaData(@BeanProperty val connection: JDBCConnection, @BeanPr
                     columnNamePattern: String = null)(tableTypes: String*): String = {
     @inline
     def format(name: String, value: String): String = {
-      s"$name ${if (value.contains("%")) "like" else "is"} '$value'"
+      s"$name ${if (value.contains("%")) "matches" else "is"} '${value.replace("%", ".*")}'"
     }
 
     val conditions =

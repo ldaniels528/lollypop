@@ -63,7 +63,7 @@ class DoWhileTest extends AnyFunSpec with VerificationTools {
            |
            |let cnt: Int = 1
            |do {
-           |   out.println('{{ roman(Int(cnt)) }}. Hello World')
+           |   stdout <=== '{{ roman(Int(cnt)) }}. Hello World'
            |   cnt += 1
            |} while cnt < 5
            |select cnt

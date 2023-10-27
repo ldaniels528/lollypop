@@ -42,22 +42,22 @@ class WhenEverTest extends AnyFunSpec with VerificationTools {
         s"""|var deaths: Int = 0
             |var health: Int = 1
             |whenever health == 0 set deaths = deaths + 1
-            |out.println("health: {{health}}  deaths: {{deaths}}")
+            |stdout <=== "health: {{health}}  deaths: {{deaths}}"
             |set health = health - 1
-            |out.println("health: {{health}}  deaths: {{deaths}}")
+            |stdout <=== "health: {{health}}  deaths: {{deaths}}"
             |""".stripMargin)
       assert(scope.resolve("deaths") contains 1)
       assert(scope.resolve("health") contains 0)
     }
 
-    it("should execute: whenever '^out.println(.*)' ...") {
+    it("should execute: whenever '^stdout.println(.*)' ...") {
       val (scope, _, _) = QweryVM.executeSQL(Scope(),
         s"""|var counter = 0
-            |whenever '^out.println(.*)' {
+            |whenever '^stdout.println(.*)' {
             |   counter += 1
             |}
-            |out.println('Hello World 1')
-            |out.println('Hello World 2')
+            |stdout.println('Hello World 1')
+            |stdout.println('Hello World 2')
             |""".stripMargin)
       assert(scope.resolve("counter") contains 2)
     }

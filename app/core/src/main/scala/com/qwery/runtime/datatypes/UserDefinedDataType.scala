@@ -1,8 +1,8 @@
 package com.qwery.runtime.datatypes
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.{ColumnTypeParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.language.models.ColumnType
+import com.qwery.language.{ColumnTypeParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.Scope
 
 object UserDefinedDataType extends ColumnTypeParser with DataTypeParser {

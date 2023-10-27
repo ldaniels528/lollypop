@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.CATEGORY_SCIENCE
+import com.qwery.language.HelpDoc.CATEGORY_TRANSFORMATION
 import com.qwery.language.models.Expression
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -27,6 +27,6 @@ case class ScaleTo(numberExpr: Expression, scaleExpr: Expression) extends Scalar
 
 object ScaleTo extends FunctionCallParserE2(
   name = "scaleTo",
-  category = CATEGORY_SCIENCE,
+  category = CATEGORY_TRANSFORMATION,
   description = "Returns the the numeric expression truncated after `scale` decimal places.",
   example = "scaleTo(0.567, 2)")

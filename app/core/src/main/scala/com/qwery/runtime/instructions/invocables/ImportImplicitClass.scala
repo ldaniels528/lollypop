@@ -1,10 +1,10 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SYSTEMS, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.Expression
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.qwery.runtime.{Scope}
 import com.qwery.runtime.plastics.RuntimeClass
 import com.qwery.util.OptionHelper.OptionEnrichment
 import qwery.io.IOCost
@@ -30,7 +30,7 @@ object ImportImplicitClass extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "import implicit",
-    category = CATEGORY_SYSTEMS,
+    category = CATEGORY_SYSTEM_TOOLS,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     syntax = templateCard,
     description = "Imports the methods of a Scala implicit class",

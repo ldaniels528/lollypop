@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.Scope
 import com.qwery.runtime.datatypes.Float64Type
@@ -42,7 +42,7 @@ case class Sum(expression: Expression) extends AggregateFunctionCall
 
 object Sum extends FunctionCallParserE1(
   name = "sum",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns the sum of a numeric expression.",
   examples = List(

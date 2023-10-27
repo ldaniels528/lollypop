@@ -58,7 +58,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.listFiles('/examples/src/main/qwery')") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/main/qwery') where name like '%.sql'
+        """|from OS.listFiles('./contrib/examples/src/main/qwery') where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
@@ -69,7 +69,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.listFiles('/examples/src/main/qwery', true)") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/', true) where name like '%.sql'
+        """|from OS.listFiles('./contrib/examples/src/', true) where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
@@ -235,9 +235,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
     it("should capture and return the output of STDERR on the server-side") {
       val scope0 = QweryUniverse(isServerMode = true).createRootScope()
       val (scope1, _, _) = QweryVM.executeSQL(scope0,
-        """|err.println("1. Always be respective")
-           |err.println("2. Always be honest")
-           |err.println("3. Always be kind")
+        """|stderr.println("1. Always be respective")
+           |stderr.println("2. Always be honest")
+           |stderr.println("3. Always be kind")
            |""".stripMargin)
       assert(scope1.getUniverse.system.stdErr.asString() ==
         """|1. Always be respective
@@ -249,9 +249,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
     it("should capture and return the output of STDOUT on the server-side") {
       val scope0 = QweryUniverse(isServerMode = true).createRootScope()
       val (scope1, _, _) = QweryVM.executeSQL(scope0,
-        """|out.println("1. Always be respective")
-           |out.println("2. Always be honest")
-           |out.println("3. Always be kind")
+        """|stdout <=== "1. Always be respective\n"
+           |stdout <=== "2. Always be honest\n"
+           |stdout <=== "3. Always be kind\n"
            |""".stripMargin)
       assert(scope1.getUniverse.system.stdOut.asString() ==
         """|1. Always be respective

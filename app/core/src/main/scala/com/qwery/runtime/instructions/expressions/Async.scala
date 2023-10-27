@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_IO, PARADIGM_REACTIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.qwery.language.models.{Instruction, Invokable}
 import com.qwery.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.{QweryVM, Scope}
@@ -27,7 +27,7 @@ object Async extends ExpressionParser with InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "async",
-    category = CATEGORY_ASYNC_IO,
+    category = CATEGORY_ASYNC_REACTIVE,
     paradigm = PARADIGM_REACTIVE,
     syntax = templateCard,
     description = "Asynchronously executes an instruction",

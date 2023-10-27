@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_REACTIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Expression, Instruction}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression
@@ -35,7 +35,7 @@ object Every extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "every",
-    category = CATEGORY_CONTROL_FLOW,
+    category = CATEGORY_ASYNC_REACTIVE,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
     description = "Schedules the execution of command(s) on a specific interval",

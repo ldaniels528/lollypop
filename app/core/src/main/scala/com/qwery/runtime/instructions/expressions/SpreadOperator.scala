@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_MISC, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 
@@ -17,7 +17,7 @@ object SpreadOperator extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = _symbol,
-    category = CATEGORY_MISC,
+    category = CATEGORY_JVM_REFLECTION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = _symbol,
     description = "The argument spread operator: can convert an array into individual arguments",
@@ -28,7 +28,7 @@ object SpreadOperator extends ExpressionChainParser {
          |""".stripMargin
   ), HelpDoc(
     name = _symbol,
-    category = CATEGORY_MISC,
+    category = CATEGORY_JVM_REFLECTION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = _symbol,
     description = "The argument spread operator: can convert a dictionary into individual arguments",

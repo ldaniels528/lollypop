@@ -44,8 +44,8 @@ case class QweryUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypePa
       .withVariable("π", Math.PI)
       .withVariable("OS", system)
       .withVariable("Random", qwery.lang.Random)
-      .withVariable("err", system.stdErr.writer)
-      .withVariable("out", system.stdOut.writer)
+      .withVariable("stderr", system.stdErr.writer)
+      .withVariable("stdout", system.stdOut.writer)
       .withVariable("stdin", system.stdIn.reader)
       .withImports(Map(Seq(
         classOf[BitArray], classOf[ComplexNumber], classOf[java.util.Date], classOf[IOCost],
@@ -197,15 +197,15 @@ object QweryUniverse {
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
     DeclareClass, DeclarePackage, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy,
     Div, DoWhile, Drop,
-    Each, ElementAt, EOL, EQ, Every, Exists, Explode, Expose,
+    Each, ElementAt, EOL, EQ, Every, Exists, Expose,
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
     HashTag, Having, Help, Http,
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InterfacesOf, Intersect, Into, InvokeVirtualMethod,
     Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
-    LessLess, LessLessLess, Let, Like, Limit, LT, LTE,
-    Macro, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
+    LessLess, LessLessLess, Let, Limit, LT, LTE,
+    Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
     Namespace, NEG, NEQ, New, NodeAPI, NodeConsole, NodeExec, NodeScan, NodeStart, NodeStop, NodeWWW, Not,
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
@@ -213,7 +213,7 @@ object QweryUniverse {
     Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf, Synchronized,
     Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
-    TryCatch, Truncate, TupleLiteral, TypeOf,
+    Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
     WhileDo, WhenEver, Where, WhereIn, With,

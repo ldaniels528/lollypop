@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.{Expression, FieldRef, VariableRef}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieUnsupportedType}
 import com.qwery.runtime.Scope
@@ -24,7 +24,7 @@ object Destroy extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "destroy",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = templateCard,
     description = "Removes a variable from the active scope",

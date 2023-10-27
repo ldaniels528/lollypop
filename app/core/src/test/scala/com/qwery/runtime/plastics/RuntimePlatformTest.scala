@@ -217,9 +217,9 @@ class RuntimePlatformTest extends AnyFunSpec {
   }
 
   describe("Array:foreach()") {
-    it("should execute: [1, 3, 5, 7, 9].foreach( (n: Int) => out.println(n) )") {
+    it("should execute: [1, 3, 5, 7, 9].foreach( (n: Int) => stdout.println(n) )") {
       val (scope, _, _) = QweryVM.executeSQL(ctx.createRootScope(),
-        """[1, 3, 5, 7, 9].foreach( (n: Int) => out.println(n) )""")
+        """[1, 3, 5, 7, 9].foreach(n => stdout.println(n))""")
       assert(scope.getUniverse.system.stdOut.asString() ==
         """|1
            |3

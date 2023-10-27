@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.conditions
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_BRANCHING_OPS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.qwery.runtime.{QweryVM, Scope}
@@ -29,7 +29,7 @@ case class IsNotNull(expr: Expression) extends ScalarFunctionCall with RuntimeCo
 
 object IsNotNull extends FunctionCallParserE1(
   name = "isNotNull",
-  category = CATEGORY_BRANCHING_OPS,
+  category = CATEGORY_FILTER_MATCH_OPS,
   paradigm = PARADIGM_IMPERATIVE,
   description = "Returns true if the expression is not null, otherwise false.",
   example = "isNotNull('yes')")

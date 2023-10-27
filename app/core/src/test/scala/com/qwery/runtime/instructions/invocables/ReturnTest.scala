@@ -48,7 +48,7 @@ class ReturnTest extends AnyFunSpec with VerificationTools {
            |  set @a = 3
            |  return @a * 2
            |}
-           |out.println('@x = {{x}}')
+           |stdout <=== '@x = {{x}}'
            |return @x
            |""".stripMargin)
       assert(returned contains 6.0)
@@ -56,7 +56,7 @@ class ReturnTest extends AnyFunSpec with VerificationTools {
 
     it("should execute return (select ... )") {
       val (_, _, result_?) = QweryVM.executeSQL(Scope(),
-        """|return (select name from (from OS.listFiles('./contrib/examples/src/main/qwery')) where name like '%.sql' order by name)
+        """|return (select name from (from OS.listFiles('./contrib/examples/src/main/qwery')) where name matches '.*[.]sql' order by name)
            |""".stripMargin)
       val device_? = result_?.collect { case d: RowCollection => d }
       assert(device_?.toList.flatMap(_.toMapGraph).toSet == Set(

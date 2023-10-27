@@ -1,14 +1,14 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.die
-import com.qwery.language.HelpDoc.{CATEGORY_PATTERN_MATCHING, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.{Expression, Instruction}
 import com.qwery.runtime.datatypes.{BooleanType, StringType, TableType}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.qwery.runtime.devices.{QMap, RowCollection, TableColumn}
-import com.qwery.runtime.instructions.conditions.Like
+import com.qwery.runtime.instructions.conditions.Matches
 import com.qwery.runtime.instructions.expressions.TableExpression
 import com.qwery.runtime.instructions.functions.{AnonymousFunction, FunctionCallParserE1, ScalarFunctionCall}
 import com.qwery.runtime.instructions.queryables.Expose.exposeMatch
@@ -22,14 +22,14 @@ import qwery.io.IOCost
  * @param expression the [[Expression expression]] to expose
  * @example {{{
  *   set response = { id: 5678, symbol: "DOG", exchange: "NYSE", "lastSale": 90.67 }
- *   response like { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber }
+ *   response matches { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber }
  * }}}
  */
 case class Expose(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
 
   override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     expression match {
-      case Like(source, pattern) =>
+      case Matches(source, pattern) =>
         val rows = exposeMatch(src = QweryVM.execute(scope, source)._3, pattern = QweryVM.execute(scope, pattern)._3)
         val out = createQueryResultTable(returnType.columns)
         val cost = out.insert(rows.map(_.toRow(out)))
@@ -48,7 +48,7 @@ case class Expose(expression: Expression) extends ScalarFunctionCall with Runtim
 
 object Expose extends FunctionCallParserE1(
   name = "expose",
-  category = CATEGORY_PATTERN_MATCHING,
+  category = CATEGORY_FILTER_MATCH_OPS,
   paradigm = PARADIGM_DECLARATIVE,
   description = "Exposes the components of a `matches` expression",
   example =
@@ -56,7 +56,7 @@ object Expose extends FunctionCallParserE1(
        |isUUID = v => v.isUUID()
        |isNumber = v => v.isNumber()
        |response = { id: "a891ee9b-6667-40fc-9ed1-a129d04c8b6d", symbol: "ABC", exchange: "NYSE", lastSale: "35.76" }
-       |expose(response like { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber })
+       |expose(response matches { id: isUUID, symbol: isString, exchange: isString, lastSale: isNumber })
        |""".stripMargin) {
 
   def exposeMatch(src: Any, pattern: Any)(implicit scope: Scope): List[QMap[String, Any]] = {

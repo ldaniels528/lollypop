@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Instruction
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.RowCollection
@@ -33,7 +33,7 @@ object Exists extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = s"${__name}(`query`)",
     description = "determines whether at least one row is found within the query",

@@ -2,9 +2,9 @@ package com.qwery.runtime.datatypes
 
 import com.qwery.language.dieUnsupportedConversion
 import com.qwery.language.models.{ColumnType, Expression}
+import com.qwery.runtime.instructions.expressions.NamedFunctionCall
 import com.qwery.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.qwery.runtime.{Boolean2Int, Scope}
-import com.qwery.runtime.instructions.expressions.NamedFunctionCall
 
 /**
  * Represents a generic numeric data type

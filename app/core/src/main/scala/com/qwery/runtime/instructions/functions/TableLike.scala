@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.DatabaseManagementSystem.readPhysicalTable
 import com.qwery.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
@@ -27,7 +27,7 @@ case class TableLike(source: Expression) extends ScalarFunctionCall with Runtime
 
 object TableLike extends FunctionCallParserE1(
   name = "tableLike",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_TRANSFORMATION,
   paradigm = PARADIGM_FUNCTIONAL,
   description =
     """|Creates a new table file, which will be identical to the source table.

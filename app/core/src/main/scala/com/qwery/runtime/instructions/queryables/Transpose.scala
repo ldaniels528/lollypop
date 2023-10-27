@@ -1,15 +1,14 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.models.Expression.implicits.RichAliasable
-import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.datatypes._
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
 import com.qwery.runtime.devices.RowCollectionZoo._
-import com.qwery.runtime.devices.{QMap, RowCollection, TableColumn}
-import com.qwery.runtime.instructions.expressions.RuntimeExpression
+import com.qwery.runtime.devices.{QMap, Row, RowCollection, TableColumn}
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
+import com.qwery.runtime.plastics.Tuples.tupleToSeq
 import com.qwery.runtime.{QweryVM, Scope}
 import com.qwery.util.JVMSupport.NormalizeAny
 import qwery.io.IOCost
@@ -19,12 +18,10 @@ import scala.reflect.ClassTag
 
 /**
  * Separates the elements of a collection expression into a table expression.
- * @example {{{ explode(new `java.util.Date`()) }}}
- * @param expression the [[Expression expression]] to explode
+ * @example {{{ transpose(new `java.util.Date`()) }}}
+ * @param expression the [[Expression expression]] to transpose
  */
-case class Explode(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with RuntimeExpression {
-
-  override def evaluate()(implicit scope: Scope): RowCollection = search()._3
+case class Transpose(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with Expression {
 
   override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope0, cost0, result0) = QweryVM.execute(scope, expression)
@@ -32,6 +29,9 @@ case class Explode(expression: Expression) extends ScalarFunctionCall with Runti
     @tailrec
     def recurse(value: Any): RowCollection = value match {
       case null => null
+      case m: Matrix => m.transpose.toTable
+      case r: Row => fromRow(r)
+      case r: RowCollection => fromTable(r)
       case a: Array[_] => fromArray(a)
       case s: Seq[_] => fromSeq(s.asInstanceOf[Seq[AnyRef]])
       case s: Set[_] => recurse(s.toSeq)
@@ -70,6 +70,18 @@ case class Explode(expression: Expression) extends ScalarFunctionCall with Runti
     Map(p.productElementNames.toSeq zip p.productIterator: _*).toKeyValueCollection
   }
 
+  private def fromRow(row: Row): RowCollection = {
+    val newColumns: Seq[TableColumn] = Seq(
+      TableColumn(name = "name", `type` = StringType(maxSizeInBytes = 65536, isExternal = true)),
+      TableColumn(name = "value", `type` = StringType(maxSizeInBytes = 65536, isExternal = true))
+    )
+    val out = createTempTable(newColumns)
+    row.columns foreach { column =>
+      out.insert(Map("name" -> column.name, "value" -> row.get(column.name).orNull).toRow(out))
+    }
+    out
+  }
+
   private def fromSeq[T](items: Seq[T])(implicit ct: ClassTag[T]): RowCollection = {
     val columnName = expression.getNameOrDie
     val columns = Seq(TableColumn(name = columnName, `type` = Inferences.fromClass(ct.runtimeClass)))
@@ -78,19 +90,36 @@ case class Explode(expression: Expression) extends ScalarFunctionCall with Runti
     out
   }
 
+  private def fromTable(rc: RowCollection): RowCollection = {
+    val newColumns: Seq[TableColumn] = Seq(
+      TableColumn(name = "name", `type` = StringType(maxSizeInBytes = 65536, isExternal = true)),
+      TableColumn(name = "value", `type` = StringType(maxSizeInBytes = 65536, isExternal = true))
+    )
+    val out = createTempTable(newColumns)
+    rc.foreach { row => out.insert(fromRow(row)) }
+    out
+  }
+
 }
 
-object Explode extends FunctionCallParserE1(
-  name = "explode",
-  category = CATEGORY_DATAFRAME,
+object Transpose extends FunctionCallParserE1(
+  name = "transpose",
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_DECLARATIVE,
   description = "Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.",
   examples = List(
-    "explode(items: [1 to 5])",
-    """|faces = explode(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
-       |suits = explode(suit: ["♠", "♦", "♥", "♣"])
+    "transpose(items: [1 to 5])",
+    """|faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
+       |suits = transpose(suit: ["♠", "♦", "♥", "♣"])
        |deck = faces * suits
        |deck.shuffle()
        |@@deck limit 5
+       |""".stripMargin,
+    "transpose(help('select'))",
+    """|transpose(new Matrix([
+       |  [1.0, 2.0, 3.0],
+       |  [4.0, 5.0, 6.0],
+       |  [7.0, 8.0, 9.0]
+       |]))
        |""".stripMargin
   ))

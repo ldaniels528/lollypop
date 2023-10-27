@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, TokenStream}
 import com.qwery.runtime.Scope
 import qwery.io.IOCost
@@ -18,7 +18,7 @@ object Reset extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = name,
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = name,
     description = "Resets the scope; wiping out all state",

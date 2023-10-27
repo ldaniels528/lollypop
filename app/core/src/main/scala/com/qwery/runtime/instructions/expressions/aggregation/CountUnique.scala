@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions.aggregation
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.instructions.expressions.LongIntExpression
 import com.qwery.runtime.instructions.functions.FunctionCallParserE1
@@ -27,7 +27,7 @@ case class CountUnique(expression: Expression) extends AggregateFunctionCall wit
 
 object CountUnique extends FunctionCallParserE1(
   name = "countUnique",
-  category = CATEGORY_DATAFRAME,
+  category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns the distinct number of rows matching the query criteria.",
   examples = List(

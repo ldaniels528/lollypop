@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.{ConditionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.language.models.Condition
+import com.qwery.language.{ConditionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.Scope
 
 /**

@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_OBJECT_ORIENTED}
+import com.qwery.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.qwery.language.models.{Atom, Expression}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.functions.{AnonymousFunction, FunctionArguments}
@@ -97,14 +97,14 @@ object New extends ExpressionParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "new",
-      category = CATEGORY_SESSION,
+      category = CATEGORY_JVM_REFLECTION,
       paradigm = PARADIGM_OBJECT_ORIENTED,
       syntax = templateCard,
       description = "The new operator can be used to instantiate JVM classes.",
       example = "new `java.util.Date`()"
     ), HelpDoc(
       name = "new",
-      category = CATEGORY_SESSION,
+      category = CATEGORY_JVM_REFLECTION,
       paradigm = PARADIGM_OBJECT_ORIENTED,
       syntax = templateCard,
       description = "The new operator can be used to instantiate Qwery-defined classes.",
@@ -116,7 +116,7 @@ object New extends ExpressionParser {
            |""".stripMargin
     ), HelpDoc(
       name = "new",
-      category = CATEGORY_SESSION,
+      category = CATEGORY_JVM_REFLECTION,
       paradigm = PARADIGM_OBJECT_ORIENTED,
       syntax = templateCard,
       description = "The new operator can be used to create anonymous objects from interfaces or traits.",

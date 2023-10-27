@@ -1,6 +1,6 @@
 package com.qwery.language.models
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 
 /**
@@ -15,8 +15,8 @@ object VariableRef extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "@",
-    category = CATEGORY_SESSION,
-    paradigm = PARADIGM_IMPERATIVE,
+    category = CATEGORY_SCOPE_SESSION,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = "@`variable`",
     description = "used to disambiguate a variable from a field or other identifiers",
     example =
@@ -25,8 +25,8 @@ object VariableRef extends ExpressionParser {
          |""".stripMargin
   ), HelpDoc(
     name = "@@",
-    category = CATEGORY_SESSION,
-    paradigm = PARADIGM_IMPERATIVE,
+    category = CATEGORY_SCOPE_SESSION,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = "@@`variable`",
     description = "used to disambiguate a table variable from a field or other identifiers",
     example =

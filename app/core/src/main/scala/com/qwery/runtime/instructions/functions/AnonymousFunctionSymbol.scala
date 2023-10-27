@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.functions
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression.implicits.RichAliasable
 import com.qwery.language.models.{ColumnType, Expression, Parameter}
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
@@ -17,7 +17,7 @@ trait AnonymousFunctionSymbol extends ExpressionChainParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "=>",
-      category = CATEGORY_SESSION,
+      category = CATEGORY_SCOPE_SESSION,
       paradigm = PARADIGM_FUNCTIONAL,
       syntax = "",
       description = "Defines an anonymous function",

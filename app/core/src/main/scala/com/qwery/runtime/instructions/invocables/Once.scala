@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.invocables
 
-import com.qwery.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_REACTIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.qwery.language.models.Instruction
 import com.qwery.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.{QweryVM, Scope}
@@ -26,7 +26,7 @@ object Once extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "once",
-    category = CATEGORY_CONTROL_FLOW,
+    category = CATEGORY_ASYNC_REACTIVE,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
     description = "Invokes an instruction or set of instructions one-time only",

@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.infrastructure
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Atom, Column, Instruction}
 import com.qwery.runtime.devices.RecordCollectionZoo.MapToRow
@@ -144,7 +144,7 @@ object AlterTable extends ModifiableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "alter",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Modifies the structure of a table",

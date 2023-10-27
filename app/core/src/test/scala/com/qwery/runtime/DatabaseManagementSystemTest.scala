@@ -38,7 +38,7 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
     it("should retrieve the details for a specific table") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
         """|namespace 'temp.runtime'
-           |from (OS.getDatabaseObjects()) where name like '%stocksDM%'
+           |from (OS.getDatabaseObjects()) where name matches '.*stocksDM.*'
            |""".stripMargin
       )
       device.tabulate() foreach logger.info
@@ -50,7 +50,7 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
     it("should search for columns from within a specific table") {
       val (_, _, device) = QweryVM.searchSQL(Scope(),
         """|namespace 'temp.runtime'
-           |from (OS.getDatabaseColumns()) where name like '%stocksDM%'
+           |from (OS.getDatabaseColumns()) where name matches '.*stocksDM.*'
            |""".stripMargin
       )
       device.tabulate(limit = 20).foreach(logger.info)

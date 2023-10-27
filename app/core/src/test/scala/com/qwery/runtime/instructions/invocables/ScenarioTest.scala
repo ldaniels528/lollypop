@@ -62,27 +62,27 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
            |  scenario 'Create a contest' {
            |    val contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
            |    var counter = 1
-           |    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+           |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
            |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
            |        and counter is 1
            |  }
            |
            |  scenario 'Create a member' {
            |    val member_id = "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
-           |    out <=== "member_id = {{member_id}}"
+           |    stdout <=== "member_id = {{member_id}}"
            |    verify member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
            |  }
            |
            |  scenario 'Inherit contest state' extends 'Create a contest' {
            |    counter = counter + 1
-           |    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+           |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
            |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
            |        and counter is 2
            |  }
            |
            |  scenario 'Inherit contest and member state' extends ['Create a contest', 'Create a member'] {
            |    counter = counter + 1
-           |    out <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}"
+           |    stdout <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}"
            |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
            |        and member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
            |        and counter is 3
@@ -99,14 +99,14 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
              |  scenario 'Create some state' {
              |    contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
              |    counter = 1
-             |    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+             |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
              |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
              |        and counter is 1
              |  }
              |
              |  scenario 'Pass state from a parent' extends 'Create XXX state' {
              |    counter = counter + 1
-             |    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+             |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
              |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
              |        and counter is 2
              |  }

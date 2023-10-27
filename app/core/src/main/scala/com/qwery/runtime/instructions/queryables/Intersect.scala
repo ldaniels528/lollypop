@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.RowCollection
@@ -32,7 +32,7 @@ object Intersect extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "intersect",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "%q:query0 intersect %q:query1",
     description = "Computes the intersection of two queries",

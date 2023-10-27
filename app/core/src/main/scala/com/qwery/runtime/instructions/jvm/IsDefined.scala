@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.jvm
 
-import com.qwery.language.HelpDoc.{CATEGORY_BRANCHING_OPS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.{Expression, IdentifierRef}
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.conditions.RuntimeCondition
@@ -22,7 +22,7 @@ case class IsDefined(expression: Expression) extends ScalarFunctionCall with Run
 
 object IsDefined extends FunctionCallParserE1(
   name = "isDefined",
-  category = CATEGORY_BRANCHING_OPS,
+  category = CATEGORY_FILTER_MATCH_OPS,
   paradigm = PARADIGM_IMPERATIVE,
   description = "Returns true if the field or variable exists within the scope.",
   example = "isDefined(counter)")

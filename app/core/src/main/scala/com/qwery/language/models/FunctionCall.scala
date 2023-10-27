@@ -18,7 +18,7 @@ object FunctionCall  extends ExpressionParser {
   override def help: List[HelpDoc] = Nil
 
   /**
-   * Parses an internal or user-defined (e.g. "explode(new `java.util.Date`())")
+   * Parses an internal or user-defined (e.g. "transpose(new `java.util.Date`())")
    * @param stream the given [[TokenStream token stream]]
    * @return a [[Expression function]]
    */

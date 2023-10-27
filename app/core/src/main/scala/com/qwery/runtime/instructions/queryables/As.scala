@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_SESSION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language.Token.AtomToken
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
@@ -20,7 +20,7 @@ object As extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "as",
-    category = CATEGORY_SESSION,
+    category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Applies an alias to an expression or query",

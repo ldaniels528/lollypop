@@ -83,19 +83,19 @@ class TryCatchTest extends AnyFunSpec {
       assert(result == 2)
     }
 
-    it("should execute: try n /= 0 catch e => println(e.getMessage())") {
+    it("should execute: try n /= 0 catch e => stdout <=== e.getMessage()") {
       val (_, _, result) = QweryVM.executeSQL(Scope(),
         """|var n = 1
-           |try n /= 0 catch e => out <=== e.getMessage()
+           |try n /= 0 catch e => stdout <=== e.getMessage()
            |n
            |""".stripMargin)
       assert(result == 1)
     }
 
-    it("should execute: try n /= 0 catch e => println(e.getMessage()) finally n = -1") {
+    it("should execute: try n /= 0 catch e => stdout <=== e.getMessage() finally n = -1") {
       val (_, _, result) = QweryVM.executeSQL(Scope(),
         """|var n = 1
-           |try n /= 0 catch e => out <=== e.getMessage() finally n = -1
+           |try n /= 0 catch e => stdout <=== e.getMessage() finally n = -1
            |n
            |""".stripMargin)
       assert(result == -1)

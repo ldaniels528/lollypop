@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.devices.RowCollection
 import com.qwery.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
@@ -20,8 +20,8 @@ case class UnNest(expression: Expression) extends ScalarFunctionCall with Runtim
 
 object UnNest extends FunctionCallParserE1(
   name = "unnest",
-  category = CATEGORY_DATAFRAME,
-  paradigm = PARADIGM_FUNCTIONAL,
+  category = CATEGORY_AGG_SORT_OPS,
+  paradigm = PARADIGM_DECLARATIVE,
   description =
     "Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.",
   example =

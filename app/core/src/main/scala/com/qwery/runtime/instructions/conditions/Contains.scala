@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_BRANCHING_OPS, PARADIGM_IMPERATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
 import com.qwery.language.models.Expression
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.QMap
@@ -35,7 +35,7 @@ object Contains extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",
@@ -45,7 +45,7 @@ object Contains extends ExpressionToConditionPostParser {
          |""".stripMargin
   ), HelpDoc(
     name = __name,
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",
@@ -55,7 +55,7 @@ object Contains extends ExpressionToConditionPostParser {
          |""".stripMargin
   ), HelpDoc(
     name = __name,
-    category = CATEGORY_BRANCHING_OPS,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_IMPERATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",

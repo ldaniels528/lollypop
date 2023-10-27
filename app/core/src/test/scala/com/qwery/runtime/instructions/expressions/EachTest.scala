@@ -74,7 +74,7 @@ class EachTest extends AnyFunSpec with VerificationTools {
             | ('2a33228d-06a7-4d7c-921f-00dad33c19fb', 'JONES', 'SAMANTHA', 'BUR'),('fffe8f51-6ebd-427b-a612-4ed0c875fc93', 'SHARMA', 'PANKAJ', 'LAX')
             | 
             |each traveler in (select * from @@travelers limit 5) {
-            |  out <=== '{{ uid }} is {{ lastName }}, {{ firstName }}'
+            |  stdout <=== '{{ uid }} is {{ lastName }}, {{ firstName }}'
             |}
             |""".stripMargin)
     }
@@ -90,7 +90,7 @@ class EachTest extends AnyFunSpec with VerificationTools {
             | ('2a33228d-06a7-4d7c-921f-00dad33c19fb', 'JONES', 'SAMANTHA', 'BUR'),('fffe8f51-6ebd-427b-a612-4ed0c875fc93', 'SHARMA', 'PANKAJ', 'LAX')
             | 
             |each traveler in reverse (select * from @@travelers limit 5) {
-            |  out <=== '{{ uid }} is {{ lastName }}, {{ firstName }}'
+            |  stdout <=== '{{ uid }} is {{ lastName }}, {{ firstName }}'
             |}
             |""".stripMargin)
     }

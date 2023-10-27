@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.functions
 
 import com.qwery.database.server.QweryServers
-import com.qwery.language.HelpDoc.{CATEGORY_DISTRIBUTED, PARADIGM_FUNCTIONAL}
+import com.qwery.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_FUNCTIONAL}
 import com.qwery.language.models.Expression
 import com.qwery.runtime.Scope
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -25,7 +25,7 @@ case class NodeStart(port: Option[Expression]) extends ScalarFunctionCall with R
 
 object NodeStart extends FunctionCallParserE0Or1(
   name = "nodeStart",
-  category = CATEGORY_DISTRIBUTED,
+  category = CATEGORY_ASYNC_REACTIVE,
   paradigm = PARADIGM_FUNCTIONAL,
   description =
     """|Starts a Qwery peer node.

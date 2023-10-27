@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.conditions
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Expression.implicits.{LifestyleExpressionsAny, RichAliasable}
 import com.qwery.language.models.{Condition, Expression, FieldRef}
 import com.qwery.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
@@ -17,7 +17,7 @@ import com.qwery.util.OptionHelper.implicits.risky._
  * select * from Stocks
  * where symbol is 'AAPL'
  * and transactions wherein (id < 5)
- * and keyStatistics wherein (beta >= 0.5 and warrants wherein (message like '%clear%'))
+ * and keyStatistics wherein (beta >= 0.5 and warrants wherein (message matches '%clear%'))
  * }}}
  */
 case class WhereIn(field: Expression, condition: Condition) extends RuntimeCondition {
@@ -45,7 +45,7 @@ object WhereIn extends ExpressionToConditionPostParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",

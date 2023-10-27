@@ -39,6 +39,6 @@ nodeAPI(port, '/api/shocktrade/members/by/name', {
     // http post 'http://{{host}}:{{port}}/api/shocktrade/members/by/name' <~ { searchText: "fugitive528" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (searchText: String) => {
-        from ns('Members') where name like '%{{searchText}}%'
+        from ns('Members') where name matches '.*{{searchText}}.*'
     }
 })

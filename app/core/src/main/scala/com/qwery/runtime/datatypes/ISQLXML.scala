@@ -1,7 +1,7 @@
 package com.qwery.runtime.datatypes
 
-import com.qwery.runtime.{DataObject, DatabaseObjectNS, QweryNative}
 import com.qwery.runtime.devices.RowCollectionZoo.createTempNS
+import com.qwery.runtime.{DataObject, DatabaseObjectNS, QweryNative}
 
 import java.io.{InputStream, OutputStream, Reader, Writer}
 import javax.xml.transform.{Result, Source}

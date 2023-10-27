@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAME, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Expression, Queryable}
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.devices.RowCollection
@@ -34,7 +34,7 @@ object Limit extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "limit",
-    category = CATEGORY_DATAFRAME,
+    category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Limits the maximum number of rows returned by a query",
