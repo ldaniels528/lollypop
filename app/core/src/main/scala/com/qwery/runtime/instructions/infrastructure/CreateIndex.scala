@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.runtime.DatabaseManagementSystem.createIndex
 import com.qwery.runtime.{DatabaseObjectRef, Scope}
@@ -30,7 +30,7 @@ object CreateIndex extends ModifiableParser with IfNotExists {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "create index",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_INFRA,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Creates a table index",

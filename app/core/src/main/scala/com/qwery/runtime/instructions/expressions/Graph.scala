@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.expressions
 
-import com.qwery.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Expression, Queryable}
 import com.qwery.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -34,7 +34,7 @@ object Graph extends ExpressionParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "graph",
-      category = CATEGORY_AGG_SORT_OPS,
+      category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
       description = "Produces graphical charts",
@@ -53,7 +53,7 @@ object Graph extends ExpressionParser {
            |""".stripMargin
     ), HelpDoc(
       name = "graph",
-      category = CATEGORY_AGG_SORT_OPS,
+      category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
       description = "Produces graphical charts",
@@ -66,7 +66,7 @@ object Graph extends ExpressionParser {
            |""".stripMargin
     ), HelpDoc(
       name = "graph",
-      category = CATEGORY_AGG_SORT_OPS,
+      category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
       description = "Produces graphical charts",

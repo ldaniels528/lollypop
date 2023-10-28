@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Atom, Literal, Queryable, TableModel}
 import com.qwery.language.{HelpDoc, IfNotExists, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieUnsupportedType}
 import com.qwery.runtime.DatabaseManagementSystem.readPhysicalTable
@@ -56,7 +56,7 @@ object DeclareTable extends ModifiableParser with IfNotExists {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "declare table",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_INFRA,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Creates a durable database table",
