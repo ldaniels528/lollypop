@@ -87,7 +87,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
         s"""||--------------------------------------------|
             || line                                       |
             ||--------------------------------------------|
-            || Qwery v${AppConstants.version}                               |
+            || Qwery v${AppConstants.version}                             |
             || ============                               |
             ||                                            |
             || ## Table of Contents                       |
