@@ -37,7 +37,7 @@ object ThrowException extends InvokableParser {
     example =
       """|try
          |  throw new `java.lang.RuntimeException`('A processing error occurred')
-         |catch e => out <=== e.getMessage()
+         |catch e => stdout <=== e.getMessage()
          |""".stripMargin
   ))
 

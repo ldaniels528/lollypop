@@ -26,7 +26,7 @@ object NotImplemented extends ExpressionParser {
          |try
          |  blowUp()
          |catch e =>
-         |  out <=== e.getMessage()
+         |  stdout <=== e.getMessage()
          |""".stripMargin
   ))
 

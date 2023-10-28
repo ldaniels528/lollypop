@@ -124,11 +124,11 @@ object New extends ExpressionParser {
         """|import "java.awt.event.MouseListener"
            |import "java.awt.event.MouseEvent"
            |new MouseListener() {
-           |    mouseClicked: (e: MouseEvent) => out <=== "mouseClicked"
-           |    mousePressed: (e: MouseEvent) => out <=== "mousePressed"
-           |    mouseReleased: (e: MouseEvent) => out <=== "mouseReleased"
-           |    mouseEntered: (e: MouseEvent) => out <=== "mouseEntered"
-           |    mouseExited: (e: MouseEvent) => out <=== "mouseExited"
+           |    mouseClicked: (e: MouseEvent) => stdout <=== "mouseClicked"
+           |    mousePressed: (e: MouseEvent) => stdout <=== "mousePressed"
+           |    mouseReleased: (e: MouseEvent) => stdout <=== "mouseReleased"
+           |    mouseEntered: (e: MouseEvent) => stdout <=== "mouseEntered"
+           |    mouseExited: (e: MouseEvent) => stdout <=== "mouseExited"
            |}
            |""".stripMargin
     ))

@@ -32,8 +32,8 @@ object Once extends InvokableParser {
     description = "Invokes an instruction or set of instructions one-time only",
     example =
       """|[1 to 5].foreach(n => {
-         |  out <=== 'This happens every cycle {{n}}\n'
-         |  once out <=== 'This happens once {{n}}\n'
+         |  stdout <=== 'This happens every cycle {{n}}\n'
+         |  once stdout <=== 'This happens once {{n}}\n'
          |})
          |""".stripMargin
   ))

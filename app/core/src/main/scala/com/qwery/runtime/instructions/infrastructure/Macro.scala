@@ -36,7 +36,7 @@ object Macro extends ModifiableParser {
          |  "Circle({{size}}) <- ({{x * 2}}, {{y / 2}})"
          |}
          |
-         |out <=== drawCircle(100)@(80, 650)
+         |stdout <=== drawCircle(100)@(80, 650)
          |""".stripMargin
   ))
 

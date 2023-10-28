@@ -12,7 +12,7 @@ import qwery.io.IOCost
  * @param code      the code to execute
  * @param onError   the error handler
  * @param `finally` the optionally finally clause
- * @example try n /= 0 catch e => out <=== e.getMessage() finally n = -1
+ * @example try n /= 0 catch e => stdout <=== e.getMessage() finally n = -1
  */
 case class TryCatch(code: Instruction, onError: Instruction, `finally`: Option[Instruction] = None)
   extends RuntimeInvokable with Expression with Queryable {
@@ -46,7 +46,7 @@ object TryCatch extends InvokableParser {
       description = "Attempts an operation and catches any exceptions that occur preventing them from stopping program execution",
       example =
         """|def connect() := throw new `java.lang.RuntimeException`("Connection error")
-           |try connect() catch e => err <=== e.getMessage()
+           |try connect() catch e => stderr <=== e.getMessage()
            |""".stripMargin
     ), HelpDoc(
       name = "try",
@@ -56,7 +56,7 @@ object TryCatch extends InvokableParser {
       description = "Attempts an operation and catches any exceptions that occur preventing them from stopping program execution",
       example =
         """|var n = 0
-           |try n /= 0 catch e => err <=== e.getMessage() finally n = -1
+           |try n /= 0 catch e => stderr <=== e.getMessage() finally n = -1
            |this
            |""".stripMargin
     ))

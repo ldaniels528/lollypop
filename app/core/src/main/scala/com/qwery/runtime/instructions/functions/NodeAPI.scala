@@ -41,10 +41,10 @@ object NodeAPI extends FunctionCallParserE3(
     """|import "java.lang.Thread"
        |var port = nodeStart()
        |nodeAPI(port, '/api/comments/', {
-       |  post: (message: String) => { out <=== "post '{{message}}'" },
-       |  get: (id: UUID) => { out <=== "get {{(id}}" },
-       |  put: (id: UUID, message: String) => { out <=== "put '{{message}}' ~> {{(id}}" },
-       |  delete: (id: UUID) => { out <=== "delete {{(id}}" }
+       |  post: (message: String) => { stdout <=== "post '{{message}}'" },
+       |  get: (id: UUID) => { stdout <=== "get {{(id}}" },
+       |  put: (id: UUID, message: String) => { stdout <=== "put '{{message}}' ~> {{(id}}" },
+       |  delete: (id: UUID) => { stdout <=== "delete {{(id}}" }
        |})
        |Thread.sleep(Long(100))
        |http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }

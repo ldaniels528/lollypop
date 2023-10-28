@@ -31,10 +31,10 @@ object WhenEver extends InvokableParser {
       syntax = templateCard,
       description = "Executes an instruction at the moment the expression evaluates as true",
       example =
-        """|whenever n_bricks is 0 { out <=== "n_bricks is empty\n" }
-           |out <=== "Setting n_bricks to 0\n"
+        """|whenever n_bricks is 0 { stdout <=== "n_bricks is empty\n" }
+           |stdout <=== "Setting n_bricks to 0\n"
            |n_bricks = 0
-           |out <=== "Did it work?"
+           |stdout <=== "Did it work?"
            |""".stripMargin
     ), HelpDoc(
       name = "whenever",
@@ -44,10 +44,10 @@ object WhenEver extends InvokableParser {
       description = "Executes an instruction at the moment the expression evaluates as true",
       example =
         """|whenever '^set(.*)'
-           |  out <=== "instruction was '{{__INSTRUCTION__}}'\n"
+           |  stdout <=== "instruction was '{{__INSTRUCTION__}}'\n"
            |
            |set x = { message: "Confirmed" }
-           |out <=== "Did it work?"
+           |stdout <=== "Did it work?"
            |""".stripMargin
     ))
 
