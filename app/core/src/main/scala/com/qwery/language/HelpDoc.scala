@@ -10,6 +10,7 @@ import com.qwery.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_IMPERATIVE}
  * @param syntax         the syntax of the instruction
  * @param description    the description of the instruction
  * @param example        an example of the instruction in-use.
+ * @param featureTitle   an optional feature title
  * @param isExperimental indicates whether the referenced instruction is to be considered "experimental"
  *                       meaning not for general use.
  */
@@ -19,6 +20,7 @@ case class HelpDoc(name: String,
                    syntax: String = "",
                    description: String,
                    example: String,
+                   featureTitle: Option[String] = None,
                    isExperimental: Boolean = false)
 
 object HelpDoc {

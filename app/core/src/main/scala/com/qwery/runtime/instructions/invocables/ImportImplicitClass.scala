@@ -28,17 +28,21 @@ case class ImportImplicitClass(expression: Expression) extends RuntimeInvokable 
 object ImportImplicitClass extends InvokableParser {
   val templateCard = "import implicit %e:target"
 
-  override def help: List[HelpDoc] = List(HelpDoc(
-    name = "import implicit",
-    category = CATEGORY_SYSTEM_TOOLS,
-    paradigm = PARADIGM_OBJECT_ORIENTED,
-    syntax = templateCard,
-    description = "Imports the methods of a Scala implicit class",
-    example =
-      """|import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
-         |"Hello".renderAsJson()
-         |""".stripMargin
-  ))
+  override def help: List[HelpDoc] = {
+    import com.qwery.util.OptionHelper.implicits.risky._
+    List(HelpDoc(
+      name = "import implicit",
+      category = CATEGORY_SYSTEM_TOOLS,
+      paradigm = PARADIGM_OBJECT_ORIENTED,
+      syntax = templateCard,
+      featureTitle = "Import (Scala-compiled) Implicit Classes",
+      description = "Imports the methods of a Scala implicit class",
+      example =
+        """|import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
+           |DateTime().renderAsJson()
+           |""".stripMargin
+    ))
+  }
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): ImportImplicitClass = {
     val params = SQLTemplateParams(ts, templateCard)
