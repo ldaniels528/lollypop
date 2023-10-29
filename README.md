@@ -1,4 +1,4 @@
-Qwery v0.1.5
+Qwery v0.1.5.1
 ============
 
 ## Table of Contents
@@ -19,15 +19,17 @@ Qwery v0.1.5
   * <a href="#Define_non_persistent_Implicit_Classes">Define (non-persistent) Implicit Classes</a>
   * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
 * <a href="#Examples">Featured Examples By Category</a>
-  * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (26)
+  * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (23)
   * <a href="#Asynchronous_Distributed_Reactive">Asynchronous/Distributed/Reactive</a> (16)
   * <a href="#Control_Flow">Control Flow</a> (21)
-  * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (26)
+  * <a href="#Dataframe_I_O">Dataframe I/O</a> (23)
+  * <a href="#Dataframe_Management">Dataframe Management</a> (14)
+  * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (25)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
   * <a href="#Scope_Session">Scope/Session</a> (15)
   * <a href="#System_Tools">System Tools</a> (12)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
-  * <a href="#Transformation">Transformation</a> (39)
+  * <a href="#Transformation">Transformation</a> (6)
 <a name="Introduction"></a>
 ## Introduction
 Qwery is a general-purpose programming/scripting language for the JVM.
@@ -49,13 +51,13 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.1.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.1.jar`
 
 ### Run Query CLI
 ```bash
@@ -63,7 +65,7 @@ sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.1.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -110,7 +112,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-27T19:44:47.589Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T01:26:44.802Z")
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
@@ -253,7 +255,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-27T19:44:48.260Z"
+"2023-10-29T01:26:45.617Z"
 ```
 <a name="Examples"></a>
 
@@ -441,61 +443,6 @@ select total: countUnique(exchange) from @@stocks
 |     2 |
 |-------|
 ```
-### graph¹ (Aggregation/Sorting &#8212; Declarative)
-*Description*: Produces graphical charts
-
-```sql
-graph { shape: "ring", title: "Ring Demo" } from (
-  |------------------|
-  | exchange | total |
-  |------------------|
-  | NASDAQ   |    24 |
-  | AMEX     |     5 |
-  | NYSE     |    28 |
-  | OTCBB    |    32 |
-  | OTHEROTC |     7 |
-  |------------------|
-)
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Ring_Demo.png">
-</div>
-
-### graph² (Aggregation/Sorting &#8212; Declarative)
-*Description*: Produces graphical charts
-
-```sql
-chart = { shape: "pie", title: "Member Types of OS" }
-graph chart from (
-  select memberType, total: count(*) from (membersOf(OS))
-  group by memberType
-)
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Member_Types_of_OS.png">
-</div>
-
-### graph³ (Aggregation/Sorting &#8212; Declarative)
-*Description*: Produces graphical charts
-
-```sql
-chart = { shape: "scatter", title: "Scatter Demo" }
-samples = {
-  import "java.lang.Math"
-  def series(x) := "Series {{ (x % 2) + 1 }}"
-  select w, x, y from ([0 to 500]
-    .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
-    .toTable())
-}
-graph chart from samples
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Scatter_Demo.png">
-</div>
-
 ### group by¹ (Aggregation/Sorting &#8212; Declarative)
 *Description*: Aggregates a result set by a column
 
@@ -698,7 +645,7 @@ select total: sum(lastSale) from (
 |-----------|
 ```
 ### transpose¹ (Aggregation/Sorting &#8212; Declarative)
-*Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
+*Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
 transpose(items: [1 to 5])
@@ -716,7 +663,7 @@ transpose(items: [1 to 5])
 |-------|
 ```
 ### transpose² (Aggregation/Sorting &#8212; Declarative)
-*Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
+*Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
 faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
@@ -730,15 +677,15 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 10   | ♠    |
-| 5    | ♦    |
-| 5    | ♣    |
 | 3    | ♥    |
+| 5    | ♠    |
+| 10   | ♠    |
+| 9    | ♥    |
 | 9    | ♣    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
-*Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
+*Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
 transpose(help('select'))
@@ -749,14 +696,14 @@ transpose(help('select'))
 | name        | value                                                                                |
 |----------------------------------------------------------------------------------------------------|
 | name        | select                                                                               |
-| category    | Transformation                                                                       |
+| category    | Dataframe I/O                                                                        |
 | paradigm    | Declarative                                                                          |
 | description | Returns row(s) of data based on the expression and options                           |
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
 ### transpose° (Aggregation/Sorting &#8212; Declarative)
-*Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
+*Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
 transpose(new Matrix([
@@ -928,7 +875,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="59ff9758-a099-4ddf-b301-059d1df24e3c")
+', message="OK", statusCode=200, responseID="98a5a4c8-0576-4cd8-9e8c-b3b0073d0159")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -938,7 +885,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="7c28afb9-7bfc-4d1a-bc25-d696937efa91")
+HttpResponse(body=null, message=null, statusCode=200, responseID="133c1c6e-1da6-4dbf-89f7-ca18ac250a55")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -948,7 +895,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="09d35b75-835c-4a72-9260-375e2cbb732f")
+HttpResponse(body=null, message=null, statusCode=200, responseID="79d7158d-351d-4e9b-b186-072b0a099ac3")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -957,17 +904,21 @@ HttpResponse(body=null, message=null, statusCode=200, responseID="09d35b75-835c-
 import "java.lang.Thread"
 var port = nodeStart()
 nodeAPI(port, '/api/comments/', {
-  post: (message: String) => { out <=== "post '{{message}}'" },
-  get: (id: UUID) => { out <=== "get {{(id}}" },
-  put: (id: UUID, message: String) => { out <=== "put '{{message}}' ~> {{(id}}" },
-  delete: (id: UUID) => { out <=== "delete {{(id}}" }
+  post: (message: String) => { stdout <=== "post '{{message}}'" },
+  get: (id: UUID) => { stdout <=== "get {{(id}}" },
+  put: (id: UUID, message: String) => { stdout <=== "put '{{message}}' ~> {{(id}}" },
+  delete: (id: UUID) => { stdout <=== "delete {{(id}}" }
 })
 Thread.sleep(Long(100))
 http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body={}, message="Server returned HTTP response code: 500 for URL: http://0.0.0.0:14093/api/comments/", statusCode=500, responseID="ee1d22e7-9f5f-49c0-8c5f-223bc5f68b0b")
+HttpResponse(body="java.io.PrintStream@2e1792e7", message="OK", statusCode=200, responseID="9e14054c-6107-4e0b-9c75-d4c1d4b630df")
+```
+##### Console Output
+```
+post 'Hello World'
 ```
 ### nodeConsole (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Opens a commandline interface to a remote Qwery peer node.
@@ -984,7 +935,7 @@ nodeConsole(remotePort, [
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name | category           | paradigm        | description                                                                      | example                                                                                                   |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| #    | Transformation     | Declarative     | Returns a column slice of a data frame                                           | declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTim ...  |
+| #    | Dataframe I/O      | Declarative     | Returns a column slice of a data frame                                           | declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTim ...  |
 | &&   | Control Flow       | Declarative     | Binds multiple statements together                                               | declare table if not exists TradingSystem ( stock_id: RowNumber, symbol: String(5), exchange: Enum ( ...  |
 | .!   | JVM and Reflection | Object-Oriented | Invokes a virtual method                                                         | val items = values ("NASDAQ", 1276), ("AMEX", 1259), ("NYSE", 1275), ("OTCBB", 1190) items.!toTable( ...  |
 | ...  | JVM and Reflection | Declarative     | The argument spread operator: can convert an array into individual arguments     | def p3d(x: Double, y: Double, z: Double) := (x, y, z)  p3d([ x: 123, y:13, z: 67 ]...)                    |
@@ -1028,7 +979,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[14657, 10796, 14041, 14992, 10803, 8252, 11856, 15801, 9177, 11860, 9578, 11872, 12133, 11876, 13662, 14093, 13459, 13935, 14653, 10149, 10885]
+[15579, 13258, 9046]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -1038,7 +989,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-11811
+9487
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -1072,28 +1023,60 @@ false
 
 ```sql
 [1 to 5].foreach(n => {
-  out <=== 'This happens every cycle {{n}}\n'
-  once out <=== 'This happens once {{n}}\n'
+  stdout <=== 'This happens every cycle {{n}}\n'
+  once stdout <=== 'This happens once {{n}}\n'
 })
+```
+##### Results
+```sql
+()
+```
+##### Console Output
+```
+This happens every cycle 1
+This happens once 1
+This happens every cycle 2
+This happens every cycle 3
+This happens every cycle 4
+This happens every cycle 5
 ```
 ### whenever¹ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Executes an instruction at the moment the expression evaluates as true
 
 ```sql
-whenever n_bricks is 0 { out <=== "n_bricks is empty\n" }
-out <=== "Setting n_bricks to 0\n"
+whenever n_bricks is 0 { stdout <=== "n_bricks is empty\n" }
+stdout <=== "Setting n_bricks to 0\n"
 n_bricks = 0
-out <=== "Did it work?"
+stdout <=== "Did it work?"
+```
+##### Results
+```sql
+java.io.PrintStream@2e1792e7
+```
+##### Console Output
+```
+Setting n_bricks to 0
+n_bricks is empty
+Did it work?
 ```
 ### whenever² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Executes an instruction at the moment the expression evaluates as true
 
 ```sql
 whenever '^set(.*)'
-  out <=== "instruction was '{{__INSTRUCTION__}}'\n"
+  stdout <=== "instruction was '{{__INSTRUCTION__}}'\n"
 
 set x = { message: "Confirmed" }
-out <=== "Did it work?"
+stdout <=== "Did it work?"
+```
+##### Results
+```sql
+java.io.PrintStream@2e1792e7
+```
+##### Console Output
+```
+instruction was 'set x = { message: "Confirmed" }'
+Did it work?
 ```
 <a name="Control_Flow"></a>
 ## Control Flow Examples
@@ -1121,10 +1104,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-27T19:44:51.704Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-27T19:44:51.704Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-27T19:44:51.704Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-27T19:44:51.704Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-29T01:26:49.471Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-29T01:26:49.472Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-29T01:26:49.472Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-29T01:26:49.472Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1135,7 +1118,15 @@ def blowUp() := ???
 try
   blowUp()
 catch e =>
-  out <=== e.getMessage()
+  stdout <=== e.getMessage()
+```
+##### Results
+```sql
+java.io.PrintStream@2e1792e7
+```
+##### Console Output
+```
+an implementation is missing on line 3 at 3
 ```
 ### call (Control Flow &#8212; Procedural)
 *Description*: Executes a stored procedure; returns a row set
@@ -1208,15 +1199,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | KMHH   |   0.4714 | 2023-10-27T19:44:01.418Z |
-| NASDAQ    | AT     |  87.5352 | 2023-10-27T19:44:19.850Z |
-| AMEX      | WCUX   |  15.8233 | 2023-10-27T19:43:56.454Z |
-| OTCBB     | ZREUA  |   2.1908 | 2023-10-27T19:44:31.361Z |
-| OTHER_OTC | ZZQLJ  |   0.3927 | 2023-10-27T19:44:24.773Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NASDAQ   | RKT    |  39.7348 | 2023-10-29T01:26:07.715Z |
+| AMEX     | OWRS   |  98.3049 | 2023-10-29T01:26:12.645Z |
+| NYSE     | OWE    |  16.3096 | 2023-10-29T01:26:11.491Z |
+| OTCBB    | LZHC   |    4.164 | 2023-10-29T01:25:54.704Z |
+| NYSE     | JRZP   |  23.2363 | 2023-10-29T01:26:28.059Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -1284,7 +1275,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.2845, _2=720.0)
+Tuple2(_1=0.745292, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1414,7 +1405,11 @@ macro "drawCircle ( %e:size ) @ ( %e:x , %e:y )" := {
   "Circle({{size}}) <- ({{x * 2}}, {{y / 2}})"
 }
 
-out <=== drawCircle(100)@(80, 650)
+stdout <=== drawCircle(100)@(80, 650)
+```
+##### Results
+```sql
+Circle(100) <- (160, 325)
 ```
 ### return (Control Flow &#8212; Procedural)
 *Description*: Returns a result set (from a daughter scope)
@@ -1432,22 +1427,57 @@ Hello World
 ```sql
 try
   throw new `java.lang.RuntimeException`('A processing error occurred')
-catch e => out <=== e.getMessage()
+catch e => stdout <=== e.getMessage()
+```
+##### Results
+```sql
+java.io.PrintStream@2e1792e7
+```
+##### Console Output
+```
+A processing error occurred on line 2 at 3
 ```
 ### try¹ (Control Flow &#8212; Functional)
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
 
 ```sql
 def connect() := throw new `java.lang.RuntimeException`("Connection error")
-try connect() catch e => err <=== e.getMessage()
+try connect() catch e => stderr <=== e.getMessage()
+```
+##### Results
+```sql
+java.io.PrintStream@3eb631b8
+```
+##### Console Error
+```
+Connection error on line 1 at 17 on line 2 at 5
 ```
 ### try² (Control Flow &#8212; Functional)
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
 
 ```sql
 var n = 0
-try n /= 0 catch e => err <=== e.getMessage() finally n = -1
+try n /= 0 catch e => stderr <=== e.getMessage() finally n = -1
 this
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| name   | kind                | value                                                                 |
+|------------------------------------------------------------------------------------------------------|
+| n      | Integer             | -1                                                                    |
+| stdout | PrintStream         | java.io.PrintStream@2e1792e7                                          |
+| stdin  | BufferedReader      | java.io.BufferedReader@6719a5b8                                       |
+| stderr | PrintStream         | java.io.PrintStream@3eb631b8                                          |
+| OS     | OS                  | qwery.lang.OS                                                         |
+| π      | Double              | 3.141592653589793                                                     |
+| e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
+| Random | Random$             | qwery.lang.Random                                                     |
+|------------------------------------------------------------------------------------------------------|
+```
+##### Console Error
+```
+Division by zero: n / 0
 ```
 ### while (Control Flow &#8212; Procedural)
 *Description*: Repeats the `command` while the `expression` is true
@@ -1494,6 +1524,1015 @@ with ns("Stocks") { stocks => @@stocks where lastSale < 50 }
 | XYZ    | AMEX     |    31.95 |
 | ABC    | OTCBB    |    5.887 |
 |------------------------------|
+```
+<a name="Dataframe_I_O"></a>
+## Dataframe I/O Examples
+<hr>
+
+### # (Dataframe I/O &#8212; Declarative)
+*Description*: Returns a column slice of a data frame
+
+```sql
+declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
+containing (
+|---------------------------------------------------------|
+| symbol | exchange | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NQOO   | AMEX     | 190.1432 | 2023-08-10T01:44:20.075Z |
+| LVMM   | NASDAQ   | 164.2654 | 2023-08-10T01:44:20.092Z |
+| VQLJ   | AMEX     |  160.753 | 2023-08-10T01:44:20.093Z |
+| LRBJ   | OTCBB    |  64.0764 | 2023-08-10T01:44:20.095Z |
+| QFHM   | AMEX     | 148.6447 | 2023-08-10T01:44:20.096Z |
+|---------------------------------------------------------|
+)
+stocks#[symbol, lastSale]
+```
+##### Results
+```sql
+|-------------------|
+| symbol | lastSale |
+|-------------------|
+| NQOO   | 190.1432 |
+| LVMM   | 164.2654 |
+| VQLJ   |  160.753 |
+| LRBJ   |  64.0764 |
+| QFHM   | 148.6447 |
+|-------------------|
+```
+### delete (Dataframe I/O &#8212; Declarative)
+*Description*: Deletes rows matching an expression from a table
+
+```sql
+val stocks =
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| OWWO   | NYSE     | 483.0286 |
+| SJJR   | OTCBB    |  56.7381 |
+| EGXY   | OTCBB    | 309.8648 |
+| NXSQ   | OTCBB    | 254.2278 |
+| LQRQ   | AMEX     |    88.42 |
+|------------------------------|
+delete from @@stocks where symbol is "EGXY"
+stocks
+```
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| OWWO   | NYSE     | 483.0286 |
+| SJJR   | OTCBB    |  56.7381 |
+| NXSQ   | OTCBB    | 254.2278 |
+| LQRQ   | AMEX     |    88.42 |
+|------------------------------|
+```
+### describe (Dataframe I/O &#8212; Declarative)
+*Description*: Returns a table representing the layout of the query expression
+
+```sql
+describe (select v1: 123, v2: 'abc')
+```
+##### Results
+```sql
+|------------------------------------------------------------|
+| name | type      | description | defaultValue | isNullable |
+|------------------------------------------------------------|
+| v1   | Int       |             |              |            |
+| v2   | String(3) |             |              |            |
+|------------------------------------------------------------|
+```
+### from (Dataframe I/O &#8212; Declarative)
+*Description*: Retrieves rows from a datasource
+
+```sql
+from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]
+```
+##### Results
+```sql
+|--------|
+| item   |
+|--------|
+| Apple  |
+| Orange |
+| Cherry |
+|--------|
+```
+### graph¹ (Dataframe I/O &#8212; Declarative)
+*Description*: Produces graphical charts
+
+```sql
+graph { shape: "ring", title: "Ring Demo" } from (
+  |------------------|
+  | exchange | total |
+  |------------------|
+  | NASDAQ   |    24 |
+  | AMEX     |     5 |
+  | NYSE     |    28 |
+  | OTCBB    |    32 |
+  | OTHEROTC |     7 |
+  |------------------|
+)
+```
+##### Results
+<div style="width: 100%">
+<img src="./docs/images/Ring_Demo.png">
+</div>
+
+### graph² (Dataframe I/O &#8212; Declarative)
+*Description*: Produces graphical charts
+
+```sql
+chart = { shape: "pie", title: "Member Types of OS" }
+graph chart from (
+  select memberType, total: count(*) from (membersOf(OS))
+  group by memberType
+)
+```
+##### Results
+<div style="width: 100%">
+<img src="./docs/images/Member_Types_of_OS.png">
+</div>
+
+### graph³ (Dataframe I/O &#8212; Declarative)
+*Description*: Produces graphical charts
+
+```sql
+chart = { shape: "scatter", title: "Scatter Demo" }
+samples = {
+  import "java.lang.Math"
+  def series(x) := "Series {{ (x % 2) + 1 }}"
+  select w, x, y from ([0 to 500]
+    .map(x => select w: series(x), x, y: x * iff((x % 2) is 0, Math.cos(x), Math.sin(x)))
+    .toTable())
+}
+graph chart from samples
+```
+##### Results
+<div style="width: 100%">
+<img src="./docs/images/Scatter_Demo.png">
+</div>
+
+### insert¹ (Dataframe I/O &#8212; Declarative)
+*Description*: Appends new row(s) to a table
+
+```sql
+stagedActors =
+|------------------------------------------|
+| name              | popularity | ratio   |
+|------------------------------------------|
+| John Wayne        | 42         |  0.4206 |
+| Carry Grant       | 87         |  0.8712 |
+| Doris Day         | 89         |  0.8907 |
+| Audrey Hepburn    | 97         |  0.9732 |
+| Gretta Garbeaux   | 57         |  0.5679 |
+|------------------------------------------|
+
+declare table Actors (name: String(64), popularity: Int)
+insert into Actors (name, popularity) select name, popularity from @@stagedActors
+
+graph { shape: "bar", title: "Popularity" } from Actors
+```
+##### Results
+<div style="width: 100%">
+<img src="./docs/images/Popularity.png">
+</div>
+
+### insert² (Dataframe I/O &#8212; Declarative)
+*Description*: Appends new row(s) to a table
+
+```sql
+declare table Stocks(symbol: String(8), exchange: String(8), transactions: Table(price: Double, transactionTime: DateTime))
+insert into Stocks (symbol, exchange, transactions)
+values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('AMZN', 'NASDAQ', {"price":988.12, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
+                          {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
+
+insert into Stocks#transactions (price, transactionTime)
+values (35.11, "2021-08-05T19:23:12.000Z"),
+       (35.83, "2021-08-05T19:23:15.000Z"),
+       (36.03, "2021-08-05T19:23:17.000Z")
+where symbol is 'AMD'
+```
+##### Results
+```sql
+|---------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs    |
+|---------------------------------------------------------------------------------------------------------|
+|       0 |       0 |         0 |       0 |        3 |       1 |       5 |        0 |       0 | [6, 7, 8] |
+|---------------------------------------------------------------------------------------------------------|
+```
+### intersect (Dataframe I/O &#8212; Declarative)
+*Description*: Computes the intersection of two queries
+
+```sql
+from (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | AAXX   | NYSE     |    56.12 |
+    | UPEX   | NYSE     |   116.24 |
+    | XYZ    | AMEX     |    31.95 |
+    | ABC    | OTCBB    |    5.887 |
+    |------------------------------|
+) intersect (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | JUNK   | AMEX     |    97.61 |
+    | AAXX   | NYSE     |    56.12 |
+    | ABC    | OTCBB    |    5.887 |
+    |------------------------------|
+)
+```
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAXX   | NYSE     |    56.12 |
+| ABC    | OTCBB    |    5.887 |
+|------------------------------|
+```
+### into (Dataframe I/O &#8212; Declarative)
+*Description*: Inserts a result set into a table
+
+```sql
+pennyStocks = Table(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
+from (
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTHER_OTC | YVWY   |   0.5407 | 2023-09-21T04:47:37.370Z |
+| OTHER_OTC | EPOFJ  |   0.8329 | 2023-09-21T04:47:27.720Z |
+| OTHER_OTC | QEQA   |   0.7419 | 2023-09-21T04:48:07.901Z |
+| OTHER_OTC | SFWCS  |   0.9577 | 2023-09-21T04:47:54.694Z |
+| OTHER_OTC | VBJHF  |   0.8121 | 2023-09-21T04:47:56.769Z |
+| OTHER_OTC | SDLMF  |   0.2186 | 2023-09-21T04:48:18.913Z |
+| OTHER_OTC | JXDZ   |   0.0157 | 2023-09-21T04:48:08.459Z |
+| OTCBB     | ZMNF   |   0.5647 | 2023-09-21T04:47:23.112Z |
+| OTCBB     | VVAH   |   0.5786 | 2023-09-21T04:47:40.420Z |
+| OTCBB     | HSCKG  |   0.2719 | 2023-09-21T04:47:43.268Z |
+| OTCBB     | SHDF   |   0.0161 | 2023-09-21T04:57:07.529Z |
+| OTCBB     | QJGVO  |   0.0026 | 2023-09-21T04:57:39.230Z |
+| OTHER_OTC | PMBFY  |   0.0139 | 2023-09-21T04:57:46.146Z |
+| OTCBB     | CAVY   |   0.0047 | 2023-09-21T04:57:43.503Z |
+|----------------------------------------------------------|
+) where lastSale <= 0.02 into @@pennyStocks
+```
+##### Results
+```sql
+|----------------------------------------------------------|
+| symbol | exchange  | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| JXDZ   | OTHER_OTC |   0.0157 | 2023-09-21T04:48:08.459Z |
+| SHDF   | OTCBB     |   0.0161 | 2023-09-21T04:57:07.529Z |
+| QJGVO  | OTCBB     |   0.0026 | 2023-09-21T04:57:39.230Z |
+| PMBFY  | OTHER_OTC |   0.0139 | 2023-09-21T04:57:46.146Z |
+| CAVY   | OTCBB     |   0.0047 | 2023-09-21T04:57:43.503Z |
+|----------------------------------------------------------|
+```
+### pagination¹ (Dataframe I/O &#8212; Declarative)
+*Description*: Setups a pagination query
+
+```sql
+stocks =
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
+| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
+| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
+| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
+| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
+| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
+| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
+| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
+| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
+| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
+| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
+| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
+| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
+| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
+| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
+|----------------------------------------------------------|
+stocksP = pagination(select * from stocks)
+stocksP.first(5)
+```
+##### Results
+```sql
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
+| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
+| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
+| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
+| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
+|----------------------------------------------------------|
+```
+### pagination² (Dataframe I/O &#8212; Declarative)
+*Description*: Setups a pagination query
+
+```sql
+stocks =
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
+| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
+| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
+| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
+| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
+| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
+| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
+| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
+| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
+| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
+| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
+| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
+| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
+| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
+| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
+|----------------------------------------------------------|
+stocksP = pagination(select * from stocks)
+stocksP.last(5)
+```
+##### Results
+```sql
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
+| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
+| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
+| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
+| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
+|----------------------------------------------------------|
+```
+### pagination³ (Dataframe I/O &#8212; Declarative)
+*Description*: Setups a pagination query
+
+```sql
+stocks =
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
+| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
+| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
+| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
+| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
+| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
+| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
+| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
+| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
+| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
+| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
+| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
+| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
+| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
+| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
+|----------------------------------------------------------|
+stocksP = pagination(select * from stocks)
+stocksP.first(5)
+stocksP.next(5)
+```
+##### Results
+```sql
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NYSE     | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
+| NASDAQ   | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
+| NASDAQ   | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
+| AMEX     | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
+| NASDAQ   | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
+|---------------------------------------------------------|
+```
+### select (Dataframe I/O &#8212; Declarative)
+*Description*: Returns row(s) of data based on the expression and options
+
+```sql
+select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime()
+```
+##### Results
+```sql
+|---------------------------------------------------------|
+| symbol | exchange | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-29T01:26:50.578Z |
+|---------------------------------------------------------|
+```
+### subtract (Dataframe I/O &#8212; Declarative)
+*Description*: Computes the subtraction of two queries
+
+```sql
+from (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | AAXX   | NYSE     |    56.12 |
+    | UPEX   | NYSE     |   116.24 |
+    | JUNK   | AMEX     |    97.61 |
+    | XYZ    | AMEX     |    31.95 |
+    |------------------------------|
+) subtract (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | JUNK   | AMEX     |    97.61 |
+    | ABC    | OTCBB    |    5.887 |
+    | XYZ    | AMEX     |    31.95 |
+    |------------------------------|
+)
+```
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAXX   | NYSE     |    56.12 |
+| UPEX   | NYSE     |   116.24 |
+|------------------------------|
+```
+### undelete (Dataframe I/O &#8212; Declarative)
+*Description*: Restores rows matching an expression from a table
+
+```sql
+val stocks =
+ |---------------------------------------------------------|
+ | symbol | exchange | lastSale | lastSaleTime             |
+ |---------------------------------------------------------|
+ | CMHA   | NASDAQ   | 121.4325 | 2023-08-05T22:45:29.370Z |
+ | JPJI   | NYSE     | 185.8192 | 2023-08-05T22:45:29.371Z |
+ | QCYA   | AMEX     | 152.0165 | 2023-08-05T22:45:29.372Z |
+ | TGRV   | NYSE     |   80.225 | 2023-08-05T22:45:29.373Z |
+ | XHMQ   | NASDAQ   |   98.445 | 2023-08-05T22:45:29.374Z |
+ |---------------------------------------------------------|
+delete from @@stocks where symbol is "CMHA"
+undelete from @@stocks where symbol is "CMHA"
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       0 |         0 |       0 |        0 |       1 |       1 |        0 |       1 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### union (Dataframe I/O &#8212; Declarative)
+*Description*: Combines two (or more) result sets (vertically)
+
+```sql
+from (
+  |------------------------------|
+  | symbol | exchange | lastSale |
+  |------------------------------|
+  | AAXX   | NYSE     |    56.12 |
+  | UPEX   | NYSE     |   116.24 |
+  | XYZ    | AMEX     |    31.95 |
+  |------------------------------|
+) union (
+  |------------------------------|
+  | symbol | exchange | lastSale |
+  |------------------------------|
+  | JUNK   | AMEX     |    97.61 |
+  | ABC    | OTC BB   |    5.887 |
+  |------------------------------|
+)
+```
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAXX   | NYSE     |    56.12 |
+| UPEX   | NYSE     |   116.24 |
+| XYZ    | AMEX     |    31.95 |
+| JUNK   | AMEX     |    97.61 |
+| ABC    | OTC BB   |    5.887 |
+|------------------------------|
+```
+### union distinct (Dataframe I/O &#8212; Declarative)
+*Description*: Combines two (or more) result sets (vertically) retaining only distinct rows
+
+```sql
+from (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | AAXX   | NYSE     |    56.12 |
+    | UPEX   | NYSE     |   116.24 |
+    | XYZ    | AMEX     |    31.95 |
+    | ABC    | OTCBB    |    5.887 |
+    |------------------------------|
+) union distinct (
+    |------------------------------|
+    | symbol | exchange | lastSale |
+    |------------------------------|
+    | JUNK   | AMEX     |    97.61 |
+    | AAXX   | NYSE     |    56.12 |
+    | ABC    | OTCBB    |    5.887 |
+    |------------------------------|
+)
+```
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAXX   | NYSE     |    56.12 |
+| UPEX   | NYSE     |   116.24 |
+| XYZ    | AMEX     |    31.95 |
+| ABC    | OTCBB    |    5.887 |
+| JUNK   | AMEX     |    97.61 |
+|------------------------------|
+```
+### update¹ (Dataframe I/O &#8212; Declarative)
+*Description*: Modifies rows matching a conditional expression from a table
+
+```sql
+val stocks =
+ |---------------------------------------------------------|
+ | symbol | exchange | lastSale | lastSaleTime             |
+ |---------------------------------------------------------|
+ | ISIT   | NASDAQ   | 189.3509 | 2023-08-05T22:34:20.263Z |
+ | OBEA   | NASDAQ   |  99.1026 | 2023-08-05T22:34:20.279Z |
+ | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
+ | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
+ | UKHT   | NASDAQ   |  71.1514 | 2023-08-05T22:34:20.283Z |
+ |---------------------------------------------------------|
+update @@stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
+stocks
+```
+##### Results
+```sql
+|---------------------------------------------------------|
+| symbol | exchange | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-29T01:26:50.634Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-29T01:26:50.635Z |
+| IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
+| SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-29T01:26:50.635Z |
+|---------------------------------------------------------|
+```
+### update² (Dataframe I/O &#8212; Declarative)
+*Description*: Modifies rows matching a conditional expression from a table
+
+```sql
+declare table stocks (symbol: String(8), exchange: String(8), transactions: Table (price: Double, transactionTime: DateTime)[5])
+insert into @@stocks (symbol, exchange, transactions)
+values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('AMZN', 'NASDAQ', {"price":988.12, "transactionTime":"2021-08-05T19:23:11.000Z"}),
+       ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
+                          {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
+
+update @@stocks#transactions
+set price = 0.0012
+where symbol is 'SHMN'
+and transactions wherein (price is 0.001)
+limit 1
+stocks
+```
+##### Results
+```sql
+|-----------------------------------------------------------------------------|
+| symbol | exchange | transactions                                            |
+|-----------------------------------------------------------------------------|
+| AAPL   | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
+| AMD    | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
+| INTC   | NYSE     | EmbeddedInnerTableRowCollection(price, transactionTime) |
+| AMZN   | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
+| SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
+|-----------------------------------------------------------------------------|
+```
+### upsert¹ (Dataframe I/O &#8212; Declarative)
+*Description*: Inserts (or updates) new row(s) into a table
+
+```sql
+namespace "temp.examples"
+drop if exists Stocks &&
+create table Stocks (symbol: String(8), exchange: String(8), lastSale: Double) &&
+create index Stocks#symbol &&
+insert into Stocks (symbol, exchange, lastSale)
+  |------------------------------|
+  | symbol | exchange | lastSale |
+  |------------------------------|
+  | ATT    | NYSE     |    66.78 |
+  | UPEX   | NASDAQ   |   116.24 |
+  | XYZ    | AMEX     |    31.95 |
+  | ABC    | OTCBB    |    5.887 |
+  |------------------------------|
+upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
+ns('Stocks')
+```
+<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
+
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| ATT    | NYSE     |    66.78 |
+| UPEX   | NASDAQ   |   116.24 |
+| XYZ    | AMEX     |    31.95 |
+| ABC    | OTCBB    |    5.887 |
+| AAPL   | NASDAQ   |   156.39 |
+|------------------------------|
+```
+### upsert² (Dataframe I/O &#8212; Declarative)
+*Description*: Inserts (or updates) new row(s) into a table
+
+```sql
+namespace "temp.examples"
+drop if exists Stocks &&
+create table Stocks (symbol: String(8), exchange: String(8), lastSale: Double) &&
+create index Stocks#symbol &&
+insert into Stocks (symbol, exchange, lastSale)
+  |------------------------------|
+  | symbol | exchange | lastSale |
+  |------------------------------|
+  | AAPL   | NASDAQ   |   156.12 |
+  | ATT    | NYSE     |    66.78 |
+  | UPEX   | NASDAQ   |   116.24 |
+  | XYZ    | AMEX     |    31.95 |
+  | ABC    | OTCBB    |    5.887 |
+  |------------------------------|
+upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
+ns('Stocks')
+```
+<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
+
+##### Results
+```sql
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAPL   | NASDAQ   |   156.39 |
+| ATT    | NYSE     |    66.78 |
+| UPEX   | NASDAQ   |   116.24 |
+| XYZ    | AMEX     |    31.95 |
+| ABC    | OTCBB    |    5.887 |
+|------------------------------|
+```
+<a name="Dataframe_Management"></a>
+## Dataframe Management Examples
+<hr>
+
+### alter (Dataframe Management &#8212; Declarative)
+*Description*: Modifies the structure of a table
+
+```sql
+namespace "temp.examples"
+drop if exists StockQuotes
+create table StockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTCBB     | YSZUY  |   0.2355 | 2023-10-19T23:25:32.886Z |
+| NASDAQ    | DMZH   | 183.1636 | 2023-10-19T23:26:03.509Z |
+| OTCBB     | VV     |          |                          |
+| NYSE      | TGPNF  |  51.6171 | 2023-10-19T23:25:32.166Z |
+| OTHER_OTC | RIZA   |   0.2766 | 2023-10-19T23:25:42.020Z |
+| NASDAQ    | JXMLB  |  91.6028 | 2023-10-19T23:26:08.951Z |
+|----------------------------------------------------------|
+)
+alter table StockQuotes
+  prepend column saleDate: DateTime = DateTime()
+  rename column symbol to ticker
+  label 'Stock quotes staging table'
+ns('StockQuotes')
+```
+##### Results
+```sql
+|----------------------------------------------------------|
+| saleDate                 | ticker | exchange  | lastSale |
+|----------------------------------------------------------|
+| 2023-10-29T01:26:50.751Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-29T01:26:50.751Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-29T01:26:50.751Z | VV     | OTCBB     |          |
+| 2023-10-29T01:26:50.751Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-29T01:26:50.751Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-29T01:26:50.751Z | JXMLB  | NASDAQ    |  91.6028 |
+|----------------------------------------------------------|
+```
+### create external table (Dataframe Management &#8212; Declarative)
+*Description*: Creates an external table
+
+```sql
+create external table if not exists customers (
+  customer_uid: UUID,
+  name: String,
+  address: String,
+  ingestion_date: Long
+) containing { format: 'json', location: './datasets/customers/json/', null_values: ['n/a'] }
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### create index (Dataframe Management &#8212; Declarative)
+*Description*: Creates a table index
+
+```sql
+create index if not exists stocks#symbol
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### create table (Dataframe Management &#8212; Declarative)
+*Description*: Creates a persistent database table
+
+```sql
+def generateStocks(qty: Int) := {
+  [1 to qty].map(_ => {
+      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
+      is_otc = exchange.startsWith("OT")
+      lastSale = scaleTo(iff(is_otc, 1, 201) * Random.nextDouble(1.0), 4)
+      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
+      symbol = Random.nextString(['A' to 'Z'], iff(is_otc, Random.nextInt(2) + 4, Random.nextInt(4) + 2))
+      select lastSaleTime, lastSale, exchange, symbol
+  }).toTable()
+}
+
+namespace "temp.examples"
+drop if exists Stocks
+create table Stocks (symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
+  containing (generateStocks(1000))
+
+graph { shape: "pie", title: "Small Caps" }
+select exchange, total: sum(lastSale) from Stocks
+where lastSale <= 5.0
+group by exchange
+```
+##### Results
+<div style="width: 100%">
+<img src="./docs/images/Small_Caps.png">
+</div>
+
+### create type (Dataframe Management &#8212; Declarative)
+*Description*: Creates a database type
+
+```sql
+create type mood := Enum (sad, okay, happy)
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### create unique index (Dataframe Management &#8212; Declarative)
+*Description*: Creates a unique index
+
+```sql
+namespace "temp.examples"
+drop if exists Stocks
+create table Stocks (
+  symbol: String(5),
+  exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
+  lastSale: Double,
+  lastSaleTime: DateTime
+)
+create unique index Stocks#symbol
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### create view (Dataframe Management &#8212; Declarative)
+*Description*: Creates a view
+
+```sql
+namespace "temp.temp"
+drop if exists Students
+create table Students (name: String(64), grade: Char, ratio: Double) containing (
+|----------------------------------|
+| name            | grade | ratio  |
+|----------------------------------|
+| John Wayne      | D     | 0.6042 |
+| Carry Grant     | B     | 0.8908 |
+| Doris Day       | A     | 0.9936 |
+| Audrey Hepburn  | A     | 0.9161 |
+| Gretta Garbeaux | C     | 0.7656 |
+|----------------------------------|
+)
+drop if exists A_Students
+create view A_Students as select * from Students where ratio >= 0.9
+ns('A_Students')
+```
+##### Results
+```sql
+|---------------------------------|
+| name           | grade | ratio  |
+|---------------------------------|
+| Doris Day      | A     | 0.9936 |
+| Audrey Hepburn | A     | 0.9161 |
+|---------------------------------|
+```
+### declare table (Dataframe Management &#8212; Declarative)
+*Description*: Creates a durable database table
+
+```sql
+declare table Stocks (
+symbol: String(8),
+exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
+lastSale: Double,
+lastSaleTime: DateTime)
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### declare view (Dataframe Management &#8212; Declarative)
+*Description*: Creates a view
+
+```sql
+declare table Students (name: String(64), grade: Char, ratio: Double) containing (
+|----------------------------------|
+| name            | grade | ratio  |
+|----------------------------------|
+| John Wayne      | D     | 0.6042 |
+| Carry Grant     | B     | 0.8908 |
+| Doris Day       | A     | 0.9936 |
+| Audrey Hepburn  | A     | 0.9161 |
+| Gretta Garbeaux | C     | 0.7656 |
+|----------------------------------|
+)
+declare view A_Students as select * from Students where ratio >= 0.9
+A_Students
+```
+##### Results
+```sql
+|---------------------------------|
+| name           | grade | ratio  |
+|---------------------------------|
+| Doris Day      | A     | 0.9936 |
+| Audrey Hepburn | A     | 0.9161 |
+|---------------------------------|
+```
+### drop (Dataframe Management &#8212; Declarative)
+*Description*: Deletes a database object
+
+```sql
+namespace "temp.examples"
+drop if exists Stocks
+create table Stocks (
+  symbol: String(8),
+  exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
+  lastSale: Double,
+  lastSaleTime: DateTime,
+  headlines Table ( headline String(128), newsDate DateTime )[100]
+)
+drop Stocks
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       0 |         1 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
+```
+### Table (Dataframe Management &#8212; Functional)
+*Description*: Returns a new transient table
+
+```sql
+val stocks = Table(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[5])
+insert into @@stocks (symbol, exchange, transactions)
+values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.000Z"}),
+       ('AMD',  'NASDAQ', {price:56.87, transactionTime:"2021-08-05T19:23:11.000Z"}),
+       ('INTC', 'NYSE',   {price:89.44, transactionTime:"2021-08-05T19:23:11.000Z"}),
+       ('AMZN', 'NASDAQ', {price:988.12, transactionTime:"2021-08-05T19:23:11.000Z"}),
+       ('SHMN', 'OTCBB', [{price:0.0010, transactionTime:"2021-08-05T19:23:11.000Z"},
+                          {price:0.0011, transactionTime:"2021-08-05T19:23:12.000Z"}])
+@@stocks
+```
+##### Results
+```sql
+|--------------------------------------------------------------------|
+| symbol | exchange | transactions                                   |
+|--------------------------------------------------------------------|
+| AAPL   | NASDAQ   | (price, transactionTime)                       |
+| AMD    | NASDAQ   | (price, transactionTime)                       |
+| INTC   | NYSE     | (price, transactionTime)                       |
+| AMZN   | NASDAQ   | (price, transactionTime)                       |
+| SHMN   | OTCBB    | ByteArrayRowCollection(price, transactionTime) |
+|--------------------------------------------------------------------|
+```
+### tableLike (Dataframe Management &#8212; Functional)
+*Description*: Creates a new table file, which will be identical to the source table.
+
+```sql
+val stocksA =
+ |---------------------------------------------------------|
+ | symbol | exchange | lastSale | lastSaleTime             |
+ |---------------------------------------------------------|
+ | NUBD   | NYSE     | 183.8314 | 2023-08-06T03:56:12.932Z |
+ | UAGU   | NASDAQ   | 105.9287 | 2023-08-06T03:56:12.940Z |
+ | XUWH   | NASDAQ   |   58.743 | 2023-08-06T03:56:12.941Z |
+ | EDVC   | NYSE     | 186.1966 | 2023-08-06T03:56:12.943Z |
+ | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
+ |---------------------------------------------------------|
+val stocksB = tableLike(stocksA)
+insert into @@stocksB from stocksA where lastSale >= 120
+stocksB
+```
+##### Results
+```sql
+|---------------------------------------------------------|
+| symbol | exchange | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NUBD   | NYSE     | 183.8314 | 2023-08-06T03:56:12.932Z |
+| EDVC   | NYSE     | 186.1966 | 2023-08-06T03:56:12.943Z |
+| LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
+|---------------------------------------------------------|
+```
+### TableZoo (Dataframe Management &#8212; Functional)
+*Description*: Returns a Table builder
+
+```sql
+val stocks =
+  TableZoo(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
+    .withMemorySupport(150)
+    .build()
+insert into @@stocks
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTHER_OTC | MBANF  |   0.0109 | 2023-09-21T04:57:58.702Z |
+| OTHER_OTC | YAMJI  |   0.0155 | 2023-09-21T04:57:24.456Z |
+| OTCBB     | HQCY   |   0.0135 | 2023-09-21T04:57:53.351Z |
+| OTHER_OTC | GEYSG  |   0.0186 | 2023-09-21T04:57:28.014Z |
+| OTHER_OTC | WYISA  |   0.0132 | 2023-09-21T04:57:58.271Z |
+| OTCBB     | TXWFI  |   0.0194 | 2023-09-21T04:58:06.199Z |
+| OTCBB     | ZIYBG  |   0.0167 | 2023-09-21T04:58:03.392Z |
+|----------------------------------------------------------|
+stocks
+```
+##### Results
+```sql
+|----------------------------------------------------------|
+| symbol | exchange  | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| MBANF  | OTHER_OTC |   0.0109 | 2023-09-21T04:57:58.702Z |
+| YAMJI  | OTHER_OTC |   0.0155 | 2023-09-21T04:57:24.456Z |
+| HQCY   | OTCBB     |   0.0135 | 2023-09-21T04:57:53.351Z |
+| GEYSG  | OTHER_OTC |   0.0186 | 2023-09-21T04:57:28.014Z |
+| WYISA  | OTHER_OTC |   0.0132 | 2023-09-21T04:57:58.271Z |
+| TXWFI  | OTCBB     |   0.0194 | 2023-09-21T04:58:06.199Z |
+| ZIYBG  | OTCBB     |   0.0167 | 2023-09-21T04:58:03.392Z |
+|----------------------------------------------------------|
+```
+### truncate (Dataframe Management &#8212; Declarative)
+*Description*: Removes all of the data from a table
+
+```sql
+val stocks =
+  |---------------------------------------------------------|
+  | symbol | exchange | lastSale | lastSaleTime             |
+  |---------------------------------------------------------|
+  | CJHK   | OTCBB    |  36.4423 | 2023-08-03T00:09:42.263Z |
+  | OZIS   | NYSE     |  97.3854 | 2023-08-03T00:09:42.279Z |
+  | DKRA   | NASDAQ   | 127.5813 | 2023-08-03T00:09:42.280Z |
+  | IWEC   | AMEX     | 132.1874 | 2023-08-03T00:09:42.282Z |
+  | JIRD   | OTCBB    |  22.0003 | 2023-08-03T00:09:42.283Z |
+  |---------------------------------------------------------|
+truncate @@stocks
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------|
+| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
+|------------------------------------------------------------------------------------------------------|
+|       0 |       0 |         0 |       5 |        0 |       0 |       0 |        0 |       0 | []     |
+|------------------------------------------------------------------------------------------------------|
 ```
 <a name="Filtering_Pattern_Matching"></a>
 ## Filtering/Pattern Matching Examples
@@ -1737,38 +2776,6 @@ inner join companies_A as B on A.symbol is B.symbol
 | BFG Corp.       | BFG    | NYSE     |   113.56 |
 | GreedIsGood.com | GREED  | NASDAQ   |  2345.78 |
 |------------------------------------------------|
-```
-### intersect (Filtering/Pattern Matching &#8212; Declarative)
-*Description*: Computes the intersection of two queries
-
-```sql
-from (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | AAXX   | NYSE     |    56.12 |
-    | UPEX   | NYSE     |   116.24 |
-    | XYZ    | AMEX     |    31.95 |
-    | ABC    | OTCBB    |    5.887 |
-    |------------------------------|
-) intersect (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | JUNK   | AMEX     |    97.61 |
-    | AAXX   | NYSE     |    56.12 |
-    | ABC    | OTCBB    |    5.887 |
-    |------------------------------|
-)
-```
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| AAXX   | NYSE     |    56.12 |
-| ABC    | OTCBB    |    5.887 |
-|------------------------------|
 ```
 ### is¹ (Filtering/Pattern Matching &#8212; Procedural)
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
@@ -2081,7 +3088,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-27T19:44:52.254Z
+2023-10-29T01:26:51.742Z
 ```
 ### new² (JVM and Reflection &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -2103,16 +3110,16 @@ stock.lastSale
 import "java.awt.event.MouseListener"
 import "java.awt.event.MouseEvent"
 new MouseListener() {
-    mouseClicked: (e: MouseEvent) => out <=== "mouseClicked"
-    mousePressed: (e: MouseEvent) => out <=== "mousePressed"
-    mouseReleased: (e: MouseEvent) => out <=== "mouseReleased"
-    mouseEntered: (e: MouseEvent) => out <=== "mouseEntered"
-    mouseExited: (e: MouseEvent) => out <=== "mouseExited"
+    mouseClicked: (e: MouseEvent) => stdout <=== "mouseClicked"
+    mousePressed: (e: MouseEvent) => stdout <=== "mousePressed"
+    mouseReleased: (e: MouseEvent) => stdout <=== "mouseReleased"
+    mouseEntered: (e: MouseEvent) => stdout <=== "mouseEntered"
+    mouseExited: (e: MouseEvent) => stdout <=== "mouseExited"
 }
 ```
 ##### Results
 ```sql
-new MouseListener() { mouseClicked: (e: MouseEvent) => out <=== "mouseClicked", mousePressed: (e: MouseEvent) => out <=== "mousePressed", mouseReleased: (e: MouseEvent) => out <=== "mouseReleased", mouseEntered: (e: MouseEvent) => out <=== "mouseEntered", mouseExited: (e: MouseEvent) => out <=== "mouseExited" }
+new MouseListener() { mouseClicked: (e: MouseEvent) => stdout <=== "mouseClicked", mousePressed: (e: MouseEvent) => stdout <=== "mousePressed", mouseReleased: (e: MouseEvent) => stdout <=== "mouseReleased", mouseEntered: (e: MouseEvent) => stdout <=== "mouseEntered", mouseExited: (e: MouseEvent) => stdout <=== "mouseExited" }
 ```
 ### objectOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns a Scala object instance by name
@@ -2122,7 +3129,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@396f2724
+scala.Function1$@65b2ee36
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -2309,9 +3316,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| stdout | PrintStream    | java.io.PrintStream@5dd747c1    |
-| stdin  | BufferedReader | java.io.BufferedReader@1bdafb01 |
-| stderr | PrintStream    | java.io.PrintStream@7aa3857b    |
+| stdout | PrintStream    | java.io.PrintStream@2e1792e7    |
+| stdin  | BufferedReader | java.io.BufferedReader@6719a5b8 |
+| stderr | PrintStream    | java.io.PrintStream@3eb631b8    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -2340,7 +3347,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-27T19:44:52.317Z
+2023-10-29T01:26:52.124Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -2355,7 +3362,7 @@ transpose(help('select'))
 | name        | value                                                                                |
 |----------------------------------------------------------------------------------------------------|
 | name        | select                                                                               |
-| category    | Transformation                                                                       |
+| category    | Dataframe I/O                                                                        |
 | paradigm    | Declarative                                                                          |
 | description | Returns row(s) of data based on the expression and options                           |
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
@@ -2366,21 +3373,28 @@ transpose(help('select'))
 Additionally, it's an internal database containing information about every loaded instruction.
 
 ```sql
-select paradigm, total: count(*)
+select category, total: count(*)
 from (help())
-group by paradigm
+group by category
+order by category
 ```
 ##### Results
 ```sql
-|-------------------------|
-| paradigm        | total |
-|-------------------------|
-| Functional      |    44 |
-| Procedural      |    35 |
-| Object-Oriented |    14 |
-| Declarative     |    72 |
-| Reactive        |     9 |
-|-------------------------|
+|-------------------------------------------|
+| category                          | total |
+|-------------------------------------------|
+| Aggregation/Sorting               |    23 |
+| Asynchronous/Distributed/Reactive |    16 |
+| Control Flow                      |    21 |
+| Dataframe I/O                     |    23 |
+| Dataframe Management              |    14 |
+| Filtering/Pattern Matching        |    25 |
+| JVM and Reflection                |    14 |
+| Scope/Session                     |    15 |
+| System Tools                      |    12 |
+| Testing - Unit/Integration        |     5 |
+| Transformation                    |     6 |
+|-------------------------------------------|
 ```
 ### help³ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -2462,8 +3476,8 @@ from ns('examples.shocktrade.Contests') limit 5
 |-----------------------------------------------------------------------------------------------|
 | contest_id                           | name               | funds  | creationTime             |
 |-----------------------------------------------------------------------------------------------|
-| 4fd11d81-ea5a-4039-87bd-2a4ca37244ea | Winter is coming   | 2000.0 | 2023-10-27T04:18:43.552Z |
-| 3bd2447b-bed4-400a-8bbe-fc0137e77651 | Winter has come!!! | 2000.0 | 2023-10-27T04:18:43.605Z |
+| b9a5a1d1-4435-4ab9-958d-b7c4cd39ff80 | Winter is coming   | 2000.0 | 2023-10-27T19:48:31.517Z |
+| 9cc6cbf0-9599-4d83-9282-6719424eb95b | Winter has come!!! | 2000.0 | 2023-10-27T19:48:31.572Z |
 |-----------------------------------------------------------------------------------------------|
 ```
 ### require (System Tools &#8212; Object-Oriented)
@@ -2509,8 +3523,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000750ms] AnyLiteral 1 ~> 1 <Integer>
-[0.262709ms] SetAnyVariable set x = 1 ~> null <null>
+[0.001541ms] AnyLiteral 1 ~> 1 <Integer>
+[0.363959ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -2520,7 +3534,15 @@ total = 101
 try
   assert(total < 100, 'total must be less than 100')
 catch e =>
-  err <=== e.getMessage()
+  stderr <=== e.getMessage()
+```
+##### Results
+```sql
+java.io.PrintStream@3eb631b8
+```
+##### Console Error
+```
+total must be less than 100 on line 3 at 3
 ```
 ### feature (Testing - Unit/Integration &#8212; Declarative)
 *Description*: Feature-based test declaration
@@ -2587,11 +3609,12 @@ feature "Traveler information service" {
     scenario "Testing that we GET the record we previously created" {
        http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
        verify statusCode is 200
-          and body.size() >= 0
-          and body[0].id is "119ff8a6-b569-4d54-80c6-03eb1c7f795d"
-          and body[0].firstName is "CHRIS"
-          and body[0].lastName is "DANIELS"
-          and body[0].destAirportCode is "DTW"
+          and body matches [{
+              id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
+              firstName: "CHRIS",
+              lastName: "DANIELS",
+              destAirportCode: "DTW"
+          }]
     }
     scenario "Testing what happens when a response does not match the expected value" {
        http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
@@ -2621,11 +3644,7 @@ Feature: Traveler information service
       [x] statusCode is 200
    Passed: Testing that we GET the record we previously created
       [x] statusCode is 200
-      [x] body.size() >= 0
-      [x] (body[0]).id is "119ff8a6-b569-4d54-80c6-03eb1c7f795d"
-      [x] (body[0]).firstName is "CHRIS"
-      [x] (body[0]).lastName is "DANIELS"
-      [x] (body[0]).destAirportCode is "DTW"
+      [x] body matches [{ id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }]
    Failed: Testing what happens when a response does not match the expected value
       [x] statusCode is 200
       [x] body.size() >= 0
@@ -2643,32 +3662,53 @@ feature "State Inheritance" {
   scenario 'Create a contest' {
     val contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
     var counter = 1
-    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
     verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
         and counter is 1
   }
 
   scenario 'Create a member' {
     val member_id = "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
-    out <=== "member_id = {{member_id}}"
+    stdout <=== "member_id = {{member_id}}"
     verify member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
   }
 
   scenario 'Inherit contest state' extends 'Create a contest' {
     counter = counter + 1
-    out <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
     verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
         and counter is 2
   }
 
   scenario 'Inherit contest and member state' extends ['Create a contest', 'Create a member'] {
     counter = counter + 1
-    out <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}"
+    stdout <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}"
     verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
         and member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
         and counter is 3
   }
 }
+```
+##### Results
+```sql
+{"passed": 4, "failed": 0}
+```
+##### Console Output
+```
+Feature: State Inheritance
+contest_id = 40d1857b-474c-4400-8f07-5e04cbacc021, counter = 1   Passed: Create a contest
+      [x] contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
+      [x] counter is 1
+member_id = 4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1   Passed: Create a member
+      [x] member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
+contest_id = 40d1857b-474c-4400-8f07-5e04cbacc021, counter = 2   Passed: Inherit contest state
+      [x] contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
+      [x] counter is 2
+contest_id = 40d1857b-474c-4400-8f07-5e04cbacc021, member_id = 4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1, counter = 3   Passed: Inherit contest and member state
+      [x] contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
+      [x] member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
+      [x] counter is 3
+completed: passed: 4, failed: 0
 ```
 ### verify (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Verifies the current state of the scope
@@ -2682,49 +3722,10 @@ verify response.id is 357
 ```sql
 true
 ```
-##### Console Output
-```
-Feature: State Inheritance
-   Failed: Create a contest
-      [x] contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
-      [x] counter is 1
-   Failed: Create a member
-      [x] member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
-```
 <a name="Transformation"></a>
 ## Transformation Examples
 <hr>
 
-### # (Transformation &#8212; Declarative)
-*Description*: Returns a column slice of a data frame
-
-```sql
-declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
-containing (
-|---------------------------------------------------------|
-| symbol | exchange | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NQOO   | AMEX     | 190.1432 | 2023-08-10T01:44:20.075Z |
-| LVMM   | NASDAQ   | 164.2654 | 2023-08-10T01:44:20.092Z |
-| VQLJ   | AMEX     |  160.753 | 2023-08-10T01:44:20.093Z |
-| LRBJ   | OTCBB    |  64.0764 | 2023-08-10T01:44:20.095Z |
-| QFHM   | AMEX     | 148.6447 | 2023-08-10T01:44:20.096Z |
-|---------------------------------------------------------|
-)
-stocks#[symbol, lastSale]
-```
-##### Results
-```sql
-|-------------------|
-| symbol | lastSale |
-|-------------------|
-| NQOO   | 190.1432 |
-| LVMM   | 164.2654 |
-| VQLJ   |  160.753 |
-| LRBJ   |  64.0764 |
-| QFHM   | 148.6447 |
-|-------------------|
-```
 ### <=== (Transformation &#8212; Declarative)
 *Description*: A declarative way to write to OutputStream or Writer resources
 
@@ -2732,7 +3733,15 @@ stocks#[symbol, lastSale]
 import "java.io.File"
 f = new File("./test1.json")
 f <=== "Hello World\n"
-f ===> out
+f ===> stdout
+```
+##### Results
+```sql
+java.io.PrintStream@2e1792e7
+```
+##### Console Output
+```
+Hello World
 ```
 ### ===> (Transformation &#8212; Declarative)
 *Description*: A declarative way to write to OutputStream or Writer resources
@@ -2740,7 +3749,7 @@ f ===> out
 ```sql
 import "java.io.File"
 f = new File("./test.json")
-f ===> out
+f ===> stdout
 ```
 ### =>>¹ (Transformation &#8212; Functional)
 *Description*: Monadic comprehension
@@ -2775,389 +3784,6 @@ c
 ```sql
 Success(value={"value": 100})
 ```
-### alter (Transformation &#8212; Declarative)
-*Description*: Modifies the structure of a table
-
-```sql
-namespace "temp.examples"
-drop if exists StockQuotes
-create table StockQuotes(symbol: String(5), exchange: String(9), lastSale: Double) containing (
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | YSZUY  |   0.2355 | 2023-10-19T23:25:32.886Z |
-| NASDAQ    | DMZH   | 183.1636 | 2023-10-19T23:26:03.509Z |
-| OTCBB     | VV     |          |                          |
-| NYSE      | TGPNF  |  51.6171 | 2023-10-19T23:25:32.166Z |
-| OTHER_OTC | RIZA   |   0.2766 | 2023-10-19T23:25:42.020Z |
-| NASDAQ    | JXMLB  |  91.6028 | 2023-10-19T23:26:08.951Z |
-|----------------------------------------------------------|
-)
-alter table StockQuotes
-  prepend column saleDate: DateTime = DateTime()
-  rename column symbol to ticker
-  label 'Stock quotes staging table'
-ns('StockQuotes')
-```
-##### Results
-```sql
-|----------------------------------------------------------|
-| saleDate                 | ticker | exchange  | lastSale |
-|----------------------------------------------------------|
-| 2023-10-27T19:44:53.623Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-27T19:44:53.624Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-27T19:44:53.624Z | VV     | OTCBB     |          |
-| 2023-10-27T19:44:53.624Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-27T19:44:53.624Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-27T19:44:53.624Z | JXMLB  | NASDAQ    |  91.6028 |
-|----------------------------------------------------------|
-```
-### create external table (Transformation &#8212; Declarative)
-*Description*: Creates an external table
-
-```sql
-create external table if not exists customers (
-  customer_uid: UUID,
-  name: String,
-  address: String,
-  ingestion_date: Long
-) containing { format: 'json', location: './datasets/customers/json/', null_values: ['n/a'] }
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### create index (Transformation &#8212; Declarative)
-*Description*: Creates a table index
-
-```sql
-create index if not exists stocks#symbol
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### create table (Transformation &#8212; Declarative)
-*Description*: Creates a persistent database table
-
-```sql
-def generateStocks(qty: Int) := {
-  [1 to qty].map(_ => {
-      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
-      is_otc = exchange.startsWith("OT")
-      lastSale = scaleTo(iff(is_otc, 1, 201) * Random.nextDouble(1.0), 4)
-      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
-      symbol = Random.nextString(['A' to 'Z'], iff(is_otc, Random.nextInt(2) + 4, Random.nextInt(4) + 2))
-      select lastSaleTime, lastSale, exchange, symbol
-  }).toTable()
-}
-
-namespace "temp.examples"
-drop if exists Stocks
-create table Stocks (symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
-  containing (generateStocks(1000))
-
-graph { shape: "pie", title: "Small Caps" }
-select exchange, total: sum(lastSale) from Stocks
-where lastSale <= 5.0
-group by exchange
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Small_Caps.png">
-</div>
-
-### create type (Transformation &#8212; Declarative)
-*Description*: Creates a database type
-
-```sql
-create type mood := Enum (sad, okay, happy)
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### create unique index (Transformation &#8212; Declarative)
-*Description*: Creates a unique index
-
-```sql
-namespace "temp.examples"
-drop if exists Stocks
-create table Stocks (
-  symbol: String(5),
-  exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
-  lastSale: Double,
-  lastSaleTime: DateTime
-)
-create unique index Stocks#symbol
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### create view (Transformation &#8212; Declarative)
-*Description*: Creates a view
-
-```sql
-namespace "temp.temp"
-drop if exists Students
-create table Students (name: String(64), grade: Char, ratio: Double) containing (
-|----------------------------------|
-| name            | grade | ratio  |
-|----------------------------------|
-| John Wayne      | D     | 0.6042 |
-| Carry Grant     | B     | 0.8908 |
-| Doris Day       | A     | 0.9936 |
-| Audrey Hepburn  | A     | 0.9161 |
-| Gretta Garbeaux | C     | 0.7656 |
-|----------------------------------|
-)
-drop if exists A_Students
-create view A_Students as select * from Students where ratio >= 0.9
-ns('A_Students')
-```
-##### Results
-```sql
-|---------------------------------|
-| name           | grade | ratio  |
-|---------------------------------|
-| Doris Day      | A     | 0.9936 |
-| Audrey Hepburn | A     | 0.9161 |
-|---------------------------------|
-```
-### declare table (Transformation &#8212; Declarative)
-*Description*: Creates a durable database table
-
-```sql
-declare table Stocks (
-symbol: String(8),
-exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
-lastSale: Double,
-lastSaleTime: DateTime)
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### declare view (Transformation &#8212; Declarative)
-*Description*: Creates a view
-
-```sql
-declare table Students (name: String(64), grade: Char, ratio: Double) containing (
-|----------------------------------|
-| name            | grade | ratio  |
-|----------------------------------|
-| John Wayne      | D     | 0.6042 |
-| Carry Grant     | B     | 0.8908 |
-| Doris Day       | A     | 0.9936 |
-| Audrey Hepburn  | A     | 0.9161 |
-| Gretta Garbeaux | C     | 0.7656 |
-|----------------------------------|
-)
-declare view A_Students as select * from Students where ratio >= 0.9
-A_Students
-```
-##### Results
-```sql
-|---------------------------------|
-| name           | grade | ratio  |
-|---------------------------------|
-| Doris Day      | A     | 0.9936 |
-| Audrey Hepburn | A     | 0.9161 |
-|---------------------------------|
-```
-### delete (Transformation &#8212; Declarative)
-*Description*: Deletes rows matching an expression from a table
-
-```sql
-val stocks =
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| OWWO   | NYSE     | 483.0286 |
-| SJJR   | OTCBB    |  56.7381 |
-| EGXY   | OTCBB    | 309.8648 |
-| NXSQ   | OTCBB    | 254.2278 |
-| LQRQ   | AMEX     |    88.42 |
-|------------------------------|
-delete from @@stocks where symbol is "EGXY"
-stocks
-```
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| OWWO   | NYSE     | 483.0286 |
-| SJJR   | OTCBB    |  56.7381 |
-| NXSQ   | OTCBB    | 254.2278 |
-| LQRQ   | AMEX     |    88.42 |
-|------------------------------|
-```
-### describe (Transformation &#8212; Declarative)
-*Description*: Returns a table representing the layout of the query expression
-
-```sql
-describe (select v1: 123, v2: 'abc')
-```
-##### Results
-```sql
-|------------------------------------------------------------|
-| name | type      | description | defaultValue | isNullable |
-|------------------------------------------------------------|
-| v1   | Int       |             |              |            |
-| v2   | String(3) |             |              |            |
-|------------------------------------------------------------|
-```
-### drop (Transformation &#8212; Declarative)
-*Description*: Deletes a database object
-
-```sql
-namespace "temp.examples"
-drop if exists Stocks
-create table Stocks (
-  symbol: String(8),
-  exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
-  lastSale: Double,
-  lastSaleTime: DateTime,
-  headlines Table ( headline String(128), newsDate DateTime )[100]
-)
-drop Stocks
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         1 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### from (Transformation &#8212; Declarative)
-*Description*: Retrieves rows from a datasource
-
-```sql
-from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]
-```
-##### Results
-```sql
-|--------|
-| item   |
-|--------|
-| Apple  |
-| Orange |
-| Cherry |
-|--------|
-```
-### insert¹ (Transformation &#8212; Declarative)
-*Description*: Appends new row(s) to a table
-
-```sql
-stagedActors =
-|------------------------------------------|
-| name              | popularity | ratio   |
-|------------------------------------------|
-| John Wayne        | 42         |  0.4206 |
-| Carry Grant       | 87         |  0.8712 |
-| Doris Day         | 89         |  0.8907 |
-| Audrey Hepburn    | 97         |  0.9732 |
-| Gretta Garbeaux   | 57         |  0.5679 |
-|------------------------------------------|
-
-declare table Actors (name: String(64), popularity: Int)
-insert into Actors (name, popularity) select name, popularity from @@stagedActors
-
-graph { shape: "bar", title: "Popularity" } from Actors
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Popularity.png">
-</div>
-
-### insert² (Transformation &#8212; Declarative)
-*Description*: Appends new row(s) to a table
-
-```sql
-declare table Stocks(symbol: String(8), exchange: String(8), transactions: Table(price: Double, transactionTime: DateTime))
-insert into Stocks (symbol, exchange, transactions)
-values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('AMZN', 'NASDAQ', {"price":988.12, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
-                          {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
-
-insert into Stocks#transactions (price, transactionTime)
-values (35.11, "2021-08-05T19:23:12.000Z"),
-       (35.83, "2021-08-05T19:23:15.000Z"),
-       (36.03, "2021-08-05T19:23:17.000Z")
-where symbol is 'AMD'
-```
-##### Results
-```sql
-|---------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs    |
-|---------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       0 |        3 |       1 |       5 |        0 |       0 | [6, 7, 8] |
-|---------------------------------------------------------------------------------------------------------|
-```
-### into (Transformation &#8212; Declarative)
-*Description*: Inserts a result set into a table
-
-```sql
-pennyStocks = Table(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
-from (
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTHER_OTC | YVWY   |   0.5407 | 2023-09-21T04:47:37.370Z |
-| OTHER_OTC | EPOFJ  |   0.8329 | 2023-09-21T04:47:27.720Z |
-| OTHER_OTC | QEQA   |   0.7419 | 2023-09-21T04:48:07.901Z |
-| OTHER_OTC | SFWCS  |   0.9577 | 2023-09-21T04:47:54.694Z |
-| OTHER_OTC | VBJHF  |   0.8121 | 2023-09-21T04:47:56.769Z |
-| OTHER_OTC | SDLMF  |   0.2186 | 2023-09-21T04:48:18.913Z |
-| OTHER_OTC | JXDZ   |   0.0157 | 2023-09-21T04:48:08.459Z |
-| OTCBB     | ZMNF   |   0.5647 | 2023-09-21T04:47:23.112Z |
-| OTCBB     | VVAH   |   0.5786 | 2023-09-21T04:47:40.420Z |
-| OTCBB     | HSCKG  |   0.2719 | 2023-09-21T04:47:43.268Z |
-| OTCBB     | SHDF   |   0.0161 | 2023-09-21T04:57:07.529Z |
-| OTCBB     | QJGVO  |   0.0026 | 2023-09-21T04:57:39.230Z |
-| OTHER_OTC | PMBFY  |   0.0139 | 2023-09-21T04:57:46.146Z |
-| OTCBB     | CAVY   |   0.0047 | 2023-09-21T04:57:43.503Z |
-|----------------------------------------------------------|
-) where lastSale <= 0.02 into @@pennyStocks
-```
-##### Results
-```sql
-|----------------------------------------------------------|
-| symbol | exchange  | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| JXDZ   | OTHER_OTC |   0.0157 | 2023-09-21T04:48:08.459Z |
-| SHDF   | OTCBB     |   0.0161 | 2023-09-21T04:57:07.529Z |
-| QJGVO  | OTCBB     |   0.0026 | 2023-09-21T04:57:39.230Z |
-| PMBFY  | OTHER_OTC |   0.0139 | 2023-09-21T04:57:46.146Z |
-| CAVY   | OTCBB     |   0.0047 | 2023-09-21T04:57:43.503Z |
-|----------------------------------------------------------|
-```
 ### Matrix (Transformation &#8212; Functional)
 *Description*: Creates a new matrix
 
@@ -3174,124 +3800,6 @@ matrixA * vector
 ```sql
 [13.0, 31.0, 49.0]
 ```
-### pagination¹ (Transformation &#8212; Declarative)
-*Description*: Setups a pagination query
-
-```sql
-stocks =
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
-| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
-| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
-| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
-| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
-| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
-| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
-| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
-| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
-| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
-| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
-| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
-| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
-| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
-| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
-|----------------------------------------------------------|
-stocksP = pagination(select * from stocks)
-stocksP.first(5)
-```
-##### Results
-```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
-| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
-| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
-| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
-| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
-|----------------------------------------------------------|
-```
-### pagination² (Transformation &#8212; Declarative)
-*Description*: Setups a pagination query
-
-```sql
-stocks =
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
-| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
-| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
-| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
-| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
-| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
-| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
-| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
-| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
-| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
-| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
-| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
-| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
-| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
-| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
-|----------------------------------------------------------|
-stocksP = pagination(select * from stocks)
-stocksP.last(5)
-```
-##### Results
-```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
-| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
-| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
-| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
-| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
-|----------------------------------------------------------|
-```
-### pagination³ (Transformation &#8212; Declarative)
-*Description*: Setups a pagination query
-
-```sql
-stocks =
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTCBB     | RPYM   |   0.4932 | 2023-10-02T01:57:31.086Z |
-| OTCBB     | EGBQ   |   0.6747 | 2023-10-02T01:57:09.991Z |
-| OTHER_OTC | PEMCQ  |   0.6176 | 2023-10-02T01:57:23.684Z |
-| NASDAQ    | IPHBY  | 113.9129 | 2023-10-02T01:57:01.837Z |
-| NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
-| NYSE      | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
-| NASDAQ    | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
-| NASDAQ    | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
-| AMEX      | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
-| NASDAQ    | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
-| NASDAQ    | ZEP    |   91.009 | 2023-10-02T01:57:03.740Z |
-| OTHER_OTC | KMUEH  |   0.2605 | 2023-10-02T01:57:03.702Z |
-| OTCBB     | WLXIM  |   0.6886 | 2023-10-02T01:57:45.739Z |
-| NASDAQ    | OVTS   | 153.5991 | 2023-10-02T01:57:23.061Z |
-| OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
-|----------------------------------------------------------|
-stocksP = pagination(select * from stocks)
-stocksP.first(5)
-stocksP.next(5)
-```
-##### Results
-```sql
-|---------------------------------------------------------|
-| exchange | symbol | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NYSE     | WQN    | 177.4067 | 2023-10-02T01:57:17.371Z |
-| NASDAQ   | JONV   | 139.6465 | 2023-10-02T01:57:55.758Z |
-| NASDAQ   | KKLPE  | 135.2768 | 2023-10-02T01:57:07.520Z |
-| AMEX     | KHGRO  | 163.3631 | 2023-10-02T01:57:21.286Z |
-| NASDAQ   | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
-|---------------------------------------------------------|
-```
 ### scaleTo (Transformation &#8212; Functional)
 *Description*: Returns the the numeric expression truncated after `scale` decimal places.
 
@@ -3301,387 +3809,4 @@ scaleTo(0.567, 2)
 ##### Results
 ```sql
 0.56
-```
-### select (Transformation &#8212; Declarative)
-*Description*: Returns row(s) of data based on the expression and options
-
-```sql
-select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime()
-```
-##### Results
-```sql
-|---------------------------------------------------------|
-| symbol | exchange | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-27T19:44:54.507Z |
-|---------------------------------------------------------|
-```
-### subtract (Transformation &#8212; Declarative)
-*Description*: Computes the subtraction of two queries
-
-```sql
-from (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | AAXX   | NYSE     |    56.12 |
-    | UPEX   | NYSE     |   116.24 |
-    | JUNK   | AMEX     |    97.61 |
-    | XYZ    | AMEX     |    31.95 |
-    |------------------------------|
-) subtract (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | JUNK   | AMEX     |    97.61 |
-    | ABC    | OTCBB    |    5.887 |
-    | XYZ    | AMEX     |    31.95 |
-    |------------------------------|
-)
-```
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| AAXX   | NYSE     |    56.12 |
-| UPEX   | NYSE     |   116.24 |
-|------------------------------|
-```
-### Table (Transformation &#8212; Functional)
-*Description*: Returns a new transient table
-
-```sql
-val stocks = Table(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[5])
-insert into @@stocks (symbol, exchange, transactions)
-values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.000Z"}),
-       ('AMD',  'NASDAQ', {price:56.87, transactionTime:"2021-08-05T19:23:11.000Z"}),
-       ('INTC', 'NYSE',   {price:89.44, transactionTime:"2021-08-05T19:23:11.000Z"}),
-       ('AMZN', 'NASDAQ', {price:988.12, transactionTime:"2021-08-05T19:23:11.000Z"}),
-       ('SHMN', 'OTCBB', [{price:0.0010, transactionTime:"2021-08-05T19:23:11.000Z"},
-                          {price:0.0011, transactionTime:"2021-08-05T19:23:12.000Z"}])
-@@stocks
-```
-##### Results
-```sql
-|--------------------------------------------------------------------|
-| symbol | exchange | transactions                                   |
-|--------------------------------------------------------------------|
-| AAPL   | NASDAQ   | (price, transactionTime)                       |
-| AMD    | NASDAQ   | (price, transactionTime)                       |
-| INTC   | NYSE     | (price, transactionTime)                       |
-| AMZN   | NASDAQ   | (price, transactionTime)                       |
-| SHMN   | OTCBB    | ByteArrayRowCollection(price, transactionTime) |
-|--------------------------------------------------------------------|
-```
-### tableLike (Transformation &#8212; Functional)
-*Description*: Creates a new table file, which will be identical to the source table.
-
-```sql
-val stocksA =
- |---------------------------------------------------------|
- | symbol | exchange | lastSale | lastSaleTime             |
- |---------------------------------------------------------|
- | NUBD   | NYSE     | 183.8314 | 2023-08-06T03:56:12.932Z |
- | UAGU   | NASDAQ   | 105.9287 | 2023-08-06T03:56:12.940Z |
- | XUWH   | NASDAQ   |   58.743 | 2023-08-06T03:56:12.941Z |
- | EDVC   | NYSE     | 186.1966 | 2023-08-06T03:56:12.943Z |
- | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
- |---------------------------------------------------------|
-val stocksB = tableLike(stocksA)
-insert into @@stocksB from stocksA where lastSale >= 120
-stocksB
-```
-##### Results
-```sql
-|---------------------------------------------------------|
-| symbol | exchange | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NUBD   | NYSE     | 183.8314 | 2023-08-06T03:56:12.932Z |
-| EDVC   | NYSE     | 186.1966 | 2023-08-06T03:56:12.943Z |
-| LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
-|---------------------------------------------------------|
-```
-### TableZoo (Transformation &#8212; Functional)
-*Description*: Returns a Table builder
-
-```sql
-val stocks =
-  TableZoo(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
-    .withMemorySupport(150)
-    .build()
-insert into @@stocks
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| OTHER_OTC | MBANF  |   0.0109 | 2023-09-21T04:57:58.702Z |
-| OTHER_OTC | YAMJI  |   0.0155 | 2023-09-21T04:57:24.456Z |
-| OTCBB     | HQCY   |   0.0135 | 2023-09-21T04:57:53.351Z |
-| OTHER_OTC | GEYSG  |   0.0186 | 2023-09-21T04:57:28.014Z |
-| OTHER_OTC | WYISA  |   0.0132 | 2023-09-21T04:57:58.271Z |
-| OTCBB     | TXWFI  |   0.0194 | 2023-09-21T04:58:06.199Z |
-| OTCBB     | ZIYBG  |   0.0167 | 2023-09-21T04:58:03.392Z |
-|----------------------------------------------------------|
-stocks
-```
-##### Results
-```sql
-|----------------------------------------------------------|
-| symbol | exchange  | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| MBANF  | OTHER_OTC |   0.0109 | 2023-09-21T04:57:58.702Z |
-| YAMJI  | OTHER_OTC |   0.0155 | 2023-09-21T04:57:24.456Z |
-| HQCY   | OTCBB     |   0.0135 | 2023-09-21T04:57:53.351Z |
-| GEYSG  | OTHER_OTC |   0.0186 | 2023-09-21T04:57:28.014Z |
-| WYISA  | OTHER_OTC |   0.0132 | 2023-09-21T04:57:58.271Z |
-| TXWFI  | OTCBB     |   0.0194 | 2023-09-21T04:58:06.199Z |
-| ZIYBG  | OTCBB     |   0.0167 | 2023-09-21T04:58:03.392Z |
-|----------------------------------------------------------|
-```
-### truncate (Transformation &#8212; Declarative)
-*Description*: Removes all of the data from a table
-
-```sql
-val stocks =
-  |---------------------------------------------------------|
-  | symbol | exchange | lastSale | lastSaleTime             |
-  |---------------------------------------------------------|
-  | CJHK   | OTCBB    |  36.4423 | 2023-08-03T00:09:42.263Z |
-  | OZIS   | NYSE     |  97.3854 | 2023-08-03T00:09:42.279Z |
-  | DKRA   | NASDAQ   | 127.5813 | 2023-08-03T00:09:42.280Z |
-  | IWEC   | AMEX     | 132.1874 | 2023-08-03T00:09:42.282Z |
-  | JIRD   | OTCBB    |  22.0003 | 2023-08-03T00:09:42.283Z |
-  |---------------------------------------------------------|
-truncate @@stocks
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       5 |        0 |       0 |       0 |        0 |       0 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### undelete (Transformation &#8212; Declarative)
-*Description*: Restores rows matching an expression from a table
-
-```sql
-val stocks =
- |---------------------------------------------------------|
- | symbol | exchange | lastSale | lastSaleTime             |
- |---------------------------------------------------------|
- | CMHA   | NASDAQ   | 121.4325 | 2023-08-05T22:45:29.370Z |
- | JPJI   | NYSE     | 185.8192 | 2023-08-05T22:45:29.371Z |
- | QCYA   | AMEX     | 152.0165 | 2023-08-05T22:45:29.372Z |
- | TGRV   | NYSE     |   80.225 | 2023-08-05T22:45:29.373Z |
- | XHMQ   | NASDAQ   |   98.445 | 2023-08-05T22:45:29.374Z |
- |---------------------------------------------------------|
-delete from @@stocks where symbol is "CMHA"
-undelete from @@stocks where symbol is "CMHA"
-```
-##### Results
-```sql
-|------------------------------------------------------------------------------------------------------|
-| altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
-|------------------------------------------------------------------------------------------------------|
-|       0 |       0 |         0 |       0 |        0 |       1 |       1 |        0 |       1 | []     |
-|------------------------------------------------------------------------------------------------------|
-```
-### union (Transformation &#8212; Declarative)
-*Description*: Combines two (or more) result sets (vertically)
-
-```sql
-from (
-  |------------------------------|
-  | symbol | exchange | lastSale |
-  |------------------------------|
-  | AAXX   | NYSE     |    56.12 |
-  | UPEX   | NYSE     |   116.24 |
-  | XYZ    | AMEX     |    31.95 |
-  |------------------------------|
-) union (
-  |------------------------------|
-  | symbol | exchange | lastSale |
-  |------------------------------|
-  | JUNK   | AMEX     |    97.61 |
-  | ABC    | OTC BB   |    5.887 |
-  |------------------------------|
-)
-```
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| AAXX   | NYSE     |    56.12 |
-| UPEX   | NYSE     |   116.24 |
-| XYZ    | AMEX     |    31.95 |
-| JUNK   | AMEX     |    97.61 |
-| ABC    | OTC BB   |    5.887 |
-|------------------------------|
-```
-### union distinct (Transformation &#8212; Declarative)
-*Description*: Combines two (or more) result sets (vertically) retaining only distinct rows
-
-```sql
-from (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | AAXX   | NYSE     |    56.12 |
-    | UPEX   | NYSE     |   116.24 |
-    | XYZ    | AMEX     |    31.95 |
-    | ABC    | OTCBB    |    5.887 |
-    |------------------------------|
-) union distinct (
-    |------------------------------|
-    | symbol | exchange | lastSale |
-    |------------------------------|
-    | JUNK   | AMEX     |    97.61 |
-    | AAXX   | NYSE     |    56.12 |
-    | ABC    | OTCBB    |    5.887 |
-    |------------------------------|
-)
-```
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| AAXX   | NYSE     |    56.12 |
-| UPEX   | NYSE     |   116.24 |
-| XYZ    | AMEX     |    31.95 |
-| ABC    | OTCBB    |    5.887 |
-| JUNK   | AMEX     |    97.61 |
-|------------------------------|
-```
-### update¹ (Transformation &#8212; Declarative)
-*Description*: Modifies rows matching a conditional expression from a table
-
-```sql
-val stocks =
- |---------------------------------------------------------|
- | symbol | exchange | lastSale | lastSaleTime             |
- |---------------------------------------------------------|
- | ISIT   | NASDAQ   | 189.3509 | 2023-08-05T22:34:20.263Z |
- | OBEA   | NASDAQ   |  99.1026 | 2023-08-05T22:34:20.279Z |
- | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
- | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
- | UKHT   | NASDAQ   |  71.1514 | 2023-08-05T22:34:20.283Z |
- |---------------------------------------------------------|
-update @@stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
-stocks
-```
-##### Results
-```sql
-|---------------------------------------------------------|
-| symbol | exchange | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-27T19:44:54.598Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-27T19:44:54.598Z |
-| IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
-| SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-27T19:44:54.598Z |
-|---------------------------------------------------------|
-```
-### update² (Transformation &#8212; Declarative)
-*Description*: Modifies rows matching a conditional expression from a table
-
-```sql
-declare table stocks (symbol: String(8), exchange: String(8), transactions: Table (price: Double, transactionTime: DateTime)[5])
-insert into @@stocks (symbol, exchange, transactions)
-values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('AMZN', 'NASDAQ', {"price":988.12, "transactionTime":"2021-08-05T19:23:11.000Z"}),
-       ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
-                          {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
-
-update @@stocks#transactions
-set price = 0.0012
-where symbol is 'SHMN'
-and transactions wherein (price is 0.001)
-limit 1
-stocks
-```
-##### Results
-```sql
-|-----------------------------------------------------------------------------|
-| symbol | exchange | transactions                                            |
-|-----------------------------------------------------------------------------|
-| AAPL   | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
-| AMD    | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
-| INTC   | NYSE     | EmbeddedInnerTableRowCollection(price, transactionTime) |
-| AMZN   | NASDAQ   | EmbeddedInnerTableRowCollection(price, transactionTime) |
-| SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
-|-----------------------------------------------------------------------------|
-```
-### upsert¹ (Transformation &#8212; Declarative)
-*Description*: Inserts (or updates) new row(s) into a table
-
-```sql
-namespace "temp.examples"
-drop if exists Stocks &&
-create table Stocks (symbol: String(8), exchange: String(8), lastSale: Double) &&
-create index Stocks#symbol &&
-insert into Stocks (symbol, exchange, lastSale)
-  |------------------------------|
-  | symbol | exchange | lastSale |
-  |------------------------------|
-  | ATT    | NYSE     |    66.78 |
-  | UPEX   | NASDAQ   |   116.24 |
-  | XYZ    | AMEX     |    31.95 |
-  | ABC    | OTCBB    |    5.887 |
-  |------------------------------|
-upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
-ns('Stocks')
-```
-<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
-
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| ATT    | NYSE     |    66.78 |
-| UPEX   | NASDAQ   |   116.24 |
-| XYZ    | AMEX     |    31.95 |
-| ABC    | OTCBB    |    5.887 |
-| AAPL   | NASDAQ   |   156.39 |
-|------------------------------|
-```
-### upsert² (Transformation &#8212; Declarative)
-*Description*: Inserts (or updates) new row(s) into a table
-
-```sql
-namespace "temp.examples"
-drop if exists Stocks &&
-create table Stocks (symbol: String(8), exchange: String(8), lastSale: Double) &&
-create index Stocks#symbol &&
-insert into Stocks (symbol, exchange, lastSale)
-  |------------------------------|
-  | symbol | exchange | lastSale |
-  |------------------------------|
-  | AAPL   | NASDAQ   |   156.12 |
-  | ATT    | NYSE     |    66.78 |
-  | UPEX   | NASDAQ   |   116.24 |
-  | XYZ    | AMEX     |    31.95 |
-  | ABC    | OTCBB    |    5.887 |
-  |------------------------------|
-upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
-ns('Stocks')
-```
-<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
-
-##### Results
-```sql
-|------------------------------|
-| symbol | exchange | lastSale |
-|------------------------------|
-| AAPL   | NASDAQ   |   156.39 |
-| ATT    | NYSE     |    66.78 |
-| UPEX   | NASDAQ   |   116.24 |
-| XYZ    | AMEX     |    31.95 |
-| ABC    | OTCBB    |    5.887 |
-|------------------------------|
 ```
