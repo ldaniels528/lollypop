@@ -1,7 +1,7 @@
 package com.qwery.runtime.instructions.queryables
 
 import com.qwery.implicits.MagicImplicits
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models.{Expression, FieldRef, NamedExpression}
 import com.qwery.runtime.devices.RowCollection
@@ -62,7 +62,7 @@ object HashTag extends ExpressionChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = s"`dataFrame`${__name}`column`",
     description = "Returns a column slice of a data frame",

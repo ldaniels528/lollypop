@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.language.models._
 import com.qwery.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
@@ -59,7 +59,7 @@ object Update extends ModifiableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "update",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Modifies rows matching a conditional expression from a table",
@@ -79,7 +79,7 @@ object Update extends ModifiableParser {
          |""".stripMargin
   ), HelpDoc(
     name = "update",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Modifies rows matching a conditional expression from a table",

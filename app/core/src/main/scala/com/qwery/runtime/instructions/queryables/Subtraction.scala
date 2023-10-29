@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.Queryable
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, TokenStream}
 import com.qwery.runtime.devices.RowCollection
@@ -32,7 +32,7 @@ object Subtraction extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "subtract",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "%q:query0 subtract %q:query1",
     description = "Computes the subtraction of two queries",

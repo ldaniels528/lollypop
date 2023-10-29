@@ -47,7 +47,7 @@ object Assert extends FunctionCallParserE2(
        |try
        |  assert(total < 100, 'total must be less than 100')
        |catch e =>
-       |  err <=== e.getMessage()
+       |  stderr <=== e.getMessage()
        |""".stripMargin
   )
 
