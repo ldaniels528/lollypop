@@ -36,6 +36,8 @@ object HelpDoc {
   val CATEGORY_ASYNC_REACTIVE = "Asynchronous/Distributed/Reactive"
   val CATEGORY_FILTER_MATCH_OPS = "Filtering/Pattern Matching"
   val CATEGORY_CONTROL_FLOW = "Control Flow"
+  val CATEGORY_DATAFRAMES_INFRA = "Dataframe Management"
+  val CATEGORY_DATAFRAMES_IO = "Dataframe I/O"
   val CATEGORY_TRANSFORMATION = "Transformation"
   val CATEGORY_JVM_REFLECTION = "JVM and Reflection"
   val CATEGORY_SCOPE_SESSION = "Scope/Session"

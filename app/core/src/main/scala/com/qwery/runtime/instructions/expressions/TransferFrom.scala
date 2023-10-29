@@ -59,7 +59,7 @@ object TransferFrom extends ExpressionChainParser {
       """|import "java.io.File"
          |f = new File("./test1.json")
          |f <=== "Hello World\n"
-         |f ===> out
+         |f ===> stdout
          |""".stripMargin
   ))
 

@@ -13,14 +13,14 @@ class AfterTest extends AnyFunSpec with VerificationTools {
 
     it("should support compile") {
       val results = compiler.compile(
-        """|after '2 SECONDS' out.println('Hello World')
+        """|after '2 SECONDS' stdout.println('Hello World')
            |""".stripMargin)
-      assert(results == After("2 SECONDS", Infix("out".f, "println".fx("Hello World"))))
+      assert(results == After("2 SECONDS", Infix("stdout".f, "println".fx("Hello World"))))
     }
 
     it("should support decompile") {
       verify(
-        """|after '2 SECONDS' out.println 'Hello World'
+        """|after '2 SECONDS' stdout <=== 'Hello World'
            |""".stripMargin)
     }
 

@@ -106,7 +106,7 @@ object Transpose extends FunctionCallParserE1(
   name = "transpose",
   category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_DECLARATIVE,
-  description = "Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.",
+  description = "Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.",
   examples = List(
     "transpose(items: [1 to 5])",
     """|faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])

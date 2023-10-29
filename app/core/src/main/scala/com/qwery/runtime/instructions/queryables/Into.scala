@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.queryables
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.qwery.language.models.{Instruction, Modifiable, Queryable}
 import com.qwery.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.qwery.runtime.devices.RowCollection
@@ -37,7 +37,7 @@ object Into extends QueryableChainParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "into",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Inserts a result set into a table",

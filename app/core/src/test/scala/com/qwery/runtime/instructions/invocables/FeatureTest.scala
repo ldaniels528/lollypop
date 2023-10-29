@@ -169,11 +169,12 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
             |    scenario "Testing that we GET the record we previously created" {
             |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=CHRIS&lastName=DANIELS"
             |       verify statusCode is 200
-            |          and body.size() >= 0
-            |          and body[0].id is "119ff8a6-b569-4d54-80c6-03eb1c7f795d"
-            |          and body[0].firstName is "CHRIS"
-            |          and body[0].lastName is "DANIELS"
-            |          and body[0].destAirportCode is "DTW"
+            |          and body matches [{
+            |             id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
+            |             firstName: "CHRIS",
+            |             lastName: "DANIELS",
+            |             destAirportCode: "DTW"
+            |          }]
             |    }
             |    scenario "Testing what happens when a response does not match the expected value" {
             |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=SAMANTHA&lastName=JONES"

@@ -58,7 +58,7 @@ object TransferTo extends ExpressionChainParser {
     example =
       """|import "java.io.File"
          |f = new File("./test.json")
-         |f ===> out
+         |f ===> stdout
          |""".stripMargin
   ))
 

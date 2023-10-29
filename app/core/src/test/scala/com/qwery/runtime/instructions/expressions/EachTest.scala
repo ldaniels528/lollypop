@@ -19,14 +19,14 @@ class EachTest extends AnyFunSpec with VerificationTools {
     it("should support compiling each .. in") {
       val results = compiler.compile(
         """|each stock in (select symbol, lastSale from Securities where naics == '12345') {
-           |  out <=== '{{symbol}} is {{lastSale}}/share'
+           |  stdout <=== '{{symbol}} is {{lastSale}}/share'
            |}
            |""".stripMargin)
       assert(results == Each(
         variable = "stock",
         queryable = Select(fields = Seq("symbol".f, "lastSale".f), from = DatabaseObjectRef("Securities"), where = "naics".f === "12345"),
         code = CodeBlock(
-          TransferFrom("out".f, "{{symbol}} is {{lastSale}}/share")
+          TransferFrom("stdout".f, "{{symbol}} is {{lastSale}}/share")
         )
       ))
     }
@@ -34,14 +34,14 @@ class EachTest extends AnyFunSpec with VerificationTools {
     it("should support compiling each .. in reverse") {
       val results = compiler.compile(
         """|each stock in reverse (select symbol, lastSale from Securities where naics == '12345') {
-           |  out <=== '{{symbol}} is {{lastSale}}/share'
+           |  stdout <=== '{{symbol}} is {{lastSale}}/share'
            |}
            |""".stripMargin)
       assert(results == Each(
         variable = "stock",
         queryable = Select(fields = Seq("symbol".f, "lastSale".f), from = DatabaseObjectRef("Securities"), where = "naics".f === "12345"),
         code = CodeBlock(
-          TransferFrom("out".f, "{{symbol}} is {{lastSale}}/share")
+          TransferFrom("stdout".f, "{{symbol}} is {{lastSale}}/share")
         ),
         isReverse = true
       ))
@@ -50,7 +50,7 @@ class EachTest extends AnyFunSpec with VerificationTools {
     it("should support decompiling each .. in") {
       verify(
         """|each stock in (select symbol, lastSale from Securities where naics == '12345') {
-           |  out <=== '{{@stock.symbol}} is {{@stock.lastSale}}/share'
+           |  stdout <=== '{{@stock.symbol}} is {{@stock.lastSale}}/share'
            |}
            |""".stripMargin)
     }
@@ -58,7 +58,7 @@ class EachTest extends AnyFunSpec with VerificationTools {
     it("should support decompiling each .. in reverse") {
       verify(
         """|each stock in reverse (select symbol, lastSale from Securities where naics == '12345') {
-           |  out <=== '{{@stock.symbol}} is {{@stock.lastSale}}/share'
+           |  stdout <=== '{{@stock.symbol}} is {{@stock.lastSale}}/share'
            |}
            |""".stripMargin)
     }

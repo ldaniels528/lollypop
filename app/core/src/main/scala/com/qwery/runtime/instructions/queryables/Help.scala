@@ -42,9 +42,10 @@ object Help extends FunctionCallParserE0Or1(
        |""".stripMargin,
   examples = List(
     "transpose(help('select'))",
-    """|select paradigm, total: count(*)
+    """|select category, total: count(*)
        |from (help())
-       |group by paradigm
+       |group by category
+       |order by category
        |""".stripMargin,
     """|chart = { shape: "ring", title: "Help By Category" }
        |graph chart from (

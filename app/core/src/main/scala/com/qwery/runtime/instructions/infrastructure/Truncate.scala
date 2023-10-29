@@ -1,6 +1,6 @@
 package com.qwery.runtime.instructions.infrastructure
 
-import com.qwery.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
+import com.qwery.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.qwery.language._
 import com.qwery.runtime.{DatabaseObjectRef, Scope}
 import qwery.io.IOCost
@@ -25,7 +25,7 @@ object Truncate extends ModifiableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "truncate",
-    category = CATEGORY_TRANSFORMATION,
+    category = CATEGORY_DATAFRAMES_INFRA,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
     description = "Removes all of the data from a table",
