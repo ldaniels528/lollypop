@@ -57,31 +57,35 @@ case class DefineImplicit(className: Atom, methods: Instruction) extends Runtime
 object DefineImplicit extends InvokableParser {
   private val template = "implicit class %a:class %i:methods"
 
-  override def help: List[HelpDoc] = List(HelpDoc(
-    name = "implicit",
-    category = CATEGORY_SYSTEM_TOOLS,
-    paradigm = PARADIGM_OBJECT_ORIENTED,
-    syntax = template,
-    description = "Binds a virtual method to a class",
-    example =
-      """|implicit class `java.lang.String` {
-         |    def reverseString(self) := {
-         |        import "java.lang.StringBuilder"
-         |        val src = self.toCharArray()
-         |        val dest = new StringBuilder(self.length())
-         |        val eol = self.length() - 1
-         |        var n = 0
-         |        while (n <= eol) {
-         |          dest.append(src[eol - n])
-         |          n += 1
-         |        }
-         |        dest.toString()
-         |    }
-         |}
-         |
-         |"Hello World".reverseString()
-         |""".stripMargin
-  ))
+  override def help: List[HelpDoc] = {
+    import com.qwery.util.OptionHelper.implicits.risky._
+    List(HelpDoc(
+      name = "implicit",
+      category = CATEGORY_SYSTEM_TOOLS,
+      paradigm = PARADIGM_OBJECT_ORIENTED,
+      syntax = template,
+      featureTitle = "Define Implicit Classes (non-persistent)",
+      description = "Binds a virtual method to a class",
+      example =
+        """|implicit class `java.lang.String` {
+           |    def reverseString(self) := {
+           |        import "java.lang.StringBuilder"
+           |        val src = self.toCharArray()
+           |        val dest = new StringBuilder(self.length())
+           |        val eol = self.length() - 1
+           |        var n = 0
+           |        while (n <= eol) {
+           |          dest.append(src[eol - n])
+           |          n += 1
+           |        }
+           |        dest.toString()
+           |    }
+           |}
+           |
+           |"Hello World".reverseString()
+           |""".stripMargin
+    ))
+  }
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DefineImplicit = {
     val params = SQLTemplateParams(ts, template)

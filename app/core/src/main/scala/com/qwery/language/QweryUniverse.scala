@@ -204,7 +204,7 @@ object QweryUniverse {
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InterfacesOf, Intersect, Into, InvokeVirtualMethod,
     Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
-    LessLess, LessLessLess, Let, Limit, LT, LTE,
+    LessLess, LessLessLess, Let, Limit, Literal, LT, LTE,
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
     Namespace, NEG, NEQ, New, NodeAPI, NodeConsole, NodeExec, NodeScan, NodeStart, NodeStop, NodeWWW, Not,
     NotImplemented, NS, Null,

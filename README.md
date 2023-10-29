@@ -1,4 +1,4 @@
-Qwery v0.1.5.1
+Qwery v0.1.5.2
 ============
 
 ## Table of Contents
@@ -6,27 +6,27 @@ Qwery v0.1.5.1
 * <a href="#Project_Status">Project Status</a>
 * <a href="#Getting_Started">Getting Started</a>
 * <a href="#Basic_Examples">Basic Features</a>
-  * <a href="#Array_Literals">Array Literals</a>
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
-  * <a href="#Monadic_Arrays_supports_map_filter_fold_etc_">Monadic Arrays (supports map, filter, fold, etc.)</a>
-  * <a href="#Define_and_Instantiate_JVM_classes">Define and Instantiate JVM classes</a>
+  * <a href="#Array_Literals">Array Literals</a>
+  * <a href="#Array_Ops_supports_map_filter_fold_etc_">Array Ops (supports map, filter, fold, etc.)</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
+  * <a href="#Define_Implicit_Classes_non_persistent_">Define Implicit Classes (non-persistent)</a>
+  * <a href="#Define_and_Instantiate_JVM_classes">Define and Instantiate JVM classes</a>
   * <a href="#Dictionary_Literals">Dictionary Literals</a>
   * <a href="#Function_Literals_Lambdas_">Function Literals (Lambdas)</a>
+  * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
   * <a href="#JSON_Literals">JSON Literals</a>
   * <a href="#Matrix_and_Vector_Literals">Matrix and Vector Literals</a>
   * <a href="#String_Literals_and_Interpolation">String Literals and Interpolation</a>
-  * <a href="#Define_non_persistent_Implicit_Classes">Define (non-persistent) Implicit Classes</a>
-  * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
 * <a href="#Examples">Featured Examples By Category</a>
   * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (23)
   * <a href="#Asynchronous_Distributed_Reactive">Asynchronous/Distributed/Reactive</a> (16)
   * <a href="#Control_Flow">Control Flow</a> (21)
   * <a href="#Dataframe_I_O">Dataframe I/O</a> (23)
   * <a href="#Dataframe_Management">Dataframe Management</a> (14)
-  * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (25)
+  * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (26)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
-  * <a href="#Scope_Session">Scope/Session</a> (15)
+  * <a href="#Scope_Session">Scope/Session</a> (22)
   * <a href="#System_Tools">System Tools</a> (12)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
   * <a href="#Transformation">Transformation</a> (6)
@@ -51,13 +51,13 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.1.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.2.jar`
 
 ### To build the Qwery JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.1.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.2.jar`
 
 ### Run Query CLI
 ```bash
@@ -65,22 +65,12 @@ sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.1.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.2.jar
 ```
 
 <a name="Basic_Examples"></a>
 ## Basic Features
 
-<a name="Array_Literals"></a>
-### Array Literals
-
-```sql
-['A', 'B', 'C', 'D', 'E', 'F'].reverse()
-```
-##### Results
-```sql
-['F', 'E', 'D', 'C', 'B', 'A']
-```
 <a name="Array_Comprehensions"></a>
 ### Array Comprehensions
 
@@ -91,8 +81,18 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.1.jar
 ```sql
 ['F', 'E', 'D', 'C', 'B', 'A']
 ```
-<a name="Monadic_Arrays_supports_map_filter_fold_etc_"></a>
-### Monadic Arrays (supports map, filter, fold, etc.)
+<a name="Array_Literals"></a>
+### Array Literals
+
+```sql
+['A', 'B', 'C', 'D', 'E', 'F'].reverse()
+```
+##### Results
+```sql
+['F', 'E', 'D', 'C', 'B', 'A']
+```
+<a name="Array_Ops_supports_map_filter_fold_etc_"></a>
+### Array Ops (supports map, filter, fold, etc.)
 
 ```sql
 abc = [n => 2 * n, n => 3 * n, n => n * n]
@@ -101,18 +101,6 @@ abc.map(f => f(4))
 ##### Results
 ```sql
 [8, 12, 16]
-```
-<a name="Define_and_Instantiate_JVM_classes"></a>
-### Define and Instantiate JVM classes
-
-```sql
-class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
-stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
-stock.toString()
-```
-##### Results
-```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T01:26:44.802Z")
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
@@ -135,6 +123,43 @@ graph { shape: "ring", title: "Ring Demo" } from (
 <img src="./docs/images/Ring_Demo.png">
 </div>
 
+<a name="Define_Implicit_Classes_non_persistent_"></a>
+### Define Implicit Classes (non-persistent)
+
+```sql
+implicit class `java.lang.String` {
+    def reverseString(self) := {
+        import "java.lang.StringBuilder"
+        val src = self.toCharArray()
+        val dest = new StringBuilder(self.length())
+        val eol = self.length() - 1
+        var n = 0
+        while (n <= eol) {
+          dest.append(src[eol - n])
+          n += 1
+        }
+        dest.toString()
+    }
+}
+
+"Hello World".reverseString()
+```
+##### Results
+```sql
+dlroW olleH
+```
+<a name="Define_and_Instantiate_JVM_classes"></a>
+### Define and Instantiate JVM classes
+
+```sql
+class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+stock.toString()
+```
+##### Results
+```sql
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T18:46:26.450Z")
+```
 <a name="Dictionary_Literals"></a>
 ### Dictionary Literals
 
@@ -158,6 +183,17 @@ pythagoros(3, 4)
 ##### Results
 ```sql
 5.0
+```
+<a name="Import_Scala_compiled_Implicit_Classes"></a>
+### Import (Scala-compiled) Implicit Classes
+
+```sql
+import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
+DateTime().renderAsJson()
+```
+##### Results
+```sql
+"2023-10-29T18:46:26.480Z"
 ```
 <a name="JSON_Literals"></a>
 ### JSON Literals
@@ -193,12 +229,12 @@ pythagoros(3, 4)
 
 ```sql
 vector = [2.0, 1.0, 3.0]
-matrix = new Matrix([
+matrixA = new Matrix([
   [1.0, 2.0, 3.0],
   [4.0, 5.0, 6.0],
   [7.0, 8.0, 9.0]
 ])
-matrix * vector
+matrixA * vector
 ```
 ##### Results
 ```sql
@@ -220,42 +256,6 @@ Hello Larry,
 how are you?
 Fine, I hope!
 
-```
-<a name="Define_non_persistent_Implicit_Classes"></a>
-### Define (non-persistent) Implicit Classes
-
-```sql
-implicit class `java.lang.String` {
-    def reverseString(self) := {
-        import "java.lang.StringBuilder"
-        val src = self.toCharArray()
-        val dest = new StringBuilder(self.length())
-        val eol = self.length() - 1
-        var n = 0
-        while (n <= eol) {
-          dest.append(src[eol - n])
-          n += 1
-        }
-        dest.toString()
-    }
-}
-
-"Hello World".reverseString()
-```
-##### Results
-```sql
-dlroW olleH
-```
-<a name="Import_Scala_compiled_Implicit_Classes"></a>
-### Import (Scala-compiled) Implicit Classes
-
-```sql
-import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
-DateTime().renderAsJson()
-```
-##### Results
-```sql
-"2023-10-29T01:26:45.617Z"
 ```
 <a name="Examples"></a>
 
@@ -370,7 +370,7 @@ select total: count(*) from @@stocks
 |     6 |
 |-------|
 ```
-### count° (Aggregation/Sorting &#8212; Functional)
+### count (Aggregation/Sorting &#8212; Functional)
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -677,11 +677,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 3    | ♥    |
-| 5    | ♠    |
-| 10   | ♠    |
-| 9    | ♥    |
-| 9    | ♣    |
+| K    | ♦    |
+| 3    | ♦    |
+| A    | ♣    |
+| A    | ♦    |
+| 5    | ♦    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
@@ -702,7 +702,7 @@ transpose(help('select'))
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
-### transpose° (Aggregation/Sorting &#8212; Declarative)
+### transpose (Aggregation/Sorting &#8212; Declarative)
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -875,7 +875,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="98a5a4c8-0576-4cd8-9e8c-b3b0073d0159")
+', message="OK", statusCode=200, responseID="a90aca12-357a-448b-ac94-5262b44dee68")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -885,7 +885,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="133c1c6e-1da6-4dbf-89f7-ca18ac250a55")
+HttpResponse(body=null, message=null, statusCode=200, responseID="56a466c1-1487-4ad0-926e-352e05852db6")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -895,7 +895,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="79d7158d-351d-4e9b-b186-072b0a099ac3")
+HttpResponse(body=null, message=null, statusCode=200, responseID="468c69bd-7625-4733-b4fd-107f6cbca8ab")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -914,7 +914,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@2e1792e7", message="OK", statusCode=200, responseID="9e14054c-6107-4e0b-9c75-d4c1d4b630df")
+HttpResponse(body="java.io.PrintStream@6ef7623", message="OK", statusCode=200, responseID="02baad32-848f-45ab-b372-d66cc1eaa2e5")
 ```
 ##### Console Output
 ```
@@ -979,7 +979,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[15579, 13258, 9046]
+[14452, 8804, 9520]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Starts a Qwery peer node.
@@ -989,7 +989,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9487
+11968
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: shuts down a running Qwery peer node.
@@ -1051,7 +1051,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@2e1792e7
+java.io.PrintStream@6ef7623
 ```
 ##### Console Output
 ```
@@ -1071,7 +1071,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@2e1792e7
+java.io.PrintStream@6ef7623
 ```
 ##### Console Output
 ```
@@ -1104,10 +1104,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-29T01:26:49.471Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-29T01:26:49.472Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-29T01:26:49.472Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-29T01:26:49.472Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-29T18:46:30.569Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-29T18:46:30.569Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-29T18:46:30.569Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-29T18:46:30.570Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1122,7 +1122,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@2e1792e7
+java.io.PrintStream@6ef7623
 ```
 ##### Console Output
 ```
@@ -1202,11 +1202,11 @@ tickers 5
 |---------------------------------------------------------|
 | exchange | symbol | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| NASDAQ   | RKT    |  39.7348 | 2023-10-29T01:26:07.715Z |
-| AMEX     | OWRS   |  98.3049 | 2023-10-29T01:26:12.645Z |
-| NYSE     | OWE    |  16.3096 | 2023-10-29T01:26:11.491Z |
-| OTCBB    | LZHC   |    4.164 | 2023-10-29T01:25:54.704Z |
-| NYSE     | JRZP   |  23.2363 | 2023-10-29T01:26:28.059Z |
+| NYSE     | QISJ   |    43.74 | 2023-10-29T18:46:03.343Z |
+| OTCBB    | FLTEN  |   3.1034 | 2023-10-29T18:45:59.756Z |
+| NYSE     | TITHW  |  76.9044 | 2023-10-29T18:45:52.422Z |
+| AMEX     | AWTBE  |  79.6174 | 2023-10-29T18:46:07.186Z |
+| OTCBB    | QWVK   |   1.5498 | 2023-10-29T18:45:51.320Z |
 |---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -1275,7 +1275,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.745292, _2=720.0)
+Tuple2(_1=0.614125, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1431,7 +1431,7 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@2e1792e7
+java.io.PrintStream@6ef7623
 ```
 ##### Console Output
 ```
@@ -1446,7 +1446,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3eb631b8
+java.io.PrintStream@5c089b2f
 ```
 ##### Console Error
 ```
@@ -1466,9 +1466,9 @@ this
 | name   | kind                | value                                                                 |
 |------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                    |
-| stdout | PrintStream         | java.io.PrintStream@2e1792e7                                          |
-| stdin  | BufferedReader      | java.io.BufferedReader@6719a5b8                                       |
-| stderr | PrintStream         | java.io.PrintStream@3eb631b8                                          |
+| stdout | PrintStream         | java.io.PrintStream@6ef7623                                           |
+| stdin  | BufferedReader      | java.io.BufferedReader@64e1dd11                                       |
+| stderr | PrintStream         | java.io.PrintStream@5c089b2f                                          |
 | OS     | OS                  | qwery.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                     |
 | e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -1924,7 +1924,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-29T01:26:50.578Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-29T18:46:31.660Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative)
@@ -2074,11 +2074,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-29T01:26:50.634Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-29T01:26:50.635Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-29T18:46:31.719Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-29T18:46:31.719Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-29T01:26:50.635Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-29T18:46:31.719Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative)
@@ -2215,12 +2215,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-29T01:26:50.751Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-29T01:26:50.751Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-29T01:26:50.751Z | VV     | OTCBB     |          |
-| 2023-10-29T01:26:50.751Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-29T01:26:50.751Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-29T01:26:50.751Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-29T18:46:31.843Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-29T18:46:31.843Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-29T18:46:31.843Z | VV     | OTCBB     |          |
+| 2023-10-29T18:46:31.843Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-29T18:46:31.843Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-29T18:46:31.843Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative)
@@ -2253,7 +2253,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (Dataframe Management &#8212; Declarative)
@@ -2887,17 +2887,17 @@ from (
 | WRGB   | AMEX   |  46.8355 |            46.8 | 2022-09-04T23:36:47.862Z |
 |-------------------------------------------------------------------------|
 ```
-### matches¹ (Filtering/Pattern Matching &#8212; Procedural)
+### matches¹ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-"Hello World" matches "H.* W.*"
+"Hello 123" matches "H.* \d+"
 ```
 ##### Results
 ```sql
 true
 ```
-### matches² (Filtering/Pattern Matching &#8212; Procedural)
+### matches² (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2908,16 +2908,31 @@ isNumeric = x => x.isNumber()
 ```sql
 true
 ```
-### matches³ (Filtering/Pattern Matching &#8212; Procedural)
+### matches³ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
 isExchange = s => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
 isNumber = x => x.isNumber()
 isString = x => x.isString()
+
+response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
 response matches { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
 ```
+##### Results
+```sql
+true
+```
+### matches (Filtering/Pattern Matching &#8212; Declarative)
+*Description*: determines whether the `value` matches the `expression`
+
+```sql
+class Stock(symbol: String, exchange: String, lastSale: Double)
+stock = new Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
+stock matches Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
+```
+<img src="docs/images/experimental.png" alt="matches is marked as experimental">
+
 ##### Results
 ```sql
 true
@@ -3088,7 +3103,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-29T01:26:51.742Z
+2023-10-29T18:46:32.901Z
 ```
 ### new² (JVM and Reflection &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Qwery-defined classes.
@@ -3129,7 +3144,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@65b2ee36
+scala.Function1$@7805478c
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -3166,7 +3181,7 @@ java.lang.Integer
 ```sql
 [['a', 1], ['b', 2], ['c', 3]]
 ```
-### => (Scope/Session &#8212; Functional)
+### =>¹ (Scope/Session &#8212; Functional)
 *Description*: Defines an anonymous function
 
 ```sql
@@ -3176,6 +3191,47 @@ f(5)
 ##### Results
 ```sql
 25
+```
+### =>² (Scope/Session &#8212; Declarative)
+*Description*: Define lambda functions
+
+```sql
+import "java.lang.Math"
+pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
+pythagoros(3, 4)
+```
+##### Results
+```sql
+5.0
+```
+### =>³ (Scope/Session &#8212; Declarative)
+*Description*: Define objects literally using JSON syntax
+
+```sql
+[{id: '7bd0b461-4eb9-400a-9b63-713af85a43d0', lastName: 'JONES', firstName: 'GARRY', airportCode: 'SNA'},
+ {id: '73a3fe49-df95-4a7a-9809-0bb4009f414b', lastName: 'JONES', firstName: 'DEBBIE', airportCode: 'SNA'},
+ {id: 'e015fc77-45bf-4a40-9721-f8f3248497a1', lastName: 'JONES', firstName: 'TAMERA', airportCode: 'SNA'},
+ {id: '33e31b53-b540-45e3-97d7-d2353a49f9c6', lastName: 'JONES', firstName: 'ERIC', airportCode: 'SNA'},
+ {id: 'e4dcba22-56d6-4e53-adbc-23fd84aece72', lastName: 'ADAMS', firstName: 'KAREN', airportCode: 'DTW'},
+ {id: '3879ba60-827e-4535-bf4e-246ca8807ba1', lastName: 'ADAMS', firstName: 'MIKE', airportCode: 'DTW'},
+ {id: '3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b', lastName: 'JONES', firstName: 'SAMANTHA', airportCode: 'BUR'},
+ {id: '22d10aaa-32ac-4cd0-9bed-aa8e78a36d80', lastName: 'SHARMA', firstName: 'PANKAJ', airportCode: 'LAX'}
+].toTable()
+```
+##### Results
+```sql
+|---------------------------------------------------------------------------|
+| airportCode | lastName | firstName | id                                   |
+|---------------------------------------------------------------------------|
+| SNA         | JONES    | GARRY     | 7bd0b461-4eb9-400a-9b63-713af85a43d0 |
+| SNA         | JONES    | DEBBIE    | 73a3fe49-df95-4a7a-9809-0bb4009f414b |
+| SNA         | JONES    | TAMERA    | e015fc77-45bf-4a40-9721-f8f3248497a1 |
+| SNA         | JONES    | ERIC      | 33e31b53-b540-45e3-97d7-d2353a49f9c6 |
+| DTW         | ADAMS    | KAREN     | e4dcba22-56d6-4e53-adbc-23fd84aece72 |
+| DTW         | ADAMS    | MIKE      | 3879ba60-827e-4535-bf4e-246ca8807ba1 |
+| BUR         | JONES    | SAMANTHA  | 3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b |
+| LAX         | SHARMA   | PANKAJ    | 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 |
+|---------------------------------------------------------------------------|
 ```
 ### @ (Scope/Session &#8212; Declarative)
 *Description*: used to disambiguate a variable from a field or other identifiers
@@ -3202,6 +3258,37 @@ r = select value: 1
 |-------|
 |     1 |
 |-------|
+```
+### []¹ (Scope/Session &#8212; Declarative)
+*Description*: Define arrays
+
+```sql
+['A', 'B', 'C', 'D', 'E', 'F'].reverse()
+```
+##### Results
+```sql
+['F', 'E', 'D', 'C', 'B', 'A']
+```
+### []² (Scope/Session &#8212; Declarative)
+*Description*: Perform collection-like operations on arrays
+
+```sql
+abc = [n => 2 * n, n => 3 * n, n => n * n]
+abc.map(f => f(4))
+```
+##### Results
+```sql
+[8, 12, 16]
+```
+### [_ to _] (Scope/Session &#8212; Declarative)
+*Description*: Define logical arrays
+
+```sql
+['A' to 'F'].reverse()
+```
+##### Results
+```sql
+['F', 'E', 'D', 'C', 'B', 'A']
 ```
 ### as (Scope/Session &#8212; Declarative)
 *Description*: Applies an alias to an expression or query
@@ -3237,11 +3324,13 @@ from @@stocks
 *Description*: Creates a new ephemeral (in-memory) JVM-compatible class
 
 ```sql
-class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+stock.toString()
 ```
 ##### Results
 ```sql
-()
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T18:46:33.385Z")
 ```
 ### destroy (Scope/Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3304,6 +3393,23 @@ x.a.b.c
 ```sql
 98
 ```
+### String (Scope/Session &#8212; Declarative)
+*Description*: Declare multiline strings
+
+```sql
+item = { name : "Larry" }
+'''|Hello {{ item.name }},
+   |how are you?
+   |Fine, I hope!
+   |'''.stripMargin('|')
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+
+```
 ### this (Scope/Session &#8212; Declarative)
 *Description*: Table representation of the current scope
 
@@ -3316,9 +3422,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | qwery.lang.Random               |
-| stdout | PrintStream    | java.io.PrintStream@2e1792e7    |
-| stdin  | BufferedReader | java.io.BufferedReader@6719a5b8 |
-| stderr | PrintStream    | java.io.PrintStream@3eb631b8    |
+| stdout | PrintStream    | java.io.PrintStream@6ef7623     |
+| stdin  | BufferedReader | java.io.BufferedReader@64e1dd11 |
+| stderr | PrintStream    | java.io.PrintStream@5c089b2f    |
 | OS     | OS             | qwery.lang.OS                   |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3335,6 +3441,18 @@ val greeting: String = 'Hello World'
 ```sql
 var customer_id: Int = 5
 ```
+### {} (Scope/Session &#8212; Declarative)
+*Description*: Dynamically create dictionary/object literals
+
+```sql
+response = { 'message1' : 'Hello World' }
+response.message2 = 'Hallo Monde'
+response
+```
+##### Results
+```sql
+{"message1": "Hello World", "message2": "Hallo Monde"}
+```
 <a name="System_Tools"></a>
 ## System Tools Examples
 <hr>
@@ -3347,7 +3465,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-29T01:26:52.124Z
+2023-10-29T18:46:33.399Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -3388,9 +3506,9 @@ order by category
 | Control Flow                      |    21 |
 | Dataframe I/O                     |    23 |
 | Dataframe Management              |    14 |
-| Filtering/Pattern Matching        |    25 |
+| Filtering/Pattern Matching        |    26 |
 | JVM and Reflection                |    14 |
-| Scope/Session                     |    15 |
+| Scope/Session                     |    22 |
 | System Tools                      |    12 |
 | Testing - Unit/Integration        |     5 |
 | Transformation                    |     6 |
@@ -3453,11 +3571,11 @@ java.util.Date
 
 ```sql
 import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
-"Hello".renderAsJson()
+DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"Hello"
+"2023-10-29T18:46:33.447Z"
 ```
 ### include (System Tools &#8212; Declarative)
 *Description*: incorporates the contents of an external file into current scope
@@ -3523,8 +3641,8 @@ true
 ```
 ##### Console Error
 ```
-[0.001541ms] AnyLiteral 1 ~> 1 <Integer>
-[0.363959ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000875ms] AnyLiteral 1 ~> 1 <Integer>
+[0.300459ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3538,7 +3656,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3eb631b8
+java.io.PrintStream@5c089b2f
 ```
 ##### Console Error
 ```
@@ -3737,7 +3855,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@2e1792e7
+java.io.PrintStream@6ef7623
 ```
 ##### Console Output
 ```

@@ -29,6 +29,7 @@ case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {
 }
 
 object Graph extends ExpressionParser {
+  import com.qwery.util.OptionHelper.implicits.risky._
   private val template = "graph %e:chart %i:source"
 
   override def help: List[HelpDoc] = List(
@@ -37,6 +38,7 @@ object Graph extends ExpressionParser {
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
+      featureTitle = "Dataframe Literals",
       description = "Produces graphical charts",
       example =
         """|graph { shape: "ring", title: "Ring Demo" } from (

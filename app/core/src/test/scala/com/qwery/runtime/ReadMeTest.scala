@@ -29,6 +29,7 @@ class ReadMeTest extends AnyFunSpec {
   private val baseDirectory = new File(".") / "docs"
   private val imageDirectory = baseDirectory / "images"
   private val mdFile = new File("./README.md")
+  private val featuredExamples: List[HelpDoc] = ctx.helpDocs.filter(_.featureTitle.nonEmpty).sortBy(_.featureTitle)
 
   describe(classOf[ReadMeTest].getSimpleName) {
 
@@ -46,9 +47,9 @@ class ReadMeTest extends AnyFunSpec {
               |* <a href="#Basic_Examples">Basic Features</a>
               |""".stripMargin.trim)
 
-        // include the featured examples in the ToC
+        // include the basic features in the ToC
         for {
-          (title, _) <- featuredExamples
+          title <- featuredExamples.flatMap(_.featureTitle)
         } out.println(s"""  * <a href="#${toAnchor(title)}">$title</a>""")
 
         // include the instruction examples in the ToC
@@ -69,8 +70,9 @@ class ReadMeTest extends AnyFunSpec {
              |## Basic Features
              |""".stripMargin)
         for {
-          (title, example) <- featuredExamples
-        } invoke(out, title, example)
+          doc <- featuredExamples
+          title <- doc.featureTitle
+        } invoke(out, title, doc.example)
 
         // include examples by category
         out.println(
@@ -98,7 +100,7 @@ class ReadMeTest extends AnyFunSpec {
           case 0 => "¹"
           case 1 => "²"
           case 2 => "³"
-          case _ => "°"
+          case _ => ""
         } else ""
 
         // execute and produce results
@@ -275,119 +277,5 @@ class ReadMeTest extends AnyFunSpec {
       case _ => '_'
     }.replace("__", "_")
   }
-
-  private val array_comprehensions =
-    """|['A' to 'F'].reverse()
-       |""".stripMargin
-
-  private val array_literals =
-    """|['A', 'B', 'C', 'D', 'E', 'F'].reverse()
-       |""".stripMargin
-
-  private val dataframe_literals =
-    """|graph { shape: "ring", title: "Ring Demo" } from (
-       |  |------------------|
-       |  | exchange | total |
-       |  |------------------|
-       |  | NASDAQ   |    24 |
-       |  | AMEX     |     5 |
-       |  | NYSE     |    28 |
-       |  | OTCBB    |    32 |
-       |  | OTHEROTC |     7 |
-       |  |------------------|
-       |)
-       |""".stripMargin
-
-  private val define_implicit_conversions =
-    """|implicit class `java.lang.String` {
-       |    def reverseString(self) := {
-       |        import "java.lang.StringBuilder"
-       |        val src = self.toCharArray()
-       |        val dest = new StringBuilder(self.length())
-       |        val eol = self.length() - 1
-       |        var n = 0
-       |        while (n <= eol) {
-       |          dest.append(src[eol - n])
-       |          n += 1
-       |        }
-       |        dest.toString()
-       |    }
-       |}
-       |
-       |"Hello World".reverseString()
-       |""".stripMargin
-
-  private val dictionary_literals =
-    """|response = { 'message1' : 'Hello World' }
-       |response.message2 = 'Hallo Monde'
-       |response
-       |""".stripMargin
-
-  private val monadic_arrays =
-    """|abc = [n => 2 * n, n => 3 * n, n => n * n]
-       |abc.map(f => f(4))
-       |""".stripMargin
-
-  private val function_literals =
-    """|import "java.lang.Math"
-       |pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
-       |pythagoros(3, 4)
-       |""".stripMargin
-
-  private val import_implicit_conversions =
-    """|import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
-       |DateTime().renderAsJson()
-       |""".stripMargin
-
-  private val json_literals =
-    """|[{id: '7bd0b461-4eb9-400a-9b63-713af85a43d0', lastName: 'JONES', firstName: 'GARRY', airportCode: 'SNA'},
-       | {id: '73a3fe49-df95-4a7a-9809-0bb4009f414b', lastName: 'JONES', firstName: 'DEBBIE', airportCode: 'SNA'},
-       | {id: 'e015fc77-45bf-4a40-9721-f8f3248497a1', lastName: 'JONES', firstName: 'TAMERA', airportCode: 'SNA'},
-       | {id: '33e31b53-b540-45e3-97d7-d2353a49f9c6', lastName: 'JONES', firstName: 'ERIC', airportCode: 'SNA'},
-       | {id: 'e4dcba22-56d6-4e53-adbc-23fd84aece72', lastName: 'ADAMS', firstName: 'KAREN', airportCode: 'DTW'},
-       | {id: '3879ba60-827e-4535-bf4e-246ca8807ba1', lastName: 'ADAMS', firstName: 'MIKE', airportCode: 'DTW'},
-       | {id: '3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b', lastName: 'JONES', firstName: 'SAMANTHA', airportCode: 'BUR'},
-       | {id: '22d10aaa-32ac-4cd0-9bed-aa8e78a36d80', lastName: 'SHARMA', firstName: 'PANKAJ', airportCode: 'LAX'}
-       |].toTable()
-       |""".stripMargin
-
-  private val matrices_and_vectors =
-    """|vector = [2.0, 1.0, 3.0]
-       |matrix = new Matrix([
-       |  [1.0, 2.0, 3.0],
-       |  [4.0, 5.0, 6.0],
-       |  [7.0, 8.0, 9.0]
-       |])
-       |matrix * vector
-       |""".stripMargin
-
-  private val string_literals =
-    """|item = { name : "Larry" }
-       |'''|Hello {{ item.name }},
-       |   |how are you?
-       |   |Fine, I hope!
-       |   |'''.stripMargin('|')
-       |""".stripMargin
-
-  private val instantiate_jvm_classes =
-    """|class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
-       |stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
-       |stock.toString()
-       |""".stripMargin
-
-  private val featuredExamples = List(
-    "Array Literals" -> array_literals,
-    "Array Comprehensions" -> array_comprehensions,
-    "Monadic Arrays (supports map, filter, fold, etc.)" -> monadic_arrays,
-    "Define and Instantiate JVM classes" -> instantiate_jvm_classes,
-    "Dataframe Literals" -> dataframe_literals,
-    "Dictionary Literals" -> dictionary_literals,
-    "Function Literals (Lambdas)" -> function_literals,
-    "JSON Literals" -> json_literals,
-    "Matrix and Vector Literals" -> matrices_and_vectors,
-    "String Literals and Interpolation" -> string_literals,
-    "Define (non-persistent) Implicit Classes" -> define_implicit_conversions,
-    "Import (Scala-compiled) Implicit Classes" -> import_implicit_conversions
-  )
 
 }
