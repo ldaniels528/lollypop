@@ -151,9 +151,13 @@ object Matches extends ExpressionToConditionPostParser {
     syntax = templateCard,
     description = "determines whether the `value` matches the `expression`",
     example =
-      """|class Stock(symbol: String, exchange: String, lastSale: Double)
-         |stock = new Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
-         |stock matches Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
+      """|isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+         |isNumber = x => x.isNumber()
+         |isString = x => x.isString()
+         |
+         |class Stock(symbol: String, exchange: String, lastSale: Double)
+         |stock = new Stock(symbol: "IBM", exchange: "NASDAQ", lastSale: 234.57)
+         |stock matches Stock(symbol: isString, exchange: isExchange, lastSale: isNumber)
          |""".stripMargin,
     isExperimental = true
   ))
