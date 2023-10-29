@@ -68,22 +68,26 @@ object MatrixType extends DataTypeParser with ConstructorSupport[Matrix] {
     case _ => None
   }
 
-  override def help: List[HelpDoc] = List(HelpDoc(
-    name = "Matrix",
-    category = CATEGORY_TRANSFORMATION,
-    paradigm = PARADIGM_FUNCTIONAL,
-    syntax = "new Matrix([ ... ])",
-    description = "Creates a new matrix",
-    example =
-      """|vector = [2.0, 1.0, 3.0]
-         |matrixA = new Matrix([
-         |  [1.0, 2.0, 3.0],
-         |  [4.0, 5.0, 6.0],
-         |  [7.0, 8.0, 9.0]
-         |])
-         |matrixA * vector
-         |""".stripMargin
-  ))
+  override def help: List[HelpDoc] = {
+    import com.qwery.util.OptionHelper.implicits.risky._
+    List(HelpDoc(
+      name = "Matrix",
+      category = CATEGORY_TRANSFORMATION,
+      paradigm = PARADIGM_FUNCTIONAL,
+      syntax = "new Matrix([ ... ])",
+      featureTitle = "Matrix and Vector Literals",
+      description = "Creates a new matrix",
+      example =
+        """|vector = [2.0, 1.0, 3.0]
+           |matrixA = new Matrix([
+           |  [1.0, 2.0, 3.0],
+           |  [4.0, 5.0, 6.0],
+           |  [7.0, 8.0, 9.0]
+           |])
+           |matrixA * vector
+           |""".stripMargin
+    ))
+  }
 
   override def parseDataType(columnType: ColumnType)(implicit scope: Scope): Option[DataType] = {
     columnType.name match {

@@ -1,5 +1,6 @@
 package com.qwery.language.models
 
+import com.qwery.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.qwery.language.TemplateProcessor.TokenStreamExtensions
 import com.qwery.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.qwery.language.models.Literal.implicits.NumericLiteralTokenStreamExtensions
@@ -77,7 +78,90 @@ object Literal extends ExpressionParser {
 
   }
 
-  override def help: List[HelpDoc] = Nil
+  override def help: List[HelpDoc] = {
+    import com.qwery.util.OptionHelper.implicits.risky._
+    List(HelpDoc(
+      name = "[_ to _]",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "Array Comprehensions",
+      description = "Define logical arrays",
+      example =
+        """|['A' to 'F'].reverse()
+           |""".stripMargin
+    ), HelpDoc(
+      name = "[]",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "Array Literals",
+      description = "Define arrays",
+      example =
+        """|['A', 'B', 'C', 'D', 'E', 'F'].reverse()
+           |""".stripMargin
+    ), HelpDoc(
+      name = "[]",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "Array Ops (supports map, filter, fold, etc.)",
+      description = "Perform collection-like operations on arrays",
+      example =
+        """|abc = [n => 2 * n, n => 3 * n, n => n * n]
+           |abc.map(f => f(4))
+           |""".stripMargin
+    ), HelpDoc(
+      name = "{}",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "Dictionary Literals",
+      description = "Dynamically create dictionary/object literals",
+      example =
+        """|response = { 'message1' : 'Hello World' }
+           |response.message2 = 'Hallo Monde'
+           |response
+           |""".stripMargin
+    ), HelpDoc(
+      name = "=>",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "Function Literals (Lambdas)",
+      description = "Define lambda functions",
+      example =
+        """|import "java.lang.Math"
+           |pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
+           |pythagoros(3, 4)
+           |""".stripMargin
+    ), HelpDoc(
+      name = "=>",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "JSON Literals",
+      description = "Define objects literally using JSON syntax",
+      example =
+        """|[{id: '7bd0b461-4eb9-400a-9b63-713af85a43d0', lastName: 'JONES', firstName: 'GARRY', airportCode: 'SNA'},
+           | {id: '73a3fe49-df95-4a7a-9809-0bb4009f414b', lastName: 'JONES', firstName: 'DEBBIE', airportCode: 'SNA'},
+           | {id: 'e015fc77-45bf-4a40-9721-f8f3248497a1', lastName: 'JONES', firstName: 'TAMERA', airportCode: 'SNA'},
+           | {id: '33e31b53-b540-45e3-97d7-d2353a49f9c6', lastName: 'JONES', firstName: 'ERIC', airportCode: 'SNA'},
+           | {id: 'e4dcba22-56d6-4e53-adbc-23fd84aece72', lastName: 'ADAMS', firstName: 'KAREN', airportCode: 'DTW'},
+           | {id: '3879ba60-827e-4535-bf4e-246ca8807ba1', lastName: 'ADAMS', firstName: 'MIKE', airportCode: 'DTW'},
+           | {id: '3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b', lastName: 'JONES', firstName: 'SAMANTHA', airportCode: 'BUR'},
+           | {id: '22d10aaa-32ac-4cd0-9bed-aa8e78a36d80', lastName: 'SHARMA', firstName: 'PANKAJ', airportCode: 'LAX'}
+           |].toTable()
+           |""".stripMargin
+    ), HelpDoc(
+      name = "String",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "String Literals and Interpolation",
+      description = "Declare multiline strings",
+      example =
+        """|item = { name : "Larry" }
+           |'''|Hello {{ item.name }},
+           |   |how are you?
+           |   |Fine, I hope!
+           |   |'''.stripMargin('|')
+           |""".stripMargin
+    ))
+  }
 
   override def parseExpression(stream: TokenStream)(implicit compiler: SQLCompiler): Option[Expression] = {
     stream match {

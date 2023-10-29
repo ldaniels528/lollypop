@@ -49,16 +49,22 @@ object DeclareClass extends InvokableParser {
     DeclareClass(className = params.atoms("name"), fields = params.parameters("fields"))
   }
 
-  override def help: List[HelpDoc] = List(HelpDoc(
-    name = "class",
-    category = CATEGORY_SCOPE_SESSION,
-    paradigm = PARADIGM_OBJECT_ORIENTED,
-    description = "Creates a new ephemeral (in-memory) JVM-compatible class",
-    syntax = templateCard,
-    example =
-      """|class Stocks(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
-         |""".stripMargin
-  ))
+  override def help: List[HelpDoc] = {
+    import com.qwery.util.OptionHelper.implicits.risky._
+    List(HelpDoc(
+      name = "class",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_OBJECT_ORIENTED,
+      featureTitle = "Define and Instantiate JVM classes",
+      description = "Creates a new ephemeral (in-memory) JVM-compatible class",
+      syntax = templateCard,
+      example =
+        """|class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+           |stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+           |stock.toString()
+           |""".stripMargin
+    ))
+  }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "class"
 
