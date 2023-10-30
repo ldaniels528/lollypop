@@ -1,4 +1,4 @@
-Qwery v0.1.5.2
+Lollypop v0.1.5.3
 ============
 
 ## Table of Contents
@@ -32,7 +32,7 @@ Qwery v0.1.5.2
   * <a href="#Transformation">Transformation</a> (6)
 <a name="Introduction"></a>
 ## Introduction
-Qwery is a general-purpose programming/scripting language for the JVM.
+Lollypop is a general-purpose programming/scripting language for the JVM.
 Features include:
 * Native support for Scala and Java classes, objects and packages.
 * Native support for JSON (arrays, dictionaries and objects).
@@ -47,25 +47,25 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 
 <a name="Getting_Started"></a>
 ## Getting Started
-### To build Qwery Core (Client and Server)
+### To build Lollypop Core (Client and Server)
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.2.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar`
 
-### To build the Qwery JDBC driver
+### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.2.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.3.jar`
 
-### Run Query CLI
+### Run Lollipop CLI
 ```bash
 sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.2.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -158,7 +158,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T18:46:26.450Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T05:35:33.117Z")
 ```
 <a name="Dictionary_Literals"></a>
 ### Dictionary Literals
@@ -188,12 +188,12 @@ pythagoros(3, 4)
 ### Import (Scala-compiled) Implicit Classes
 
 ```sql
-import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
+import implicit "com.lollypop.util.StringRenderHelper$StringRenderer"
 DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-29T18:46:26.480Z"
+"2023-10-30T05:35:33.146Z"
 ```
 <a name="JSON_Literals"></a>
 ### JSON Literals
@@ -677,11 +677,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| K    | ♦    |
 | 3    | ♦    |
-| A    | ♣    |
-| A    | ♦    |
+| 8    | ♠    |
 | 5    | ♦    |
+| Q    | ♠    |
+| K    | ♠    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
@@ -875,7 +875,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="a90aca12-357a-448b-ac94-5262b44dee68")
+', message="OK", statusCode=200, responseID="be9447ca-9fee-4af1-8527-2992c2cdfcce")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -885,7 +885,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="56a466c1-1487-4ad0-926e-352e05852db6")
+HttpResponse(body=null, message=null, statusCode=200, responseID="68d95266-54ef-4d37-9435-e218f51aa204")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -895,7 +895,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="468c69bd-7625-4733-b4fd-107f6cbca8ab")
+HttpResponse(body=null, message=null, statusCode=200, responseID="22c23906-a3b2-4dd6-8865-9f131a2d1bf4")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -914,14 +914,14 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@6ef7623", message="OK", statusCode=200, responseID="02baad32-848f-45ab-b372-d66cc1eaa2e5")
+HttpResponse(body="java.io.PrintStream@6ef7623", message="OK", statusCode=200, responseID="55c93ac8-0fb3-40df-8714-c6e733e42d8e")
 ```
 ##### Console Output
 ```
 post 'Hello World'
 ```
 ### nodeConsole (Asynchronous/Distributed/Reactive &#8212; Functional)
-*Description*: Opens a commandline interface to a remote Qwery peer node.
+*Description*: Opens a commandline interface to a remote Lollypop peer node.
 
 ```sql
 val remotePort = nodeStart()
@@ -944,7 +944,7 @@ nodeConsole(remotePort, [
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### nodeExec (Asynchronous/Distributed/Reactive &#8212; Functional)
-*Description*: Executes a query on a running Qwery peer node.
+*Description*: Executes a query on a running Lollypop peer node.
 
 ```sql
 val port = nodeStart()
@@ -972,27 +972,27 @@ from (
 |-------------------------------------------------------|
 ```
 ### nodeScan (Asynchronous/Distributed/Reactive &#8212; Functional)
-*Description*: Returns an array of Qwery peer node port numbers.
+*Description*: Returns an array of Lollypop peer node port numbers.
 
 ```sql
 nodeScan()
 ```
 ##### Results
 ```sql
-[14452, 8804, 9520]
+[15859, 10383, 9536]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
-*Description*: Starts a Qwery peer node.
+*Description*: Starts a Lollypop peer node.
 
 ```sql
 nodeStart()
 ```
 ##### Results
 ```sql
-11968
+14302
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
-*Description*: shuts down a running Qwery peer node.
+*Description*: shuts down a running Lollypop peer node.
 
 ```sql
 nodeStop(8233)
@@ -1104,10 +1104,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-29T18:46:30.569Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-29T18:46:30.569Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-29T18:46:30.569Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-29T18:46:30.570Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-30T05:35:37.089Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-30T05:35:37.089Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-30T05:35:37.089Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-30T05:35:37.089Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1199,15 +1199,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------|
-| exchange | symbol | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NYSE     | QISJ   |    43.74 | 2023-10-29T18:46:03.343Z |
-| OTCBB    | FLTEN  |   3.1034 | 2023-10-29T18:45:59.756Z |
-| NYSE     | TITHW  |  76.9044 | 2023-10-29T18:45:52.422Z |
-| AMEX     | AWTBE  |  79.6174 | 2023-10-29T18:46:07.186Z |
-| OTCBB    | QWVK   |   1.5498 | 2023-10-29T18:45:51.320Z |
-|---------------------------------------------------------|
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| AMEX      | ZQOF   |  59.6916 | 2023-10-30T05:35:28.185Z |
+| NYSE      | RW     |  68.1486 | 2023-10-30T05:35:25.387Z |
+| NASDAQ    | XM     |  46.9782 | 2023-10-30T05:35:20.051Z |
+| OTHER_OTC | CCIF   |   0.7762 | 2023-10-30T05:35:09.407Z |
+| AMEX      | SB     |  54.7457 | 2023-10-30T05:34:43.503Z |
+|----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -1275,7 +1275,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.614125, _2=720.0)
+Tuple2(_1=0.562292, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1462,18 +1462,18 @@ this
 ```
 ##### Results
 ```sql
-|------------------------------------------------------------------------------------------------------|
-| name   | kind                | value                                                                 |
-|------------------------------------------------------------------------------------------------------|
-| n      | Integer             | -1                                                                    |
-| stdout | PrintStream         | java.io.PrintStream@6ef7623                                           |
-| stdin  | BufferedReader      | java.io.BufferedReader@64e1dd11                                       |
-| stderr | PrintStream         | java.io.PrintStream@5c089b2f                                          |
-| OS     | OS                  | qwery.lang.OS                                                         |
-| π      | Double              | 3.141592653589793                                                     |
-| e      | DivisionByZeroError | com.qwery.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
-| Random | Random$             | qwery.lang.Random                                                     |
-|------------------------------------------------------------------------------------------------------|
+|---------------------------------------------------------------------------------------------------------|
+| name   | kind                | value                                                                    |
+|---------------------------------------------------------------------------------------------------------|
+| n      | Integer             | -1                                                                       |
+| stdout | PrintStream         | java.io.PrintStream@6ef7623                                              |
+| stdin  | BufferedReader      | java.io.BufferedReader@64e1dd11                                          |
+| stderr | PrintStream         | java.io.PrintStream@5c089b2f                                             |
+| OS     | OS                  | lollypop.lang.OS                                                         |
+| π      | Double              | 3.141592653589793                                                        |
+| e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
+| Random | Random$             | lollypop.lang.Random                                                     |
+|---------------------------------------------------------------------------------------------------------|
 ```
 ##### Console Error
 ```
@@ -1924,7 +1924,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-29T18:46:31.660Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-30T05:35:38.212Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative)
@@ -2074,11 +2074,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-29T18:46:31.719Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-29T18:46:31.719Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-30T05:35:38.266Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-30T05:35:38.267Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-29T18:46:31.719Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-30T05:35:38.267Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative)
@@ -2215,12 +2215,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-29T18:46:31.843Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-29T18:46:31.843Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-29T18:46:31.843Z | VV     | OTCBB     |          |
-| 2023-10-29T18:46:31.843Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-29T18:46:31.843Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-29T18:46:31.843Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-30T05:35:38.379Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-30T05:35:38.379Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-30T05:35:38.379Z | VV     | OTCBB     |          |
+| 2023-10-30T05:35:38.379Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-30T05:35:38.380Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-30T05:35:38.380Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative)
@@ -2253,7 +2253,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (Dataframe Management &#8212; Declarative)
@@ -2912,7 +2912,7 @@ true
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-isExchange = s => s in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
 isNumber = x => x.isNumber()
 isString = x => x.isString()
 
@@ -2927,9 +2927,13 @@ true
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
+isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+isNumber = x => x.isNumber()
+isString = x => x.isString()
+
 class Stock(symbol: String, exchange: String, lastSale: Double)
-stock = new Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
-stock matches Stock(symbol: "AAPL", exchange: "NASDAQ", lastSale: 234.57)
+stock = new Stock(symbol: "IBM", exchange: "NASDAQ", lastSale: 234.57)
+stock matches Stock(symbol: isString, exchange: isExchange, lastSale: isNumber)
 ```
 <img src="docs/images/experimental.png" alt="matches is marked as experimental">
 
@@ -3103,10 +3107,10 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-29T18:46:32.901Z
+2023-10-30T05:35:39.399Z
 ```
 ### new² (JVM and Reflection &#8212; Object-Oriented)
-*Description*: The new operator can be used to instantiate Qwery-defined classes.
+*Description*: The new operator can be used to instantiate Lollypop-defined classes.
 
 ```sql
 import "java.util.Date"
@@ -3144,7 +3148,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@7805478c
+scala.Function1$@63f3366a
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -3330,7 +3334,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-29T18:46:33.385Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T05:35:39.826Z")
 ```
 ### destroy (Scope/Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3421,11 +3425,11 @@ this
 |-----------------------------------------------------------|
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
-| Random | Random$        | qwery.lang.Random               |
+| Random | Random$        | lollypop.lang.Random            |
 | stdout | PrintStream    | java.io.PrintStream@6ef7623     |
 | stdin  | BufferedReader | java.io.BufferedReader@64e1dd11 |
 | stderr | PrintStream    | java.io.PrintStream@5c089b2f    |
-| OS     | OS             | qwery.lang.OS                   |
+| OS     | OS             | lollypop.lang.OS                |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
 ```
@@ -3465,7 +3469,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-29T18:46:33.399Z
+2023-10-30T05:35:39.840Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -3570,18 +3574,18 @@ java.util.Date
 *Description*: Imports the methods of a Scala implicit class
 
 ```sql
-import implicit "com.qwery.util.StringRenderHelper$StringRenderer"
+import implicit "com.lollypop.util.StringRenderHelper$StringRenderer"
 DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-29T18:46:33.447Z"
+"2023-10-30T05:35:39.885Z"
 ```
 ### include (System Tools &#8212; Declarative)
 *Description*: incorporates the contents of an external file into current scope
 
 ```sql
-include('./contrib/examples/src/main/qwery/Stocks.sql')
+include('./contrib/examples/src/main/lollypop/Stocks.sql')
 ```
 ### ns (System Tools &#8212; Functional)
 *Description*: Returns a persistent object (e.g. table, view, et al) from disk via a namespace
@@ -3641,8 +3645,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000875ms] AnyLiteral 1 ~> 1 <Integer>
-[0.300459ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000458ms] AnyLiteral 1 ~> 1 <Integer>
+[0.307208ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
