@@ -40,9 +40,9 @@ lazy val root = (project in file("./app")).
   dependsOn(core, jdbc_driver).
   settings(testDependencies: _*).
   settings(
-    name := "qwery-platform",
-    organization := "com.qwery",
-    description := "Qwery Platform",
+    name := "lollypop-platform",
+    organization := "com.lollypop",
+    description := "Lollypop Platform",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
@@ -61,14 +61,14 @@ lazy val core = (project in file("./app/core")).
   settings(testDependencies: _*).
   settings(
     name := "core",
-    organization := "com.qwery",
-    description := "Qwery core language, run-time and utilities",
+    organization := "com.lollypop",
+    description := "Lollypop core language, run-time and utilities",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
     Compile / doc / scalacOptions += "-no-link-warnings",
     autoCompilerPlugins := true,
-    assembly / mainClass := Some("com.qwery.repl.QweryCLI"),
+    assembly / mainClass := Some("com.lollypop.repl.LollypopCLI"),
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", _*) => MergeStrategy.discard
       case PathList("org", "apache", _*) => MergeStrategy.first
@@ -110,14 +110,14 @@ lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
   settings(testDependencies: _*).
   settings(
     name := "jdbc-driver",
-    organization := "com.qwery",
-    description := "Qwery Database JDBC Driver",
+    organization := "com.lollypop",
+    description := "Lollypop Database JDBC Driver",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
     Compile / doc / scalacOptions += "-no-link-warnings",
     autoCompilerPlugins := true,
-    assembly / mainClass := Some("com.qwery.database.jdbc.QweryNetworkClient"),
+    assembly / mainClass := Some("com.lollypop.database.jdbc.LollypopNetworkClient"),
     assembly / test := {},
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", _*) => MergeStrategy.discard
@@ -140,9 +140,9 @@ lazy val contrib = (project in file("./contrib")).
   dependsOn(root, examples).
   settings(testDependencies: _*).
   settings(
-    name := "qwery-demos",
-    organization := "com.qwery",
-    description := "Qwery Demos",
+    name := "lollypop-demos",
+    organization := "com.lollypop",
+    description := "Lollypop Demos",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
@@ -162,8 +162,8 @@ lazy val examples = (project in file("./contrib/examples")).
   settings(testDependencies: _*).
   settings(
     name := "examples",
-    organization := "com.qwery.examples",
-    description := "Qwery Examples",
+    organization := "com.lollypop.examples",
+    description := "Lollypop Examples",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
