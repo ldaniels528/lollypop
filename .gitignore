@@ -38,9 +38,10 @@ node_modules/
 metastore_db/
 
 *.iml
-qwery_db/
+lollypop_db/
 jdbcnav.jar
 .bsp/
 
 vin-mapping.json
 rebuild.sh
+lollypoprc
