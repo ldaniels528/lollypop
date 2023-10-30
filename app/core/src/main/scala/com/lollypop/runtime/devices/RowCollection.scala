@@ -498,6 +498,20 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
     out
   }
 
+  def tail: RowCollection = {
+    val out = createTempTable(this)
+    for {start <- indexWhereMetadata()(_.isActive)} {
+      var id: ROWID = start + 1
+      val eof = getLength
+      while (id < eof) {
+        val row = apply(id)
+        if (row.metadata.isActive) out.insert(row)
+        id += 1
+      }
+    }
+    out
+  }
+
   override def toMap(row: Row): Map[String, Any] = row.toMap
 
   override def toString: String = s"${getClass.getSimpleName}(${columns.map(_.name).mkString(", ")})"
