@@ -94,47 +94,26 @@ object Literal extends ExpressionParser {
       category = CATEGORY_SCOPE_SESSION,
       paradigm = PARADIGM_DECLARATIVE,
       featureTitle = "Array Literals",
-      description = "Define arrays",
+      description = "Define arrays and apply monadic functions",
       example =
-        """|['A', 'B', 'C', 'D', 'E', 'F'].reverse()
-           |""".stripMargin
-    ), HelpDoc(
-      name = "[]",
-      category = CATEGORY_SCOPE_SESSION,
-      paradigm = PARADIGM_DECLARATIVE,
-      featureTitle = "Array Ops (supports map, filter, fold, etc.)",
-      description = "Perform collection-like operations on arrays",
-      example =
-        """|abc = [n => 2 * n, n => 3 * n, n => n * n]
-           |abc.map(f => f(4))
+        """|[1, 3, 5, 7].foldLeft(0, (a, b) => a + b)
            |""".stripMargin
     ), HelpDoc(
       name = "{}",
       category = CATEGORY_SCOPE_SESSION,
       paradigm = PARADIGM_DECLARATIVE,
-      featureTitle = "Dictionary Literals",
-      description = "Dynamically create dictionary/object literals",
+      featureTitle = "Dictionary/Object Literals",
+      description = "Dynamically create objects (e.g. JSON)",
       example =
         """|response = { 'message1' : 'Hello World' }
            |response.message2 = 'Hallo Monde'
+           |response.message3 = ['Hello', 'Hallo', 'World', 'Monde']
            |response
            |""".stripMargin
     ), HelpDoc(
       name = "=>",
       category = CATEGORY_SCOPE_SESSION,
       paradigm = PARADIGM_DECLARATIVE,
-      featureTitle = "Function Literals (Lambdas)",
-      description = "Define lambda functions",
-      example =
-        """|import "java.lang.Math"
-           |pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
-           |pythagoros(3, 4)
-           |""".stripMargin
-    ), HelpDoc(
-      name = "=>",
-      category = CATEGORY_SCOPE_SESSION,
-      paradigm = PARADIGM_DECLARATIVE,
-      featureTitle = "JSON Literals",
       description = "Define objects literally using JSON syntax",
       example =
         """|[{id: '7bd0b461-4eb9-400a-9b63-713af85a43d0', lastName: 'JONES', firstName: 'GARRY', airportCode: 'SNA'},
@@ -151,7 +130,27 @@ object Literal extends ExpressionParser {
       name = "String",
       category = CATEGORY_SCOPE_SESSION,
       paradigm = PARADIGM_DECLARATIVE,
-      featureTitle = "String Literals and Interpolation",
+      featureTitle = "String Literals (Double-quoted)",
+      description = "Declare strings",
+      example =
+        """|item = { name : "Larry" }
+           |"Hello {{ item.name }},\nhow are you?\nFine, I hope!"
+           |""".stripMargin
+    ), HelpDoc(
+      name = "String",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "String Literals (Single-quoted)",
+      description = "Declare strings",
+      example =
+        """|item = { name : "Larry" }
+           |'Hello {{ item.name }},\nhow are you?\nFine, I hope!'
+           |""".stripMargin
+    ), HelpDoc(
+      name = "String",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "String Literals (Triple-Single-quoted)",
       description = "Declare multiline strings",
       example =
         """|item = { name : "Larry" }
@@ -160,6 +159,21 @@ object Literal extends ExpressionParser {
            |   |Fine, I hope!
            |   |'''.stripMargin('|')
            |""".stripMargin
+    ), HelpDoc(
+      name = "String",
+      category = CATEGORY_SCOPE_SESSION,
+      paradigm = PARADIGM_DECLARATIVE,
+      featureTitle = "String Literals (Triple-Double-quoted)",
+      description = "Declare multiline strings",
+      example = {
+        val q = "\"\"\""
+        s"""|item = { name : "Larry" }
+            |$q|Hello {{ item.name }},
+            |   |how are you?
+            |   |Fine, I hope!
+            |   |$q.stripMargin('|')
+            |""".stripMargin
+      }
     ))
   }
 
