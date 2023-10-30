@@ -265,6 +265,20 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:head()") {
+    it("""should execute: ['A' to 'Z'].head()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].head()""")
+      assert(result == 'A')
+    }
+  }
+
+  describe("Array:headOption()") {
+    it("""should execute: ['A' to 'Z'].headOption()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].headOption()""")
+      assert(result == 'A')
+    }
+  }
+
   describe("Array:indexOf()") {
     it("""should execute: ['A' to 'Z'].indexOf('C')""") {
       val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].indexOf('C')""")

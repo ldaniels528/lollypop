@@ -149,6 +149,12 @@ object RuntimePlatform {
       // Returns the index of the value if found in the collection: ['A' to 'Z'].foreach((c: Char) => out.println(c))
       arrayFunction1S[LambdaFunction](name = "foreach", (arr, fx, scope) => foreach(arr.map(_.v), fx)(scope), returnType_? = ANY_TYPE)
 
+      // Returns the tail of the array: [1 to 5].head()
+      arrayFunction0(name = "head", _.head, returnType_? = ANY_TYPE)
+
+      // Returns the tail of the array: [1 to 5].headOption()
+      arrayFunction0(name = "headOption", _.headOption, returnType_? = ANY_TYPE)
+
       // Returns the index of the value if found in the collection: ['A' to 'Z'].indexOf('C')
       arrayFunction1[Any](name = "indexOf", (arr, v) => arr.toSeq.indexOf(v), returnType_? = INT_TYPE)
 
