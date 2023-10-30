@@ -272,6 +272,13 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:init()") {
+    it("""should execute: ['A' to 'D'].init()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """String(['A' to 'D'].init())""")
+      assert(result == "ABC")
+    }
+  }
+
   describe("Array:isEmpty()") {
     it("should execute: [].isEmpty()")(isTrue("[].isEmpty()"))
     it("should execute: [1, 2, 3].isEmpty()")(isFalse("[1, 2, 3].isEmpty()"))

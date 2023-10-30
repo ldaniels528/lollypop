@@ -152,6 +152,9 @@ object RuntimePlatform {
       // Returns the index of the value if found in the collection: ['A' to 'Z'].indexOf('C')
       arrayFunction1[Any](name = "indexOf", (arr, v) => arr.toSeq.indexOf(v), returnType_? = INT_TYPE)
 
+      // Returns the init of the array: [1 to 5].init()
+      arrayFunction0(name = "init", _.init, returnType_? = ARRAY_TYPE)
+
       // Returns true if the field or variable is an empty Array: x.isEmpty()
       arrayFunction0(name = "isEmpty", _.isEmpty, returnType_? = BOOLEAN_TYPE)
 
