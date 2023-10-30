@@ -143,6 +143,9 @@ object RuntimePlatform {
       // Returns a new array containing only the values that satisfy the lambda: [1 to 10].filter((n: Int) => (n % 2) == 0)
       arrayFunction1S[LambdaFunction](name = "filter", (arr, fx, scope) => filter(arr, fx)(scope), returnType_? = ARRAY_TYPE)
 
+      // Returns a new array containing only the values that satisfy the lambda: [1 to 10].filterNot((n: Int) => (n % 2) == 0)
+      arrayFunction1S[LambdaFunction](name = "filterNot", (arr, fx, scope) => filterNot(arr, fx)(scope), returnType_? = ARRAY_TYPE)
+
       // Returns the index of the value if found in the collection: ['A' to 'Z'].foldLeft([], (array: Any[], c: Char) => array.push(c))
       arrayFunction2S[Any, LambdaFunction](name = "foldLeft", (arr, init, fx, scope) => foldLeft(arr.map(_.v), init, fx)(scope), returnType_? = ANY_TYPE)
 
@@ -256,6 +259,14 @@ object RuntimePlatform {
       seqToArray(list.reverse)
     }
 
+    private def filterNot(array: Array[_], fx: LambdaFunction)(implicit scope: Scope): Array[_] = {
+      var list: List[_] = Nil
+      array.foreach { value =>
+        val result = LollypopVM.execute(scope, fx.call(List(value.v)))._3
+        if (result == false) list = value :: list
+      }
+      seqToArray(list.reverse)
+    }
 
     private def foldLeft(array: Array[Expression], initialValue: Any, fx: LambdaFunction)(implicit scope: Scope): Any = {
       array.foldLeft[(Scope, Any)]((scope, initialValue)) { case ((aggScope, aggResult), param) =>

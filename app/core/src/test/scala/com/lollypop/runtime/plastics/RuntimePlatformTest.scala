@@ -216,6 +216,14 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:filterNot()") {
+    it("should execute: [1 to 10].filterNot((n: Int) => (n % 2) == 0)") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(),
+        """[1 to 10].filterNot((n: Int) => (n % 2) == 0)""")
+      assert(Option(result).collect { case a: Array[_] => a.toList } contains List(1, 3, 5, 7, 9))
+    }
+  }
+
   describe("Array:foreach()") {
     it("should execute: [1, 3, 5, 7, 9].foreach( (n: Int) => stdout.println(n) )") {
       val (scope, _, _) = LollypopVM.executeSQL(ctx.createRootScope(),
