@@ -21,9 +21,9 @@ import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringHelper.StringEnrichment
-import org.apache.commons.io.IOUtils
 import lollypop.io.Encodable
 import lollypop.lang.OS._
+import org.apache.commons.io.IOUtils
 
 import java.io._
 import java.nio.Buffer
@@ -157,6 +157,16 @@ class OS(ctx: LollypopUniverse) {
       rc.insert(Map(columnNames.head -> (n + 1), columnNames(1) -> line).toRow)
     }
     rc
+  }
+
+  /**
+   * Executes an operating system command
+   * @param commandString the given [[String command]] to execute
+   * @return the [[RowCollection]]
+   * @example {{{ OS.execSystem('iostat 1 5') }}}
+   */
+  def execSystem(commandString: String): LazyList[String] = {
+    Process(commandString).lazyLines.flatMap(_.split("\n"))
   }
 
   /**
