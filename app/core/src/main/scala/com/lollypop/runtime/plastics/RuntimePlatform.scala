@@ -184,6 +184,9 @@ object RuntimePlatform {
 
       // Returns the sorted array. null elements are ignored: [1, 3, 5, 7, 9].sortValues()
       arrayFunction0(name = "sortValues", sortValues, returnType_? = ARRAY_TYPE)
+
+      // Returns the tail of the array: [1 to 5].tail()
+      arrayFunction0(name = "tail", _.tail, returnType_? = ARRAY_TYPE)
     }
 
     ////////////////////////////////////////////////////////////////////////////////

@@ -385,6 +385,13 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:tail()") {
+    it("""should execute: ['A' to 'D'].tail()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """String(['A' to 'D'].tail())""")
+      assert(result == "BCD")
+    }
+  }
+
   describe("Bytes:base64(), unBase64()") {
     it("""should execute: "Hello".getBytes().base64()""") {
       val (_, _, results) = LollypopVM.executeSQL(Scope(), """String("Hello".getBytes().base64().unBase64())""")
