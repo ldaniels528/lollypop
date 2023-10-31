@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.devices.QMap
@@ -36,7 +36,7 @@ object Contains extends ExpressionToConditionPostParser {
   override def help: List[HelpDoc] = List(HelpDoc(
     name = __name,
     category = CATEGORY_FILTER_MATCH_OPS,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
@@ -46,7 +46,7 @@ object Contains extends ExpressionToConditionPostParser {
   ), HelpDoc(
     name = __name,
     category = CATEGORY_FILTER_MATCH_OPS,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
@@ -56,7 +56,7 @@ object Contains extends ExpressionToConditionPostParser {
   ), HelpDoc(
     name = __name,
     category = CATEGORY_FILTER_MATCH_OPS,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = s"`value` ${__name} `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =

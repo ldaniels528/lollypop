@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.conditions.Isnt.__name
@@ -29,7 +29,7 @@ object Isnt extends ExpressionToConditionPostParser {
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "isnt",
     category = CATEGORY_FILTER_MATCH_OPS,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = "`value` isnt `expression`",
     description = "returns true if the `value` is not exactly the `expression`; otherwise false",
     example =
@@ -39,7 +39,7 @@ object Isnt extends ExpressionToConditionPostParser {
   ), HelpDoc(
     name = "isnt",
     category = CATEGORY_FILTER_MATCH_OPS,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = "`value` isnt `expression`",
     description = "returns true if the `value` is not exactly the `expression`; otherwise false",
     example =

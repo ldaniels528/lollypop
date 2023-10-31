@@ -70,10 +70,7 @@ class ReadMeTest extends AnyFunSpec {
           """|<a name="Basic_Examples"></a>
              |## Basic Features
              |""".stripMargin)
-        for {
-          doc <- featuredExamples
-          title <- doc.featureTitle
-        } invoke(out, title, doc.example)
+        for {doc <- featuredExamples} invoke(out, doc)
 
         // include examples by category
         out.println(
@@ -111,19 +108,21 @@ class ReadMeTest extends AnyFunSpec {
     }
   }
 
-  private def invoke(out: PrintWriter, title: String, example: String)(implicit scope: Scope): Unit = {
+  private def invoke(out: PrintWriter, help: HelpDoc)(implicit scope: Scope): Unit = {
+    val title = help.featureTitle.getOrElse("???")
     // header section
     out.println(
       s"""|<a name="${toAnchor(title)}"></a>
           |### $title
+          |*Description*: ${help.description.trim}
           |""".stripMargin)
     out.println("```sql")
-    out.println(example.trim)
+    out.println(help.example.trim)
     out.println("```")
 
     // detail section
     for {
-      (scope1, _, result1) <- Try(LollypopVM.executeSQL(scope, example))
+      (scope1, _, result1) <- Try(LollypopVM.executeSQL(scope, help.example))
       results <- resolve(result1)
     } {
       out.println("##### Results")
@@ -205,7 +204,7 @@ class ReadMeTest extends AnyFunSpec {
          |* Native support for JSON (arrays, dictionaries and objects).
          |* Native support for Maven package repositories.
          |* Data-oriented types - Dataframes, BLOB/CLOB and Matrices and Vectors.
-         |* Multi-paradigm programming model - declarative/SQL, functional and object-oriented.
+         |* Multi-paradigm programming model - declarative/SQL, functional, object-oriented and reactive.
          |""".stripMargin)
   }
 

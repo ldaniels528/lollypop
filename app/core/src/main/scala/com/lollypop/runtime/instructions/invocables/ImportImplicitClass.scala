@@ -35,7 +35,7 @@ object ImportImplicitClass extends InvokableParser {
       category = CATEGORY_SYSTEM_TOOLS,
       paradigm = PARADIGM_OBJECT_ORIENTED,
       syntax = templateCard,
-      featureTitle = "Import (Scala-compiled) Implicit Classes",
+      featureTitle = "Implicit Class Importing",
       description = "Imports the methods of a Scala implicit class",
       example =
         """|import implicit "com.lollypop.util.StringRenderHelper$StringRenderer"
