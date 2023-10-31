@@ -64,7 +64,7 @@ object DefineImplicit extends InvokableParser {
       category = CATEGORY_SYSTEM_TOOLS,
       paradigm = PARADIGM_OBJECT_ORIENTED,
       syntax = template,
-      featureTitle = "Define Implicit Classes (non-persistent)",
+      featureTitle = "Implicit Class Declarations",
       description = "Binds a virtual method to a class",
       example =
         """|implicit class `java.lang.String` {

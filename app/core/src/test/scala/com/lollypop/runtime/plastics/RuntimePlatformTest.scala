@@ -216,6 +216,14 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:filterNot()") {
+    it("should execute: [1 to 10].filterNot((n: Int) => (n % 2) == 0)") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(),
+        """[1 to 10].filterNot((n: Int) => (n % 2) == 0)""")
+      assert(Option(result).collect { case a: Array[_] => a.toList } contains List(1, 3, 5, 7, 9))
+    }
+  }
+
   describe("Array:foreach()") {
     it("should execute: [1, 3, 5, 7, 9].foreach( (n: Int) => stdout.println(n) )") {
       val (scope, _, _) = LollypopVM.executeSQL(ctx.createRootScope(),
@@ -265,10 +273,31 @@ class RuntimePlatformTest extends AnyFunSpec {
     }
   }
 
+  describe("Array:head()") {
+    it("""should execute: ['A' to 'Z'].head()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].head()""")
+      assert(result == 'A')
+    }
+  }
+
+  describe("Array:headOption()") {
+    it("""should execute: ['A' to 'Z'].headOption()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].headOption()""")
+      assert(result == 'A')
+    }
+  }
+
   describe("Array:indexOf()") {
     it("""should execute: ['A' to 'Z'].indexOf('C')""") {
       val (_, _, result) = LollypopVM.executeSQL(Scope(), """['A' to 'Z'].indexOf('C')""")
       assert(result == 2)
+    }
+  }
+
+  describe("Array:init()") {
+    it("""should execute: ['A' to 'D'].init()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """String(['A' to 'D'].init())""")
+      assert(result == "ABC")
     }
   }
 
@@ -382,6 +411,13 @@ class RuntimePlatformTest extends AnyFunSpec {
     it("should execute: [3, 9, 5, null, 2, 7, 1].sortValues()") {
       val (_, _, results) = LollypopVM.executeSQL(Scope(), """[3, 9, 5, null, 2, 7, 1].sortValues()""")
       assert(toList(results) == List(1, 2, 3, 5, 7, 9, null))
+    }
+  }
+
+  describe("Array:tail()") {
+    it("""should execute: ['A' to 'D'].tail()""") {
+      val (_, _, result) = LollypopVM.executeSQL(Scope(), """String(['A' to 'D'].tail())""")
+      assert(result == "BCD")
     }
   }
 

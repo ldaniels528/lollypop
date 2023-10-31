@@ -56,7 +56,16 @@ class OSTest extends AnyFunSpec with VerificationTools {
       }
     }
 
-    it("should execute: OS.listFiles('/examples/src/main/lollypop')") {
+    it("should execute: OS.execSystem('iostat 1 5')") {
+      Try {
+        val (_, _, device) = LollypopVM.searchSQL(Scope(),
+          """|OS.execSystem('iostat 1 5').toList().toArray().toTable()
+             |""".stripMargin)
+        device.tabulate() foreach logger.info
+      }
+    }
+
+    it("should execute: OS.listFiles('./contrib/examples/src/main/lollypop')") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         """|from OS.listFiles('./contrib/examples/src/main/lollypop') where name matches '.*[.]sql'
            |""".stripMargin)

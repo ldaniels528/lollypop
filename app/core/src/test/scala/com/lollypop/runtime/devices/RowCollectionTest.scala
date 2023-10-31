@@ -359,7 +359,7 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
       ))
     }
 
-    it("should use .reverse() to reverse the rows of the collection") {
+    it("should use .reverse() and .tail() to reverse the rows of the collection") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         """|declare table stocks(symbol: String(7), exchange: String(6), lastSale: Double, groupCode: Char)
            | containing values
@@ -367,11 +367,10 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
            |    ('JUNK', 'AMEX', 97.61, 'B'), ('RTX.OB',  'OTCBB', 1.93011, 'B'), ('ABC', 'NYSE', 1235.7650, 'B'),
            |    ('UNIB.OB', 'OTCBB',  9.11, 'C'), ('BRT.OB', 'OTCBB', 0.00123, 'C'), ('PLUMB', 'NYSE',  809.0770, 'C')
            |
-           |stocks.reverse()
+           |stocks.reverse().tail()
            |""".stripMargin
       )
       assert(device.toMapGraph == List(
-        Map("exchange" -> "NYSE", "symbol" -> "PLUMB", "groupCode" -> 'C', "lastSale" -> 809.077),
         Map("exchange" -> "OTCBB", "symbol" -> "BRT.OB", "groupCode" -> 'C', "lastSale" -> 0.00123),
         Map("exchange" -> "OTCBB", "symbol" -> "UNIB.OB", "groupCode" -> 'C', "lastSale" -> 9.11),
         Map("exchange" -> "NYSE", "symbol" -> "ABC", "groupCode" -> 'B', "lastSale" -> 1235.765),

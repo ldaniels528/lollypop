@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.jvm
 
-import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Expression, IdentifierRef}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
@@ -23,6 +23,6 @@ case class IsDefined(expression: Expression) extends ScalarFunctionCall with Run
 object IsDefined extends FunctionCallParserE1(
   name = "isDefined",
   category = CATEGORY_FILTER_MATCH_OPS,
-  paradigm = PARADIGM_IMPERATIVE,
+  paradigm = PARADIGM_DECLARATIVE,
   description = "Returns true if the field or variable exists within the scope.",
   example = "isDefined(counter)")

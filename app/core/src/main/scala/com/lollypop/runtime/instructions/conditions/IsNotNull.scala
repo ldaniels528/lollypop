@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_IMPERATIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -30,6 +30,6 @@ case class IsNotNull(expr: Expression) extends ScalarFunctionCall with RuntimeCo
 object IsNotNull extends FunctionCallParserE1(
   name = "isNotNull",
   category = CATEGORY_FILTER_MATCH_OPS,
-  paradigm = PARADIGM_IMPERATIVE,
+  paradigm = PARADIGM_DECLARATIVE,
   description = "Returns true if the expression is not null, otherwise false.",
   example = "isNotNull('yes')")

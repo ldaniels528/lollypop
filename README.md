@@ -1,4 +1,4 @@
-Lollypop v0.1.5.3
+Lollypop v0.1.5.4
 ============
 
 ## Table of Contents
@@ -8,16 +8,16 @@ Lollypop v0.1.5.3
 * <a href="#Basic_Examples">Basic Features</a>
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
   * <a href="#Array_Literals">Array Literals</a>
-  * <a href="#Array_Ops_supports_map_filter_fold_etc_">Array Ops (supports map, filter, fold, etc.)</a>
   * <a href="#Dataframe_Literals">Dataframe Literals</a>
-  * <a href="#Define_Implicit_Classes_non_persistent_">Define Implicit Classes (non-persistent)</a>
   * <a href="#Define_and_Instantiate_JVM_classes">Define and Instantiate JVM classes</a>
-  * <a href="#Dictionary_Literals">Dictionary Literals</a>
-  * <a href="#Function_Literals_Lambdas_">Function Literals (Lambdas)</a>
-  * <a href="#Import_Scala_compiled_Implicit_Classes">Import (Scala-compiled) Implicit Classes</a>
-  * <a href="#JSON_Literals">JSON Literals</a>
+  * <a href="#Dictionary_Object_Literals">Dictionary/Object Literals</a>
+  * <a href="#Implicit_Class_Declarations">Implicit Class Declarations</a>
+  * <a href="#Implicit_Class_Importing">Implicit Class Importing</a>
   * <a href="#Matrix_and_Vector_Literals">Matrix and Vector Literals</a>
-  * <a href="#String_Literals_and_Interpolation">String Literals and Interpolation</a>
+  * <a href="#String_Literals_Double_quoted_">String Literals (Double-quoted)</a>
+  * <a href="#String_Literals_Single_quoted_">String Literals (Single-quoted)</a>
+  * <a href="#String_Literals_Triple_Double_quoted_">String Literals (Triple-Double-quoted)</a>
+  * <a href="#String_Literals_Triple_Single_quoted_">String Literals (Triple-Single-quoted)</a>
 * <a href="#Examples">Featured Examples By Category</a>
   * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (23)
   * <a href="#Asynchronous_Distributed_Reactive">Asynchronous/Distributed/Reactive</a> (16)
@@ -26,7 +26,7 @@ Lollypop v0.1.5.3
   * <a href="#Dataframe_Management">Dataframe Management</a> (14)
   * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (26)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
-  * <a href="#Scope_Session">Scope/Session</a> (22)
+  * <a href="#Scope_Session">Scope/Session</a> (23)
   * <a href="#System_Tools">System Tools</a> (12)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
   * <a href="#Transformation">Transformation</a> (6)
@@ -38,7 +38,7 @@ Features include:
 * Native support for JSON (arrays, dictionaries and objects).
 * Native support for Maven package repositories.
 * Data-oriented types - Dataframes, BLOB/CLOB and Matrices and Vectors.
-* Multi-paradigm programming model - declarative/SQL, functional and object-oriented.
+* Multi-paradigm programming model - declarative/SQL, functional, object-oriented and reactive.
 
 <a name="Project_Status"></a>
 ## Project Status
@@ -51,21 +51,21 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.4.jar`
 
 ### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.3.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.4.jar`
 
-### Run Lollipop CLI
+### Run Lollypop CLI
 ```bash
 sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.4.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -73,6 +73,7 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar
 
 <a name="Array_Comprehensions"></a>
 ### Array Comprehensions
+*Description*: Define logical arrays
 
 ```sql
 ['A' to 'F'].reverse()
@@ -83,27 +84,18 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.3.jar
 ```
 <a name="Array_Literals"></a>
 ### Array Literals
+*Description*: Define arrays and apply monadic functions
 
 ```sql
-['A', 'B', 'C', 'D', 'E', 'F'].reverse()
+[1, 3, 5, 7].foldLeft(0, (a, b) => a + b)
 ```
 ##### Results
 ```sql
-['F', 'E', 'D', 'C', 'B', 'A']
-```
-<a name="Array_Ops_supports_map_filter_fold_etc_"></a>
-### Array Ops (supports map, filter, fold, etc.)
-
-```sql
-abc = [n => 2 * n, n => 3 * n, n => n * n]
-abc.map(f => f(4))
-```
-##### Results
-```sql
-[8, 12, 16]
+16
 ```
 <a name="Dataframe_Literals"></a>
 ### Dataframe Literals
+*Description*: Produces graphical charts
 
 ```sql
 graph { shape: "ring", title: "Ring Demo" } from (
@@ -123,8 +115,36 @@ graph { shape: "ring", title: "Ring Demo" } from (
 <img src="./docs/images/Ring_Demo.png">
 </div>
 
-<a name="Define_Implicit_Classes_non_persistent_"></a>
-### Define Implicit Classes (non-persistent)
+<a name="Define_and_Instantiate_JVM_classes"></a>
+### Define and Instantiate JVM classes
+*Description*: Creates a new ephemeral (in-memory) JVM-compatible class
+
+```sql
+class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
+stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
+stock.toString()
+```
+##### Results
+```sql
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T23:38:55.098Z")
+```
+<a name="Dictionary_Object_Literals"></a>
+### Dictionary/Object Literals
+*Description*: Dynamically create objects (e.g. JSON)
+
+```sql
+response = { 'message1' : 'Hello World' }
+response.message2 = 'Hallo Monde'
+response.message3 = ['Hello', 'Hallo', 'World', 'Monde']
+response
+```
+##### Results
+```sql
+{"message1": "Hello World", "message2": "Hallo Monde", "message3": ["Hello", "Hallo", "World", "Monde"]}
+```
+<a name="Implicit_Class_Declarations"></a>
+### Implicit Class Declarations
+*Description*: Binds a virtual method to a class
 
 ```sql
 implicit class `java.lang.String` {
@@ -148,44 +168,9 @@ implicit class `java.lang.String` {
 ```sql
 dlroW olleH
 ```
-<a name="Define_and_Instantiate_JVM_classes"></a>
-### Define and Instantiate JVM classes
-
-```sql
-class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
-stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
-stock.toString()
-```
-##### Results
-```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T05:35:33.117Z")
-```
-<a name="Dictionary_Literals"></a>
-### Dictionary Literals
-
-```sql
-response = { 'message1' : 'Hello World' }
-response.message2 = 'Hallo Monde'
-response
-```
-##### Results
-```sql
-{"message1": "Hello World", "message2": "Hallo Monde"}
-```
-<a name="Function_Literals_Lambdas_"></a>
-### Function Literals (Lambdas)
-
-```sql
-import "java.lang.Math"
-pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
-pythagoros(3, 4)
-```
-##### Results
-```sql
-5.0
-```
-<a name="Import_Scala_compiled_Implicit_Classes"></a>
-### Import (Scala-compiled) Implicit Classes
+<a name="Implicit_Class_Importing"></a>
+### Implicit Class Importing
+*Description*: Imports the methods of a Scala implicit class
 
 ```sql
 import implicit "com.lollypop.util.StringRenderHelper$StringRenderer"
@@ -193,39 +178,11 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-30T05:35:33.146Z"
-```
-<a name="JSON_Literals"></a>
-### JSON Literals
-
-```sql
-[{id: '7bd0b461-4eb9-400a-9b63-713af85a43d0', lastName: 'JONES', firstName: 'GARRY', airportCode: 'SNA'},
- {id: '73a3fe49-df95-4a7a-9809-0bb4009f414b', lastName: 'JONES', firstName: 'DEBBIE', airportCode: 'SNA'},
- {id: 'e015fc77-45bf-4a40-9721-f8f3248497a1', lastName: 'JONES', firstName: 'TAMERA', airportCode: 'SNA'},
- {id: '33e31b53-b540-45e3-97d7-d2353a49f9c6', lastName: 'JONES', firstName: 'ERIC', airportCode: 'SNA'},
- {id: 'e4dcba22-56d6-4e53-adbc-23fd84aece72', lastName: 'ADAMS', firstName: 'KAREN', airportCode: 'DTW'},
- {id: '3879ba60-827e-4535-bf4e-246ca8807ba1', lastName: 'ADAMS', firstName: 'MIKE', airportCode: 'DTW'},
- {id: '3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b', lastName: 'JONES', firstName: 'SAMANTHA', airportCode: 'BUR'},
- {id: '22d10aaa-32ac-4cd0-9bed-aa8e78a36d80', lastName: 'SHARMA', firstName: 'PANKAJ', airportCode: 'LAX'}
-].toTable()
-```
-##### Results
-```sql
-|---------------------------------------------------------------------------|
-| airportCode | lastName | firstName | id                                   |
-|---------------------------------------------------------------------------|
-| SNA         | JONES    | GARRY     | 7bd0b461-4eb9-400a-9b63-713af85a43d0 |
-| SNA         | JONES    | DEBBIE    | 73a3fe49-df95-4a7a-9809-0bb4009f414b |
-| SNA         | JONES    | TAMERA    | e015fc77-45bf-4a40-9721-f8f3248497a1 |
-| SNA         | JONES    | ERIC      | 33e31b53-b540-45e3-97d7-d2353a49f9c6 |
-| DTW         | ADAMS    | KAREN     | e4dcba22-56d6-4e53-adbc-23fd84aece72 |
-| DTW         | ADAMS    | MIKE      | 3879ba60-827e-4535-bf4e-246ca8807ba1 |
-| BUR         | JONES    | SAMANTHA  | 3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b |
-| LAX         | SHARMA   | PANKAJ    | 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 |
-|---------------------------------------------------------------------------|
+"2023-10-30T23:38:55.129Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
+*Description*: Creates a new matrix
 
 ```sql
 vector = [2.0, 1.0, 3.0]
@@ -240,8 +197,55 @@ matrixA * vector
 ```sql
 [13.0, 31.0, 49.0]
 ```
-<a name="String_Literals_and_Interpolation"></a>
-### String Literals and Interpolation
+<a name="String_Literals_Double_quoted_"></a>
+### String Literals (Double-quoted)
+*Description*: Declare strings
+
+```sql
+item = { name : "Larry" }
+"Hello {{ item.name }},\nhow are you?\nFine, I hope!"
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+```
+<a name="String_Literals_Single_quoted_"></a>
+### String Literals (Single-quoted)
+*Description*: Declare strings
+
+```sql
+item = { name : "Larry" }
+'Hello {{ item.name }},\nhow are you?\nFine, I hope!'
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+```
+<a name="String_Literals_Triple_Double_quoted_"></a>
+### String Literals (Triple-Double-quoted)
+*Description*: Declare multiline strings
+
+```sql
+item = { name : "Larry" }
+"""|Hello {{ item.name }},
+   |how are you?
+   |Fine, I hope!
+   |""".stripMargin('|')
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+
+```
+<a name="String_Literals_Triple_Single_quoted_"></a>
+### String Literals (Triple-Single-quoted)
+*Description*: Declare multiline strings
 
 ```sql
 item = { name : "Larry" }
@@ -677,11 +681,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 3    | ♦    |
-| 8    | ♠    |
-| 5    | ♦    |
-| Q    | ♠    |
-| K    | ♠    |
+| 8    | ♥    |
+| J    | ♥    |
+| 6    | ♣    |
+| 7    | ♣    |
+| 3    | ♠    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
@@ -798,10 +802,10 @@ async { OS.listFiles("./app") }
 |-------------------------------------------------------------------------------------------------------------------------------------|
 | name        | canonicalPath                                   | lastModified             | length | isDirectory | isFile | isHidden |
 |-------------------------------------------------------------------------------------------------------------------------------------|
-| .DS_Store   | /Users/ldaniels/GitHub/qwery-v4/app/.DS_Store   | 2023-10-24T15:36:47.670Z |   6148 | false       | true   | true     |
-| core        | /Users/ldaniels/GitHub/qwery-v4/app/core        | 2023-05-23T21:20:11.818Z |    160 | true        | false  | false    |
-| target      | /Users/ldaniels/GitHub/qwery-v4/app/target      | 2023-06-29T22:26:20.958Z |    192 | true        | false  | false    |
-| jdbc-driver | /Users/ldaniels/GitHub/qwery-v4/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
+| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-10-30T21:46:39.057Z |   6148 | false       | true   | true     |
+| core        | /Users/ldaniels/GitHub/lollypop/app/core        | 2023-05-23T21:20:11.818Z |    160 | true        | false  | false    |
+| target      | /Users/ldaniels/GitHub/lollypop/app/target      | 2023-06-29T22:26:20.958Z |    192 | true        | false  | false    |
+| jdbc-driver | /Users/ldaniels/GitHub/lollypop/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
 |-------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### every (Asynchronous/Distributed/Reactive &#8212; Reactive)
@@ -875,7 +879,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="be9447ca-9fee-4af1-8527-2992c2cdfcce")
+', message="OK", statusCode=200, responseID="20ffcc7e-33ed-4f24-8243-8c917229c9a4")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -885,7 +889,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="68d95266-54ef-4d37-9435-e218f51aa204")
+HttpResponse(body=null, message=null, statusCode=200, responseID="2945dc08-a3ea-4427-92e0-11a92dee2282")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -895,7 +899,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="22c23906-a3b2-4dd6-8865-9f131a2d1bf4")
+HttpResponse(body=null, message=null, statusCode=200, responseID="2f7e48af-9230-4d13-9332-49660d520e0c")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -914,7 +918,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@6ef7623", message="OK", statusCode=200, responseID="55c93ac8-0fb3-40df-8714-c6e733e42d8e")
+HttpResponse(body="java.io.PrintStream@718f3088", message="OK", statusCode=200, responseID="bc54d515-e8f7-41c4-8bef-d5204217f6d8")
 ```
 ##### Console Output
 ```
@@ -979,7 +983,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[15859, 10383, 9536]
+[11173, 9971, 10327, 10662, 11754, 10280, 12538, 10869, 15421, 8415, 15736, 15159, 13915, 8855, 12402, 9269, 8247, 8029, 15296, 15416, 9172]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Starts a Lollypop peer node.
@@ -989,7 +993,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-14302
+14192
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: shuts down a running Lollypop peer node.
@@ -1051,7 +1055,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@6ef7623
+java.io.PrintStream@718f3088
 ```
 ##### Console Output
 ```
@@ -1071,7 +1075,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@6ef7623
+java.io.PrintStream@718f3088
 ```
 ##### Console Output
 ```
@@ -1104,10 +1108,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-10-30T05:35:37.089Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-30T05:35:37.089Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-10-30T05:35:37.089Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-30T05:35:37.089Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-10-30T23:38:58.178Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-10-30T23:38:58.178Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-10-30T23:38:58.178Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-10-30T23:38:58.178Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1122,7 +1126,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@6ef7623
+java.io.PrintStream@718f3088
 ```
 ##### Console Output
 ```
@@ -1199,15 +1203,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| AMEX      | ZQOF   |  59.6916 | 2023-10-30T05:35:28.185Z |
-| NYSE      | RW     |  68.1486 | 2023-10-30T05:35:25.387Z |
-| NASDAQ    | XM     |  46.9782 | 2023-10-30T05:35:20.051Z |
-| OTHER_OTC | CCIF   |   0.7762 | 2023-10-30T05:35:09.407Z |
-| AMEX      | SB     |  54.7457 | 2023-10-30T05:34:43.503Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| OTCBB    | SYTHG  |   0.2605 | 2023-10-30T23:38:11.736Z |
+| OTCBB    | PHSQW  |   3.7628 | 2023-10-30T23:38:42.447Z |
+| AMEX     | FZ     |  36.3053 | 2023-10-30T23:38:37.391Z |
+| OTCBB    | WFTY   |   1.9164 | 2023-10-30T23:38:23.184Z |
+| AMEX     | OZ     |  57.8843 | 2023-10-30T23:38:48.008Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -1275,7 +1279,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.562292, _2=720.0)
+Tuple2(_1=0.316125, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1431,7 +1435,7 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@6ef7623
+java.io.PrintStream@718f3088
 ```
 ##### Console Output
 ```
@@ -1446,7 +1450,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5c089b2f
+java.io.PrintStream@11bfd751
 ```
 ##### Console Error
 ```
@@ -1466,9 +1470,9 @@ this
 | name   | kind                | value                                                                    |
 |---------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                       |
-| stdout | PrintStream         | java.io.PrintStream@6ef7623                                              |
-| stdin  | BufferedReader      | java.io.BufferedReader@64e1dd11                                          |
-| stderr | PrintStream         | java.io.PrintStream@5c089b2f                                             |
+| stdout | PrintStream         | java.io.PrintStream@718f3088                                             |
+| stdin  | BufferedReader      | java.io.BufferedReader@11adab6d                                          |
+| stderr | PrintStream         | java.io.PrintStream@11bfd751                                             |
 | OS     | OS                  | lollypop.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                        |
 | e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -1924,7 +1928,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-10-30T05:35:38.212Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-10-30T23:38:59.397Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative)
@@ -2074,11 +2078,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-10-30T05:35:38.266Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-10-30T05:35:38.267Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-10-30T23:38:59.433Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-10-30T23:38:59.433Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-10-30T05:35:38.267Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-10-30T23:38:59.433Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative)
@@ -2215,12 +2219,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-10-30T05:35:38.379Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-10-30T05:35:38.379Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-10-30T05:35:38.379Z | VV     | OTCBB     |          |
-| 2023-10-30T05:35:38.379Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-10-30T05:35:38.380Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-10-30T05:35:38.380Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-10-30T23:38:59.564Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-10-30T23:38:59.564Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-10-30T23:38:59.564Z | VV     | OTCBB     |          |
+| 2023-10-30T23:38:59.564Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-10-30T23:38:59.564Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-10-30T23:38:59.564Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative)
@@ -2253,7 +2257,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (Dataframe Management &#8212; Declarative)
@@ -2538,7 +2542,7 @@ truncate @@stocks
 ## Filtering/Pattern Matching Examples
 <hr>
 
-### between (Filtering/Pattern Matching &#8212; Procedural)
+### between (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` is between the `to` and `from` (inclusive)
 
 ```sql
@@ -2564,7 +2568,7 @@ from (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 ```
-### betwixt (Filtering/Pattern Matching &#8212; Procedural)
+### betwixt (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` is between the `to` and `from` (non-inclusive)
 
 ```sql
@@ -2605,7 +2609,7 @@ end
 ```sql
 Oil-Gas
 ```
-### contains¹ (Filtering/Pattern Matching &#8212; Procedural)
+### contains¹ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2616,7 +2620,7 @@ string contains "World"
 ```sql
 true
 ```
-### contains² (Filtering/Pattern Matching &#8212; Procedural)
+### contains² (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2627,7 +2631,7 @@ dict contains "name"
 ```sql
 true
 ```
-### contains³ (Filtering/Pattern Matching &#8212; Procedural)
+### contains³ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2717,7 +2721,7 @@ group by lastName having members > 1
 <img src="./docs/images/Travelers.png">
 </div>
 
-### in (Filtering/Pattern Matching &#8212; Procedural)
+### in (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2777,7 +2781,7 @@ inner join companies_A as B on A.symbol is B.symbol
 | GreedIsGood.com | GREED  | NASDAQ   |  2345.78 |
 |------------------------------------------------|
 ```
-### is¹ (Filtering/Pattern Matching &#8212; Procedural)
+### is¹ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
 
 ```sql
@@ -2788,7 +2792,7 @@ x is 200
 ```sql
 true
 ```
-### is² (Filtering/Pattern Matching &#8212; Procedural)
+### is² (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
 
 ```sql
@@ -2799,7 +2803,7 @@ x is 200
 ```sql
 false
 ```
-### isCodecOf (Filtering/Pattern Matching &#8212; Procedural)
+### isCodecOf (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: determines whether the `expression` is compatible with the `CODEC`
 
 ```sql
@@ -2809,7 +2813,7 @@ false
 ```sql
 true
 ```
-### isDefined (Filtering/Pattern Matching &#8212; Procedural)
+### isDefined (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: Returns true if the field or variable exists within the scope.
 
 ```sql
@@ -2819,7 +2823,7 @@ isDefined(counter)
 ```sql
 false
 ```
-### isNotNull (Filtering/Pattern Matching &#8212; Procedural)
+### isNotNull (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: Returns true if the expression is not null, otherwise false.
 
 ```sql
@@ -2829,7 +2833,7 @@ isNotNull('yes')
 ```sql
 true
 ```
-### isnt¹ (Filtering/Pattern Matching &#8212; Procedural)
+### isnt¹ (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: returns true if the `value` is not exactly the `expression`; otherwise false
 
 ```sql
@@ -2840,7 +2844,7 @@ x isnt 200
 ```sql
 true
 ```
-### isnt² (Filtering/Pattern Matching &#8212; Procedural)
+### isnt² (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: returns true if the `value` is not exactly the `expression`; otherwise false
 
 ```sql
@@ -2851,7 +2855,7 @@ x isnt 200
 ```sql
 false
 ```
-### isNull (Filtering/Pattern Matching &#8212; Procedural)
+### isNull (Filtering/Pattern Matching &#8212; Declarative)
 *Description*: Returns true if the expression is null, otherwise false.
 
 ```sql
@@ -3107,7 +3111,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-10-30T05:35:39.399Z
+2023-10-30T23:39:00.726Z
 ```
 ### new² (JVM and Reflection &#8212; Object-Oriented)
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3148,7 +3152,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@63f3366a
+scala.Function1$@61288814
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -3197,18 +3201,6 @@ f(5)
 25
 ```
 ### =>² (Scope/Session &#8212; Declarative)
-*Description*: Define lambda functions
-
-```sql
-import "java.lang.Math"
-pythagoros = (a, b) => Math.sqrt((a * a) + (b * b))
-pythagoros(3, 4)
-```
-##### Results
-```sql
-5.0
-```
-### =>³ (Scope/Session &#8212; Declarative)
 *Description*: Define objects literally using JSON syntax
 
 ```sql
@@ -3263,26 +3255,15 @@ r = select value: 1
 |     1 |
 |-------|
 ```
-### []¹ (Scope/Session &#8212; Declarative)
-*Description*: Define arrays
+### [] (Scope/Session &#8212; Declarative)
+*Description*: Define arrays and apply monadic functions
 
 ```sql
-['A', 'B', 'C', 'D', 'E', 'F'].reverse()
+[1, 3, 5, 7].foldLeft(0, (a, b) => a + b)
 ```
 ##### Results
 ```sql
-['F', 'E', 'D', 'C', 'B', 'A']
-```
-### []² (Scope/Session &#8212; Declarative)
-*Description*: Perform collection-like operations on arrays
-
-```sql
-abc = [n => 2 * n, n => 3 * n, n => n * n]
-abc.map(f => f(4))
-```
-##### Results
-```sql
-[8, 12, 16]
+16
 ```
 ### [_ to _] (Scope/Session &#8212; Declarative)
 *Description*: Define logical arrays
@@ -3334,7 +3315,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T05:35:39.826Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-10-30T23:39:00.867Z")
 ```
 ### destroy (Scope/Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3397,7 +3378,33 @@ x.a.b.c
 ```sql
 98
 ```
-### String (Scope/Session &#8212; Declarative)
+### String¹ (Scope/Session &#8212; Declarative)
+*Description*: Declare strings
+
+```sql
+item = { name : "Larry" }
+"Hello {{ item.name }},\nhow are you?\nFine, I hope!"
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+```
+### String² (Scope/Session &#8212; Declarative)
+*Description*: Declare strings
+
+```sql
+item = { name : "Larry" }
+'Hello {{ item.name }},\nhow are you?\nFine, I hope!'
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+```
+### String³ (Scope/Session &#8212; Declarative)
 *Description*: Declare multiline strings
 
 ```sql
@@ -3406,6 +3413,23 @@ item = { name : "Larry" }
    |how are you?
    |Fine, I hope!
    |'''.stripMargin('|')
+```
+##### Results
+```sql
+Hello Larry,
+how are you?
+Fine, I hope!
+
+```
+### String (Scope/Session &#8212; Declarative)
+*Description*: Declare multiline strings
+
+```sql
+item = { name : "Larry" }
+"""|Hello {{ item.name }},
+   |how are you?
+   |Fine, I hope!
+   |""".stripMargin('|')
 ```
 ##### Results
 ```sql
@@ -3426,9 +3450,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | lollypop.lang.Random            |
-| stdout | PrintStream    | java.io.PrintStream@6ef7623     |
-| stdin  | BufferedReader | java.io.BufferedReader@64e1dd11 |
-| stderr | PrintStream    | java.io.PrintStream@5c089b2f    |
+| stdout | PrintStream    | java.io.PrintStream@718f3088    |
+| stdin  | BufferedReader | java.io.BufferedReader@11adab6d |
+| stderr | PrintStream    | java.io.PrintStream@11bfd751    |
 | OS     | OS             | lollypop.lang.OS                |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3446,16 +3470,17 @@ val greeting: String = 'Hello World'
 var customer_id: Int = 5
 ```
 ### {} (Scope/Session &#8212; Declarative)
-*Description*: Dynamically create dictionary/object literals
+*Description*: Dynamically create objects (e.g. JSON)
 
 ```sql
 response = { 'message1' : 'Hello World' }
 response.message2 = 'Hallo Monde'
+response.message3 = ['Hello', 'Hallo', 'World', 'Monde']
 response
 ```
 ##### Results
 ```sql
-{"message1": "Hello World", "message2": "Hallo Monde"}
+{"message1": "Hello World", "message2": "Hallo Monde", "message3": ["Hello", "Hallo", "World", "Monde"]}
 ```
 <a name="System_Tools"></a>
 ## System Tools Examples
@@ -3469,7 +3494,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-10-30T05:35:39.840Z
+2023-10-30T23:39:00.894Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -3512,7 +3537,7 @@ order by category
 | Dataframe Management              |    14 |
 | Filtering/Pattern Matching        |    26 |
 | JVM and Reflection                |    14 |
-| Scope/Session                     |    22 |
+| Scope/Session                     |    23 |
 | System Tools                      |    12 |
 | Testing - Unit/Integration        |     5 |
 | Transformation                    |     6 |
@@ -3579,7 +3604,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-10-30T05:35:39.885Z"
+"2023-10-30T23:39:00.952Z"
 ```
 ### include (System Tools &#8212; Declarative)
 *Description*: incorporates the contents of an external file into current scope
@@ -3646,7 +3671,7 @@ true
 ##### Console Error
 ```
 [0.000458ms] AnyLiteral 1 ~> 1 <Integer>
-[0.307208ms] SetAnyVariable set x = 1 ~> null <null>
+[0.429000ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3660,7 +3685,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5c089b2f
+java.io.PrintStream@11bfd751
 ```
 ##### Console Error
 ```
@@ -3859,7 +3884,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@6ef7623
+java.io.PrintStream@718f3088
 ```
 ##### Console Output
 ```
