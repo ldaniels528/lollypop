@@ -7,7 +7,7 @@ import com.lollypop.language.{LollypopUniverse, dieUnsupportedType}
 import com.lollypop.runtime.LollypopNative
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.functions.Iff
-import com.lollypop.runtime.instructions.invocables.IF
+import com.lollypop.runtime.instructions.invocables.{IF, Switch}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 
 /**
@@ -63,13 +63,13 @@ trait Inferences {
       case q: LollypopNative => q.returnType
       // specific
       case ArrayFromRange(a, b) => ArrayType(componentType = resolveType(inferType(a), inferType(b)))
-      case Case(whens, otherwise) => resolveType((whens.map(_.result) ::: otherwise.toList).map(recurse): _*)
       case CodeBlock(ops) => ops.lastOption.map(recurse) || AnyType
       case IF(_, onTrue, onFalse) => ifA(onTrue, onFalse)
       case Iff(_, onTrue, onFalse) => ifB(onTrue, onFalse)
       case UnaryOperation(a) => resolveType(recurse(a))
       case BinaryOperation(a, b) => resolveType(recurse(a), recurse(b))
       case New(Atom(typeName), _, _) => AnyType(typeName)
+      case Switch(_, cases) => resolveType(cases.map(_.result).map(recurse): _*)
       // generic
       case _: Queryable => TableType(columns = Nil)
       case _ => AnyType

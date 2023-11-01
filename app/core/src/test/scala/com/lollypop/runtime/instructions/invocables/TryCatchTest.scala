@@ -105,12 +105,11 @@ class TryCatchTest extends AnyFunSpec {
       val (scope, _, result) = LollypopVM.executeSQL(Scope(),
         """|var n = 1
            |var error: String = null
-           |try n / 0 catch e => {
-           |  case
-           |    when typeOf(e) is "java.lang.RuntimeException" -> error = "RuntimeException: {{e.getMessage()}}"
-           |    else error = e.getMessage()
-           |  end
-           |}
+           |try n / 0 catch e =>
+           |  switch typeOf(e)
+           |    case "java.lang.RuntimeException" ~>
+           |      error = "RuntimeException: {{e.getMessage()}}"
+           |    case _ ~> error = e.getMessage()
            |finally n = -1
            |n
            |""".stripMargin)
