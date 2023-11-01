@@ -21,10 +21,10 @@ level = 1
 
 def getCardScore(hand) := {
     def computeScore(aceScore: Int) := {
-        (select score: sum(case
-                           when face is "A" -> aceScore
-                           when face between "2" and "9" -> Int(face)
-                           else 10 end)
+        (select score: sum(switch face
+                               case "A" ~> aceScore
+                               case face between "2" and "9" ~> Int(face)
+                               case _ ~> 10)
         from @@hand)[0][0]
     }
 

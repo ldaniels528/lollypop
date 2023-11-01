@@ -20,7 +20,7 @@ class MacroCallTest extends AnyFunSpec with VerificationTools {
            |  [1 to qty].map(_ => {
            |      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
            |      is_otc = exchange.startsWith("OT")
-           |      lastSaleLimit = case exchange when "OTCBB" -> 5.0 when "OTHER_OTC" -> 1.0 else 100.0 end
+           |      lastSaleLimit = switch exchange case "OTCBB" then 5.0 case "OTHER_OTC" then 1.0 case _ then 100.0
            |      lastSale = scaleTo(lastSaleLimit * Random.nextDouble(1.0), 4)
            |      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
            |      symbol = Random.nextString(['A' to 'Z'], iff(exchange.startsWith("OT"), Random.nextInt(2) + 4, Random.nextInt(4) + 2))
@@ -41,7 +41,7 @@ class MacroCallTest extends AnyFunSpec with VerificationTools {
            |  [1 to qty].map(_ => {
            |      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
            |      is_otc = exchange.startsWith("OT")
-           |      lastSaleLimit = case exchange when "OTCBB" -> 5.0 when "OTHER_OTC" -> 1.0 else 100.0 end
+           |      lastSaleLimit = switch exchange case "OTCBB" then 5.0 case "OTHER_OTC" then 1.0 case _ then 100.0
            |      lastSale = scaleTo(lastSaleLimit * Random.nextDouble(1.0), 4)
            |      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
            |      symbol = Random.nextString(['A' to 'Z'], iff(exchange.startsWith("OT"), Random.nextInt(2) + 4, Random.nextInt(4) + 2))
@@ -61,7 +61,7 @@ class MacroCallTest extends AnyFunSpec with VerificationTools {
            |  [1 to qty].map(_ => {
            |      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
            |      is_otc = exchange.startsWith("OT")
-           |      lastSaleLimit = case exchange when "OTCBB" -> 5.0 when "OTHER_OTC" -> 1.0 else 100.0 end
+           |      lastSaleLimit = switch exchange case "OTCBB" then 5.0 case "OTHER_OTC" then 1.0 case _ then 100.0
            |      lastSale = scaleTo(lastSaleLimit * Random.nextDouble(1.0), 4)
            |      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
            |      symbol = Random.nextString(['A' to 'Z'], iff(exchange.startsWith("OT"), Random.nextInt(2) + 4, Random.nextInt(4) + 2))
