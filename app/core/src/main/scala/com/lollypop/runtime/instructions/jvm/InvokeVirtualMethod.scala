@@ -7,6 +7,7 @@ import com.lollypop.runtime.instructions.expressions.{NamedFunctionCall, Runtime
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Invoke a Virtual Method
@@ -17,13 +18,14 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  */
 case class InvokeVirtualMethod(instance: Expression, method: Expression) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = {
-    method match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val result = method match {
       case NamedFunctionCall(name, args) =>
         val inst = LollypopVM.execute(scope, instance)._3
         inst.invokeVirtualMethod(name, args)
       case x => x.dieIllegalType()
     }
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = Seq(instance.wrapSQL, ".!", method.wrapSQL).mkString
@@ -31,10 +33,10 @@ case class InvokeVirtualMethod(instance: Expression, method: Expression) extends
 }
 
 object InvokeVirtualMethod extends ExpressionChainParser {
-  private val __name = ".!"
+  private val keyword = ".!"
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_JVM_REFLECTION,
     paradigm = PARADIGM_OBJECT_ORIENTED,
     syntax = "",
@@ -46,11 +48,11 @@ object InvokeVirtualMethod extends ExpressionChainParser {
   ))
 
   override def parseExpressionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Expression] = {
-    if (ts nextIf __name) {
+    if (ts nextIf keyword) {
       compiler.nextExpression(ts).map(InvokeVirtualMethod(host, _)) ?? ts.dieExpectedIdentifier()
     } else None
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

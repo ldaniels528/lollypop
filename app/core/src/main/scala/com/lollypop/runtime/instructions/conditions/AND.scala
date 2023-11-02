@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.models.Condition
 import com.lollypop.language.{ConditionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.Scope
+import lollypop.io.IOCost
 
 /**
  * SQL: `condition` and `condition`
@@ -11,7 +12,9 @@ import com.lollypop.runtime.Scope
  */
 case class AND(a: Condition, b: Condition) extends RuntimeCondition {
 
-  override def isTrue(implicit scope: Scope): Boolean = RuntimeCondition.isTrue(a) && RuntimeCondition.isTrue(b)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, IOCost.empty, RuntimeCondition.isTrue(a) && RuntimeCondition.isTrue(b))
+  }
 
   override def toSQL: String = s"${a.wrapSQL} and ${b.wrapSQL}"
 

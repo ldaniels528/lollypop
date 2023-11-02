@@ -31,9 +31,11 @@ object Destroy extends InvokableParser {
     example = "destroy stocks"
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Destroy = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Destroy(ref = params.expressions("name"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Destroy] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Destroy(ref = params.expressions("name")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "destroy"

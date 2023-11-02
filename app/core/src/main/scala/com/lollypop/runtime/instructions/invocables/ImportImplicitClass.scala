@@ -44,9 +44,11 @@ object ImportImplicitClass extends InvokableParser {
     ))
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): ImportImplicitClass = {
-    val params = SQLTemplateParams(ts, templateCard)
-    ImportImplicitClass(params.expressions("target"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ImportImplicitClass] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(ImportImplicitClass(params.expressions("target")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "import implicit"

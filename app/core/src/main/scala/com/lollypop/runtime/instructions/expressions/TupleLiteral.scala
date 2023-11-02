@@ -8,15 +8,16 @@ import com.lollypop.runtime.instructions.functions.ArgumentBlock
 import com.lollypop.runtime.plastics.Tuples.seqToTuple
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Represents a collection of arguments
  */
 case class TupleLiteral(args: List[Expression]) extends RuntimeExpression with ArgumentBlock with Literal {
 
-  override def evaluate()(implicit scope: Scope): Any = {
-    val (_, _, values) = LollypopVM.transform(scope, args)
-    seqToTuple(values)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val (scopeA, costA, values) = LollypopVM.transform(scope, args)
+    (scopeA, costA, seqToTuple(values).orNull)
   }
 
   override def parameters: List[ParameterLike] = args.map {

@@ -7,6 +7,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.plastics.RuntimeClass.getClassByName
+import lollypop.io.IOCost
 
 /**
  * ClassOf() function - returns the Class instance for a given classname
@@ -16,8 +17,8 @@ import com.lollypop.runtime.plastics.RuntimeClass.getClassByName
  * }}}
  */
 case class ClassOf(expression: Expression) extends ScalarFunctionCall with RuntimeExpression {
-  override def evaluate()(implicit scope: Scope): Class[_] = {
-    expression.asString.map(getClassByName).orNull
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Class[_]) = {
+    (scope, IOCost.empty, expression.asString.map(getClassByName).orNull)
   }
 }
 

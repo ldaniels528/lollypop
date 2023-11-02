@@ -7,6 +7,8 @@ import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.{LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
+import java.util.Date
+
 
 class AssumeConditionTest extends AnyFunSpec {
 
@@ -19,7 +21,7 @@ class AssumeConditionTest extends AnyFunSpec {
 
     it("should fail if the host instruction does not evaluate as a Condition") {
       assertThrows[LollypopException] {
-        val model = ArrayLiteral(1.v, 2.v, 3.v).asCondition
+        val model = new Date().v.asCondition
         LollypopVM.execute(Scope(), model)
       }
     }

@@ -57,12 +57,14 @@ object CreateMacro extends ModifiableParser with SQLLanguageParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateMacro = {
-    val params = SQLTemplateParams(ts, template)
-    CreateMacro(
-      ref = params.locations("name"),
-      ifNotExists = params.indicators.get("exists").contains(true),
-      `macro` = Macro.parseMacro(params))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateMacro] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateMacro(
+        ref = params.locations("name"),
+        ifNotExists = params.indicators.get("exists").contains(true),
+        `macro` = Macro.parseMacro(params)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create macro"

@@ -46,7 +46,7 @@ class SQLSupportTest extends AnyFunSpec {
       assert(device.getLength == rows.length)
 
       // perform a simple query
-      val (_, _, resultsA) = device.select("*".f).where("exchange".f === "OTCBB").search()
+      val (_, _, resultsA) = device.select("*".f).where("exchange".f === "OTCBB").execute()
       resultsA.toMapGraph foreach (row => logger.info(s"row: $row"))
       assert(resultsA.toMapGraph == List(
         Map("exchange" -> "OTCBB", "symbol" -> "SCAM.OB", "lastSale" -> 0.001)
@@ -57,7 +57,7 @@ class SQLSupportTest extends AnyFunSpec {
         .select("exchange".f, Max("lastSale".f) as "maxLastSale", Count("*".f) as "total")
         .groupBy("exchange".f)
         .orderBy("total".desc)
-        .search()
+        .execute()
 
       resultsB.toMapGraph foreach (row => logger.info(s"row: $row"))
       assert(resultsB.toMapGraph == List(

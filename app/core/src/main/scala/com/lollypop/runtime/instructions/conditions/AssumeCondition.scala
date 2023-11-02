@@ -1,16 +1,14 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.{Condition, Instruction}
+import com.lollypop.runtime.datatypes.BooleanType
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 case class AssumeCondition(instruction: Instruction) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
-    val (scope0, _, result0) = LollypopVM.execute(scope, instruction)
-    result0 match {
-      case b: Boolean => b
-      case o: Option[_] => o.nonEmpty
-      case z => instruction.dieExpectedBoolean(z)
-    }
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val (s, c, r) = LollypopVM.execute(scope, instruction)
+    (s, c, BooleanType.convert(r))
   }
 
   override def toSQL: String = instruction.toSQL

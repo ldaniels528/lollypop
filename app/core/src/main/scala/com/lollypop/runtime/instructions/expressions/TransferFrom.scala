@@ -8,6 +8,7 @@ import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.Streamable.{getInputStream, getOutputStream}
 import com.lollypop.runtime.instructions.expressions.TransferFrom._symbol
 import com.lollypop.util.ResourceHelper.AutoClose
+import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
 
 import java.io.OutputStream
@@ -34,12 +35,14 @@ import java.io.OutputStream
  * }}}
  */
 case class TransferFrom(a: Expression, b: Expression) extends RuntimeExpression {
-  override def evaluate()(implicit scope: Scope): OutputStream = {
-    getInputStream(b).use(in =>
+
+  override def execute()(implicit scope: Scope): (Scope, IOCost, OutputStream) = {
+    val result = getInputStream(b).use(in =>
       getOutputStream(a) ~> { out =>
         IOUtils.copy(in, out)
         out
       })
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = Seq(a.toSQL, _symbol, b.toSQL).mkString(" ")

@@ -6,15 +6,16 @@ import com.lollypop.runtime.datatypes.BooleanType
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * Runtime Condition
  */
-trait RuntimeCondition extends Condition with RuntimeExpression {
+trait RuntimeCondition extends RuntimeExpression with Condition {
 
-  override def evaluate()(implicit scope: Scope): Boolean = isTrue
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean)
 
-  def isTrue(implicit scope: Scope): Boolean
+  def isTrue(implicit scope: Scope): Boolean = execute()._3
 
   def isFalse(implicit scope: Scope): Boolean = !isTrue
 
@@ -26,10 +27,10 @@ trait RuntimeCondition extends Condition with RuntimeExpression {
 object RuntimeCondition {
 
   def isTrue(expression: Expression)(implicit scope: Scope): Boolean = expression match {
-    case cond: RuntimeCondition => cond.isTrue
-    case expr: RuntimeExpression => BooleanType.convert(expr.evaluate())
-    case queryable: RuntimeQueryable => BooleanType.convert(LollypopVM.search(scope, queryable)._3)
-    case unknown => dieUnsupportedEntity(unknown, entityName = "condition")
+    case c: RuntimeCondition => c.isTrue
+    case e: RuntimeExpression => BooleanType.convert(e.execute()._3)
+    case q: RuntimeQueryable => BooleanType.convert(LollypopVM.search(scope, q)._3)
+    case u => dieUnsupportedEntity(u, entityName = "condition")
   }
 
   def isFalse(expression: Expression)(implicit scope: Scope): Boolean = !isTrue(expression)

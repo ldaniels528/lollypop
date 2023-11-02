@@ -5,9 +5,12 @@ import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.NotImplemented._symbol
+import lollypop.io.IOCost
 
 case class NotImplemented() extends RuntimeExpression {
-  override def evaluate()(implicit scope: Scope): Any = this.dieNotImplemented()
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    this.dieNotImplemented()
+  }
 
   override def toSQL: String = _symbol
 }

@@ -9,6 +9,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Represents the sum function
@@ -30,12 +31,13 @@ case class Sum(expression: Expression) extends AggregateFunctionCall
     }
   }
 
-  override def evaluate()(implicit scope: Scope): Double = {
-    compute(expression, { (rc: RowCollection, columnID: Int) =>
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Double) = {
+    val result = compute(expression, { (rc: RowCollection, columnID: Int) =>
       var sum: Double = 0
       rc.foreach { row => sum += Float64Type.convert(row.fields(columnID).value) }
       sum
     })
+    (scope, IOCost.empty, result)
   }
 
 }

@@ -134,14 +134,16 @@ object InsertInto extends ModifiableParser with InsertValues {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): InsertInto = {
-    val params = SQLTemplateParams(ts, template)
-    InsertInto(
-      ref = params.locations("target"),
-      source = params.instructions("source").asQueryable,
-      fields = params.fieldLists.getOrElse("fields", Nil),
-      condition = params.conditions.get("condition"),
-      limit = params.expressions.get("limit"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[InsertInto] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(InsertInto(
+        ref = params.locations("target"),
+        source = params.instructions("source").asQueryable,
+        fields = params.fieldLists.getOrElse("fields", Nil),
+        condition = params.conditions.get("condition"),
+        limit = params.expressions.get("limit")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "insert into"

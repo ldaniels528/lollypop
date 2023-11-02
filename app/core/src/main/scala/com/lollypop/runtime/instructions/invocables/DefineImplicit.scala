@@ -87,9 +87,11 @@ object DefineImplicit extends InvokableParser {
     ))
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DefineImplicit = {
-    val params = SQLTemplateParams(ts, template)
-    DefineImplicit(className = params.atoms("class"), methods = params.instructions("methods"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DefineImplicit] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(DefineImplicit(className = params.atoms("class"), methods = params.instructions("methods")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "implicit class"

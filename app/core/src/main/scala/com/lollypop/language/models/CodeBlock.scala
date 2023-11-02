@@ -43,11 +43,13 @@ object CodeBlock extends InvokableParser {
 
   override def help: List[HelpDoc] = Nil
 
-  override def parseInvokable(stream: TokenStream)(implicit compiler: SQLCompiler): CodeBlock = {
-    stream match {
-      case ts if ts is "begin" => parseSequence(ts, "begin", "end")
-      case ts => ts.dieExpectedKeywords("begin")
-    }
+  override def parseInvokable(stream: TokenStream)(implicit compiler: SQLCompiler): Option[CodeBlock] = {
+    if (understands(stream)) {
+      stream match {
+        case ts if ts is "begin" => Option(parseSequence(ts, "begin", "end"))
+        case ts => ts.dieExpectedKeywords("begin")
+      }
+    } else None
   }
 
   private def parseSequence[A <: CodeBlock](ts: TokenStream, start: String, end: String)(implicit compiler: SQLCompiler): CodeBlock = {

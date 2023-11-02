@@ -102,16 +102,18 @@ object Update extends ModifiableParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Update = {
-    val params = SQLTemplateParams(ts, template)
-    Update(
-      ref = params.locations("name"),
-      modification = params.instructions("modification") match {
-        case smi: ScopeModification => smi
-        case ins => ts.dieExpectedScopeMutation(ins)
-      },
-      condition = params.conditions.get("condition"),
-      limit = params.expressions.get("limit"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Update] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(Update(
+        ref = params.locations("name"),
+        modification = params.instructions("modification") match {
+          case smi: ScopeModification => smi
+          case ins => ts.dieExpectedScopeMutation(ins)
+        },
+        condition = params.conditions.get("condition"),
+        limit = params.expressions.get("limit")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "update"

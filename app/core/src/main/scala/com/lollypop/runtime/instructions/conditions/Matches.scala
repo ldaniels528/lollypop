@@ -10,6 +10,7 @@ import com.lollypop.runtime.instructions.expressions.{NamedFunctionCall, New}
 import com.lollypop.runtime.instructions.functions.AnonymousNamedFunction
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.JVMSupport.NormalizeAny
+import lollypop.io.IOCost
 
 /**
  * Matches: Advanced Pattern Matching Operator
@@ -36,9 +37,9 @@ import com.lollypop.util.JVMSupport.NormalizeAny
  * }}}
  */
 case class Matches(expression: Expression, pattern: Expression) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
-    val (scopeA, _, aValue) = LollypopVM.execute(scope, expression)
-    pattern match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val (scopeA, costA, aValue) = LollypopVM.execute(scope, expression)
+    val result = pattern match {
       // "Hello World" matches "H.* W.*"
       case Literal(textPattern: String) =>
         aValue match {
@@ -54,6 +55,7 @@ case class Matches(expression: Expression, pattern: Expression) extends RuntimeC
         val (_, _, objectPattern) = LollypopVM.execute(scopeA, pattern)
         isMatch(src = aValue, pattern = objectPattern)
     }
+    (scope, costA, result)
   }
 
   override def toSQL: String = Seq(expression.toSQL, keyword, pattern.toSQL).mkString(" ")
@@ -76,7 +78,7 @@ case class Matches(expression: Expression, pattern: Expression) extends RuntimeC
         case (name: String, af: LambdaFunction) =>
           src.get(name).exists { value => LollypopVM.execute(scope, af.call(List(value.v)))._3 == true }
         case (name: String, af: AnonymousNamedFunction) =>
-          src.get(name).exists { value => af.call(List(value.v)).evaluate() == true }
+          src.get(name).exists { value => af.call(List(value.v)).execute()._3 == true }
         case (name: String, value) => src.get(name).exists(isMatch(_, value))
       }
       results.forall(_ == true)

@@ -6,8 +6,9 @@ import com.lollypop.language.models.{Condition, Expression, FieldRef}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.{Row, RowCollection}
-import com.lollypop.runtime.instructions.conditions.WhereIn.__name
+import com.lollypop.runtime.instructions.conditions.WhereIn.keyword
 import com.lollypop.util.OptionHelper.implicits.risky._
+import lollypop.io.IOCost
 
 /**
  * Represents a WhereIn clause
@@ -21,8 +22,8 @@ import com.lollypop.util.OptionHelper.implicits.risky._
  * }}}
  */
 case class WhereIn(field: Expression, condition: Condition) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
-    (for {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val result = (for {
       srcRow <- scope.getCurrentRow
       srcField <- srcRow.getField(field.getNameOrDie)
       srcTable <- srcField.value.collect { case rc: RowCollection => rc }
@@ -31,23 +32,24 @@ case class WhereIn(field: Expression, condition: Condition) extends RuntimeCondi
       srcTable.iterateWhere(condition = condition, limit = 1.v)(_.isActive) { (_: Scope, _: Row) => matched = true }
       matched
     }).contains(true)
+    (scope, IOCost.empty, result)
   }
 
-  override def toSQL: String = Seq(field.toSQL, __name, condition.toSQL).mkString(" ")
+  override def toSQL: String = Seq(field.toSQL, keyword, condition.toSQL).mkString(" ")
 }
 
 object WhereIn extends ExpressionToConditionPostParser {
-  private val __name = "wherein"
+  private val keyword = "wherein"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[WhereIn] = {
-    if (ts.nextIf(__name)) compiler.nextCondition(ts).map(WhereIn(host, _)) else None
+    if (ts.nextIf(keyword)) compiler.nextCondition(ts).map(WhereIn(host, _)) else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `expression`",
+    syntax = s"`value` $keyword `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
       """|stocks = Table(symbol: String(4), exchange: String(8), transactions: Table(price: Double, transactionTime: DateTime)[2])
@@ -65,6 +67,6 @@ object WhereIn extends ExpressionToConditionPostParser {
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

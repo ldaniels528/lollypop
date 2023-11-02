@@ -45,8 +45,10 @@ object Namespace extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Namespace = {
-    Namespace(expression = SQLTemplateParams(ts, template).expressions("path"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Namespace] = {
+    if (understands(ts)) {
+      Some(Namespace(expression = SQLTemplateParams(ts, template).expressions("path")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = Set("use", "namespace").exists(ts is _)

@@ -9,6 +9,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE2, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Represents a Assertion
@@ -23,8 +24,9 @@ case class Assert(condition: Expression, message: Expression) extends ScalarFunc
     inequalities.collect { case inEq if LollypopVM.execute(scope, inEq)._3 == false => inEq.negate.toSQL }
   }
 
-  override def isTrue(implicit scope: Scope): Boolean = {
-    if (RuntimeCondition.isTrue(condition)) true else die(message.asString || "Assertion failed")
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val (s, c, r) = LollypopVM.execute(scope, condition)
+    (s, c, if (r == true) true else die(message.asString || "Assertion failed"))
   }
 
   override def title: Option[Expression] = _title

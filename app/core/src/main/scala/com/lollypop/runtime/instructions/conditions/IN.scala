@@ -1,12 +1,12 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{ArrayExpression, Expression, Instruction, Queryable}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedEntity}
 import com.lollypop.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Creates an IN clause
@@ -15,27 +15,30 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  * @author lawrence.daniels@gmail.com
  */
 case class IN(expr: Expression, source: Instruction) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     source match {
-      case array: ArrayFromRange.Exclusive => Betwixt(expr, array.start, array.end).isTrue
-      case array: ArrayFromRange.Inclusive => Between(expr, array.start, array.end).isTrue
-      case array: ArrayLiteral => (LollypopVM.execute(scope, expr)._3, array.value.map(LollypopVM.execute(scope, _)._3)) ~> { case (value, rows) => rows.contains(value) }
-      case source: Queryable =>
-        val (scope1, cost1, value) = LollypopVM.execute(scope, expr)
-        val (_, _, device) = LollypopVM.search(scope1, source)
-        device.toList.exists(_.getField(0).value == value)
+      case a: ArrayFromRange.Exclusive => Betwixt(expr, a.start, a.end).execute()
+      case a: ArrayFromRange.Inclusive => Between(expr, a.start, a.end).execute()
+      case a: ArrayLiteral =>
+        val (s1, c1, value) = LollypopVM.execute(scope, expr)
+        val (s2, c2, rows) = LollypopVM.transform(s1, a.value)
+        (s2, c1 ++ c2, rows.contains(value))
+      case q: Queryable =>
+        val (s1, c1, value) = LollypopVM.execute(scope, expr)
+        val (s2, c2, device) = LollypopVM.search(s1, q)
+        (s2, c1 ++ c2, device.exists(_.getField(0).value == value))
       case unknown => dieUnsupportedEntity(unknown, entityName = "queryable")
     }
   }
 
-  override def toSQL: String = s"${expr.toSQL} in ${source.toSQL}"
+  override def toSQL: String = Seq(expr.toSQL, "in", source.toSQL).mkString(" ")
 }
 
 object IN extends ExpressionToConditionPostParser {
-  private val __name = "in"
+  private val keyword = "in"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[IN] = {
-    if (ts.nextIf(__name)) {
+    if (ts.nextIf(keyword)) {
       Option(host) map { expr =>
         ts match {
           case ts if ts is "(" => IN(expr, compiler.nextQueryOrVariableWithAlias(ts))
@@ -47,10 +50,10 @@ object IN extends ExpressionToConditionPostParser {
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `expression`",
+    syntax = s"`value` $keyword `expression`",
     description = "determines whether the `value` matches the `expression`",
     example =
       """|val stocks = (
@@ -68,6 +71,6 @@ object IN extends ExpressionToConditionPostParser {
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

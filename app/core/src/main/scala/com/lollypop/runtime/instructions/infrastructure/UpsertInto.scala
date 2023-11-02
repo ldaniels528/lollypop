@@ -118,13 +118,15 @@ object UpsertInto extends ModifiableParser with InsertValues {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): UpsertInto = {
-    val params = SQLTemplateParams(ts, template)
-    UpsertInto(
-      ref = params.locations("target"),
-      source = params.instructions("source").asQueryable,
-      fields = params.fieldLists.getOrElse("fields", Nil),
-      condition = params.conditions("condition"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[UpsertInto] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(UpsertInto(
+        ref = params.locations("target"),
+        source = params.instructions("source").asQueryable,
+        fields = params.fieldLists.getOrElse("fields", Nil),
+        condition = params.conditions("condition")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "upsert into"

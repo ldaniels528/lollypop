@@ -36,9 +36,11 @@ case class Trace(instruction: Instruction) extends RuntimeInvokable {
 object Trace extends InvokableParser {
   val templateCard = "trace %i:instruction"
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Trace = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Trace(params.instructions("instruction"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Trace] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Trace(params.instructions("instruction")))
+    } else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(

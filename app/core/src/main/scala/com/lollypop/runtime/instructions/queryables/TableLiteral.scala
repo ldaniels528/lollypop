@@ -35,9 +35,7 @@ case class TableLiteral(columns: List[TableColumn], value: List[List[Expression]
   extends AbstractTableExpression(columns) with RecordStructure with RuntimeQueryable with RuntimeExpression
     with Literal with TableRendering with TableExpression {
 
-  override def evaluate()(implicit scope: Scope): RowCollection = search()._3
-
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val device = createTempTable(columns, fixedRowCount = value.size)
     val columnNames = columns.map(_.name)
     val cost = (for {
@@ -54,7 +52,7 @@ case class TableLiteral(columns: List[TableColumn], value: List[List[Expression]
     s"\n$sql\n"
   }
 
-  override def toTable(implicit scope: Scope): RowCollection = search()(scope)._3
+  override def toTable(implicit scope: Scope): RowCollection = execute()(scope)._3
 
   override def toTableType: TableType = TableType(columns)
 
@@ -122,10 +120,12 @@ object TableLiteral extends QueryableParser with ExpressionParser {
   }
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[TableLiteral] = {
-    if (understands(ts)) Option(parseQueryable(ts)) else None
+    if (understands(ts)) Option(TableLiteral(toCells(ts))) else None
   }
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): TableLiteral = apply(toCells(ts))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[TableLiteral] = {
+    if (understands(ts)) Option(TableLiteral(toCells(ts))) else None
+  }
 
   override def help: List[HelpDoc] = Nil
 

@@ -5,6 +5,7 @@ import com.lollypop.language.models._
 import com.lollypop.runtime.datatypes.ConstructorSupport
 import com.lollypop.runtime.instructions.functions.InternalFunctionCall
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * Represents a named function call
@@ -14,7 +15,7 @@ import com.lollypop.runtime.{LollypopVM, Scope}
 case class NamedFunctionCall(name: String, args: List[Expression]) extends FunctionCall
   with RuntimeExpression with NamedExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // handle the spread operator
     val myArgs = args match {
       case Seq(SpreadOperator(ArrayLiteral(value))) => value
@@ -24,7 +25,7 @@ case class NamedFunctionCall(name: String, args: List[Expression]) extends Funct
     }
 
     try {
-      scope.resolveAny(name, myArgs) match {
+      val result = scope.resolveAny(name, myArgs) match {
         case fx: LambdaFunction => LollypopVM.execute(scope, LambdaFunctionCall(fx, myArgs))._3
         case fx: InternalFunctionCall => LollypopVM.execute(scope, fx)._3
         case fx: Procedure => LollypopVM.execute(scope.withParameters(fx.params, myArgs), fx.code)._3
@@ -32,6 +33,7 @@ case class NamedFunctionCall(name: String, args: List[Expression]) extends Funct
         case cs: ConstructorSupport[_] => cs.construct(LollypopVM.evaluate(scope, myArgs))
         case _ => processInternalOps(name.f, myArgs)
       }
+      (scope, IOCost.empty, result)
     } catch {
       case e: Throwable => this.die(e.getMessage, e)
     }

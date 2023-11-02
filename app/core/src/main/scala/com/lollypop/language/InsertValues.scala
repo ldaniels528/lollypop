@@ -3,6 +3,7 @@ package com.lollypop.language
 import com.lollypop.language.InsertValues.InsertSourceTemplateTag
 import com.lollypop.language.TemplateProcessor.tags.TemplateTag
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
+import com.lollypop.util.OptionHelper.OptionEnrichment
 
 trait InsertValues { self: LanguageParser =>
 
@@ -19,7 +20,7 @@ object InsertValues {
    */
   case class InsertSourceTemplateTag(name: String) extends TemplateTag {
     override def extract(stream: TokenStream)(implicit compiler: SQLCompiler): SQLTemplateParams = {
-      SQLTemplateParams(instructions = Map(name -> RowsOfValues.parseQueryable(stream)))
+      SQLTemplateParams(instructions = Map(name -> (RowsOfValues.parseQueryable(stream) || dieNoResultSet())))
     }
 
     override def toCode: String = s"%V:$name"

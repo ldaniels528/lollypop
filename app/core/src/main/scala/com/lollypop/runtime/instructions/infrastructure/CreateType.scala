@@ -48,9 +48,14 @@ object CreateType extends ModifiableParser with IfNotExists {
     example = "create type mood := Enum (sad, okay, happy)"
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateType = {
-    val params = SQLTemplateParams(ts, template)
-    CreateType(ref = params.locations("name"), userType = params.types("type"), ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateType] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateType(
+        ref = params.locations("name"),
+        userType = params.types("type"),
+        ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create type"

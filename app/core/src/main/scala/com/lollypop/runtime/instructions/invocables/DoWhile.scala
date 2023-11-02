@@ -34,6 +34,7 @@ case class DoWhile(code: Instruction, condition: Condition) extends RuntimeInvok
       val (s, c, r) = LollypopVM.execute(scope, _code)
       if (!s.isReturned && RuntimeCondition.isTrue(condition)(s)) recurse(s) else (s, c, r)
     }
+
     recurse(scope0)
   }
 
@@ -57,12 +58,14 @@ object DoWhile extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DoWhile = {
-    val params = SQLTemplateParams(ts, templateCard)
-    DoWhile(condition = params.conditions("condition"), code = params.instructions.get("command") match {
-      case Some(ops) => ops
-      case None => ts.dieExpectedInvokable()
-    })
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DoWhile] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(DoWhile(condition = params.conditions("condition"), code = params.instructions.get("command") match {
+        case Some(ops) => ops
+        case None => ts.dieExpectedInvokable()
+      }))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "do"

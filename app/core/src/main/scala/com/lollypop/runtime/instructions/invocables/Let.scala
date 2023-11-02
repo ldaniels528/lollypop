@@ -43,11 +43,13 @@ object Let extends InvokableParser {
     isExperimental = true
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Let = {
-    val params = SQLTemplateParams(ts, template)
-    Let(ref = params.atoms("ref"),
-      codec = AnonymousNamedFunction(params.atoms("codec").name),
-      initialValue = params.instructions("value"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Let] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(Let(ref = params.atoms("ref"),
+        codec = AnonymousNamedFunction(params.atoms("codec").name),
+        initialValue = params.instructions("value")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "let"

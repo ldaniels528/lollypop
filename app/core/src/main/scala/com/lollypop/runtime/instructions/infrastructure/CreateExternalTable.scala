@@ -95,13 +95,15 @@ object CreateExternalTable extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateExternalTable = {
-    val params = SQLTemplateParams(ts, template)
-    CreateExternalTable(ref = params.locations("name"),
-      ExternalTable(
-        columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
-        options = params.expressions("options")),
-      ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateExternalTable] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateExternalTable(ref = params.locations("name"),
+        ExternalTable(
+          columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
+          options = params.expressions("options")),
+        ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "create external table"

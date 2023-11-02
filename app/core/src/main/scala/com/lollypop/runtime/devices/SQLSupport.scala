@@ -30,7 +30,7 @@ object SQLSupport {
   class SelectBuilder(val collection: RowCollection, val fields: Seq[Expression]) extends RuntimeQueryable {
     private var select: Select = Select(fields = fields, from = Some(WrappedQueryableDevice(collection)))
 
-    override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = LollypopVM.search(scope, select)
+    override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = LollypopVM.search(scope, select)
 
     def groupBy(groupFields: FieldRef*): this.type = {
       this.select = select.copy(groupBy = groupFields)
@@ -74,7 +74,7 @@ object SQLSupport {
    * @param device the [[RowCollection device]]
    */
   case class WrappedQueryableDevice(device: RowCollection) extends RuntimeQueryable {
-    override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = (scope, IOCost.empty, device)
+    override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = (scope, IOCost.empty, device)
   }
 
 }

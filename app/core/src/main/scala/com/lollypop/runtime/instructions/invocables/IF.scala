@@ -43,12 +43,14 @@ object IF extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): IF = {
-    val params = SQLTemplateParams(ts, templateCard)
-    IF(
-      condition = params.conditions("condition"),
-      onTrue = params.instructions("onTrue"),
-      onFalse = params.instructions.get("onFalse"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[IF] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(IF(
+        condition = params.conditions("condition"),
+        onTrue = params.instructions("onTrue"),
+        onFalse = params.instructions.get("onFalse")))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "if"

@@ -6,6 +6,7 @@ import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplat
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Draws graphical charts
@@ -17,11 +18,11 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  */
 case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): GraphResult = {
-    val (scope1, _, rc) = LollypopVM.search(scope, from)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, GraphResult) = {
+    val (scope1, cost1, rc) = LollypopVM.search(scope, from)
     val dict = chart.asDictionary(scope1) || dieXXXIsNull("Dictionary")
     dict.get("shape").collect { case s: String => s } || dieXXXIsNull("Attribute 'shape'")
-    GraphResult(options = dict.toMap, data = rc)
+    (scope, cost1, GraphResult(options = dict.toMap, data = rc))
   }
 
   override def toSQL: String = List("graph", chart.wrapSQL, from.toSQL).mkString(" ")

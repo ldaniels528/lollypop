@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.instructions.conditions.Is.__name
+import com.lollypop.runtime.instructions.conditions.Is.keyword
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * SQL: `a` is equal to `b`
@@ -13,17 +14,20 @@ import com.lollypop.runtime.{LollypopVM, Scope}
  */
 case class Is(a: Expression, b: Expression) extends RuntimeInequality {
 
-  override def isTrue(implicit scope: Scope): Boolean = LollypopVM.execute(scope, a)._3 == LollypopVM.execute(scope, b)._3
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val result = LollypopVM.execute(scope, a)._3 == LollypopVM.execute(scope, b)._3
+    (scope, IOCost.empty, result)
+  }
 
-  override def operator: String = __name
+  override def operator: String = keyword
 
 }
 
 object Is extends ExpressionToConditionPostParser {
-  private val __name = "is"
+  private val keyword = "is"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Condition] = {
-    if (ts.nextIf(__name)) {
+    if (ts.nextIf(keyword)) {
       if (ts.nextIf("not null")) Option(IsNotNull(host))
       else if (ts.nextIf("not")) compiler.nextExpression(ts).map(Isnt(host, _))
       else if (ts.nextIf("null")) Option(IsNull(host))
@@ -53,6 +57,6 @@ object Is extends ExpressionToConditionPostParser {
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

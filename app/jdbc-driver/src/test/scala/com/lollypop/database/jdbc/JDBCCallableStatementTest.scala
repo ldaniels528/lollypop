@@ -40,7 +40,7 @@ class JDBCCallableStatementTest extends AnyFunSpec with JDBCTestServer with Veri
               ||---------------------------------------------------------|
               |)
               |""".stripMargin)
-        assert(cs0.executeUpdate() == 5)
+        assert(cs0.executeUpdate() == 9)
 
         // create the procedure
         val cs1 = conn.prepareCall(
@@ -115,7 +115,7 @@ class JDBCCallableStatementTest extends AnyFunSpec with JDBCTestServer with Veri
               ||---------------------------------------------------------|
               |)
               |""".stripMargin)
-        assert(cs0.executeUpdate() == 9)
+        assert(cs0.executeUpdate() == 17)
 
         // create the procedure
         val cs1 = conn.prepareCall(

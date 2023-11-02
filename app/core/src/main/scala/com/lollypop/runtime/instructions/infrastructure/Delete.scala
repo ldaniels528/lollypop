@@ -71,9 +71,14 @@ object Delete extends ModifiableParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Delete = {
-    val params = SQLTemplateParams(ts, template)
-    Delete(ref = params.locations("name"), condition = params.conditions.get("condition"), limit = params.expressions.get("limit"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Delete] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(Delete(
+        ref = params.locations("name"),
+        condition = params.conditions.get("condition"),
+        limit = params.expressions.get("limit")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "delete from"

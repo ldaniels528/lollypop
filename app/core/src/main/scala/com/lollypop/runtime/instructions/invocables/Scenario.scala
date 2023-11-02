@@ -131,16 +131,18 @@ object Scenario extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Scenario = {
-    val params = SQLTemplateParams(ts, template)
-    Scenario(
-      title = params.expressions("title"),
-      verifications = params.instructions.get("code") match {
-        case Some(CodeBlock(statements)) => statements
-        case Some(statements) => List(statements)
-        case None => Nil
-      },
-      inherits = params.expressions.get("inheritance"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Scenario] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(Scenario(
+        title = params.expressions("title"),
+        verifications = params.instructions.get("code") match {
+          case Some(CodeBlock(statements)) => statements
+          case Some(statements) => List(statements)
+          case None => Nil
+        },
+        inherits = params.expressions.get("inheritance")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "scenario"

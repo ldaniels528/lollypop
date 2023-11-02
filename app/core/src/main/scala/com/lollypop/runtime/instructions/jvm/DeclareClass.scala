@@ -44,9 +44,9 @@ case class DeclareClass(className: Atom, fields: List[ParameterLike]) extends Ru
 object DeclareClass extends InvokableParser {
   private val templateCard = "class %a:name ( ?%P:fields )"
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DeclareClass = {
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DeclareClass] = {
     val params = SQLTemplateParams(ts, templateCard)
-    DeclareClass(className = params.atoms("name"), fields = params.parameters("fields"))
+    Some(DeclareClass(className = params.atoms("name"), fields = params.parameters("fields")))
   }
 
   override def help: List[HelpDoc] = {

@@ -20,7 +20,7 @@ import scala.language.{existentials, postfixOps}
  */
 case class HashTag(host: Expression, tags: Expression) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     LollypopVM.execute(scope, host) match {
       case (scopeA, costA, rc: RowCollection) =>
         createColumnarTable(rc, getColumnNames, cost0 = costA) ~> { case (c, r) => (scope, c, r)}
@@ -54,17 +54,17 @@ case class HashTag(host: Expression, tags: Expression) extends RuntimeQueryable 
 }
 
 object HashTag extends ExpressionChainParser {
-  private val __name = "#"
+  private val keyword = "#"
 
   override def parseExpressionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Expression] = {
-    if (ts nextIf __name) NamedExpression.parseExpression(ts).map(HashTag(host, _)) ?? ts.dieExpectedExpression() else None
+    if (ts nextIf keyword) NamedExpression.parseExpression(ts).map(HashTag(host, _)) ?? ts.dieExpectedExpression() else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_DATAFRAMES_IO,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`dataFrame`${__name}`column`",
+    syntax = s"`dataFrame`$keyword`column`",
     description = "Returns a column slice of a data frame",
     example =
       s"""|declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
@@ -83,6 +83,6 @@ object HashTag extends ExpressionChainParser {
           |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

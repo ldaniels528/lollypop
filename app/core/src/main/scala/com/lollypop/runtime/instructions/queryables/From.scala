@@ -11,7 +11,7 @@ import lollypop.io.IOCost
 import scala.annotation.tailrec
 
 case class From(source: Instruction) extends RuntimeQueryable {
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     @tailrec
     def recurse(value: Any): RowCollection = value match {
       case None => dieNoResultSet()
@@ -43,9 +43,11 @@ object From extends QueryableParser {
     example = """from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]"""
   ))
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Queryable = {
-    val params = SQLTemplateParams(ts, template)
-    From(source = params.instructions("source"))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[From] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(From(source = params.instructions("source")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "from"

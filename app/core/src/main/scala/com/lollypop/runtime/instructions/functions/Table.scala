@@ -25,7 +25,7 @@ import lollypop.io.IOCost
 case class Table(columns: List[Column]) extends ScalarFunctionCall with RuntimeQueryable {
   override val functionName: String = "Table"
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     (scope, IOCost(created = 1), createQueryResultTable(columns.map(_.toTableColumn)))
   }
 

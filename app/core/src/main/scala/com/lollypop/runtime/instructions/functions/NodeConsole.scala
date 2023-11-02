@@ -6,6 +6,7 @@ import com.lollypop.language.models.Expression
 import com.lollypop.runtime.datatypes.Int32Type
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
 
 /**
@@ -21,8 +22,8 @@ case class NodeConsole(portExpr: Expression, commandsExpr: Option[Expression])
   extends ScalarFunctionCall with RuntimeExpression {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def evaluate()(implicit scope: Scope): Any = {
-    val (_, _, result1) = LollypopVM.execute(scope, portExpr)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val (_, cost1, result1) = LollypopVM.execute(scope, portExpr)
     val port = Int32Type.convert(result1)
     val commands_? = for {
       commandsE <- commandsExpr
@@ -33,14 +34,16 @@ case class NodeConsole(portExpr: Expression, commandsExpr: Option[Expression])
     } yield array
 
     logger.info(s"Connecting to remote peer on port $port...")
-    commands_? match {
+    val result = commands_? match {
       case Some(commands) =>
         LollypopServers.evaluate(port, commands.mkString("\n"), scope)
       case None =>
         LollypopServers.cli(port)
         null
     }
+    (scope, cost1, result)
   }
+
 }
 
 object NodeConsole extends FunctionCallParserE1Or2(

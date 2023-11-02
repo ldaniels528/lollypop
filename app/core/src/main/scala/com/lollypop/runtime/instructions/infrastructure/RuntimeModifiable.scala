@@ -10,7 +10,7 @@ import lollypop.io.IOCost
 /**
  * Represents a run-time infrastructural modification
  */
-trait RuntimeModifiable extends Modifiable with RuntimeInstruction with TableExpression {
+trait RuntimeModifiable extends RuntimeInstruction with TableExpression with Modifiable {
 
   override def returnType: TableType = classOf[IOCost].toTableType
 

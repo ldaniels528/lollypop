@@ -33,7 +33,7 @@ case class Select(fields: Seq[Expression] = Seq(AllFields),
                   limit: Option[Expression] = None)
   extends RuntimeQueryable with SQLRuntimeSupport {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     search(scope, this) ~> { case (c, r) => (scope, c, r) }
   }
 
@@ -70,15 +70,17 @@ object Select extends QueryableParser {
     example = "select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime()"
   ))
 
-  override def parseQueryable(stream: TokenStream)(implicit compiler: SQLCompiler): Queryable = {
-    val params = SQLTemplateParams(stream, templateCard)
-    Queryable(stream, Select(
-      fields = params.expressionLists("fields"),
-      from = params.instructions.get("source").map {
-        case q: Queryable => q
-        case z => From(z)
-      }
-    ))
+  override def parseQueryable(stream: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = {
+    if (understands(stream)) {
+      val params = SQLTemplateParams(stream, templateCard)
+      Some(Queryable(stream, Select(
+        fields = params.expressionLists("fields"),
+        from = params.instructions.get("source").map {
+          case q: Queryable => q
+          case z => From(z)
+        }
+      )))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "select"

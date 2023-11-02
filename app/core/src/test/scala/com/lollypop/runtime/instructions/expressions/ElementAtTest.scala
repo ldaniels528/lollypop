@@ -53,13 +53,13 @@ class ElementAtTest extends AnyFunSpec {
 
     it("should evaluate: [99, 100, 101][1]") {
       val model = ElementAt(ArrayLiteral(99.v, 100.v, 101.v), 1.v)
-      val value = model.evaluate()(Scope())
+      val value = model.execute()(Scope())._3
       assert(value == 100)
     }
 
     it("should evaluate: 'Hello World'[4]") {
       val model = ElementAt("Hello World".v, 4.v)
-      val value = model.evaluate()(Scope())
+      val value = model.execute()(Scope())._3
       assert(value == 'o')
     }
 
@@ -71,7 +71,7 @@ class ElementAtTest extends AnyFunSpec {
            |stocks.push({ symbol: 'AAPL', exchange: 'NASDAQ', lastSale: 149.76 })
            |""".stripMargin)
       val model = ElementAt(@@("stocks"), 2.v)
-      val value = model.evaluate()(scope)
+      val value = model.execute()(scope)._3
       assert(value ==
         Row(id = 2, metadata = RowMetadata(),
           columns = List(

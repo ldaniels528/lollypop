@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.CodeBlock.summarize
-import com.lollypop.language.models.{CodeBlock, Instruction}
+import com.lollypop.language.models.{CodeBlock, Expression, Instruction}
 import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
@@ -18,7 +18,8 @@ import lollypop.io.IOCost
  * }
  * }}}
  */
-case class ScopedCodeBlock(instructions: List[Instruction]) extends CodeBlock with RuntimeInvokable {
+case class ScopedCodeBlock(instructions: List[Instruction]) extends CodeBlock
+  with Expression with RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val scope0 = Scope(scope)

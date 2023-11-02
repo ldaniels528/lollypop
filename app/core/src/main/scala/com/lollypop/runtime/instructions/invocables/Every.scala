@@ -7,6 +7,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import java.util.{Timer, TimerTask}
 
@@ -18,12 +19,12 @@ import java.util.{Timer, TimerTask}
  */
 case class Every(interval: Expression, invokable: Instruction) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): Timer = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Timer) = {
     val timer = new Timer()
     timer.scheduleAtFixedRate(new TimerTask {
       override def run(): Unit = LollypopVM.execute(scope, invokable)._3
     }, 0L, (interval.asInterval || dieExpectedInterval()).toMillis)
-    timer
+    (scope, IOCost.empty, timer)
   }
 
   override def toSQL: String = s"every ${interval.toSQL} ${invokable.toSQL}"

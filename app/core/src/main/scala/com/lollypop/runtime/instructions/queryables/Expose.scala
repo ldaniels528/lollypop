@@ -27,7 +27,7 @@ import lollypop.io.IOCost
  */
 case class Expose(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     expression match {
       case Matches(source, pattern) =>
         val rows = exposeMatch(src = LollypopVM.execute(scope, source)._3, pattern = LollypopVM.execute(scope, pattern)._3)

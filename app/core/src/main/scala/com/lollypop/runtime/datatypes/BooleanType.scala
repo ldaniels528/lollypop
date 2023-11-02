@@ -8,6 +8,7 @@ import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import java.nio.ByteBuffer
 import java.nio.ByteBuffer.allocate
 import java.util.Optional
+import scala.util.Try
 
 /**
  * Represents a Boolean (Bit) type
@@ -17,6 +18,7 @@ abstract class BooleanType extends FixedLengthDataType(maxSizeInBytes = ONE_BYTE
 
   override def convert(value: Any): Boolean = value match {
     case null => false
+    case a: Array[_] => a.nonEmpty
     case b: Boolean => b
     case b: java.lang.Boolean => b
     case n: Number => n.doubleValue() != 0.0
@@ -24,6 +26,8 @@ abstract class BooleanType extends FixedLengthDataType(maxSizeInBytes = ONE_BYTE
     case o: Optional[_] => !o.isEmpty
     case s: Seq[_] => s.nonEmpty
     case s: String => s.nonEmpty && java.lang.Boolean.valueOf(s)
+    case t: Try[_] => t.isSuccess
+    case x: IterableOnce[_] => x.nonEmpty
     case x => dieUnsupportedConversion(x, name)
   }
 

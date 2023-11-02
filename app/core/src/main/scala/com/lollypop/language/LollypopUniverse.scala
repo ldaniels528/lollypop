@@ -126,11 +126,11 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def getModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Modifiable] = matchInstruction(ts) {
-    case parser: ModifiableParser => Option(parser.parseModifiable(ts))
+    case parser: ModifiableParser => parser.parseModifiable(ts)
   }
 
   def getQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = matchInstruction(ts) {
-    case parser: QueryableParser => Option(parser.parseQueryable(ts))
+    case parser: QueryableParser => parser.parseQueryable(ts)
   }
 
   def getQueryableChain(ts: TokenStream, host: Queryable)(implicit compiler: SQLCompiler): Option[Queryable] = matchInstruction(ts) {
@@ -142,7 +142,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def getStatement(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Instruction] = matchInstruction(ts) {
-    case parser: InvokableParser => Option(parser.parseInvokable(ts))
+    case parser: InvokableParser => parser.parseInvokable(ts)
   }
 
   def getKeywords: List[String] = antiFunctionParsers.flatMap(_.help.collect { case c if c.name.forall(_.isLetter) => c.name })

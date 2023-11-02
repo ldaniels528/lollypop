@@ -4,6 +4,7 @@ import com.lollypop.language.models.{Expression, Literal}
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 import scala.collection.mutable
 
@@ -21,8 +22,9 @@ import scala.collection.mutable
  */
 case class Dictionary(value: List[(String, Expression)]) extends Literal with RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): mutable.LinkedHashMap[String, Any] = {
-    mutable.LinkedHashMap(value.map { case (name, expr) => name -> LollypopVM.execute(scope, expr)._3 }: _*)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, mutable.LinkedHashMap[String, Any]) = {
+    val result = mutable.LinkedHashMap(value.map { case (name, expr) => name -> LollypopVM.execute(scope, expr)._3 }: _*)
+    (scope, IOCost.empty, result)
   }
 
   override def returnType: DataType = AnyType(className = classOf[mutable.LinkedHashMap.type].getName)

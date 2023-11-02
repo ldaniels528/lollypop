@@ -82,27 +82,30 @@ object CreateTable extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): RuntimeModifiable = {
-    val params = SQLTemplateParams(ts, templateCard)
-    val ifNotExists = params.indicators.get("exists").contains(true)
-    val template = params.locations.get("template")
-    val ref = params.locations("name")
-    val table = TableModel(
-      columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
-      initialCapacity = params.expressions.get("initialCapacity").map {
-        case Literal(value: Number) => value.intValue()
-        case x => dieUnsupportedType(x)
-      },
-      partitions = params.expressions.get("partitions"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[RuntimeModifiable] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      val ifNotExists = params.indicators.get("exists").contains(true)
+      val template = params.locations.get("template")
+      val ref = params.locations("name")
+      val table = TableModel(
+        columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
+        initialCapacity = params.expressions.get("initialCapacity").map {
+          case Literal(value: Number) => value.intValue()
+          case x => dieUnsupportedType(x)
+        },
+        partitions = params.expressions.get("partitions"))
 
-    // return the instruction
-    template.map(CreateTableLike(ref, table, _, ifNotExists)) getOrElse {
-      params.instructions.get("source") match {
-        case None => CreateTable(ref, table, ifNotExists)
-        case Some(from: Queryable) => CreateTableFrom(ref, table, from, ifNotExists)
-        case Some(_) => ts.dieExpectedQueryable()
+      // return the instruction
+      val op_? = template.map(CreateTableLike(ref, table, _, ifNotExists))
+      if (op_?.nonEmpty) op_? else {
+        params.instructions.get("source") match {
+          case None => Some(CreateTable(ref, table, ifNotExists))
+          case Some(from: Queryable) => Some(CreateTableFrom(ref, table, from, ifNotExists))
+          case Some(_) => ts.dieExpectedQueryable()
+        }
       }
-    }
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create table"

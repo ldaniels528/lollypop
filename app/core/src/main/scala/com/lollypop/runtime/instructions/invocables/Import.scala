@@ -67,9 +67,11 @@ object Import extends InvokableParser {
     example = "import 'java.util.Date'"
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Import = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Import(target = params.expressions("target"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Import] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Import(target = params.expressions("target")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {

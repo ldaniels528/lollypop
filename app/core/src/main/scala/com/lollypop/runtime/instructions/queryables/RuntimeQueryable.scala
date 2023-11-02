@@ -15,9 +15,7 @@ import scala.language.postfixOps
  */
 trait RuntimeQueryable extends Queryable with RuntimeInstruction {
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = search()
-
-  def search()(implicit scope: Scope): (Scope, IOCost, RowCollection)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection)
 
 }
 

@@ -12,6 +12,7 @@ import com.lollypop.util.JSONSupport.JSONProductConversion
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
+import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
 
 import java.io.{File, FileInputStream}
@@ -39,7 +40,7 @@ import scala.concurrent.duration.{Duration, DurationInt}
 case class Http(method: Atom, url: Expression, body: Option[Expression] = None, headers: Option[Expression] = None)
   extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): HttpResponse = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, HttpResponse) = {
 
     def getAbsoluteURL: String = {
       (for {
@@ -49,7 +50,7 @@ case class Http(method: Atom, url: Expression, body: Option[Expression] = None, 
       } yield uri.resolve(path).toString).orNull
     }
 
-    method.name.toLowerCase() match {
+    val result = method.name.toLowerCase() match {
       case "path" => HttpResponse(body = getAbsoluteURL, message = null, statusCode = 200, responseID = UUID.randomUUID())
       case "uri" => HttpResponse(body = getAbsoluteURL, message = null, statusCode = 200, responseID = UUID.randomUUID())
       case _method =>
@@ -59,6 +60,7 @@ case class Http(method: Atom, url: Expression, body: Option[Expression] = None, 
           headers = headers.flatMap(_.asDictionary),
           method = Some(_method))
     }
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = {

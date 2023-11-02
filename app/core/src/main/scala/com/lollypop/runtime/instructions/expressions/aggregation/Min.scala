@@ -8,6 +8,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import java.util.Date
 
@@ -19,7 +20,8 @@ import java.util.Date
  *  min(stocks#lastSale)
  * }}}
  */
-case class Min(expression: Expression) extends AggregateFunctionCall with ColumnarFunction with RuntimeExpression {
+case class Min(expression: Expression) extends AggregateFunctionCall
+  with ColumnarFunction with RuntimeExpression {
 
   override def aggregate: Aggregator = {
     var minValue_? : Option[Any] = None
@@ -39,17 +41,20 @@ case class Min(expression: Expression) extends AggregateFunctionCall with Column
     }
   }
 
-  override def evaluate()(implicit scope: Scope): Any = doIt().orNull
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
 
-  private def doIt[A <: Comparable[A]]()(implicit scope: Scope): Option[A] = {
-    compute(expression, { (rc: RowCollection, columnID: Int) =>
-      var minValue_? : Option[A] = None
-      rc.foreach { row =>
-        val value_? = row.fields(columnID).value.flatMap(safeCast[A])
-        minValue_? = (for {minValue <- minValue_?; value <- value_?} yield getMin(minValue, value)) ?? value_?
-      }
-      minValue_?
-    })
+    def doIt[A <: Comparable[A]]()(implicit scope: Scope): Option[A] = {
+      compute(expression, { (rc: RowCollection, columnID: Int) =>
+        var minValue_? : Option[A] = None
+        rc.foreach { row =>
+          val value_? = row.fields(columnID).value.flatMap(safeCast[A])
+          minValue_? = (for {minValue <- minValue_?; value <- value_?} yield getMin(minValue, value)) ?? value_?
+        }
+        minValue_?
+      })
+    }
+
+    (scope, IOCost.empty, doIt().orNull)
   }
 
   private def getMin[A <: Comparable[A]](v1: A, v2: A): A = v1.compareTo(v2) match {

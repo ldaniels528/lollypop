@@ -1,20 +1,22 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, CATEGORY_DATAFRAMES_INFRA, PARADIGM_FUNCTIONAL}
+import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Column
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollectionBuilder
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
+import lollypop.io.IOCost
 
 case class TableZoo(columns: List[Column]) extends ScalarFunctionCall with RuntimeExpression {
   override val functionName: String = "TableZoo"
 
-  override def evaluate()(implicit scope: Scope): RowCollectionBuilder = {
-    RowCollectionBuilder(columns = columns.map(_.toTableColumn))
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollectionBuilder) = {
+    (scope, IOCost.empty, RowCollectionBuilder(columns = columns.map(_.toTableColumn)))
   }
 
   override def toSQL: String = List(functionName, columns.map(_.toSQL).mkString("(", ", ", ")")).mkString
+
 }
 
 object TableZoo extends FunctionCallParserP(
@@ -23,7 +25,7 @@ object TableZoo extends FunctionCallParserP(
   paradigm = PARADIGM_FUNCTIONAL,
   description = "Returns a Table builder",
   example =
-    """|val stocks =
+    """|stocks =
        |  TableZoo(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
        |    .withMemorySupport(150)
        |    .build()

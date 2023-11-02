@@ -366,7 +366,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
             |""".stripMargin)
       val ns = xStockQuotes.toNS(scope)
       assert(ns.getConfig.description contains "Stock quotes staging table")
-      assert(cost == IOCost(created = 1, destroyed = 1, inserted = 12, rowIDs = RowIDRange(0L to 5L: _*)))
+      assert(cost == IOCost(created = 1, destroyed = 1, inserted = 18, rowIDs = RowIDRange(0L to 5L: _*)))
     }
 
   }

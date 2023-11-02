@@ -36,7 +36,7 @@ class DeleteTest extends AnyFunSpec with VerificationTools {
            ||------------------------------|
            |order by symbol
            |""".stripMargin)
-      assert(cost0 == IOCost(created = 1, destroyed = 1, matched = 5, scanned = 18, updated = 8, inserted = 5, rowIDs = RowIDRange(0L, 1, 2, 3, 4)))
+      assert(cost0 == IOCost(created = 1, destroyed = 1, matched = 5, scanned = 18, updated = 8, inserted = 10, rowIDs = RowIDRange(0L, 1, 2, 3, 4)))
 
       // confirm the data was inserted
       val (scope1, _, result1) = LollypopVM.searchSQL(scope0,

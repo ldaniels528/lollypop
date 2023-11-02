@@ -39,9 +39,11 @@ object CreateIndex extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateIndex = {
-    val params = SQLTemplateParams(ts, template)
-    CreateIndex(ref = params.locations("table"), ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateIndex] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateIndex(ref = params.locations("table"), ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create index"

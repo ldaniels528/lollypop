@@ -12,9 +12,9 @@ import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringRenderHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
+import lollypop.io.IOCost
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
-import lollypop.io.IOCost
 
 import java.io.{File, PrintWriter, StringWriter}
 import scala.annotation.tailrec
@@ -33,15 +33,15 @@ case class LollypopPage(baseDirectory: File,
                         markdown: String,
                         cssFiles: Seq[String] = Nil) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope0: Scope): String = {
-    val (_, code1) = parseTag(scope0, markdown, tagStart = "<LollypopCode>", tagEnd = "</LollypopCode>")(executeLollypopCode)
-    val (_, code2) = parseTag(scope0, code1, tagStart = "<LollypopExample>", tagEnd = "</LollypopExample>")(executeLollypopExample)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, String) = {
+    val (_, code1) = parseTag(scope, markdown, tagStart = "<LollypopCode>", tagEnd = "</LollypopCode>")(executeLollypopCode)
+    val (_, code2) = parseTag(scope, code1, tagStart = "<LollypopExample>", tagEnd = "</LollypopExample>")(executeLollypopExample)
 
     // render the markdown as HTML
     val parser = Parser.builder().build()
     val document = parser.parse(code2)
     val renderer = HtmlRenderer.builder().build()
-    wrapHTML(renderer.render(document))
+    (scope, IOCost.empty, wrapHTML(renderer.render(document)))
   }
 
   private def wrapHTML(contents: String): String = {

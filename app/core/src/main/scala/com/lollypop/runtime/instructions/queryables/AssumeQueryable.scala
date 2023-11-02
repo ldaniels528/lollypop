@@ -8,7 +8,7 @@ import lollypop.io.IOCost
 
 case class AssumeQueryable(instruction: Instruction) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope0, cost0, result0) = LollypopVM.execute(scope, instruction)
     result0 match {
       case rc: RowCollection => (scope0, cost0, rc)

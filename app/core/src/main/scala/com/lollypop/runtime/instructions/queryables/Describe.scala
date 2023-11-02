@@ -17,7 +17,7 @@ import lollypop.io.IOCost
  */
 case class Describe(queryable: Instruction) extends RuntimeQueryable with TableExpression {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope1, cost1, result1) = LollypopVM.search(scope, queryable)
     val columns = result1.columns
     implicit val out: RowCollection = createQueryResultTable(columns = returnType.columns)
@@ -54,8 +54,10 @@ object Describe extends QueryableParser {
     example = "describe (select v1: 123, v2: 'abc')"
   ))
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Describe = {
-    Describe(SQLTemplateParams(ts, templateCard).instructions("query"))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Describe] = {
+    if (understands(ts)) {
+      Some(Describe(SQLTemplateParams(ts, templateCard).instructions("query")))
+    } else None
   }
 
   val templateCard: String = "describe %i:query"

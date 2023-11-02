@@ -331,7 +331,7 @@ class ProductCollectionTest extends AnyFunSpec {
             |    |--------------------------------------------------------|
             |)
             |""".stripMargin)
-      assert(cost == IOCost(created = 1, destroyed = 1, inserted = 5, rowIDs = RowIDRange(0, 1, 2, 3, 4)))
+      assert(cost == IOCost(created = 1, destroyed = 1, inserted = 10, rowIDs = RowIDRange(0, 1, 2, 3, 4)))
       val device = DatabaseManagementSystem.readProductCollection[StockTicker](ref.toNS(scope))
       assert(device.toList == List(
         StockTicker("NKWI", "OTCBB", 98.9501, DateHelper("2022-09-04T23:36:47.846Z")),

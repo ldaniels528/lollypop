@@ -72,11 +72,13 @@ object DeclareView extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): DeclareView = {
-    val params = SQLTemplateParams(ts, template)
-    DeclareView(ref = params.atoms("ref"),
-      View(query = params.queryables.get("query") || ts.dieExpectedQueryable()),
-      ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DeclareView] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(DeclareView(ref = params.atoms("ref"),
+        View(query = params.queryables.get("query") || ts.dieExpectedQueryable()),
+        ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "declare view"

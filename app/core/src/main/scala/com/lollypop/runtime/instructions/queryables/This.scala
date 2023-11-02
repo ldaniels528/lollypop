@@ -7,13 +7,16 @@ import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{StringType, TableType}
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, TableExpression}
+import lollypop.io.IOCost
 
 /**
  * This (scope variable)
  */
 case class This() extends RuntimeExpression with TableRendering with TableExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = scope
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Scope) = {
+    (scope, IOCost.empty, scope)
+  }
 
   override def toSQL: String = "this"
 

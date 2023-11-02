@@ -11,7 +11,7 @@ import lollypop.io.IOCost
  */
 case class TableVariableRef(name: String) extends VariableRef with DatabaseObjectRef with RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     (scope, IOCost.empty, scope.resolveTableVariable(name))
   }
 

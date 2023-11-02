@@ -6,6 +6,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * InterfacesOf() function - returns the interfaces implemented by a class or instance
@@ -15,11 +16,12 @@ import com.lollypop.runtime.{LollypopVM, Scope}
  * }}}
  */
 case class InterfacesOf(expression: Expression) extends ScalarFunctionCall with RuntimeExpression {
-  override def evaluate()(implicit scope: Scope): Array[Class[_]] = {
-    (Option(LollypopVM.execute(scope, expression)._3) map {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Array[Class[_]]) = {
+    val result = (Option(LollypopVM.execute(scope, expression)._3) map {
       case _class: Class[_] => _class
       case value => value.getClass
     }).map(RuntimeClass.getInterfaces(_).toArray).orNull
+    (scope, IOCost.empty, result)
   }
 }
 

@@ -7,6 +7,7 @@ import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.Scope
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import scala.util.Try
 
@@ -23,7 +24,9 @@ case class Verify(condition: Condition, message: Option[Expression] = None) exte
     inequalities.collect { case inEq if !Try(RuntimeCondition.isTrue(inEq)(scope)).toOption.contains(true) => inEq.negate.toSQL }
   }
 
-  override def isTrue(implicit scope: Scope): Boolean = RuntimeCondition.isTrue(condition)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, IOCost.empty, RuntimeCondition.isTrue(condition))
+  }
 
   override def toSQL: String = ("verify" :: condition.toSQL :: title.toList.flatMap(t => List("^^^", t.toSQL))).mkString(" ")
 

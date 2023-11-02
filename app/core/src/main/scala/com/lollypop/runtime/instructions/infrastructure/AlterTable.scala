@@ -126,20 +126,22 @@ object AlterTable extends ModifiableParser {
    */
   def apply(ref: DatabaseObjectRef, alteration: Alteration) = new AlterTable(ref, alterations = Seq(alteration))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): AlterTable = {
-    val params = SQLTemplateParams(ts, templateCard)
-    val alterations: List[Alteration] =
-      params.parameters.get("add_col").map(columns => AddColumn(columns.onlyOne(ts).toColumn)).toList :::
-        params.parameters.get("append_col").map(columns => AppendColumn(columns.onlyOne(ts).toColumn)).toList :::
-        params.atoms.get("description").map(SetLabel).toList :::
-        params.atoms.get("drop_col").map { case Atom(name) => DropColumn(name) }.toList :::
-        params.parameters.get("prepend_col").map(columns => PrependColumn(columns.onlyOne(ts).toColumn)).toList ::: (
-        for {
-          Atom(oldName) <- params.atoms.get("old_name")
-          Atom(newName) <- params.atoms.get("new_name")
-        } yield RenameColumn(oldName, newName)).toList
-    if (alterations.isEmpty) ts.dieExpectedAlteration()
-    AlterTable(ref = params.locations("name"), alterations = alterations)
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[AlterTable] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      val alterations: List[Alteration] =
+        params.parameters.get("add_col").map(columns => AddColumn(columns.onlyOne(ts).toColumn)).toList :::
+          params.parameters.get("append_col").map(columns => AppendColumn(columns.onlyOne(ts).toColumn)).toList :::
+          params.atoms.get("description").map(SetLabel).toList :::
+          params.atoms.get("drop_col").map { case Atom(name) => DropColumn(name) }.toList :::
+          params.parameters.get("prepend_col").map(columns => PrependColumn(columns.onlyOne(ts).toColumn)).toList ::: (
+          for {
+            Atom(oldName) <- params.atoms.get("old_name")
+            Atom(newName) <- params.atoms.get("new_name")
+          } yield RenameColumn(oldName, newName)).toList
+      if (alterations.isEmpty) ts.dieExpectedAlteration()
+      Some(AlterTable(ref = params.locations("name"), alterations = alterations))
+    } else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(

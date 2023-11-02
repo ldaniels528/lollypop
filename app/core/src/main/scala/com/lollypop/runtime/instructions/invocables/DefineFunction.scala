@@ -87,22 +87,19 @@ object DefineFunction extends ExpressionParser with InvokableParser {
   ))
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Expression] = {
-    if (understands(ts)) {
-      parseInvokable(ts) match {
-        case DefineFunction(af: AnonymousFunction) => Some(af)
-        case function => Some(function)
-      }
-    } else None
+    parseInvokable(ts)
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DefineFunction = {
-    val params = SQLTemplateParams(ts, template1)
-    val function = NamedFunction(
-      name = params.atoms("name").name,
-      params = params.parameters("params"),
-      returnType_? = params.types.get("returnType"),
-      code = params.instructions("code"))
-    DefineFunction(function)
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DefineFunction] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template1)
+      val function = NamedFunction(
+        name = params.atoms("name").name,
+        params = params.parameters("params"),
+        returnType_? = params.types.get("returnType"),
+        code = params.instructions("code"))
+      Some(DefineFunction(function))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "def"

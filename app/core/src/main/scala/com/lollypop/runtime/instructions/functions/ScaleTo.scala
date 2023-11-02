@@ -6,6 +6,7 @@ import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Returns the the numeric expression rounded by scale decimal places
@@ -14,13 +15,14 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  */
 case class ScaleTo(numberExpr: Expression, scaleExpr: Expression) extends ScalarFunctionCall
   with RuntimeExpression with DoubleExpression {
-  override def evaluate()(implicit scope: Scope): Double = {
-    (for {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Double) = {
+    val result = (for {
       number <- numberExpr.asDouble
       scale <- scaleExpr.asInt32
       factor = Math.pow(10, scale)
       output = (number * factor).longValue() / factor
     } yield output) || 0.0
+    (scope, IOCost.empty, result)
   }
 
 }

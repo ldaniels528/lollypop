@@ -72,11 +72,13 @@ object CreateView extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateView = {
-    val params = SQLTemplateParams(ts, template)
-    CreateView(ref = params.locations("ref"),
-      View(query = params.queryables.get("query") || ts.dieExpectedQueryable()),
-      ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateView] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateView(ref = params.locations("ref"),
+        View(query = params.queryables.get("query") || ts.dieExpectedQueryable()),
+        ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create view"

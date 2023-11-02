@@ -4,15 +4,20 @@ import com.lollypop.language.models.{ArrayExpression, Expression, Literal}
 import com.lollypop.runtime.datatypes.{ArrayType, DataType, Inferences}
 import com.lollypop.runtime.plastics.Tuples.seqToArray
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * Represents an array literal
  * @param value the values within the array
  */
-case class ArrayLiteral(value: List[Expression]) extends Literal with ArrayExpression with RuntimeExpression {
+case class ArrayLiteral(value: List[Expression]) extends Literal
+  with RuntimeExpression with ArrayExpression {
   private lazy val _type = ArrayType(Inferences.resolveType(value.map(Inferences.inferType)), capacity = Some(value.size))
 
-  override def evaluate()(implicit scope: Scope): Any = seqToArray(values = value.map(LollypopVM.execute(scope, _)._3))
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Array[_]) = {
+    val (s, c, values) = LollypopVM.transform(scope, value)
+    (s, c, seqToArray(values))
+  }
 
   override def returnType: DataType = _type
 

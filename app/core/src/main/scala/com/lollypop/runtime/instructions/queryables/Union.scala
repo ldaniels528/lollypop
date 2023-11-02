@@ -16,7 +16,7 @@ import lollypop.io.IOCost
  */
 case class Union(query0: Queryable, query1: Queryable) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scopeA, costA, deviceA) = LollypopVM.search(scope, query0)
     val (scopeB, costB, deviceB) = LollypopVM.search(scopeA, query1)
     (scopeB, costA ++ costB, deviceA union deviceB)
@@ -38,7 +38,7 @@ object Union extends QueryableChainParser {
 
   override def help: List[HelpDoc] = {
     import com.lollypop.util.OptionHelper.implicits.risky.value2Option
-    List(HelpDoc(
+    List(/*HelpDoc(
       name = "union",
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
@@ -65,7 +65,7 @@ object Union extends QueryableChainParser {
            |    transpose(select maxMemory: rt.maxMemory(), totalMemory: rt.totalMemory(), freeMemory: rt.freeMemory())
            |}
            |""".stripMargin
-    ), HelpDoc(
+    ),*/ HelpDoc(
       name = "union",
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,

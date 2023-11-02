@@ -16,7 +16,7 @@ import lollypop.io.IOCost
 case class Into(source: Instruction, target: DatabaseObjectRef)
   extends RuntimeQueryable with Modifiable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope1, cost0, in) = LollypopVM.search(scope, source)
     val out = scope1.getRowCollection(target)
     val cost1 = in.iterateWhere()(_.isActive) { case (_, row) => out.insert(row) }

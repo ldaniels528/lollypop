@@ -7,6 +7,6 @@ import com.lollypop.language.models.Queryable
  */
 trait QueryableParser extends LanguageParser {
 
-  def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Queryable
+  def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable]
 
 }
