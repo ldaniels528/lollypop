@@ -23,7 +23,7 @@ import scala.reflect.ClassTag
  */
 case class Transpose(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with Expression {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope0, cost0, result0) = LollypopVM.execute(scope, expression)
 
     @tailrec

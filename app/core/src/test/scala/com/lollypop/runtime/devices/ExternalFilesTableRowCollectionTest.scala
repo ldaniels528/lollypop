@@ -120,7 +120,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
           .select("Sector".f, Count("*".f) as "total")
           .groupBy("Sector".f)
           .orderBy("Sector".asc)
-          .search()
+          .execute()
 
         rs.toMapGraph.zipWithIndex foreach { case (row, n) => logger.info(f"[$n%02d] $row") }
         assert(rs.toMapGraph == List(

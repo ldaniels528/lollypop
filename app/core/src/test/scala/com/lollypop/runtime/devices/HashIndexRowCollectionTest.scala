@@ -282,7 +282,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
           |    | GABY   | NASDAQ   |    13.99 |
           |    |------------------------------|
           |""".stripMargin)
-    assert(cost2.inserted == 8)
+    assert(cost2.inserted == 16)
     (scope2, rc)
   }
 

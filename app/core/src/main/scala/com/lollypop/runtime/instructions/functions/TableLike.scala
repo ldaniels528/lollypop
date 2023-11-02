@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, CATEGORY_DATAFRAMES_INFRA, PARADIGM_FUNCTIONAL}
+import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.DatabaseManagementSystem.readPhysicalTable
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
@@ -13,16 +13,16 @@ import lollypop.io.IOCost
 
 case class TableLike(source: Expression) extends ScalarFunctionCall with RuntimeExpression with RuntimeQueryable {
 
-  override def evaluate()(implicit scope: Scope): RowCollection = {
-    val (_, _, result1) = LollypopVM.execute(scope, source)
-    result1 match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+    val (scope1, cost1, result1) = LollypopVM.execute(scope, source)
+    val result2 = result1 match {
       case collection: RowCollection => createTempTable(collection)
       case path: String => createTempTable(readPhysicalTable(DatabaseObjectRef(path).toNS))
       case other => dieIllegalType(other)
     }
+    (scope1, cost1, result2)
   }
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = (scope, IOCost.empty, evaluate())
 }
 
 object TableLike extends FunctionCallParserE1(

@@ -14,7 +14,7 @@ import lollypop.io.IOCost
  */
 case class Subtraction(query0: Queryable, query1: Queryable) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scopeA, costA, deviceA) = LollypopVM.search(scope, query0)
     val (scopeB, costB, deviceB) = LollypopVM.search(scopeA, query1)
     (scopeB, costA ++ costB, deviceA subtract deviceB)

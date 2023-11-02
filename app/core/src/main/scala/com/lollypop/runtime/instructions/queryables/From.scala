@@ -11,7 +11,7 @@ import lollypop.io.IOCost
 import scala.annotation.tailrec
 
 case class From(source: Instruction) extends RuntimeQueryable {
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     @tailrec
     def recurse(value: Any): RowCollection = value match {
       case None => dieNoResultSet()

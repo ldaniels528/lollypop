@@ -10,7 +10,7 @@ import lollypop.io.IOCost
 
 case class Limit(source: Queryable, limit: Option[Expression] = None) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope1, cost1, in) = LollypopVM.search(scope, source)
     val out = createQueryResultTable(in.columns)
     val cost2 = in.iterateWhere(limit = limit)(_.isActive) { case (_, row) => out.insert(row) }(scope1)

@@ -24,7 +24,7 @@ import lollypop.io.IOCost
  * }}}
  */
 case class Help(name: Option[Expression]) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     implicit val ctx: LollypopUniverse = scope.getUniverse
     gatherHelp(name_? = name.flatMap(_.asString)) ~> { case (c, r) => (scope, c, r) }
   }

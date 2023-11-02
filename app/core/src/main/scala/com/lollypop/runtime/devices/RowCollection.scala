@@ -415,7 +415,7 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
   }
 
   def search(condition: Option[Condition], limit: Option[Expression] = None)(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    select(AllFields).where(condition).limit(limit).search()
+    select(AllFields).where(condition).limit(limit).execute()
   }
 
   def show(): Unit = show(20)

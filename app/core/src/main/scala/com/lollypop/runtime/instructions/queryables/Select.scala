@@ -33,7 +33,7 @@ case class Select(fields: Seq[Expression] = Seq(AllFields),
                   limit: Option[Expression] = None)
   extends RuntimeQueryable with SQLRuntimeSupport {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     search(scope, this) ~> { case (c, r) => (scope, c, r) }
   }
 

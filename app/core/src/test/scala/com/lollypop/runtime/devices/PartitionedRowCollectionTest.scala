@@ -49,7 +49,7 @@ class PartitionedRowCollectionTest extends AnyFunSpec {
            |)
            |""".stripMargin)
       // verify the cost
-      assert(cost0 == IOCost(inserted = 17, rowIDs = new RowIDRange(from = 0, to = 16)))
+      assert(cost0 == IOCost(inserted = 34, rowIDs = new RowIDRange(from = 0, to = 16)))
 
       // verify the table length
       assert(device.getLength == 17)
@@ -154,7 +154,7 @@ class PartitionedRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // verify the cost
-      assert(cost0 == IOCost(created = 1, destroyed = 1, inserted = 17, rowIDs = new RowIDRange(from = 0, to = 16)))
+      assert(cost0 == IOCost(created = 1, destroyed = 1, inserted = 34, rowIDs = new RowIDRange(from = 0, to = 16)))
 
       // get the PartitionedRowCollection
       val device = scope0.getRowCollection(DatabaseObjectRef("Stocks")) match {

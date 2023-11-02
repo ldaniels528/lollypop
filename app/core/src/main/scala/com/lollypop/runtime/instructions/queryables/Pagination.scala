@@ -14,7 +14,7 @@ import lollypop.io.IOCost
  */
 case class Pagination(queryable: Queryable) extends RuntimeQueryable {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     val (scope0, cost0, rc0) = LollypopVM.search(scope, queryable)
     (scope0, cost0, PaginationSupport(rc0))
   }
