@@ -6,6 +6,7 @@ import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.{LongIntExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * Represents the count function
@@ -27,7 +28,9 @@ case class Count(expression: Expression) extends AggregateFunctionCall
     }
   }
 
-  override def evaluate()(implicit scope: Scope): Long = doCount
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Long) = {
+    (scope, IOCost.empty, doCount)
+  }
 
   private def doCount(implicit scope: Scope): Long = {
     expression match {

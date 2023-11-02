@@ -9,6 +9,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import java.util.Date
 
@@ -43,15 +44,15 @@ case class Avg(expression: Expression) extends AggregateFunctionCall
     }
   }
 
-  override def evaluate()(implicit scope: Scope): Double = {
-    compute(expression, { (rc: RowCollection, columnID: Int) =>
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Double) = {
+    compute(expression, { (rc, columnID) =>
       var sum = 0.0
       var count = 0L
       rc.foreach { row =>
         sum += Float64Type.convert(row.fields(columnID).value)
         count += 1
       }
-      sum / count
+      (scope, IOCost.empty, sum / count)
     })
   }
 
