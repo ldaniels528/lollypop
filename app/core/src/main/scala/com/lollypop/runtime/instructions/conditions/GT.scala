@@ -4,6 +4,7 @@ import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * SQL: `a` is greater than `b`
@@ -12,7 +13,10 @@ import com.lollypop.runtime.{LollypopVM, Scope}
  */
 case class GT(a: Expression, b: Expression) extends RuntimeInequality {
 
-  override def isTrue(implicit scope: Scope): Boolean = Option(LollypopVM.execute(scope, a)._3) > Option(LollypopVM.execute(scope, b)._3)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val result = Option(LollypopVM.execute(scope, a)._3) > Option(LollypopVM.execute(scope, b)._3)
+    (scope, IOCost.empty, result)
+  }
 
   override def operator: String = ">"
 

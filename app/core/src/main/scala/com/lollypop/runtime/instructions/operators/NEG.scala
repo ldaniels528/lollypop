@@ -14,10 +14,8 @@ import lollypop.io.IOCost
 case class NEG(a: Expression) extends RuntimeExpression with UnaryOperation {
   override val operator: String = "-"
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = (scope, IOCost.empty, evaluate())
-
-  override def evaluate()(implicit scope: Scope): Any = {
-    LollypopVM.execute(scope, a)._3 match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val result = LollypopVM.execute(scope, a)._3 match {
       case b: Byte => -b
       case d: Double => -d
       case f: Float => -f
@@ -33,7 +31,9 @@ case class NEG(a: Expression) extends RuntimeExpression with UnaryOperation {
       case n: Number => -n.doubleValue()
       case _ => a.dieExpectedNumeric()
     }
+    (scope, IOCost.empty, result)
   }
+
 }
 
 object NEG extends ExpressionParser {
