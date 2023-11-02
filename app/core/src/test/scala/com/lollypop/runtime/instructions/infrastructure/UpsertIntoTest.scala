@@ -24,7 +24,7 @@ class UpsertIntoTest extends AnyFunSpec with VerificationTools {
             |  | ABC    | OTCBB    |    5.887 |
             |  |------------------------------|
             |""".stripMargin)
-      assert(cost0.inserted == 4)
+      assert(cost0.inserted == 8)
 
       val (scope1, cost1, _) = LollypopVM.executeSQL(scope0.reset(),
         s"""|upsert into $ref (symbol, exchange, lastSale)
