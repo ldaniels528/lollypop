@@ -43,9 +43,11 @@ object From extends QueryableParser {
     example = """from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]"""
   ))
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Queryable = {
-    val params = SQLTemplateParams(ts, template)
-    From(source = params.instructions("source"))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[From] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(From(source = params.instructions("source")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "from"

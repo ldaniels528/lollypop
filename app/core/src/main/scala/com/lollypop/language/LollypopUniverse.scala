@@ -130,7 +130,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def getQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = matchInstruction(ts) {
-    case parser: QueryableParser => Option(parser.parseQueryable(ts))
+    case parser: QueryableParser => parser.parseQueryable(ts)
   }
 
   def getQueryableChain(ts: TokenStream, host: Queryable)(implicit compiler: SQLCompiler): Option[Queryable] = matchInstruction(ts) {

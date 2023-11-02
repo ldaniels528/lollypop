@@ -120,10 +120,12 @@ object TableLiteral extends QueryableParser with ExpressionParser {
   }
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[TableLiteral] = {
-    if (understands(ts)) Option(parseQueryable(ts)) else None
+    if (understands(ts)) Option(TableLiteral(toCells(ts))) else None
   }
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): TableLiteral = apply(toCells(ts))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[TableLiteral] = {
+    if (understands(ts)) Option(TableLiteral(toCells(ts))) else None
+  }
 
   override def help: List[HelpDoc] = Nil
 

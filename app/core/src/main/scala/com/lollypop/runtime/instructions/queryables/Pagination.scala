@@ -120,13 +120,14 @@ object Pagination extends QueryableParser {
          |""".stripMargin
   ))
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Queryable = {
-    ts.nextIf("pagination")
-    compiler.nextExpression(ts) match {
-      case Some(queryable: Queryable) => Pagination(queryable)
-      case Some(expression) => Pagination(expression.asQueryable)
-      case None => ts.dieExpectedQueryable()
-    }
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Pagination] = {
+    if (ts.nextIf("pagination")) {
+      compiler.nextExpression(ts) match {
+        case Some(queryable: Queryable) => Some(Pagination(queryable))
+        case Some(expression) => Some(Pagination(expression.asQueryable))
+        case None => ts.dieExpectedQueryable()
+      }
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "pagination"

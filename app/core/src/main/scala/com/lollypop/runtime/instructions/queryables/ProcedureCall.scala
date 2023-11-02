@@ -90,9 +90,11 @@ object ProcedureCall extends QueryableParser {
          |""".stripMargin
   ))
 
-  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): ProcedureCall = {
-    val params = SQLTemplateParams(ts, templateCard)
-    ProcedureCall(ref = params.locations("name"), args = params.expressionLists("args"))
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ProcedureCall] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(ProcedureCall(ref = params.locations("name"), args = params.expressionLists("args")))
+    } else None
   }
 
   val templateCard: String = "call %L:name %A:args"

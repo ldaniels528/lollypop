@@ -19,7 +19,8 @@ import lollypop.io.IOCost
  * }}}
  * @param expression the [[Expression expression]]
  */
-case class NS(expression: Expression) extends ScalarFunctionCall with RuntimeExpression with Queryable {
+case class NS(expression: Expression) extends ScalarFunctionCall
+  with RuntimeExpression with Queryable {
   override val functionName: String = "ns"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
