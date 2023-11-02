@@ -36,9 +36,9 @@ object DeclarePackage extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): DeclarePackage = {
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DeclarePackage] = {
     val params = SQLTemplateParams(ts, templateCard)
-    DeclarePackage(params.atoms("packageName"))
+    Some(DeclarePackage(params.atoms("packageName")))
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "package"

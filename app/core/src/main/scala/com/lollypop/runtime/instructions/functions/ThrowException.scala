@@ -41,9 +41,11 @@ object ThrowException extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): ThrowException = {
-    val params = SQLTemplateParams(ts, templateCard)
-    ThrowException(params.expressions("error"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ThrowException] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(ThrowException(params.expressions("error")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "throw"

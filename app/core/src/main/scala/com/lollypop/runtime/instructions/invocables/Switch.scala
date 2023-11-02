@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE, PARADIGM_FUNCTIONAL}
+import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models._
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.instructions.conditions.{EQ, RuntimeCondition}
@@ -114,16 +114,18 @@ object Switch extends ExpressionParser with InvokableParser {
   }
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Switch] = {
-    Some(parseInvokable(ts))
+    parseInvokable(ts)
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Switch = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Switch(term = params.expressions("expression"), cases = params.repeatedSets.toList.sortBy(_._1.toInt).flatMap { case (_, listOfParams) =>
-      listOfParams.map { params =>
-        Switch.Case(params.expressions("valueExpr"), params.instructions("thenExpr"))
-      }
-    })
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Switch] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Switch(term = params.expressions("expression"), cases = params.repeatedSets.toList.sortBy(_._1.toInt).flatMap { case (_, listOfParams) =>
+        listOfParams.map { params =>
+          Switch.Case(params.expressions("valueExpr"), params.instructions("thenExpr"))
+        }
+      }))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword

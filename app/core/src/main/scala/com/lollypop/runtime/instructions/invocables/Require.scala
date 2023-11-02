@@ -48,9 +48,11 @@ object Require extends InvokableParser {
     example = "require ['org.apache.spark:spark-core_2.13:3.3.0']"
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Require = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Require(target = params.expressions("target"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Require] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Require(target = params.expressions("target")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "require"

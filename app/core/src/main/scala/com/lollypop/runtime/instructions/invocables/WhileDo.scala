@@ -39,6 +39,7 @@ case class WhileDo(condition: Condition, code: Instruction) extends RuntimeInvok
         recurse(i, c ++ j, k)
       } else (s, c, r)
     }
+
     recurse(scope0, IOCost.empty, null)
   }
 
@@ -56,19 +57,21 @@ object WhileDo extends InvokableParser {
     syntax = templateCard,
     description = "Repeats the `command` while the `expression` is true",
     example =
-    """|var x = 0
-       |var y = 1
-       |while x < 5 do { x += 1; y *= x }
-       |y
-       |""".stripMargin
+      """|var x = 0
+         |var y = 1
+         |while x < 5 do { x += 1; y *= x }
+         |y
+         |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): WhileDo = {
-    val params = SQLTemplateParams(ts, templateCard)
-    WhileDo(condition = params.conditions("condition"), code = params.instructions.get("command") match {
-      case Some(ops) => ops
-      case None => ts.dieExpectedInvokable()
-    })
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[WhileDo] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(WhileDo(condition = params.conditions("condition"), code = params.instructions.get("command") match {
+        case Some(ops) => ops
+        case None => ts.dieExpectedInvokable()
+      }))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "while"

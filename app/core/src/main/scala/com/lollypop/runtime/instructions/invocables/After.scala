@@ -31,6 +31,7 @@ case class After(delay: Expression, instruction: Instruction) extends RuntimeInv
 }
 
 object After extends InvokableParser {
+  private val templateCard: String = "after %e:delay %N:command"
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "after",
@@ -47,13 +48,13 @@ object After extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): After = {
-    val params = SQLTemplateParams(ts, templateCard)
-    After(delay = params.expressions("delay"), instruction = params.instructions("command"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[After] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(After(delay = params.expressions("delay"), instruction = params.instructions("command")))
+    } else None
   }
 
-  val templateCard: String = "after %e:delay %N:command"
-
-  override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "after"
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "after"
 
 }

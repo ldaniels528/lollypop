@@ -38,9 +38,11 @@ object Once extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Once = {
-    val params = SQLTemplateParams(ts, template)
-    Once(code = params.instructions("code"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Once] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(Once(code = params.instructions("code")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "once"

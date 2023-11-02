@@ -142,7 +142,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def getStatement(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Instruction] = matchInstruction(ts) {
-    case parser: InvokableParser => Option(parser.parseInvokable(ts))
+    case parser: InvokableParser => parser.parseInvokable(ts)
   }
 
   def getKeywords: List[String] = antiFunctionParsers.flatMap(_.help.collect { case c if c.name.forall(_.isLetter) => c.name })

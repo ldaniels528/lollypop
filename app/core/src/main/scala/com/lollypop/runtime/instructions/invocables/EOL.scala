@@ -11,9 +11,11 @@ case object EOL extends RuntimeInvokable with InvokableParser {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = (scope, IOCost.empty, null)
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Invokable = {
-    ts.expect(";")
-    EOL
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Invokable] = {
+    if (understands(ts)) {
+      ts.expect(";")
+      Some(EOL)
+    } else None
   }
 
   override def toSQL: String = ";"

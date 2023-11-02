@@ -61,12 +61,14 @@ object TryCatch extends InvokableParser {
            |""".stripMargin
     ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Invokable = {
-    val p = SQLTemplateParams(ts, templateCard)
-    TryCatch(
-      code = p.instructions("code"),
-      onError = p.instructions("onError"),
-      `finally` = p.instructions.get("finally"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[TryCatch] = {
+    if (understands(ts)) {
+      val p = SQLTemplateParams(ts, templateCard)
+      Some(TryCatch(
+        code = p.instructions("code"),
+        onError = p.instructions("onError"),
+        `finally` = p.instructions.get("finally")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "try"

@@ -36,13 +36,14 @@ object Async extends ExpressionParser with InvokableParser {
   ))
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Async] = {
-    val params = SQLTemplateParams(ts, templateCard)
-    params.instructions.get("code").map(Async.apply)
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      params.instructions.get("code").map(Async.apply)
+    } else None
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Async = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Async(code = params.instructions("code"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Async] = {
+    parseExpression(ts)
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "async"

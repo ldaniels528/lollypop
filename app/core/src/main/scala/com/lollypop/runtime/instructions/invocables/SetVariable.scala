@@ -4,9 +4,9 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATI
 import com.lollypop.language._
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.lollypop.language.models._
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.devices.{QMap, Row}
 import com.lollypop.runtime.instructions.expressions.Infix
+import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
@@ -30,14 +30,16 @@ object SetVariable extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): SetVariable = {
-    val params = SQLTemplateParams(ts, template)
-    val instructions: List[SetVariable] = params.assignments("assignments")
-      .map { case (name, instruction) => SetAnyVariable(name.f, instruction) }
-    instructions match {
-      case List(instruction) => instruction
-      case setters => ScopeModificationBlock(setters)
-    }
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[SetVariable] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      val instructions: List[SetVariable] = params.assignments("assignments")
+        .map { case (name, instruction) => SetAnyVariable(name.f, instruction) }
+      instructions match {
+        case List(instruction) => Some(instruction)
+        case setters => Some(ScopeModificationBlock(setters))
+      }
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "set"

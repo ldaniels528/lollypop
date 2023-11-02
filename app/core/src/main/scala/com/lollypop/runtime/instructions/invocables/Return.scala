@@ -34,9 +34,11 @@ object Return extends InvokableParser {
     example = "return 'Hello World'"
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Return = {
-    val value_? = SQLTemplateParams(ts, templateCard) ~> { params => params.instructions.get("value") }
-    Return(value_?)
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Return] = {
+    if (understands(ts)) {
+      val value_? = SQLTemplateParams(ts, templateCard) ~> { params => params.instructions.get("value") }
+      Some(Return(value_?))
+    } else None
   }
 
   val templateCard: String = "return ?%i:value"

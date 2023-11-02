@@ -25,8 +25,8 @@ object Reset extends InvokableParser {
     example = name
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Reset = {
-    if (ts.nextIf(name)) Reset() else ts.dieIllegalIdentifier()
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Reset] = {
+    if (ts.nextIf(name)) Some(Reset()) else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is name

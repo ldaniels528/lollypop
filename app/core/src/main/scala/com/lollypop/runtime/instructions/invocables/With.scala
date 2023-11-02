@@ -73,9 +73,11 @@ object With extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): With = {
-    val p = SQLTemplateParams(ts, templateCard)
-    With(resource = p.instructions("expr"), code = p.instructions("code"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[With] = {
+    if (understands(ts)) {
+      val p = SQLTemplateParams(ts, templateCard)
+      Some(With(resource = p.instructions("expr"), code = p.instructions("code")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "with"

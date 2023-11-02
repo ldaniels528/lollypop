@@ -51,9 +51,11 @@ object WhenEver extends InvokableParser {
            |""".stripMargin
     ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): WhenEver = {
-    val params = SQLTemplateParams(ts, templateCard)
-    WhenEver(expression = params.expressions("expr"), code = params.instructions("code"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[WhenEver] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(WhenEver(expression = params.expressions("expr"), code = params.instructions("code")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "whenever"

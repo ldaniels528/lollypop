@@ -63,15 +63,15 @@ object ValVar extends InvokableParser with InsertValues {
     example = "var customer_id: Int = 5"
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): ValVar = {
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ValVar] = {
     if (understands(ts)) {
       val isReadOnly = ts.next().valueAsString == "val"
       val ref = compiler.nextAtom(ts) || ts.dieIllegalVariableName()
       val columnType = if (ts.nextIf(":")) Some(nextColumnType(ts)) else None
       ts.expect("=")
       val initialValue = compiler.nextExpression(ts) getOrElse compiler.nextOpCodeOrDie(ts)
-      ValVar(ref, `type` = columnType, initialValue = Some(initialValue), isReadOnly = isReadOnly)
-    } else ts.dieExpectedKeywords(keywords: _*)
+      Some(ValVar(ref, `type` = columnType, initialValue = Some(initialValue), isReadOnly = isReadOnly))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = keywords.exists(ts is _)

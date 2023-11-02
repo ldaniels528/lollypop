@@ -10,8 +10,8 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
-import org.slf4j.LoggerFactory
 import lollypop.io.IOCost
+import org.slf4j.LoggerFactory
 
 /**
  * Feature declaration
@@ -210,14 +210,16 @@ object Feature extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Feature = {
-    val params = SQLTemplateParams(ts, template)
-    val scenarios = params.instructions.get("code") match {
-      case Some(CodeBlock(statements)) => statements
-      case Some(statements) => List(statements)
-      case None => Nil
-    }
-    Feature(title = params.expressions("title"), scenarios)
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Feature] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      val scenarios = params.instructions.get("code") match {
+        case Some(CodeBlock(statements)) => statements
+        case Some(statements) => List(statements)
+        case None => Nil
+      }
+      Some(Feature(title = params.expressions("title"), scenarios))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "feature"

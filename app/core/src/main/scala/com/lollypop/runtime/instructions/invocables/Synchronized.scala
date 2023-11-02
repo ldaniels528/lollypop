@@ -17,7 +17,7 @@ case class Synchronized(value: Expression, code: Instruction) extends RuntimeInv
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     value.asAny match {
       case Some(lock) =>
-       lock.asInstanceOf[AnyRef].synchronized {
+        lock.asInstanceOf[AnyRef].synchronized {
           LollypopVM.execute(scope, code)
         }
       case None => (scope, IOCost.empty, null)
@@ -44,9 +44,11 @@ object Synchronized extends InvokableParser {
          |""".stripMargin
   ))
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Synchronized = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Synchronized(value = params.expressions("value"), code = params.instructions("code"))
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Synchronized] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Option(Synchronized(value = params.expressions("value"), code = params.instructions("code")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "synchronized"
