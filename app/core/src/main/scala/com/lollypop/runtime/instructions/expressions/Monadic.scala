@@ -7,6 +7,7 @@ import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, Token
 import com.lollypop.runtime.instructions.expressions.Monadic.__symbol
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import scala.concurrent.Future
 import scala.util.Try
@@ -26,9 +27,9 @@ import scala.util.Try
 case class Monadic(expr0: Expression, expr1: Expression) extends RuntimeExpression {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val monad = LollypopVM.execute(scope, expr0)._3
-    LollypopVM.execute(scope, expr1)._3 match {
+    val result = LollypopVM.execute(scope, expr1)._3 match {
       case lf: LambdaFunction =>
         def exec(v: Expression): Any = LollypopVM.execute(scope, lf.call(List(v)))._3
 
@@ -40,6 +41,7 @@ case class Monadic(expr0: Expression, expr1: Expression) extends RuntimeExpressi
         }
       case z => expr1.dieIllegalType(z)
     }
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = Seq(expr0.toSQL, __symbol, expr1.toSQL).mkString(" ")

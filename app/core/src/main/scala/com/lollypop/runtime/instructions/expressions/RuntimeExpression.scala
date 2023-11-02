@@ -1,24 +1,18 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models._
 import com.lollypop.language.{dieUnsupportedConversion, dieUnsupportedType}
 import com.lollypop.runtime.LollypopVM.execute
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.instructions.RuntimeInstruction
-import com.lollypop.runtime.instructions.functions.{AnonymousFunction, ArgumentBlock}
+import com.lollypop.runtime.instructions.functions.ArgumentBlock
+import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.{LollypopVM, Scope, safeCast}
 import com.lollypop.util.JSONSupport.JSONProductConversion
 import com.lollypop.util.JVMSupport._
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import lollypop.io.IOCost
 import spray.json.JsArray
 
-import java.io.File
-import java.nio.CharBuffer
 import java.util.Date
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -28,10 +22,6 @@ import scala.concurrent.duration.FiniteDuration
  * Represents a run-time Expression
  */
 trait RuntimeExpression extends Expression with RuntimeInstruction {
-
-  def evaluate()(implicit scope: Scope): Any
-
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = evaluate() ~> { v => (scope, IOCost.empty, v) }
 
   def processInternalOps(host: Expression, args: List[Expression])(implicit scope: Scope): Any = {
     val instance = LollypopVM.execute(scope, host)._3
@@ -122,23 +112,9 @@ object RuntimeExpression {
       Option(recurse(execute(scope, getValue)._3))
     }
 
-    @inline def asBlob(implicit scope: Scope): Option[java.sql.Blob] = Option(execute(scope, getValue)._3).map(BlobType.convert)
-
     @inline def asBoolean(implicit scope: Scope): Option[Boolean] = Option(execute(scope, getValue)._3).map(BooleanType.convert)
 
     @inline def asByteArray(implicit scope: Scope): Option[Array[Byte]] = Option(execute(scope, getValue)._3).map(VarBinaryType.convert)
-
-    @inline def asChar(implicit scope: Scope): Option[Char] = Option(execute(scope, getValue)._3).map(CharType.convert)
-
-    @inline def asClob(implicit scope: Scope): Option[ICLOB] = Option(execute(scope, getValue)._3).map(ClobType.convert)
-
-    @inline def asCharArray(implicit scope: Scope): Option[Array[Char]] = Option(execute(scope, getValue)._3).map {
-      case c: Array[Char] => c
-      case c: CharBuffer => c.array()
-      case c: Range => c.toArray.map(_.toChar)
-      case s: String => s.toCharArray
-      case x => dieUnsupportedConversion(x, typeName = "char[]")
-    }
 
     @inline def asDateTime(implicit scope: Scope): Option[Date] = Option(execute(scope, getValue)._3).map(DateTimeType.convert)
 
@@ -160,37 +136,8 @@ object RuntimeExpression {
 
     @inline def asDouble(implicit scope: Scope): Option[Double] = Option(execute(scope, getValue)._3).map(Float64Type.convert)
 
-    @inline
-    def asFile(implicit scope: Scope): Option[File] = {
-
-      @tailrec
-      def recurse(value: Any): File = value match {
-        case f: File => f
-        case c: Char => recurse(String.valueOf(c))
-        case c: Character => recurse(String.valueOf(c))
-        case s: String if s.startsWith(File.separator) => new File(s).getCanonicalFile
-        case s: String => (scope.getUniverse.system.currentDirectory.map(_ / s) || new File(s)).getCanonicalFile
-        case x => dieUnsupportedConversion(x, typeName = "file")
-      }
-
-      Option(execute(scope, getValue)._3).map(recurse)
-    }
-
-    @inline
-    def asAnonymousFunction(implicit scope: Scope): Option[AnonymousFunction] = {
-      Option(execute(scope, getValue)._3).collect { case af: AnonymousFunction => af }
-    }
-
-    @inline def asFloat(implicit scope: Scope): Option[Float] = Option(execute(scope, getValue)._3).map(Float32Type.convert)
-
-    @inline def asInt8(implicit scope: Scope): Option[Byte] = Option(execute(scope, getValue)._3).map(Int8Type.convert)
-
-    @inline def asInt16(implicit scope: Scope): Option[Short] = Option(execute(scope, getValue)._3).map(Int16Type.convert)
-
     @inline def asInt32(implicit scope: Scope): Option[Int] = Option(execute(scope, getValue)._3).map(Int32Type.convert)
-
-    @inline def asInt64(implicit scope: Scope): Option[Long] = Option(execute(scope, getValue)._3).map(Int64Type.convert)
-
+    
     @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(execute(scope, getValue)._3).map(IntervalType.convert)
 
     @inline
@@ -210,8 +157,6 @@ object RuntimeExpression {
     @inline def asString(implicit scope: Scope): Option[String] = Option(execute(scope, getValue)._3).map(StringType.convert)
 
     @inline def get(implicit scope: Scope): Option[Any] = Option(execute(scope, getValue)._3)
-
-    @inline def toTextString(implicit scope: Scope): Option[String] = asString
 
     private def getValue: Expression = expression match {
       case ArgumentBlock(List(arg)) => arg

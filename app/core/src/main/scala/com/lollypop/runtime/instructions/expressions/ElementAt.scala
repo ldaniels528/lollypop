@@ -6,6 +6,7 @@ import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, Token
 import com.lollypop.runtime.datatypes.Inferences.InstructionTyping
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.{LollypopNative, Scope}
+import lollypop.io.IOCost
 
 /**
  * Element-At (operator)
@@ -21,7 +22,9 @@ import com.lollypop.runtime.{LollypopNative, Scope}
  */
 case class ElementAt(host: Expression, args: List[Expression]) extends RuntimeExpression with FunctionCall with LollypopNative {
 
-  override def evaluate()(implicit scope: Scope): Any = processInternalOps(host, args)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    (scope, IOCost.empty, processInternalOps(host, args))
+  }
 
   override def returnType: DataType = {
     host.returnType match {

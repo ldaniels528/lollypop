@@ -5,6 +5,7 @@ import com.lollypop.language.models.{ArrayExpression, Expression}
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * Represents a range-based array comprehension
@@ -36,8 +37,8 @@ object ArrayFromRange {
    */
   case class Inclusive(start: Expression, end: Expression) extends ArrayFromRange {
 
-    override def evaluate()(implicit scope: Scope): Array[_] = {
-      (for {(a, b, typeA) <- evaluateRange(start, end)} yield {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Array[_]) = {
+      val result = (for {(a, b, typeA) <- evaluateRange(start, end)} yield {
         typeA match {
           case CharType => (CharType.convert(a) to CharType.convert(b)).toArray
           case Int8Type => (Int8Type.convert(a) to Int8Type.convert(b)).toArray
@@ -47,6 +48,7 @@ object ArrayFromRange {
           case _ => dieUnsupportedType(typeA.name)
         }
       }).orNull
+      (scope, IOCost.empty, result)
     }
 
     override def toSQL: String = s"[${start.toSQL} to ${end.toSQL}]"
@@ -59,8 +61,8 @@ object ArrayFromRange {
    */
   case class Exclusive(start: Expression, end: Expression) extends ArrayFromRange {
 
-    override def evaluate()(implicit scope: Scope): Array[_] = {
-      (for {(a, b, typeA) <- evaluateRange(start, end)} yield {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Array[_]) = {
+      val result = (for {(a, b, typeA) <- evaluateRange(start, end)} yield {
         typeA match {
           case CharType => (CharType.convert(a) until CharType.convert(b)).toArray
           case Int8Type => (Int8Type.convert(a) until Int8Type.convert(b)).toArray
@@ -70,6 +72,7 @@ object ArrayFromRange {
           case _ => dieUnsupportedType(typeA.name)
         }
       }).orNull
+      (scope, IOCost.empty, result)
     }
 
     override def toSQL: String = s"[${start.toSQL} until ${end.toSQL}]"

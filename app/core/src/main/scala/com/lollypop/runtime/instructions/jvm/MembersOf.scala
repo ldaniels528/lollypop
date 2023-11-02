@@ -28,7 +28,7 @@ import java.lang.reflect.Modifier
  */
 case class MembersOf(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
 
-  override def search()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     // get the class components
     val comp_? = for {
       (_instance, _class) <- Option(LollypopVM.execute(scope, expression)._3) map {

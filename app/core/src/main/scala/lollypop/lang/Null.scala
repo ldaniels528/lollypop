@@ -5,13 +5,16 @@ import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStrea
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
+import lollypop.io.IOCost
 
 /**
  * Represents a Null value or expression
  */
 case class Null(dataType: DataType = AnyType) extends RuntimeExpression with Literal {
 
-  override def evaluate()(implicit scope: Scope): Any = null
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    (scope, IOCost.empty, null)
+  }
 
   override def returnType: DataType = dataType
 

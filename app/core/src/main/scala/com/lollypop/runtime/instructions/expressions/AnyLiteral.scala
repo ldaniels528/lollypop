@@ -7,6 +7,7 @@ import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 import com.lollypop.runtime.instructions.expressions.AnyLiteral.StringInterpolation
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import scala.collection.mutable
 
@@ -17,11 +18,12 @@ import scala.collection.mutable
 case class AnyLiteral(value: Any) extends Literal with RuntimeExpression {
   private val _type = Inferences.fromValue(value)
 
-  override def evaluate()(implicit scope: Scope): Any = {
-    value match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val result = value match {
       case s: String => s.expandEscapeCharacters.replaceTags
       case x => x
     }
+    (scope, IOCost.empty, result)
   }
 
   override def returnType: DataType = _type

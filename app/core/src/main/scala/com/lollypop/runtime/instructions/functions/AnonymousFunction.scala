@@ -5,6 +5,7 @@ import com.lollypop.runtime.instructions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.{LambdaFunctionCall, RuntimeExpression}
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Represents a nameless (lambda) function
@@ -20,10 +21,10 @@ case class AnonymousFunction(params: Seq[ParameterLike], code: Instruction, var 
 
   override def call(args: List[Expression]): LambdaFunctionCall = LambdaFunctionCall(this, args)
 
-  override def evaluate()(implicit scope: Scope): AnonymousFunction = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, AnonymousFunction) = {
     // capture the scope at the time of the lambda's creation (first execution)
     if (origin.isEmpty) updateScope(Scope(parentScope = scope))
-    this
+    (scope, IOCost.empty, this)
   }
 
   override def toScala: AnyRef = {

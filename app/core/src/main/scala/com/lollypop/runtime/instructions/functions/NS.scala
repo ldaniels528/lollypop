@@ -7,6 +7,7 @@ import com.lollypop.runtime.devices.RemoteRowCollection.getRemoteCollection
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
+import lollypop.io.IOCost
 
 /**
  * The NS() function
@@ -21,11 +22,12 @@ import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 case class NS(expression: Expression) extends ScalarFunctionCall with RuntimeExpression with Queryable {
   override val functionName: String = "ns"
 
-  override def evaluate()(implicit scope: Scope): Any = {
-    (expression.asString flatMap {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val result = (expression.asString flatMap {
       case name if name.startsWith("//") => getRemoteCollection(name)
       case name => Option(scope.getUniverse.getReferencedEntity(DatabaseObjectRef(name).toNS))
     }).orNull
+    (scope, IOCost.empty, result)
   }
 
 }

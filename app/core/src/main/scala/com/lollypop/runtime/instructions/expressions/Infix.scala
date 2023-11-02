@@ -11,6 +11,7 @@ import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.JSONSupport._
 import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 import spray.json.JsValue
 
 /**
@@ -20,14 +21,14 @@ import spray.json.JsValue
  */
 case class Infix(instance: Expression, member: Expression) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val result = member match {
       case ds if ds.getAlias.exists(scope.isDataSource) => scope.getDataSourceValue(ds.getNameOrDie, member.getNameOrDie).orNull
       case call: NamedFunctionCall => instance.invokeMember(call)
       case IdentifierRef(name) => getAttribute(instance, name)
       case other => other.dieIllegalType(other)
     }
-    result.unwrapOptions
+    (scope, IOCost.empty, result.unwrapOptions)
   }
 
   override def toSQL: String = Seq(instance, member).map(_.wrapSQL).mkString(".")

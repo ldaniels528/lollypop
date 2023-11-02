@@ -6,6 +6,7 @@ import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, StringE
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.StringRenderHelper
+import lollypop.io.IOCost
 
 /**
  * TypeOf() function - returns the JVM type of an expression
@@ -17,8 +18,9 @@ import com.lollypop.util.StringRenderHelper
  */
 case class TypeOf(expression: Expression) extends ScalarFunctionCall with RuntimeExpression with StringExpression {
 
-  override def evaluate()(implicit scope: Scope): String = {
-    Option(LollypopVM.execute(scope, expression)._3).map(_.getClass).map(StringRenderHelper.toClassString).orNull
+  override def execute()(implicit scope: Scope): (Scope, IOCost, String) = {
+    val result = Option(LollypopVM.execute(scope, expression)._3).map(_.getClass).map(StringRenderHelper.toClassString).orNull
+    (scope, IOCost.empty, result)
   }
 
 }

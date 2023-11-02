@@ -396,7 +396,7 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
     if (file.getName.toLowerCase().endsWith(".md")) {
       implicit val scope: Scope = Scope()
       val page = LollypopPage.fromFile(file)
-      val fileContents = page.evaluate()
+      val fileContents = page.execute()._3
       complete(HttpResponse(entity = HttpEntity(ContentTypes.`text/html(UTF-8)`, fileContents)))
     } else getFromFile(file)
   }
@@ -528,7 +528,7 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
                   rows = device.getLength))
             }
             else complete {
-              val (_, _, rows) = Select(fields = Seq(AllFields), from = Some(ns), where = condition, limit = limit.map(Literal.apply)).search()
+              val (_, _, rows) = Select(fields = Seq(AllFields), from = Some(ns), where = condition, limit = limit.map(Literal.apply)).execute()
               rows.toMapGraph
             }
           }

@@ -40,7 +40,7 @@ class LollypopPageTest extends AnyFunSpec {
            |) where lastSale < 75 order by lastSale
            |</LollypopCode>
            |""".stripMargin)
-      val output = page.evaluate()(Scope())
+      val output = page.execute()(Scope())._3
       assert(output ==
         """|<!DOCTYPE html>
            |<html>
@@ -91,7 +91,7 @@ class LollypopPageTest extends AnyFunSpec {
            |) where lastSale < 75 order by lastSale
            |</LollypopExample>
            |""".stripMargin)
-      val output = page.evaluate()(Scope())
+      val output = page.execute()(Scope())._3
       assert(output ===
         """|<!DOCTYPE html>
            |<html>

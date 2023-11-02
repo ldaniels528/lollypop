@@ -7,6 +7,7 @@ import com.lollypop.runtime.datatypes.Inferences.InstructionTyping
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.instructions.functions.FunctionArguments
 import com.lollypop.runtime.{LollypopNative, Scope}
+import lollypop.io.IOCost
 
 /**
  * Apply-to (operator)
@@ -32,7 +33,9 @@ case class ApplyTo(host: Expression, tuple: Expression) extends RuntimeExpressio
     case FunctionArguments(args) => args
   }
 
-  override def evaluate()(implicit scope: Scope): Any = processInternalOps(host, args)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    (scope, IOCost.empty, processInternalOps(host, args))
+  }
 
   override def returnType: DataType = {
     host.returnType match {

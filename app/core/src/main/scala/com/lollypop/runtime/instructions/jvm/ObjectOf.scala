@@ -7,12 +7,13 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.plastics.RuntimeClass.getObjectByName
 import com.lollypop.runtime.{DynamicClassLoader, Scope}
+import lollypop.io.IOCost
 
 case class ObjectOf(className: Expression) extends ScalarFunctionCall with RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     implicit val classLoader: DynamicClassLoader = scope.getUniverse.classLoader
-    className.asString.map(getObjectByName).orNull
+    (scope, IOCost.empty, className.asString.map(getObjectByName).orNull)
   }
 
 }

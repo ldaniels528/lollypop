@@ -8,12 +8,14 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.expressions.ZipWith.keyword
 import com.lollypop.runtime.plastics.Tuples.tupleToSeq
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 case class ZipWith(exprA: Expression, exprB: Expression) extends RuntimeExpression {
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val arrayA = exprA.asArray || exprA.dieIllegalType()
     val arrayB = exprB.asArray || exprB.dieIllegalType()
-    (arrayA zip arrayB).flatMap(tupleToSeq).map(_.toArray)
+    val result = (arrayA zip arrayB).flatMap(tupleToSeq).map(_.toArray)
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = Seq(exprA.toSQL, keyword, exprB.toSQL).mkString(" ")

@@ -11,6 +11,7 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import scala.collection.concurrent.TrieMap
 
@@ -43,7 +44,9 @@ case class Each(variable: Atom,
                 isYield: Boolean = false,
                 limit: Option[Expression] = None) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): RowCollection = run()(Scope(scope))
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+    (scope, IOCost.empty, run()(Scope(scope)))
+  }
 
   private def run()(implicit scope: Scope): RowCollection = {
 

@@ -6,6 +6,7 @@ import com.lollypop.runtime.datatypes.Inferences
 import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, StringExpression}
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * CodecOf() function - returns the CODEC (encoder/decoder) of an expression
@@ -16,9 +17,9 @@ import com.lollypop.runtime.{LollypopVM, Scope}
  * }}}
  */
 case class CodecOf(expression: Expression) extends ScalarFunctionCall with RuntimeExpression with StringExpression {
-  override def evaluate()(implicit scope: Scope): String = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, String) = {
     val value = LollypopVM.execute(scope, expression)._3
-    Inferences.fromValue(value).toSQL
+    (scope, IOCost.empty, Inferences.fromValue(value).toSQL)
   }
 }
 

@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
+import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Atom, Expression}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, FunctionArguments}
@@ -9,6 +9,7 @@ import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 /**
  * Represents a new instance expression
@@ -18,6 +19,8 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  * new `java.util.Date`(1631508164812)
  * }}}
  * @example {{{
+ * import "java.awt.event.MouseListener"
+ * import "java.awt.event.MouseEvent"
  * new MouseListener() {
  *    mouseClicked: (e: MouseEvent) => out <=== "mouseClicked"
  *    mousePressed: (e: MouseEvent) => out <=== "mousePressed"
@@ -29,9 +32,9 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  */
 case class New(typeName: Atom, args: Expression, methods: Option[Dictionary] = None) extends RuntimeExpression {
 
-  override def evaluate()(implicit scope: Scope): Any = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // resolve the type
-    scope.resolve(typeName.name) match {
+    val result = scope.resolve(typeName.name) match {
       case Some(_class: DeclareClass) => _class.newInstance(args)
       case _ =>
         args match {
@@ -47,6 +50,7 @@ case class New(typeName: Atom, args: Expression, methods: Option[Dictionary] = N
           case FunctionArguments(_args) => typeName.instantiate(_args: _*)
         }
     }
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = {
@@ -98,14 +102,14 @@ object New extends ExpressionParser {
     HelpDoc(
       name = "new",
       category = CATEGORY_JVM_REFLECTION,
-      paradigm = PARADIGM_OBJECT_ORIENTED,
+      paradigm = PARADIGM_FUNCTIONAL,
       syntax = templateCard,
       description = "The new operator can be used to instantiate JVM classes.",
       example = "new `java.util.Date`()"
     ), HelpDoc(
       name = "new",
       category = CATEGORY_JVM_REFLECTION,
-      paradigm = PARADIGM_OBJECT_ORIENTED,
+      paradigm = PARADIGM_FUNCTIONAL,
       syntax = templateCard,
       description = "The new operator can be used to instantiate Lollypop-defined classes.",
       example =
@@ -117,7 +121,7 @@ object New extends ExpressionParser {
     ), HelpDoc(
       name = "new",
       category = CATEGORY_JVM_REFLECTION,
-      paradigm = PARADIGM_OBJECT_ORIENTED,
+      paradigm = PARADIGM_FUNCTIONAL,
       syntax = templateCard,
       description = "The new operator can be used to create anonymous objects from interfaces or traits.",
       example =
