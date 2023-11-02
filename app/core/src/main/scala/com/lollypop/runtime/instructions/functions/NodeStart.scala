@@ -7,18 +7,20 @@ import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.{IntegerExpression, RuntimeExpression}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import lollypop.io.IOCost
 
 import scala.concurrent.duration.Duration
 
 case class NodeStart(port: Option[Expression]) extends ScalarFunctionCall with RuntimeExpression with IntegerExpression {
-  override def evaluate()(implicit scope: Scope): Int = {
-    port match {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Int) = {
+    val result = port match {
       case Some(expression) =>
         val _port = expression.asInt32 || expression.die("Integer value expected")
         LollypopServers.startManually(_port)(scope.getUniverse, Duration.Inf)
         _port
       case None => LollypopServers.start(scope.getUniverse)
     }
+    (scope, IOCost.empty, result)
   }
 
 }

@@ -6,6 +6,7 @@ import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
+import lollypop.io.IOCost
 
 /**
  * Creates a new REST API endpoint
@@ -23,13 +24,13 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 case class NodeAPI(port: Expression, url: Expression, methods: Expression)
   extends ScalarFunctionCall with RuntimeCondition {
 
-  override def isTrue(implicit scope: Scope): Boolean = {
-    (for {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val result = (for {
       myPort <- port.asInt32
       myUrl <- url.asString
       myMethods <- methods.asDictionary
-      ok <- LollypopServers.createAPIEndPoint(myPort, myUrl, myMethods.toMap)
-    } yield ok) contains true
+    } yield LollypopServers.api(myPort, myUrl, myMethods.toMap)) contains true
+    (scope, IOCost.empty, result)
   }
 }
 
