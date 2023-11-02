@@ -82,13 +82,15 @@ object CreateProcedure extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateProcedure = {
-    val params = SQLTemplateParams(ts, template)
-    CreateProcedure(ref = params.locations("name"),
-      Procedure(
-        params = params.parameters.getOrElse("params", Nil),
-        code = params.instructions("code"),
-      ), ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateProcedure] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(CreateProcedure(ref = params.locations("name"),
+        Procedure(
+          params = params.parameters.getOrElse("params", Nil),
+          code = params.instructions("code"),
+        ), ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create procedure"

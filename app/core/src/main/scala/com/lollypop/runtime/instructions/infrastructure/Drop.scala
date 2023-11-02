@@ -49,9 +49,13 @@ object Drop extends ModifiableParser with IfExists {
            |""".stripMargin)
   )
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Drop = {
-    val params = SQLTemplateParams(ts, templateCard)
-    Drop(ref = params.locations("ref"), ifExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Drop] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(Drop(
+        ref = params.locations("ref"),
+        ifExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "drop"

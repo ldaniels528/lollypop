@@ -40,9 +40,11 @@ object Macro extends ModifiableParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Macro = {
-    val params = SQLTemplateParams(ts, template)
-    parseMacro(params)
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Macro] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(parseMacro(params))
+    } else None
   }
 
   def parseMacro(params: SQLTemplateParams)(implicit compiler: SQLCompiler): Macro = {

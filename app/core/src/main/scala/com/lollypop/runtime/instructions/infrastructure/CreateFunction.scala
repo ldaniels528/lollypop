@@ -43,13 +43,15 @@ object CreateFunction extends ModifiableParser with IfNotExists {
     example = "create function if not exists calc_add(a: Int, b: Int) := a + b"
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): CreateFunction = {
-    val params = SQLTemplateParams(ts, templateCard)
-    CreateFunction(ref = params.locations("name"),
-      TypicalFunction(
-        params = params.parameters.getOrElse("params", Nil),
-        code = params.instructions("code")
-      ), ifNotExists = params.indicators.get("exists").contains(true))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[CreateFunction] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, templateCard)
+      Some(CreateFunction(ref = params.locations("name"),
+        TypicalFunction(
+          params = params.parameters.getOrElse("params", Nil),
+          code = params.instructions("code")
+        ), ifNotExists = params.indicators.get("exists").contains(true)))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "create function"

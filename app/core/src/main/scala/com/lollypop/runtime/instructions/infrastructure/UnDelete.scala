@@ -63,11 +63,13 @@ object UnDelete extends ModifiableParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): UnDelete = {
-    val params = SQLTemplateParams(ts, template)
-    UnDelete(ref = params.locations("name"),
-      condition = params.conditions.get("condition"),
-      limit = params.expressions.get("limit"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[UnDelete] = {
+    if (understands(ts)) {
+      val params = SQLTemplateParams(ts, template)
+      Some(UnDelete(ref = params.locations("name"),
+        condition = params.conditions.get("condition"),
+        limit = params.expressions.get("limit")))
+    } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "undelete"

@@ -126,7 +126,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def getModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Modifiable] = matchInstruction(ts) {
-    case parser: ModifiableParser => Option(parser.parseModifiable(ts))
+    case parser: ModifiableParser => parser.parseModifiable(ts)
   }
 
   def getQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = matchInstruction(ts) {

@@ -44,8 +44,10 @@ object Truncate extends ModifiableParser {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Truncate = {
-    Truncate(ref = SQLTemplateParams(ts, "truncate ?table %L:target").locations("target"))
+  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Truncate] = {
+    if (understands(ts)) {
+      Some(Truncate(ref = SQLTemplateParams(ts, "truncate ?table %L:target").locations("target")))
+    } else None
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "truncate"
