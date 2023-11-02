@@ -4,13 +4,16 @@ import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLAR
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * SQL: `expression` is null
  * @param expr the [[Expression expression]] to evaluate
  */
 case class IsNull(expr: Expression) extends ScalarFunctionCall with RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = LollypopVM.execute(scope, expr)._3 == null
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    (scope, IOCost.empty, LollypopVM.execute(scope, expr)._3 == null)
+  }
 
   override def toSQL: String = s"${expr.toSQL} is null"
 }

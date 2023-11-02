@@ -5,6 +5,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLAR
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 import scala.annotation.tailrec
 
@@ -13,7 +14,7 @@ import scala.annotation.tailrec
  * @param expr the [[Expression expression]] to evaluate
  */
 case class IsNotNull(expr: Expression) extends ScalarFunctionCall with RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     @tailrec
     def isntNull(value: Any): Boolean = value match {
       case Some(v) => isntNull(v)
@@ -21,7 +22,7 @@ case class IsNotNull(expr: Expression) extends ScalarFunctionCall with RuntimeCo
       case _ => true
     }
 
-    LollypopVM.execute(scope, expr) ~> { case (_, _, result1) => isntNull(result1) }
+    LollypopVM.execute(scope, expr) ~> { case (s, c, result1) => (s, c, isntNull(result1)) }
   }
 
   override def toSQL: String = s"${expr.toSQL} is not null"

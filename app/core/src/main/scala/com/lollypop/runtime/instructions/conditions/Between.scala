@@ -3,32 +3,34 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.instructions.conditions.Between.__name
+import com.lollypop.runtime.instructions.conditions.Between.keyword
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
- * SQL: `expression` between `expression` and `expression`
- * @param expr the [[Expression expression]] to evaluate
- * @param from the lower bound [[Expression expression]]
- * @param to   the upper bound [[Expression expression]]
+ * Between Operator: `value` between `from` and `to`
+ * @param value the [[Expression expression]] to evaluate
+ * @param from  the lower bound [[Expression expression]]
+ * @param to    the upper bound [[Expression expression]]
  */
-case class Between(expr: Expression, from: Expression, to: Expression) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
-    val v = Option(LollypopVM.execute(scope, expr)._3)
-    val a = Option(LollypopVM.execute(scope, from)._3)
-    val b = Option(LollypopVM.execute(scope, to)._3)
-    (v >= a) && (v <= b)
+case class Between(value: Expression, from: Expression, to: Expression) extends RuntimeCondition {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val (s0, c0, v) = LollypopVM.execute(scope, value)
+    val (s1, c1, a) = LollypopVM.execute(s0, from)
+    val (s2, c2, b) = LollypopVM.execute(s1, to)
+    val (vv, aa, bb) = (Option(v), Option(a), Option(b))
+    (s2, c0 ++ c1 ++ c2, (vv >= aa) && (vv <= bb))
   }
 
-  override def toSQL: String = s"${expr.toSQL} ${__name} ${from.toSQL} and ${to.toSQL}"
+  override def toSQL: String = Seq(value.toSQL, keyword, from.toSQL, "and", to.toSQL).mkString(" ")
 }
 
 object Between extends ExpressionToConditionPostParser {
-  private val __name = "between"
+  private val keyword = "between"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Between] = {
-    if (ts.nextIf(__name)) {
+    if (ts.nextIf(keyword)) {
       for {
         a <- compiler.nextExpression(ts)
         _ = ts expect "and"
@@ -38,10 +40,10 @@ object Between extends ExpressionToConditionPostParser {
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `to` and `from`",
+    syntax = s"%e:value $keyword %e:to and %e:from",
     description = "determines whether the `value` is between the `to` and `from` (inclusive)",
     example =
       """|from (
@@ -59,6 +61,6 @@ object Between extends ExpressionToConditionPostParser {
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

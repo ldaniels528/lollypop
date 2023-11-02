@@ -5,11 +5,11 @@ import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 case class Contains(items: Expression, item: Expression) extends RuntimeCondition {
-
-  override def isTrue(implicit scope: Scope): Boolean = {
-    (for {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val result = (for {
       container <- Option(LollypopVM.execute(scope, items)._3)
       elem <- Option(LollypopVM.execute(scope, item)._3)
     } yield {
@@ -20,6 +20,7 @@ case class Contains(items: Expression, item: Expression) extends RuntimeConditio
         case _ => false
       }
     }).contains(true)
+    (scope, IOCost.empty, result)
   }
 
   override def toSQL: String = s"${items.toSQL} contains ${item.toSQL}"
@@ -27,37 +28,37 @@ case class Contains(items: Expression, item: Expression) extends RuntimeConditio
 }
 
 object Contains extends ExpressionToConditionPostParser {
-  private val __name = "contains"
+  private val keyword = "contains"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Contains] = {
-    if (ts.nextIf(__name)) compiler.nextExpression(ts).map(Contains(host, _)) else None
+    if (ts.nextIf(keyword)) compiler.nextExpression(ts).map(Contains(host, _)) else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `expression`",
+    syntax = s"`value` $keyword `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
       """|string = "Hello World"
          |string contains "World"
          |""".stripMargin
   ), HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `expression`",
+    syntax = s"`value` $keyword `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
       """|dict = {"name":"Tom", "DOB":"2003-09-28T00:00:00.000Z"}
          |dict contains "name"
          |""".stripMargin
   ), HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`value` ${__name} `expression`",
+    syntax = s"`value` $keyword `expression`",
     description = "determines whether the `value` contains the `expression`",
     example =
       """|array = [{"name":"Jerry"}, {"name":"Tom"}, {"name":"Sheila"}]
@@ -65,6 +66,6 @@ object Contains extends ExpressionToConditionPostParser {
          |""".stripMargin
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

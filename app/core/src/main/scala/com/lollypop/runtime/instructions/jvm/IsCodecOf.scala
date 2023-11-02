@@ -6,8 +6,9 @@ import com.lollypop.language.models.{ColumnType, Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
-import com.lollypop.runtime.instructions.jvm.IsCodecOf.__name
+import com.lollypop.runtime.instructions.jvm.IsCodecOf.keyword
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.io.IOCost
 
 /**
  * isCodecOf instruction
@@ -16,31 +17,32 @@ import com.lollypop.runtime.{LollypopVM, Scope}
  * @example {{{ getNextItem() isCodecOf Int }}}
  */
 case class IsCodecOf(expr: Expression, `type`: ColumnType) extends RuntimeCondition {
-  override def isTrue(implicit scope: Scope): Boolean = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     val v = LollypopVM.execute(scope, expr)._3
-    Inferences.fromValue(v).name == DataType.load(`type`).name
+    val result = Inferences.fromValue(v).name == DataType.load(`type`).name
+    (scope, IOCost.empty, result)
   }
 
-  override def toSQL: String = List(expr.wrapSQL, __name, `type`.wrapSQL).mkString(" ")
+  override def toSQL: String = List(expr.wrapSQL, keyword, `type`.wrapSQL).mkString(" ")
 
 }
 
 object IsCodecOf extends ExpressionToConditionPostParser {
-  private val __name = "isCodecOf"
+  private val keyword = "isCodecOf"
 
   override def parseConditionChain(ts: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[Condition] = {
-    if (ts.nextIf(__name)) Option(IsCodecOf(host, nextColumnType(ts))) else None
+    if (ts.nextIf(keyword)) Option(IsCodecOf(host, nextColumnType(ts))) else None
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = __name,
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"`expression` ${__name} `CODEC`",
+    syntax = s"`expression` $keyword `CODEC`",
     description = "determines whether the `expression` is compatible with the `CODEC`",
     example = "(new `java.util.Date`()) isCodecOf DateTime"
   ))
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is __name
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }
