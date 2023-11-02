@@ -29,12 +29,12 @@ object LollypopServers {
     interact(port)(client)
   }
 
-  def createAPIEndPoint(port: Int, url: String, methods: Map[String, Any]): Option[Boolean] = {
-    servers.get(port).map(_.createAPIEndPoint(url, methods))
+  def api(port: Int, url: String, methods: Map[String, Any]): Boolean = {
+    servers.get(port).exists(_.createAPIEndPoint(url, methods))
   }
 
-  def createFileEndPoint(port: Int, url: String, files: Map[String, String]): Option[Boolean] = {
-    servers.get(port).map(_.createFileEndPoint(url, files))
+  def www(port: Int, url: String, files: Map[String, String]): Boolean = {
+    servers.get(port).exists(_.createFileEndPoint(url, files))
   }
 
   def evaluate(port: Int, sql: String, scope: Scope): QueryResponse = {
@@ -48,7 +48,7 @@ object LollypopServers {
     servers.get(port).map(_.server)
   }
 
-  def peers: List[Int] = servers.toList.map(_._1)
+  def peers: Array[Int] = servers.keys.toArray
 
   def start(ctx: LollypopUniverse = LollypopUniverse(isServerMode = true), timeout: Duration = Duration.Inf): Int = {
     val random = new Random(System.currentTimeMillis())
