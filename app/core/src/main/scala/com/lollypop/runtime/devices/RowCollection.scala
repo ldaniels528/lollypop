@@ -120,6 +120,18 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
     out
   }
 
+  def exists(f: Row => Boolean): Boolean = {
+    var found = false
+    var id = 0L
+    val eof = getLength
+    while (!found && id < eof) {
+      val row = apply(id)
+      if (row.metadata.isActive) found = f(row)
+      id += 1
+    }
+    found
+  }
+
   /**
    * Exports the contents of this device as Comma Separated Values (CSV)
    * @return the [[IOCost cost]]
