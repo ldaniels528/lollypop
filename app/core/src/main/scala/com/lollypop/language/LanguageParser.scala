@@ -3,13 +3,7 @@ package com.lollypop.language
 /**
  * Base class for all Language parser activities
  */
-trait LanguageParser {
-
-  /**
-   * Provides help for instruction
-   * @return the [[HelpDoc help-doc]]
-   */
-  def help: List[HelpDoc]
+trait LanguageParser extends HelpIntegration {
 
   /**
    * Indicates whether the next token in the stream cam be parsed
