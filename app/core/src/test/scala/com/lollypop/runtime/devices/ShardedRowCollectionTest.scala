@@ -37,7 +37,7 @@ class ShardedRowCollectionTest extends AnyFunSpec {
       val deviceB = FileRowCollection(columns)
 
       // write the contents of stocks.csv to both devices
-      Source.fromFile("./contrib/examples/stocks.csv").use(_.getLines() foreach { line =>
+      Source.fromFile("./app/examples/stocks.csv").use(_.getLines() foreach { line =>
         val array = line.split("[,]")
         val row = Map(columns.map(_.name) zip array: _*)
         deviceA.insert(row.toRow(deviceA))

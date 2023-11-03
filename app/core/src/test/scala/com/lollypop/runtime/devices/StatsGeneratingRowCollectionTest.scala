@@ -29,7 +29,7 @@ class StatsGeneratingRowCollectionTest extends AnyFunSpec with VerificationTools
       val scope1 = scope0.withVariable("stocks", device)
 
       // insert 5,000 records
-      val src = Source.fromFile("./contrib/examples/stocks-5k.csv")
+      val src = Source.fromFile("./app/examples/stocks-5k.csv")
       val lines = src.getLines()
       lines.next()
       lines foreach { line =>

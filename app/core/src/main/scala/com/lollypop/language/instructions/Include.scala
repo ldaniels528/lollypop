@@ -22,7 +22,7 @@ object Include extends DirectiveParser {
     syntax = "include `file`" ,
     description = "incorporates the contents of an external file into current scope",
     example =
-      """|include('./contrib/examples/src/main/lollypop/Stocks.sql')
+      """|include('./app/examples/src/main/lollypop/Stocks.sql')
          |""".stripMargin
   ))
 

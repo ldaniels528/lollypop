@@ -1,7 +1,7 @@
 namespace 'demo.stocks'
 //////////////////////////////////////////////////////////////////////////////////////
 //      Stocks Demo
-// include('./contrib/examples/src/main/lollypop/Stocks.sql')
+// include('./app/examples/src/main/lollypop/Stocks.sql')
 //////////////////////////////////////////////////////////////////////////////////////
 
 // create a macro to generate random stock quotes
@@ -17,7 +17,7 @@ create macro `tickers` := 'tickers %e:total' {
             exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
             symbol: Random.nextString(['A' to 'Z'], 4)
     })
-    return @@myQuotes
+    myQuotes
 }
 
 // create a table variables with a capacity of 15000 rows
@@ -25,4 +25,4 @@ stocks = tickers 10
 
 // display a limit of 5 rows
 stdout <=== 'Sampling 5 quotes:\n'
-stocks.show(5)
+stdout <=== (from stocks limit 5)

@@ -22,9 +22,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should change the current working directory") {
       val (scope, _, _) = LollypopVM.executeSQL(Scope(),
-        """|OS.chdir('./contrib/examples')
+        """|OS.chdir('./app/examples')
            |""".stripMargin)
-      assert(scope.getUniverse.system.currentDirectory contains new File("./contrib/examples"))
+      assert(scope.getUniverse.system.currentDirectory contains new File("./app/examples"))
     }
 
     it("""should compile and execute: "select 'Hello World' as message".evaluate()""") {
@@ -65,9 +65,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
       }
     }
 
-    it("should execute: OS.listFiles('./contrib/examples/src/main/lollypop')") {
+    it("should execute: OS.listFiles('./app/examples/src/main/lollypop')") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/main/lollypop') where name matches '.*[.]sql'
+        """|from OS.listFiles('./app/examples/src/main/lollypop') where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
@@ -78,7 +78,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.listFiles('/examples/src/main/lollypop', true)") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
-        """|from OS.listFiles('./contrib/examples/src/', true) where name matches '.*[.]sql'
+        """|from OS.listFiles('./app/examples/src/', true) where name matches '.*[.]sql'
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
@@ -229,9 +229,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
     it("should recursively copy a directory structure") {
       // recursive copy a directory structure
       val (scopeA, _, resultA) = LollypopVM.executeSQL(Scope(),
-        """|OS.copy("./contrib/examples/", "temp_demos/")
+        """|OS.copy("./app/examples/", "temp_demos/")
            |""".stripMargin)
-      val (srcDir, destDir) = (new File("./contrib/examples/"), new File("temp_demos/"))
+      val (srcDir, destDir) = (new File("./app/examples/"), new File("temp_demos/"))
       assert(resultA == true & srcDir.streamFilesRecursively.map(_.getName) == destDir.streamFilesRecursively.map(_.getName))
 
       // recursive delete the directory structure
