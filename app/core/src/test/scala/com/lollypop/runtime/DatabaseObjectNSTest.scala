@@ -14,27 +14,27 @@ class DatabaseObjectNSTest extends AnyFunSpec {
 
     it("should determine the file location of an inner table") {
       val ns = DatabaseObjectNS(databaseName = "finance", schemaName = "securities", name = "stocks", columnName = Some("transactions"))
-      assert(ns.subTableDataFile contains getServerRootDirectory / ns.databaseName / ns.schemaName / ns.name / (ns.name + "#" + ns.columnName.orNull + "." + dataExt))
+      assert(ns.subTableDataFile contains getDatabaseRootDirectory(ns.databaseName) / ns.schemaName / ns.name / (ns.name + "#" + ns.columnName.orNull + "." + dataExt))
     }
 
     it("should determine the file location of a database object config file") {
       val ns = DatabaseObjectNS(databaseName = "unit_test", schemaName = "files", name = "DatabaseFilesTest")
-      assert(ns.configFile == getServerRootDirectory / ns.databaseName / ns.schemaName / ns.name / (ns.name + "." + configExt))
+      assert(ns.configFile == getDatabaseRootDirectory(ns.databaseName) / ns.schemaName / ns.name / (ns.name + "." + configExt))
     }
 
     it("should determine the file location of a database object BLOB file") {
       val ns = DatabaseObjectNS(databaseName = "unit_test", schemaName = "files", name = "DatabaseFilesTest")
-      assert(ns.blobDataFile == getServerRootDirectory / ns.databaseName / ns.schemaName / ns.name / (ns.name + "." + blobDataExt))
+      assert(ns.blobDataFile == getDatabaseRootDirectory(ns.databaseName) / ns.schemaName / ns.name / (ns.name + "." + blobDataExt))
     }
 
     it("should determine the file location of a database object data file") {
       val ns = DatabaseObjectNS(databaseName = "unit_test", schemaName = "files", name = "DatabaseFilesTest")
-      assert(ns.tableDataFile == getServerRootDirectory / ns.databaseName / ns.schemaName / ns.name / (ns.name + "." + dataExt))
+      assert(ns.tableDataFile == getDatabaseRootDirectory(ns.databaseName) / ns.schemaName / ns.name / (ns.name + "." + dataExt))
     }
 
     it("should determine the file location of a database object journal file") {
       val ns = DatabaseObjectNS(databaseName = "unit_test", schemaName = "files", name = "DatabaseFilesTest")
-      assert(ns.journalFile == getServerRootDirectory / ns.databaseName / ns.schemaName / ns.name / (ns.name + "." + journalFileExt))
+      assert(ns.journalFile == getDatabaseRootDirectory(ns.databaseName) / ns.schemaName / ns.name / (ns.name + "." + journalFileExt))
     }
 
     it("should determine the database object for a namespace") {
