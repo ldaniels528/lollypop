@@ -1,11 +1,18 @@
 package com.lollypop.runtime
 
 import java.io.File
+import scala.language.implicitConversions
 
 /**
  * Runtime Files
  */
 object RuntimeFiles {
+
+  object implicits {
+
+    implicit def string2File(string: String): File = new File(string)
+
+  }
 
   /**
    * Recursive File List Enrichment
