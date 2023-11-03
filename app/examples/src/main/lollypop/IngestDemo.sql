@@ -1,7 +1,7 @@
 namespace `demo.ingest`
 //////////////////////////////////////////////////////////////////////////////////////
 //      INGESTION EXAMPLE
-// include './contrib/examples/src/main/lollypop/IngestDemo.sql'
+// include './app/examples/src/main/lollypop/IngestDemo.sql'
 //////////////////////////////////////////////////////////////////////////////////////
     
 // create an external table to represent the input data
@@ -11,7 +11,7 @@ create external table StocksFileDump (
     exchange: String(8),
     lastSale: Double,
     transactionTime: Long
-) containing { format: 'CSV', location: './contrib/examples/stocks.csv', headers: false }
+) containing { format: 'CSV', location: './app/examples/stocks.csv', headers: false }
     
 // create a work table to analyze the data
 // NOTE: the DateTime automatically converts Longs to Dates

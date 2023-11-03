@@ -27,14 +27,14 @@ class LollypopCLITest extends AnyFunSpec {
       val scope: Scope = Scope()
       val outputFile = new File("./vin-mapping.json")
       assert(!outputFile.exists() || outputFile.delete())
-      LollypopCLI.runScript(scope, "./contrib/examples/src/main/lollypop/GenerateVinMapping.sql")
+      LollypopCLI.runScript(scope, "./app/examples/src/main/lollypop/GenerateVinMapping.sql")
       assert(outputFile.exists())
     }
 
     it("should execute a .sql file via main(...)") {
       val outputFile = new File("./vin-mapping.json")
       assert(!outputFile.exists() || outputFile.delete())
-      LollypopCLI.main(Array("./contrib/examples/src/main/lollypop/GenerateVinMapping.sql"))
+      LollypopCLI.main(Array("./app/examples/src/main/lollypop/GenerateVinMapping.sql"))
       assert(outputFile.exists())
     }
 

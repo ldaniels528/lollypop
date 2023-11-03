@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 // Title: ShockTrade Demo Test
-// include('./contrib/examples/src/test/lollypop/shocktrade/shocktrade_test.sql')
+// include('./app/examples/src/test/lollypop/shocktrade/shocktrade_test.sql')
 //
 // the remote tables references:
 // -----------------------------
@@ -9,7 +9,7 @@
 // val Participants = ns('//{{host}}:{{port}}/{{__namespace__}}.Participants')
 //////////////////////////////////////////////////////////////////////////////////////
 
-include('./contrib/examples/src/main/lollypop/shocktrade/shocktrade.sql')
+include('./app/examples/src/main/lollypop/shocktrade/shocktrade.sql')
 
 feature 'ShockTrade services' {
 

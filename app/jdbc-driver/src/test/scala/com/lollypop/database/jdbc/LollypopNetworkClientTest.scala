@@ -34,7 +34,7 @@ class LollypopNetworkClientTest extends AnyFunSpec with JDBCTestServer {
       LollypopNetworkClient.getConnection(classOf[LollypopDriver].getName, jdbcURL) use { implicit conn =>
         val outputFile = new File("./vin-mapping.json")
         assert(!outputFile.exists() || outputFile.delete())
-        LollypopNetworkClient.startScript(new File("./contrib/examples/src/main/lollypop/GenerateVinMapping.sql"))
+        LollypopNetworkClient.startScript(new File("./app/examples/src/main/lollypop/GenerateVinMapping.sql"))
         assert(outputFile.exists())
       }
     }
