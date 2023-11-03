@@ -5,8 +5,9 @@ import com.lollypop.language.models._
 import com.lollypop.runtime.instructions.MacroLanguageParser
 import com.lollypop.runtime.instructions.invocables.{InlineCodeBlock, InstructionChain}
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.util.ResourceHelper.AutoClose
 
-import java.io.InputStream
+import java.io.{File, FileInputStream, InputStream}
 import scala.io.Source
 import scala.language.{existentials, postfixOps}
 
@@ -21,6 +22,13 @@ trait SQLCompiler extends TemplateProcessor {
    * @return the [[LollypopUniverse compiler context]]
    */
   def ctx: LollypopUniverse
+
+  /**
+   * Parses the contents of the given file into an [[Instruction Instruction]]
+   * @param file the [[File file]] to compile
+   * @return the resultant [[Instruction]]
+   */
+  def compile(file: File): Instruction = new FileInputStream(file).use(compile)
 
   /**
    * Parses the contents of the given input stream into an [[Instruction Instruction]]
