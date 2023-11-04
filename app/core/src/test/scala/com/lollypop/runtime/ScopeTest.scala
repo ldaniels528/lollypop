@@ -1,6 +1,7 @@
 package com.lollypop.runtime
 
 import com.lollypop.AppConstants
+import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
@@ -19,6 +20,16 @@ class ScopeTest extends AnyFunSpec {
   private val logger = LoggerFactory.getLogger(getClass)
 
   describe(classOf[Scope].getSimpleName) {
+
+    it("should return its contents as a Map") {
+      val scope = LollypopVM.executeSQL(Scope(),
+        """|x = 3
+           |y = 5
+           |z = 9
+           |w = x + y + z
+           |""".stripMargin)._1
+      assert(scope.toMap.filter(t => Set("x", "y", "z", "w") contains t._1) == Map("x" -> 3, "y" -> 5, "w" -> 17, "z" -> 9))
+    }
 
     it("should override the database from a parent scope") {
       val (parentScope, _, _) = LollypopVM.executeSQL(Scope(), "namespace 'slovett.work'")
@@ -266,6 +277,22 @@ class ScopeTest extends AnyFunSpec {
     it("should provide the Lollypop version string") {
       val version = Scope().resolve("__version__").orNull
       assert(version == AppConstants.version)
+    }
+
+    it("should provide the logging services") {
+      val ctx = LollypopUniverse(isServerMode = true)
+      val scope = ctx.createRootScope()
+        .withVariable(name = "__debug__", value = true)
+        .withVariable(name = "__info__", value = true)
+        .withVariable(name = "__error__", value = true)
+        .withVariable(name = "__warn__", value = true)
+
+      scope.debug("debug: Hello World")
+      scope.info("info: Hello World")
+      scope.warn("warn: Hello World")
+      scope.error("error: Hello World")
+      assert(ctx.system.stdOut.asString() == "debug: Hello World\ninfo: Hello World\n")
+      assert(ctx.system.stdErr.asString() == "warn: Hello World\nerror: Hello World\n")
     }
 
   }
