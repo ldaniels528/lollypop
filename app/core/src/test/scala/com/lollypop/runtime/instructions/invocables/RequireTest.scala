@@ -16,7 +16,7 @@ class RequireTest extends AnyFunSpec with VerificationTools {
            |]
            |
            |import "com.google.api.client.googleapis.notifications.TypedNotification"
-           |@TypedNotification
+           |TypedNotification
            |""".stripMargin)
       assert(Option(result).collect { case c: Class[_] => c.getName } contains "com.google.api.client.googleapis.notifications.TypedNotification")
     }

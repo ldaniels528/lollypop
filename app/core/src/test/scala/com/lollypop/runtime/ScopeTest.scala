@@ -70,7 +70,7 @@ class ScopeTest extends AnyFunSpec {
           Field(name = c.name, metadata = FieldMetadata(), value = c.defaultValue.flatMap(v => Option(LollypopVM.execute(scope0, v)._3)).map(c.`type`.convert))
         ))))
       assert(LollypopVM.executeSQL(scope, "symbol")._3 == "ABC")
-      assert(LollypopVM.executeSQL(scope, "@symbol")._3 == "BROK")
+      assert(LollypopVM.executeSQL(scope, "$symbol")._3 == "BROK")
     }
 
     it("should create and read variables") {

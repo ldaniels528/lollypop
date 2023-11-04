@@ -1,6 +1,5 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.@@
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.jvm.ClassOf
@@ -18,12 +17,12 @@ class InfixTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should decompile Java instance fields") {
-      verify("select @myValue.value")
+      verify("select myValue.value")
     }
 
     it("should compile Java instance fields") {
-      val results = compiler.compile("select @myValue.value")
-      assert(results == Select(fields = Seq(Infix(instance = @@("myValue"), member = "value".f))))
+      val results = compiler.compile("select myValue.value")
+      assert(results == Select(fields = Seq(Infix(instance = "myValue".f, member = "value".f))))
     }
 
     it("should compile Java static fields") {
@@ -32,25 +31,25 @@ class InfixTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should compile Java instance method calls") {
-      val results = compiler.compile("select @offScreen.setColor(@color)")
+      val results = compiler.compile("select offScreen.setColor(color)")
       assert(results == Select(fields = Seq(
-        Infix(instance = @@("offScreen"), member = NamedFunctionCall(name = "setColor", args = List(@@("color"))))
+        Infix(instance = "offScreen".f, member = NamedFunctionCall(name = "setColor", args = List("color".f)))
       )))
     }
 
     it("should compile Java static method calls") {
-      val results = compiler.compile("select classOf('org.jsoup.Jsoup').parse(@file, 'UTF-8')")
+      val results = compiler.compile("select classOf('org.jsoup.Jsoup').parse(file, 'UTF-8')")
       assert(results == Select(fields = Seq(
-          Infix(instance = ClassOf("org.jsoup.Jsoup".v), member = NamedFunctionCall(name = "parse", args = List(@@("file"), "UTF-8".v)))
+        Infix(instance = ClassOf("org.jsoup.Jsoup".v), member = NamedFunctionCall(name = "parse", args = List("file".f, "UTF-8".v)))
       )))
     }
 
     it("should decompile Java static method calls") {
-      verify("select classOf('org.jsoup.Jsoup').parse(@file, 'UTF-8')")
+      verify("select classOf('org.jsoup.Jsoup').parse(file, 'UTF-8')")
     }
 
     it("should decompile Java instance method calls") {
-      verify("select @offScreen.setColor(@color)")
+      verify("select offScreen.setColor(color)")
     }
 
     it("should evaluate Java static method calls") {

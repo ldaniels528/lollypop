@@ -59,24 +59,24 @@ class LollypopCompilerTest extends AnyFunSpec {
       verify("['0' until '9'] + ['A' until 'F']", ArrayFromRange.Exclusive('0', '9') + ArrayFromRange.Exclusive('A', 'F'))
     }
 
-    it("should parse an array index: @items(5)") {
-      verify("@items(5)", ApplyTo(@@("items"), 5))
+    it("should parse an array index: items(5)") {
+      verify("items(5)", "items".fx(5))
     }
 
-    it("should parse an array index: @items(@n)") {
-      verify("@items(@n)", ApplyTo(@@("items"), @@("n")))
+    it("should parse an array index: items(n)") {
+      verify("items(n)", "items".fx("n".f))
     }
 
     it("should parse an array index: ['NW', 'NE'](1)") {
       verify("['NW', 'NE'](1)", ApplyTo(ArrayLiteral("NW", "NE"), 1))
     }
 
-    it("should parse an array index: @items[5]") {
-      verify("@items[5]", ElementAt(@@("items"), 5))
+    it("should parse an array index: items[5]") {
+      verify("items[5]", ElementAt("items".f, 5))
     }
 
-    it("should parse an array index: @items[@n]") {
-      verify("@items[@n]", ElementAt(@@("items"), @@("n")))
+    it("should parse an array index: items[n]") {
+      verify("items[n]", ElementAt("items".f, "n".f))
     }
 
     it("should parse an array index: ['NW', 'NE'][1]") {
@@ -218,8 +218,8 @@ class LollypopCompilerTest extends AnyFunSpec {
       verify("sum(LastSale)", Sum("LastSale".f))
     }
 
-    it("should parse local variables: \"@total\"") {
-      verify("@total", @@("total"))
+    it("should parse local variables: \"total\"") {
+      verify("total", "total".f)
     }
 
   }

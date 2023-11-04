@@ -47,7 +47,7 @@ object DatabaseObjectRef {
       case Array(databaseName, schemaName, name) => DatabaseObjectNS(databaseName, schemaName, name)
       case Array(schemaName, name) => Unrealized(databaseName = None, schemaName = Some(schemaName), name = name)
       case Array(name) if name.startsWith("@@") => @@@(name.drop(2))
-      case Array(name) if name.startsWith("@") => @@@(name.drop(1))
+      case Array(name) if name.startsWith("$") => @@@(name.drop(1))
       case Array(name) => Unrealized(databaseName = None, schemaName = None, name = name)
       case _ => dieIllegalObjectRef(path)
     }

@@ -134,16 +134,16 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
             |nodeAPI($port, '/api/$databaseName/$schemaName', {
             |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
             |     insert into Travelers (id, firstName, lastName, destAirportCode)
-            |     values (@id, @firstName, @lastName, @destAirportCode)
+            |     values ($$id, $$firstName, $$lastName, $$destAirportCode)
             |  },
             |  get: (firstName: String, lastName: String) => {
-            |     select * from Travelers where firstName is @firstName and lastName is @lastName
+            |     select * from Travelers where firstName is $$firstName and lastName is $$lastName
             |  },
             |  put: (id: Long, name: String) => {
-            |     update subscriptions set name = @name where id is @id
+            |     update subscriptions set name = $$name where id is $$id
             |  },
             |  delete: (id: UUID) => {
-            |     delete from Travelers where id is @id
+            |     delete from Travelers where id is $$id
             |  }
             |})
             |

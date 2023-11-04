@@ -34,7 +34,7 @@ feature 'ShockTrade services' {
         val responseB = http get 'http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}'
         verify responseB.statusCode is 200
             and responseB.body.size() is 1
-            and responseB.body[0] matches { contest_id: @contest_id, name: "Winter is coming", funds: 2000.0, creationTime: isNotNull }
+            and responseB.body[0] matches { contest_id: $contest_id, name: "Winter is coming", funds: 2000.0, creationTime: isNotNull }
                 ^^^ "Retrieved contest: {{contest_id}}"
     }
             
@@ -86,7 +86,7 @@ feature 'ShockTrade services' {
 
     scenario 'Join a member to a contest as a new participant' extends ['Create a new member', 'Create a new contest'] {
         val responseH = http post 'http://{{host}}:{{port}}/api/shocktrade/participants'
-                            <~ { contest_id: @contest_id, member_id: @memberID }
+                            <~ { contest_id: $contest_id, member_id: $memberID }
         val participant_id = responseH.body
         verify responseH.statusCode is 200
             ^^^ "Joined contest: member {{memberID}}, participant {{participant_id}}"
@@ -97,7 +97,7 @@ feature 'ShockTrade services' {
         verify responseI.statusCode is 200
             and responseI.body.size() is 1
             and responseI.body[0] matches {
-                contest_id: @contest_id, member_id: memberID, participant_id: @participant_id,
+                contest_id: $contest_id, member_id: memberID, participant_id: $participant_id,
                 funds: 2000, creationTime: isDateTime
             } ^^^ "Retrieved participant: {{participant_id}}"
     }
@@ -108,7 +108,7 @@ feature 'ShockTrade services' {
 
     scenario 'Create a new order' extends 'Join a member to a contest as a new participant' {
         val responseJ = http post 'http://{{host}}:{{port}}/api/shocktrade/orders'
-                            <~ { contest_id: @contest_id, participant_id: @participant_id,
+                            <~ { contest_id: $contest_id, participant_id: $participant_id,
                                  symbol: 'AAPL', exchange: 'NYSE', order_type: 'BUY', order_terms: 'LIMIT', price: 95.67 }
         val order_id = responseJ.body
         verify responseJ.statusCode is 200
@@ -120,7 +120,7 @@ feature 'ShockTrade services' {
        verify responseK.statusCode is 200
            and responseK.body.size() is 1
            and responseK.body[0] matches {
-                contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id,
+                contest_id: $contest_id, participant_id: $participant_id, order_id: $order_id,
                 symbol: 'AAPL', exchange: 'NYSE', order_type: 'BUY', order_terms: 'LIMIT', price: 95.67,
                 price: 95.67, creationTime: isDateTime, expirationTime: isDateTime
            } ^^^ "Retrieved order: {{order_id}}"
@@ -132,7 +132,7 @@ feature 'ShockTrade services' {
 
     scenario 'Create a new position' extends 'Create a new order' {
         val responseL = http post 'http://{{host}}:{{port}}/api/shocktrade/positions'
-                            <~ { contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id,
+                            <~ { contest_id: $contest_id, participant_id: $participant_id, order_id: $order_id,
                                  symbol: 'AAPL', exchange: 'NYSE', pricePaid: 95.11 }
         val position_id = responseL.body
         verify responseL.statusCode is 200
@@ -144,7 +144,7 @@ feature 'ShockTrade services' {
        verify responseM.statusCode is 200
            and responseM.body.size() is 1
            and responseM.body[0] matches {
-                contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id, position_id: @position_id,
+                contest_id: $contest_id, participant_id: $participant_id, order_id: $order_id, position_id: $position_id,
                 symbol: 'AAPL', exchange: 'NYSE', pricePaid: 95.11, creationTime: isDateTime
            } ^^^ "Retrieved position: {{position_id}}"
    }
@@ -154,7 +154,7 @@ feature 'ShockTrade services' {
         verify responseN.statusCode is 200
             and responseN.body.size() is 1
             and responseN.body[0] matches {
-                contest_id: @contest_id, participant_id: @participant_id, order_id: @order_id, position_id: @position_id,
+                contest_id: $contest_id, participant_id: $participant_id, order_id: $order_id, position_id: $position_id,
                 symbol: 'AAPL', exchange: 'NYSE', pricePaid: 95.11, creationTime: isDateTime
             } ^^^ "Retrieved position: {{position_id}}"
    }

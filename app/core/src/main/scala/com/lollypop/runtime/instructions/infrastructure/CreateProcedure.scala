@@ -75,7 +75,7 @@ object CreateProcedure extends ModifiableParser with IfNotExists {
          |                               --> minPrice: Double) :=
          |    select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale)
          |    from @@stockQuotes
-         |    where exchange is @theExchange
+         |    where exchange is theExchange
          |    group by exchange
          |
          |call getStockQuote("NASDAQ")

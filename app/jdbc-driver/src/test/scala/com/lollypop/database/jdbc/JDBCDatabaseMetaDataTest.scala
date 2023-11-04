@@ -126,10 +126,10 @@ class JDBCDatabaseMetaDataTest extends AnyFunSpec with JDBCTestServer {
               |
               |drop if exists getStockQuote
               |create procedure getStockQuote(theExchange: String) := {
-              |    stdout <=== 'Selected Exchange: "{{ @theExchange }}"'
+              |    stdout <=== 'Selected Exchange: "{{ theExchange }}"'
               |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
               |    from @@results
-              |    where exchange == @theExchange
+              |    where exchange == theExchange
               |    group by exchange
               |}
               |

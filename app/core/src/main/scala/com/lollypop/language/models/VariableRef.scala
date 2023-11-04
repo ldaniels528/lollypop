@@ -14,14 +14,14 @@ object VariableRef extends ExpressionParser {
   def unapply(ref: VariableRef): Option[String] = Some(ref.name)
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = "@",
+    name = "$",
     category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "@`variable`",
     description = "used to disambiguate a variable from a field or other identifiers",
     example =
       """|x = 1
-         |@x
+         |$x
          |""".stripMargin
   ), HelpDoc(
     name = "@@",
@@ -38,12 +38,12 @@ object VariableRef extends ExpressionParser {
   override def parseExpression(stream: TokenStream)(implicit compiler: SQLCompiler): Option[Expression] = {
     stream match {
       // is it a variable? (e.g. @totalCost)
-      case ts if ts is "@" => compiler.nextVariableReference(ts)
+      case ts if ts is "$" => compiler.nextVariableReference(ts)
       case ts if ts nextIf "@@" => Option(compiler.nextTableVariable(ts))
       case _ => None
     }
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = Seq("@", "@@").exists(ts is _)
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = Seq("$", "@@").exists(ts is _)
 
 }

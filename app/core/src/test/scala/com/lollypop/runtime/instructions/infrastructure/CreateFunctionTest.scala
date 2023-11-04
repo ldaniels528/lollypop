@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.language.models.Operation.RichOperation
-import com.lollypop.language.models.{@@, TypicalFunction}
+import com.lollypop.language.models.{$, TypicalFunction}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
@@ -17,18 +17,18 @@ class CreateFunctionTest extends AnyFunSpec with VerificationTools {
 
     it("should support create function") {
       val results = compiler.compile(
-        """|create function if not exists calc_add(a Int, b Int) := @a + @b
+        """|create function if not exists calc_add(a Int, b Int) := a + b
            |""".stripMargin)
       assert(results == CreateFunction(ref = DatabaseObjectRef("calc_add"),
         TypicalFunction(
           params = Seq("a Int".c, "b Int".c),
-          code = @@("a") + @@("b")
+          code = "a".f + "b".f
         ), ifNotExists = true))
     }
 
     it("should support decompiling create function") {
       verify(
-        """|create function if not exists calc_add(a Int, b Int) := @a + @b
+        """|create function if not exists calc_add(a Int, b Int) := a + b
            |""".stripMargin)
     }
 
@@ -79,7 +79,7 @@ class CreateFunctionTest extends AnyFunSpec with VerificationTools {
       val (_, _, results4) = LollypopVM.searchSQL(Scope(),
         """|namespace 'samples.functions'
            |drop if exists factorial
-           |create function factorial(n: Int) := iff(@n <= 1, 1, @n * factorial(@n - 1))
+           |create function factorial(n: Int) := iff(n <= 1, 1, n * factorial(n - 1))
            |select factorial(5)
            |""".stripMargin)
       results4.tabulate() foreach logger.info
