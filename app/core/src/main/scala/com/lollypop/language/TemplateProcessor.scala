@@ -308,7 +308,7 @@ trait TemplateProcessor {
           case None => nextQueryOrVariableWithAlias(ts)
         }), ts)
       // scalar variable (e.g. "@results")?
-      case ts if ts nextIf "@" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
+      case ts if ts nextIf "$" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
       // table variable (e.g. "@@name")?
       case ts if ts nextIf "@@" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
       // sub-query?
@@ -337,7 +337,7 @@ trait TemplateProcessor {
    * @return the resultant [[DatabaseObjectRef]]
    */
   def nextTableOrVariable(stream: TokenStream): DatabaseObjectRef = stream match {
-    case ts if ts nextIf "@" => nextTableVariable(ts)
+    case ts if ts nextIf "$" => nextTableVariable(ts)
     case ts if ts nextIf "@@" => nextTableVariable(ts)
     case ts if ts.isBackticks | ts.isText | ts.isQuoted => ts.nextTableDotNotation()
     case ts => ts.dieExpectedEntityRef()
@@ -350,9 +350,9 @@ trait TemplateProcessor {
    */
   def nextVariableReference(stream: TokenStream): Option[VariableRef] = {
     val variable = stream match {
-      case ts if ts nextIf "@" => ts.nextIdentifier.map(id => @@(id))
+      case ts if ts nextIf "$" => ts.nextIdentifier.map(id => $(id))
       case ts if ts nextIf "@@" => ts.nextIdentifier.map(id => @@@(id))
-      case ts => ts.nextIdentifier.map(id => @@(id))
+      case ts => ts.nextIdentifier.map(id => $(id))
     }
     variable ?? stream.dieIllegalVariableName()
   }

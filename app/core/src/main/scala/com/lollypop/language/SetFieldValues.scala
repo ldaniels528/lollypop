@@ -34,7 +34,7 @@ object SetFieldValues {
   private def nextIdentifier(stream: TokenStream)(implicit compiler: SQLCompiler): Option[NamedExpression] = {
     stream match {
       case ts if ts is "@@" => compiler.nextVariableReference(ts)
-      case ts if ts is "@" => compiler.nextVariableReference(ts)
+      case ts if ts is "$" => compiler.nextVariableReference(ts)
       case ts => compiler.nextField(ts)
     }
   }

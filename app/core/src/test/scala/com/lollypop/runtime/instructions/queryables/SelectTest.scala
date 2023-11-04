@@ -170,8 +170,8 @@ class SelectTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support set variable") {
-      val results = compiler.compile("set @customers = @customers + 1")
-      assert(results == SetAnyVariable(ref = "customers".f, @@("customers") + 1))
+      val results = compiler.compile("set $customers = $customers + 1")
+      assert(results == SetAnyVariable(ref = "customers".f, $("customers") + 1))
     }
 
     it("should support set row variable") {

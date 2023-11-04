@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.{@@, @@@}
+import com.lollypop.language.models.{$, @@@}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.functions.ArgumentBlock
@@ -76,7 +76,7 @@ class ApplyToTest extends AnyFunSpec {
            |stocks.push({ symbol: 'T', exchange: 'NYSE', lastSale: 22.77 })
            |stocks.push({ symbol: 'AAPL', exchange: 'NASDAQ', lastSale: 149.76 })
            |""".stripMargin)
-      val model = ApplyTo(@@("stocks"), 2.v)
+      val model = ApplyTo($("stocks"), 2.v)
       val value = model.execute()(scope)._3
       assert(value ==
         Row(id = 2, metadata = RowMetadata(),

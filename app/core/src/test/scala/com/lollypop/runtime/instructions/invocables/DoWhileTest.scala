@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.models.@@
+import com.lollypop.language.models.$
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.runtime.instructions.VerificationTools
@@ -19,10 +19,10 @@ class DoWhileTest extends AnyFunSpec with VerificationTools {
       val results = compiler.compile(
         """|do {
            |   out.println('Hello World')
-           |   @cnt += 1
-           |} while @cnt < 10
+           |   cnt += 1
+           |} while cnt < 10
            |""".stripMargin)
-      val cnt = @@("cnt")
+      val cnt = "cnt".f
       assert(results == DoWhile(
         condition = cnt < 10,
         code = ScopedCodeBlock(
@@ -36,12 +36,12 @@ class DoWhileTest extends AnyFunSpec with VerificationTools {
       val model = compiler.compile(
         """|do {
            |   out.println('Hello World')
-           |   @cnt += 1
-           |} while @cnt < 10
+           |   cnt += 1
+           |} while cnt < 10
            |""".stripMargin)
-      assert(model == DoWhile(condition = @@("cnt") < 10.v, code = ScopedCodeBlock(
+      assert(model == DoWhile(condition = "cnt".f < 10.v, code = ScopedCodeBlock(
         Infix("out".f, "println".fx("Hello World".v)),
-        Plus(@@("cnt"), b = 1.v).doAndSet
+        Plus("cnt".f, b = 1.v).doAndSet
       )))
     }
 

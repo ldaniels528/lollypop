@@ -56,7 +56,7 @@ object RowsOfValues extends QueryableParser {
         case ts if ts nextIf "values" =>
           ts match {
             case ts1 if ts1 nextIf "@@" => @@@(ts1.next().valueAsString)
-            case ts1 if ts1 nextIf "@" => ts1.dieScalarVariableIncompatibleWithRowSets()
+            case ts1 if ts1 nextIf "$" => ts1.dieScalarVariableIncompatibleWithRowSets()
             case ts1 =>
               var values: List[List[Expression]] = Nil
               do values = SQLTemplateParams(ts1, "( %E:values )").expressionLists("values") :: values while (ts1 nextIf ",")
@@ -64,7 +64,7 @@ object RowsOfValues extends QueryableParser {
           }
         // variable?
         case ts if ts nextIf "@@" => @@@(ts.next().valueAsString)
-        case ts if ts nextIf "@" => ts.dieScalarVariableIncompatibleWithRowSets()
+        case ts if ts nextIf "$" => ts.dieScalarVariableIncompatibleWithRowSets()
         // any supported query ...
         case ts => compiler.nextQueryOrVariableWithAlias(ts).asQueryable
       }

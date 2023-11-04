@@ -29,7 +29,7 @@ class ThisTest extends AnyFunSpec with VerificationTools {
 
     it("should execute (expression)") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(), sql =
-        s"""|set @n = 123
+        s"""|n = 123
             |select x: this.toTable()
             |""".stripMargin)
       device.tabulate().foreach(logger.info)
@@ -52,17 +52,17 @@ class ThisTest extends AnyFunSpec with VerificationTools {
     ////////////////////////////////////////////////////////////////////////
 
     it("should compile (queryable)") {
-      val results = compiler.compile("from this.toTable() where name == '@x'")
-      assert(results == Select(fields = Seq("*".f), from = Some(From(Infix(This(), "toTable".fx()))), where = Some("name".f === "@x".v)))
+      val results = compiler.compile("from this.toTable() where name == '$x'")
+      assert(results == Select(fields = Seq("*".f), from = Some(From(Infix(This(), "toTable".fx()))), where = Some("name".f === "$x".v)))
     }
 
     it("should decompile (queryable)") {
-      verify("from (this.toTable()) where name == '@x'")
+      verify("from (this.toTable()) where name == '$x'")
     }
 
     it("should execute (queryable)") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(), sql =
-        s"""|set @n = 123
+        s"""|n = 123
             |select value from (this.toTable()) where name is "n"
             |""".stripMargin)
       assert(device.tabulate() == List(

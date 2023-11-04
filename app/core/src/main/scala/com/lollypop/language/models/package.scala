@@ -10,7 +10,7 @@ package object models {
    * @param name the name of the scalar variable
    * @return a new [[ScalarVariableRef scalar variable reference]]
    */
-  def @@(name: String): ScalarVariableRef = ScalarVariableRef(name)
+  def $(name: String): ScalarVariableRef = ScalarVariableRef(name)
 
   /**
    * Shortcut for creating a table variable reference

@@ -77,9 +77,9 @@ class TemplateProcessorTest extends AnyFunSpec {
     }
 
     it("should parse Java instance method expressions") {
-      verify(text = "offScreen->setColor(@color)", template = "%a:variable -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
+      verify(text = "offScreen->setColor(color)", template = "%a:variable -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
         atoms = Map("variable" -> "offScreen", "methodName" -> "setColor"),
-        expressionLists = Map("args" -> List(@@("color"))),
+        expressionLists = Map("args" -> List("color".f)),
         keywords = Set("->", "(", ")")
       ))
     }
@@ -92,9 +92,9 @@ class TemplateProcessorTest extends AnyFunSpec {
     }
 
     it("should parse Java static method expressions") {
-      verify(text = "`org.jsoup.Jsoup`->parse(@file, 'UTF-8')", template = "%a:className -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
+      verify(text = "`org.jsoup.Jsoup`->parse(file, 'UTF-8')", template = "%a:className -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
         atoms = Map("className" -> "org.jsoup.Jsoup", "methodName" -> "parse"),
-        expressionLists = Map("args" -> List(@@("file"), "UTF-8")),
+        expressionLists = Map("args" -> List("file".f, "UTF-8")),
         keywords = Set("->", "(", ")")
       ))
     }

@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.{@@, @@@, Atom, Column, ColumnType, TableModel}
+import com.lollypop.language.models.{$, @@@, Atom, Column, ColumnType, TableModel}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.invocables.InlineCodeBlock
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}

@@ -24,18 +24,18 @@ class NodeAPITest extends AnyFunSpec with VerificationTools {
       assert(responseA.created == 1)
 
       val (scopeB, _, responseB) = LollypopVM.executeSQL(scopeA,
-        """|nodeAPI(port, '/api/demo/subscriptions', {
+       s"""|nodeAPI(port, '/api/demo/subscriptions', {
            |  post: (name: String, startTime: DateTime) => {
-           |    insert into subscriptions (name, startTime) values (@name, @startTime)
+           |    insert into subscriptions (name, startTime) values ($$name, $$startTime)
            |  },
            |  get: (id: Long) => {
-           |    select * from subscriptions where id is @id
+           |    select * from subscriptions where id is $$id
            |  },
            |  put: (id: Long, newName: String) => {
-           |    update subscriptions set name = @newName where id is @id
+           |    update subscriptions set name = $$newName where id is $$id
            |  },
            |  delete: (id: Long, expiry: DateTime) => {
-           |    update subscriptions set stopTime = @expiry where id is @id
+           |    update subscriptions set stopTime = $$expiry where id is $$id
            |  }
            |})
            |""".stripMargin)

@@ -13,7 +13,7 @@ nodeAPI(port, '/api/shocktrade/members', {
     // http get 'http://{{host}}:{{port}}/api/shocktrade/members?id=2187296c-7bf6-4c1d-a87d-fdc3dae39dc8'
     //////////////////////////////////////////////////////////////////////////////////////
     get: (id: UUID) => {
-        from ns('Members') where member_id is @id limit 1
+        from ns('Members') where member_id is $id limit 1
     },
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ nodeAPI(port, '/api/shocktrade/members', {
     // http put 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929", name: "Winter is coming" }
     //////////////////////////////////////////////////////////////////////////////////////
     put: (id: UUID, newName: String) => {
-        update Members set name = @newName where member_id is @id
+        update Members set name = $newName where member_id is $id
     },
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ nodeAPI(port, '/api/shocktrade/members', {
     // http delete 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929" }
     //////////////////////////////////////////////////////////////////////////////////////
     delete: (id: UUID) => {
-        delete from Members where member_id is @id
+        delete from Members where member_id is $id
     }
 })
 
