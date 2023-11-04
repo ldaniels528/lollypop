@@ -5,7 +5,6 @@ import com.lollypop.language.models._
 import com.lollypop.runtime.Scope._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
-import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 
 import java.io._
@@ -16,7 +15,7 @@ import scala.util.Try
 /**
  * Represents a scope structure
  */
-trait Scope extends TableExpression {
+trait Scope {
 
   def ++(that: Scope): Scope
 
@@ -160,12 +159,6 @@ trait Scope extends TableExpression {
    */
   def resolveTableVariable(name: String): RowCollection
 
-  override def returnType: TableType = TableType(columns = Seq(
-    TableColumn(name = "name", `type` = StringType),
-    TableColumn(name = "kind", `type` = StringType),
-    TableColumn(name = "value", `type` = StringType)
-  ))
-
   /**
    * Sets a variable with the value of an evaluated instruction
    * @param name        the variable name
@@ -271,25 +264,22 @@ trait Scope extends TableExpression {
    */
   def withVariable(name: String, `type`: DataType, value: Any, isReadOnly: Boolean): Scope
 
-  def toMap: Map[String, Any] = {
-    Seq(getAliasedSources, getImports, getValueReferences).reduce(_ ++ _)
-  }
+  def toMap: Map[String, Any]
 
   def toRowCollection: RowCollection
-
-  override def toString: String = {
-    val m = getAliasedRows ++ getAliasedSources ++ getValueReferences
-    s"${this.getClass.getSimpleName}(${m.size})"
-  }
 
   //////////////////////////////////////////////////////////////////////////////////
   //    Print I/O Streams
   //////////////////////////////////////////////////////////////////////////////////
 
-  def debug(s: => String): Unit = {
-    if (resolveAs("__debug__").contains(true)) getUniverse.system.stdErr.writer.println(s)
-  }
+  def debug(s: => String): Unit
 
+  def info(s: => String): Unit
+
+  def warn(s: => String): Unit
+
+  def error(s: => String): Unit
+  
 }
 
 /**
