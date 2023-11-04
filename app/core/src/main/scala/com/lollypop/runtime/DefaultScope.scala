@@ -46,18 +46,18 @@ case class DefaultScope(superScope: Option[Scope] = None,
   extends Scope with TableExpression {
 
   private val specialVariables: Map[String, () => Any] = Map(
-    "__scope__" -> { () => this },
-    "__imports__" -> { () => getImports },
-    "__implicit_imports__" -> { () =>
+    __scope__ -> { () => this },
+    __imports__ -> { () => getImports },
+    __implicit_imports__ -> { () =>
       getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)
         .map { case (k, values) => k -> values.map(_._2).toSet }
     },
-    "__loaded__" -> { () => getUniverse.system.getReferencedEntities },
+    __loaded__ -> { () => getUniverse.system.getReferencedEntities },
     __namespace__ -> { () => (apply(__database__) || DEFAULT_DATABASE) + "." + (apply(__schema__) || DEFAULT_SCHEMA) },
-    "__resources__" -> { () => ResourceManager.getResources },
-    "__userHome__" -> { () => scala.util.Properties.userHome },
-    "__userName__" -> { () => scala.util.Properties.userName },
-    "__version__" -> { () => version }
+    __resources__ -> { () => ResourceManager.getResources },
+    __userHome__ -> { () => scala.util.Properties.userHome },
+    __userName__ -> { () => scala.util.Properties.userName },
+    __version__ -> { () => version }
   )
 
   override def ++(that: Scope): Scope = {
