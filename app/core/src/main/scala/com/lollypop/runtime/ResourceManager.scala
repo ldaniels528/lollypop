@@ -42,7 +42,7 @@ object ResourceManager {
   def getResource(ns: DatabaseObjectNS): Option[Any] = resources.get(ns)
 
   def getResourceOrElseUpdate(ns: DatabaseObjectNS, f: => Any): Any = resources.getOrElseUpdate(ns, {
-    logger.info(s"Tracking '$ns'")
+    logger.debug(s"Tracking '$ns'")
     f
   })
 
@@ -75,7 +75,7 @@ object ResourceManager {
   }
 
   def link[T <: DataObject](dataObject: T): T = {
-    logger.info(s"Tracking '${dataObject.ns}' [${dataObject.getClass.getSimpleName}]")
+    logger.debug(s"Tracking '${dataObject.ns}' [${dataObject.getClass.getSimpleName}]")
     resources.put(dataObject.ns, dataObject)
     dataObject
   }
