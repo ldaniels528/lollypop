@@ -75,7 +75,7 @@ object CreateTable extends ModifiableParser with IfNotExists {
          |create table Stocks (symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
          |  containing (generateStocks(1000))
          |
-         |graph { shape: "pie", title: "Small Caps" }
+         |graph { shape: "pie3d", title: "Small Caps" }
          |select exchange, total: sum(lastSale) from Stocks
          |where lastSale <= 5.0
          |group by exchange
