@@ -64,7 +64,7 @@ class HashTagTest extends AnyFunSpec {
     it("should create a column table from a semi-durable source") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         s"""|val stocks = Table(symbol: String(4), exchange: String(6), lastSale: Double)
-            |insert into @@stocks (symbol, exchange, lastSale)
+            |insert into @stocks (symbol, exchange, lastSale)
             |from (
             |    |------------------------------|
             |    | symbol | exchange | lastSale |
@@ -92,7 +92,7 @@ class HashTagTest extends AnyFunSpec {
     it("should create a column table from an ephemeral source") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         s"""|declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double)
-            |insert into @@stocks (symbol, exchange, lastSale)
+            |insert into @stocks (symbol, exchange, lastSale)
             |from (
             |    |------------------------------|
             |    | symbol | exchange | lastSale |

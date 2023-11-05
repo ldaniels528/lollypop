@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //      PLAYING CARDS - BLACKJACK DEMO
 // inspired by: https://codereview.stackexchange.com/questions/82103/ascii-fication-of-playing-cards
-// include('./contrib/examples/src/main/lollypop/BlackJack.sql')
+// include('./app/examples/src/main/lollypop/BlackJack.sql')
 //////////////////////////////////////////////////////////////////////////////////////
 
 import "java.lang.Math"
@@ -25,16 +25,16 @@ def getCardScore(hand) := {
                                case "A" ~> aceScore
                                case face between "2" and "9" ~> Int(face)
                                case _ ~> 10)
-        from @@hand)[0][0]
+        from @hand)[0][0]
     }
 
-    val v11 = computeScore(11)
+    v11 = computeScore(11)
     iff(v11 <= 21, v11, computeScore(1))
 }
 
 def dealerScore() := getCardScore(dealer)
 
-def hit(hand) := insert into @@hand from deck.pop()
+def hit(hand) := insert into @hand from deck.pop()
 
 def playerScore() := getCardScore(player)
 
@@ -42,7 +42,7 @@ def dealerIntelligence(finish: Boolean = false) := {
     var modified = false
     _playerScore = playerScore()
     if((_playerScore <= 21) and (dealerScore() < _playerScore)) {
-        val cost =
+        cost =
             if (finish) while (_playerScore > dealerScore()) hit(dealer)
             else if(_playerScore > dealerScore()) hit(dealer)
         modified = (modified is true) or (cost.inserted > 0)
@@ -97,7 +97,7 @@ while(isAlive) {
     deck.shuffle()
 
     // put some cards into the hands of the player and dealer
-    [dealer, player].foreach(hand => { truncate @@hand; hit(hand) })
+    [dealer, player].foreach(hand => { truncate @hand; hit(hand) })
 
     isJousting = true
     betFactor = 1.0
@@ -114,13 +114,13 @@ while(isAlive) {
         each card in cards {
             isVisible = true
             val _card = if(isVisible) faceUp(face, suit) else faceDown()
-            val lines1 = _card.split("[\n]")
+            lines1 = _card.split("[\n]")
             lines = iff(lines.length() == 0, lines1, (lines <|> lines1).map(a => a.join(" ")))
         }
 
         // add a face down card in the last position
         if (cards == dealer) {
-            val lines1 = faceDown().split("[\n]")
+            lines1 = faceDown().split("[\n]")
             lines = iff(lines.length() == 0, lines1, (lines <|> lines1).map(a => a.join(" ")))
         }
 

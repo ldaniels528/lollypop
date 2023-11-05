@@ -43,7 +43,7 @@ class TransposeTest extends AnyFunSpec with VerificationTools {
            |   | JUNK   | AMEX     |    97.61 |
            |   |------------------------------|
            |)
-           |transpose(@@rows[0])
+           |transpose(@rows[0])
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
@@ -55,13 +55,13 @@ class TransposeTest extends AnyFunSpec with VerificationTools {
 
     it("should transpose a Product instance") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
-        """|set @quote = new `com.lollypop.runtime.instructions.queryables.TransposeTest$ProductStockQuote`(
+        """|quote = new `com.lollypop.runtime.instructions.queryables.TransposeTest$ProductStockQuote`(
            |    "ABC",
            |    "OTCBB",
            |    0.0231,
            |    DateTime(1592215200000)
            |)
-           |transpose(@quote)
+           |transpose(quote)
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
@@ -74,13 +74,13 @@ class TransposeTest extends AnyFunSpec with VerificationTools {
 
     it("should transpose a POJO") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
-        """|set @quote = new `com.lollypop.runtime.instructions.queryables.TransposeTest$PojoStockQuote`(
+        """|quote = new `com.lollypop.runtime.instructions.queryables.TransposeTest$PojoStockQuote`(
            |    "ABC",
            |    "OTCBB",
            |    0.0231,
            |    DateTime(1592215200000)
            |)
-           |transpose(@quote)
+           |transpose(quote)
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(

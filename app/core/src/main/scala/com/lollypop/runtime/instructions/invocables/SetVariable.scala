@@ -133,7 +133,7 @@ case class SetVariableExpression(ref: Expression, expression: Expression) extend
     case a => List(a)
   }
 
-  override def toSQL: String = s"${ref.toSQL} = ${expression.toSQL}"
+  override def toSQL: String = Seq(ref.toSQL, "=", expression.toSQL).mkString(" ")
 
 }
 

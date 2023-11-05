@@ -31,7 +31,7 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
       assert(cost == IOCost(created = 1, destroyed = 1))
 
       // insert 5,000 records
-      val src = Source.fromFile("./contrib/examples/stocks-5k.csv")
+      val src = Source.fromFile("./app/examples/stocks-5k.csv")
       val lines = src.getLines()
       lines.next()
       lines foreach { line =>

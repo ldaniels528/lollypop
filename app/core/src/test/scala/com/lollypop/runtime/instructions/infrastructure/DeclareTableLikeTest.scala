@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.{@@, @@@, Atom, Column, ColumnType, TableModel}
+import com.lollypop.language.models._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.invocables.InlineCodeBlock
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
@@ -23,7 +23,7 @@ class DeclareTableLikeTest extends AnyFunSpec with VerificationTools {
             |  headlines Table ( headline String(128), newsDate DateTime )[100]
             |)
             |
-            |declare table ${pennyStocksRef.name} like @@Stocks ( rating Int )
+            |declare table ${pennyStocksRef.name} like @Stocks ( rating Int )
             |""".stripMargin)
       val columns = List(
         Column("symbol", ColumnType(name = "String", size = 8)),
@@ -38,7 +38,7 @@ class DeclareTableLikeTest extends AnyFunSpec with VerificationTools {
         DeclareTable(stocksRef, TableModel(columns = columns), ifNotExists = false),
         DeclareTableLike(pennyStocksRef,
           tableModel = TableModel(columns = List(Column("rating Int"))),
-          template = @@@(stocksRef.name),
+          template = @@(stocksRef.name),
           ifNotExists = false)
       ))
     }

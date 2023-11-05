@@ -1,7 +1,7 @@
 package com.lollypop.runtime
 
 import com.lollypop.language.dieIllegalObjectRef
-import com.lollypop.language.models.{@@@, Queryable}
+import com.lollypop.language.models.{@@, Queryable}
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 import com.lollypop.util.OptionHelper.OptionEnrichment
@@ -46,8 +46,7 @@ object DatabaseObjectRef {
     def parse(path: String): DatabaseObjectRef = path.split('.') match {
       case Array(databaseName, schemaName, name) => DatabaseObjectNS(databaseName, schemaName, name)
       case Array(schemaName, name) => Unrealized(databaseName = None, schemaName = Some(schemaName), name = name)
-      case Array(name) if name.startsWith("@@") => @@@(name.drop(2))
-      case Array(name) if name.startsWith("@") => @@@(name.drop(1))
+      case Array(name) if name.startsWith("@") || name.startsWith("$") => @@(name.drop(1))
       case Array(name) => Unrealized(databaseName = None, schemaName = None, name = name)
       case _ => dieIllegalObjectRef(path)
     }

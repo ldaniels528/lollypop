@@ -1,6 +1,7 @@
 package com.lollypop.runtime
 
 import com.lollypop.AppConstants
+import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
@@ -19,6 +20,16 @@ class ScopeTest extends AnyFunSpec {
   private val logger = LoggerFactory.getLogger(getClass)
 
   describe(classOf[Scope].getSimpleName) {
+
+    it("should return its contents as a Map") {
+      val scope = LollypopVM.executeSQL(Scope(),
+        """|x = 3
+           |y = 5
+           |z = 9
+           |w = x + y + z
+           |""".stripMargin)._1
+      assert(scope.toMap.filter(t => Set("x", "y", "z", "w") contains t._1) == Map("x" -> 3, "y" -> 5, "w" -> 17, "z" -> 9))
+    }
 
     it("should override the database from a parent scope") {
       val (parentScope, _, _) = LollypopVM.executeSQL(Scope(), "namespace 'slovett.work'")
@@ -70,7 +81,7 @@ class ScopeTest extends AnyFunSpec {
           Field(name = c.name, metadata = FieldMetadata(), value = c.defaultValue.flatMap(v => Option(LollypopVM.execute(scope0, v)._3)).map(c.`type`.convert))
         ))))
       assert(LollypopVM.executeSQL(scope, "symbol")._3 == "ABC")
-      assert(LollypopVM.executeSQL(scope, "@symbol")._3 == "BROK")
+      assert(LollypopVM.executeSQL(scope, "$symbol")._3 == "BROK")
     }
 
     it("should create and read variables") {
@@ -156,7 +167,7 @@ class ScopeTest extends AnyFunSpec {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         s"""|declare table travelers(lastName String(12), firstName String(12), destAirportCode String(3))
             |{
-            |   insert into @@travelers (lastName, firstName, destAirportCode)
+            |   insert into @travelers (lastName, firstName, destAirportCode)
             |   values ('JONES', 'GARRY', 'SNA'), ('JONES', 'DEBBIE', 'SNA'),
             |          ('JONES', 'TAMERA', 'SNA'), ('JONES', 'ERIC', 'SNA'),
             |          ('ADAMS', 'KAREN', 'DTW'), ('ADAMS', 'MIKE', 'DTW'),
@@ -266,6 +277,22 @@ class ScopeTest extends AnyFunSpec {
     it("should provide the Lollypop version string") {
       val version = Scope().resolve("__version__").orNull
       assert(version == AppConstants.version)
+    }
+
+    it("should provide the logging services") {
+      val ctx = LollypopUniverse(isServerMode = true)
+      val scope = ctx.createRootScope()
+        .withVariable(name = "__debug__", value = true)
+        .withVariable(name = "__info__", value = true)
+        .withVariable(name = "__error__", value = true)
+        .withVariable(name = "__warn__", value = true)
+
+      scope.debug("debug: Hello World")
+      scope.info("info: Hello World")
+      scope.warn("warn: Hello World")
+      scope.error("error: Hello World")
+      assert(ctx.system.stdOut.asString() == "debug: Hello World\ninfo: Hello World\n")
+      assert(ctx.system.stdErr.asString() == "warn: Hello World\nerror: Hello World\n")
     }
 
   }

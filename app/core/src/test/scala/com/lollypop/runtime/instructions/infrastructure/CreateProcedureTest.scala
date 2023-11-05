@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.language.models.Inequality.InequalityExtensions
-import com.lollypop.language.models.{@@, AllFields, Procedure}
+import com.lollypop.language.models.{$, AllFields, Procedure}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.aggregation.{Count, Max, Min}
 import com.lollypop.runtime.instructions.invocables.{Return, ScopedCodeBlock}
@@ -22,7 +22,7 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
            |  return (
            |    select Symbol, Name, Sector, Industry, SummaryQuote
            |    from Customers
-           |    where Industry is @industry
+           |    where Industry is $industry
            |  )
            |""".stripMargin)
       assert(results ==
@@ -32,7 +32,7 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
             code = Return(Select(
               fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
               from = DatabaseObjectRef("Customers"),
-              where = "Industry".f is @@(name = "industry")
+              where = "Industry".f is $(name = "industry")
             ))
           ), ifNotExists = false))
     }
@@ -46,7 +46,7 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
            |                                           --> minPrice: Double) := {
            |    select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale)
            |    from temp.jdbc.StockQuotes
-           |    where exchange is @theExchange
+           |    where exchange is $theExchange
            |    group by exchange
            |}
            |""".stripMargin)
@@ -57,7 +57,7 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
             code = ScopedCodeBlock(Select(
               fields = List("exchange".f, Count(AllFields) as "total", Max("lastSale".f) as "maxPrice", Min("lastSale".f) as "minPrice"),
               from = DatabaseObjectRef("temp.jdbc.StockQuotes"),
-              where = "exchange".f is @@(name = "theExchange"),
+              where = "exchange".f is $(name = "theExchange"),
               groupBy = Seq("exchange".f)
             ))
           ), ifNotExists = false))
@@ -69,7 +69,7 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
            |  return (
            |    select Symbol, Name, Sector, Industry, SummaryQuote
            |    from Customers
-           |    where Industry is @industry
+           |    where Industry is $industry
            |  )
            |""".stripMargin)
     }
@@ -81,14 +81,14 @@ class CreateProcedureTest extends AnyFunSpec with VerificationTools {
           code = ScopedCodeBlock(Select(
             fields = List("exchange".f, Count(AllFields) as "total", Max("lastSale".f) as "maxPrice", Min("lastSale".f) as "minPrice"),
             from = DatabaseObjectRef("temp.jdbc.StockQuotes"),
-            where = "exchange".f is @@(name = "theExchange"),
+            where = "exchange".f is "theExchange".f,
             groupBy = Seq("exchange".f)
           ))
         ), ifNotExists = false)
 
       assert(model.toSQL ==
         """|create procedure temp.jdbc.getStockQuote(theExchange: String, --> exchange: String, --> total: Double, --> maxPrice: Double, --> minPrice: Double) := {
-           |  select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale) from temp.jdbc.StockQuotes where exchange is @theExchange group by exchange
+           |  select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale) from temp.jdbc.StockQuotes where exchange is theExchange group by exchange
            |}
            |""".stripMargin.trim)
     }

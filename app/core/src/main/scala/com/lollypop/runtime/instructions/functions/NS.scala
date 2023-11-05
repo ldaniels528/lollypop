@@ -39,4 +39,4 @@ object NS extends FunctionCallParserE1(
   description =
     """|Returns a persistent object (e.g. table, view, et al) from disk via a namespace
        |""".stripMargin,
-  example = "from ns('examples.shocktrade.Contests') limit 5")
+  example = "from ns('lollypop.public.Stocks') limit 5")

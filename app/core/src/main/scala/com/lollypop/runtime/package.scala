@@ -22,12 +22,13 @@ package object runtime extends AppConstants {
 
   def getServerRootDirectory: File = {
     val directory = new File(sys.env.getOrElse("LOLLYPOP_DB", "lollypop_db"))
-    assert(directory.mkdirs() || directory.exists(), die(s"Could not create or find the data directory: ${directory.getAbsolutePath}")
-    )
+    assert(directory.mkdirs() || directory.exists(), die(s"Could not create or find the data directory: ${directory.getAbsolutePath}"))
     directory
   }
 
-  def getDatabaseRootDirectory(databaseName: String): File = getServerRootDirectory / databaseName
+  def getDatabaseRootDirectory(databaseName: String): File = {
+    getServerRootDirectory / "ns" / databaseName
+  }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //      UTILITIES

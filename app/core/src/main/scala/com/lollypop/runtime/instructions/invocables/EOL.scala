@@ -5,6 +5,9 @@ import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, TokenStream
 import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
+/**
+ * End of Line/Statement
+ */
 case object EOL extends RuntimeInvokable with InvokableParser {
 
   override def help: List[HelpDoc] = Nil

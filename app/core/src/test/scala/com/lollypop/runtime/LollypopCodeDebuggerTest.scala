@@ -13,22 +13,22 @@ class LollypopCodeDebuggerTest extends AnyFunSpec {
 
     it("should show the code at the current position") {
       val reader = createAutomatedConsoleReader("s")
-      LollypopCodeDebugger().stepThrough(file = new File("./contrib/examples/src/main/lollypop/BreakOutDemo.sql"), console = reader)
+      LollypopCodeDebugger().stepThrough(file = new File("./app/examples/src/main/lollypop/BreakOutDemo.sql"), console = reader)
     }
 
     it("should show a page of code lines") {
       val reader = createAutomatedConsoleReader("p")
-      LollypopCodeDebugger().stepThrough(file = "./contrib/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
+      LollypopCodeDebugger().stepThrough(file = "./app/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
     }
 
     it("should show the list of code lines") {
       val reader = createAutomatedConsoleReader("l")
-      LollypopCodeDebugger().stepThrough(file = "./contrib/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
+      LollypopCodeDebugger().stepThrough(file = "./app/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
     }
 
     it("should execute lines of code and show the scope") {
       val reader = createAutomatedConsoleReader("", "", "", "", "r", "", "?")
-      LollypopCodeDebugger().stepThrough(file = "./contrib/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
+      LollypopCodeDebugger().stepThrough(file = "./app/examples/src/main/lollypop/BreakOutDemo.sql", console = reader)
     }
 
   }

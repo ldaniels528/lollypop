@@ -1,44 +1,44 @@
-nodeAPI(port, '/api/shocktrade/contests', {
+nodeAPI(port, '/api/shocktrade/members', {
     //////////////////////////////////////////////////////////////////////////////////////
-    // creates a new contest
-    // http post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
+    // creates a new member
+    // http post 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { name: "fugitive528" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (name: String) => {
-        val result = insert into Contests (name) values (@name)
-        inserted_id('Contests', result)
+        val result = insert into Members (name) values (name)
+        inserted_id('Members', result)
     },
 
     //////////////////////////////////////////////////////////////////////////////////////
-    // retrieves a contest
-    // http get 'http://{{host}}:{{port}}/api/shocktrade/contests?id=aa440939-89cb-4ba1-80b6-20100ba6a286'
+    // retrieves a member
+    // http get 'http://{{host}}:{{port}}/api/shocktrade/members?id=2187296c-7bf6-4c1d-a87d-fdc3dae39dc8'
     //////////////////////////////////////////////////////////////////////////////////////
     get: (id: UUID) => {
-        from ns('Contests') where contest_id is @id limit 1
+        from ns('Members') where member_id is $id limit 1
     },
 
     //////////////////////////////////////////////////////////////////////////////////////
-    // updates a contest
-    // http put 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929", name: "Winter is coming" }
+    // updates a member
+    // http put 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929", name: "Winter is coming" }
     //////////////////////////////////////////////////////////////////////////////////////
     put: (id: UUID, newName: String) => {
-        val result = update Contests set name = @newName where contest_id is @id
-        result.updated
+        update Members set name = $newName where member_id is $id
     },
 
     //////////////////////////////////////////////////////////////////////////////////////
-    // deletes a contest
+    // deletes a member
+    // http delete 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929" }
     //////////////////////////////////////////////////////////////////////////////////////
     delete: (id: UUID) => {
-        delete from Contests where contest_id is @id
+        delete from Members where member_id is $id
     }
 })
 
-nodeAPI(port, '/api/shocktrade/contests/by/name', {
+nodeAPI(port, '/api/shocktrade/members/by/name', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for contests by name
-    // http post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }
+    // http post 'http://{{host}}:{{port}}/api/shocktrade/members/by/name' <~ { searchText: "fugitive528" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (searchText: String) => {
-        from ns('Contests') where name contains searchText
+        from ns('Members') where name contains searchText 
     }
 })

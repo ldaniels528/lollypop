@@ -11,7 +11,7 @@ import lollypop.io.IOCost
 /**
  * With Statement
  * @example {{{
- * with tableOpen("temp.demo.stocks") { stocks => @@stocks where lastSale < 5 }
+ * with tableOpen("temp.demo.stocks") { stocks => @stocks where lastSale < 5 }
  * }}}
  */
 case class With(resource: Instruction, code: Instruction) extends RuntimeInvokable {
@@ -69,7 +69,7 @@ object With extends InvokableParser {
          |    |------------------------------|
          |)
          |
-         |with ns("Stocks") { stocks => @@stocks where lastSale < 50 }
+         |with ns("Stocks") { stocks => @stocks where lastSale < 50 }
          |""".stripMargin
   ))
 

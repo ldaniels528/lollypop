@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.AppConstants._
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
@@ -81,9 +81,9 @@ class DatabaseObjectRefTest extends AnyFunSpec {
         (Some("finance"), Some("mortgage"), "securities", Some("transactions")))
     }
 
-    it("should parse: '@@securities#transactions'") {
-      assert(DatabaseObjectRef("@@securities#transactions") ==
-        DatabaseObjectRef(@@@("securities"), name = "transactions"))
+    it("should parse: '@securities#transactions'") {
+      assert(DatabaseObjectRef("@securities#transactions") ==
+        DatabaseObjectRef(@@("securities"), name = "transactions"))
     }
 
     it("should parse: 'stocks' (with 'USE samples')") {

@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.{@@, CodeBlock, Column, Literal}
+import com.lollypop.language.models.{$, CodeBlock, Column, Literal}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.LambdaFunctionCall
 import com.lollypop.runtime.instructions.operators.Plus
@@ -14,16 +14,16 @@ class LambdaFunctionCallTest extends AnyFunSpec with VerificationTools {
 
   describe(classOf[LambdaFunctionCall].getSimpleName) {
 
-    it("should decompile to SQL: (name: String) => 'Hello ' + @name('World')") {
+    it("should decompile to SQL: (name: String) => 'Hello ' + $name('World')") {
       val call = LambdaFunctionCall(
         AnonymousFunction(
           params = List(Column("name String")),
-          code = Plus("Hello ".v, @@("name"))
+          code = Plus("Hello ".v, $("name"))
         ),
         args = List("World".v)
       )
       assert(call.toSQL ===
-        """|(name: String) => "Hello " + @name("World")
+        """|(name: String) => "Hello " + $name("World")
            |""".stripMargin.trim)
     }
 
@@ -47,7 +47,7 @@ class LambdaFunctionCallTest extends AnyFunSpec with VerificationTools {
       val call = LambdaFunctionCall(
         AnonymousFunction(
           params = List(Column("name String")),
-          code = Plus(Literal("Hello "), @@("name"))
+          code = Plus(Literal("Hello "), $("name"))
         ),
         args = List(Literal("World"))
       )
@@ -57,8 +57,8 @@ class LambdaFunctionCallTest extends AnyFunSpec with VerificationTools {
 
     it("should compile and execute: (n: Int) => { n * n }(5)") {
       val (_, _, result) = LollypopVM.searchSQL(Scope(),
-        """|set @result = (n: Int) => { n * n }(5)
-           |select @result
+        """|set result = (n: Int) => { n * n }(5)
+           |select result
            |""".stripMargin
       )
       assert(result.toMapGraph == List(Map("result" -> 25.0)))

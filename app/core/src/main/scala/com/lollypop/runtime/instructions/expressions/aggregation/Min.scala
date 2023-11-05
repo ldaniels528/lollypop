@@ -89,5 +89,5 @@ object Min extends FunctionCallParserE1(
        |    | ABC    | NYSE     |    56.12 |
        |    | DNS    | AMEX     |    97.61 |
        |    |------------------------------|
-       |select minLastSale: min(lastSale) from @@stocks
+       |select minLastSale: min(lastSale) from @stocks
        |""".stripMargin))

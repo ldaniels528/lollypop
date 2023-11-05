@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.{@@@, Expression, Queryable}
+import com.lollypop.language.models.{@@, Expression, Queryable}
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.datatypes.{Inferences, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
@@ -55,16 +55,16 @@ object RowsOfValues extends QueryableParser {
         // values clause?
         case ts if ts nextIf "values" =>
           ts match {
-            case ts1 if ts1 nextIf "@@" => @@@(ts1.next().valueAsString)
-            case ts1 if ts1 nextIf "@" => ts1.dieScalarVariableIncompatibleWithRowSets()
+            case ts1 if ts1 nextIf "@" => @@(ts1.next().valueAsString)
+            case ts1 if ts1 nextIf "$" => ts1.dieScalarVariableIncompatibleWithRowSets()
             case ts1 =>
               var values: List[List[Expression]] = Nil
               do values = SQLTemplateParams(ts1, "( %E:values )").expressionLists("values") :: values while (ts1 nextIf ",")
               RowsOfValues(values.reverse)
           }
         // variable?
-        case ts if ts nextIf "@@" => @@@(ts.next().valueAsString)
-        case ts if ts nextIf "@" => ts.dieScalarVariableIncompatibleWithRowSets()
+        case ts if ts nextIf "@" => @@(ts.next().valueAsString)
+        case ts if ts nextIf "$" => ts.dieScalarVariableIncompatibleWithRowSets()
         // any supported query ...
         case ts => compiler.nextQueryOrVariableWithAlias(ts).asQueryable
       }

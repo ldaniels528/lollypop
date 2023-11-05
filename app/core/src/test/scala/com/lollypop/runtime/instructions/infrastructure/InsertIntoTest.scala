@@ -251,7 +251,7 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
     it(s"should insert JSON data into a nested table in memory") {
       val (scope0, result0, _) = LollypopVM.executeSQL(Scope(), sql =
         s"""|declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price Double, transactionTime DateTime)[2])
-            |insert into @@stocks (symbol, exchange, transactions)
+            |insert into @stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', '{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
             |       ('AMD', 'NASDAQ', '{"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
             |       ('INTC','NYSE', '{"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
@@ -262,14 +262,14 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
       assert(result0.inserted == 5)
 
       // verify the count
-      val (_, _, result1) = LollypopVM.searchSQL(scope0, sql = "select total: count(*) from @@stocks")
+      val (_, _, result1) = LollypopVM.searchSQL(scope0, sql = "select total: count(*) from @stocks")
       assert(result1.toMapGraph == List(Map("total" -> 5)))
     }
 
     it("should insert objects into a nested table in memory") {
       val (scope0, result0, _) = LollypopVM.executeSQL(Scope(), sql =
         s"""|declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[2])
-            |insert into @@stocks (symbol, exchange, transactions)
+            |insert into @stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', [{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}]),
             |       ('AMD', 'NASDAQ', [{"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}]),
             |       ('INTC','NYSE', [{"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}]),
@@ -280,16 +280,16 @@ class InsertIntoTest extends AnyFunSpec with VerificationTools {
       assert(result0.inserted == 5)
 
       // verify the count
-      val (_, _, result1) = LollypopVM.searchSQL(scope0, s"select total: count(*) from @@stocks")
+      val (_, _, result1) = LollypopVM.searchSQL(scope0, s"select total: count(*) from @stocks")
       assert(result1.toMapGraph == List(Map("total" -> 5)))
     }
 
     it("should insert objects into a table variable") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         """|declare table results(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@results (symbol, exchange, lastSale)
+           |insert into @results (symbol, exchange, lastSale)
            |values ('GMTQ', 'OTCBB', 0.1111), ('ABC', 'NYSE', 38.47), ('GE', 'NASDAQ', 57.89)
-           |@@results
+           |@results
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph == List(

@@ -19,8 +19,8 @@ import com.lollypop.util.CodecHelper._
 import com.lollypop.util.LogUtil
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
-import org.slf4j.LoggerFactory
 import lollypop.io.IOCost
+import org.slf4j.LoggerFactory
 
 import java.io.{FileNotFoundException, RandomAccessFile}
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -69,18 +69,6 @@ trait DatabaseManagementSystem {
         ns.rootDirectory.deleteRecursively()
     }
     IOCost(destroyed = 1)
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  //  comment
-  //////////////////////////////////////////////////////////////////////////////////////
-
-  def commentOn(ns: DatabaseObjectNS, remarks: String, ifExists: Boolean): IOCost = {
-    if (!ns.configFile.exists() && !ifExists) IOCost()
-    else {
-      ns.writeConfig(ns.getConfig.copy(description = Some(remarks)))
-      IOCost(updated = 1)
-    }
   }
 
   //////////////////////////////////////////////////////////////////////////////////////

@@ -14,6 +14,6 @@ case class ScalarVariableRef(name: String) extends RuntimeExpression with Variab
     (scope, IOCost.empty, scope.getValueReferences.getOrElse(name, dieNoSuchVariable(name)).value)
   }
 
-  override def toSQL: String = s"@$name"
+  override def toSQL: String = "$" + name
 
 }

@@ -1,6 +1,7 @@
 package com.lollypop.runtime.instructions.jvm
 
-import com.lollypop.language.models.@@
+import com.lollypop.language.models.$
+import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
 import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
@@ -15,13 +16,13 @@ class TypeOfTest extends AnyFunSpec {
     //////////////////////////////////////////////////////////////////////////////////
 
     it("should support being compiled") {
-      val model = compiler.compile("select typeOf(@x)")
-      assert(model == Select(fields = Seq(TypeOf(@@("x")))))
+      val model = compiler.compile("select typeOf(x)")
+      assert(model == Select(fields = Seq(TypeOf("x".f))))
     }
 
     it("should support being decompiled") {
-      val model = TypeOf(@@("x"))
-      assert(model.toSQL == "typeOf(@x)")
+      val model = TypeOf($("x"))
+      assert(model.toSQL == "typeOf($x)")
     }
 
     it("should support being executed") {

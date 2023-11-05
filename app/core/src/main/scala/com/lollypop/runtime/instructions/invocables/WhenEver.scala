@@ -10,7 +10,10 @@ import lollypop.io.IOCost
  * whenever instruction - executes an instruction at the moment the trigger condition evaluates as true
  * @param expression the trigger [[Expression expression]]
  * @param code       the [[Instruction instruction]] to execute
- * @example {{{ whenever n_bricks is 0 { out.println('n_bricks is empty') } }}}
+ * @example {{{
+ * whenever n_bricks is 0
+ *    stdout <=== 'n_bricks is empty\n') 
+ * }}}
  */
 case class WhenEver(expression: Expression, code: Instruction) extends RuntimeInvokable {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {

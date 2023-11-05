@@ -48,7 +48,7 @@ object Unique extends FunctionCallParserN(
        |  | YOKE   | NYSE     |    56.12 |
        |  | DNS    | AMEX     |    97.61 |
        |  |------------------------------|
-       |select exchange: unique(exchange) from @@stocks
+       |select exchange: unique(exchange) from @stocks
        |""".stripMargin) {
 
   /**

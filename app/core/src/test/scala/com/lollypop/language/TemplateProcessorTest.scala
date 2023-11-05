@@ -77,9 +77,9 @@ class TemplateProcessorTest extends AnyFunSpec {
     }
 
     it("should parse Java instance method expressions") {
-      verify(text = "offScreen->setColor(@color)", template = "%a:variable -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
+      verify(text = "offScreen->setColor(color)", template = "%a:variable -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
         atoms = Map("variable" -> "offScreen", "methodName" -> "setColor"),
-        expressionLists = Map("args" -> List(@@("color"))),
+        expressionLists = Map("args" -> List("color".f)),
         keywords = Set("->", "(", ")")
       ))
     }
@@ -92,9 +92,9 @@ class TemplateProcessorTest extends AnyFunSpec {
     }
 
     it("should parse Java static method expressions") {
-      verify(text = "`org.jsoup.Jsoup`->parse(@file, 'UTF-8')", template = "%a:className -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
+      verify(text = "`org.jsoup.Jsoup`->parse(file, 'UTF-8')", template = "%a:className -> %a:methodName ( ?%E:args )")(SQLTemplateParams(
         atoms = Map("className" -> "org.jsoup.Jsoup", "methodName" -> "parse"),
-        expressionLists = Map("args" -> List(@@("file"), "UTF-8")),
+        expressionLists = Map("args" -> List("file".f, "UTF-8")),
         keywords = Set("->", "(", ")")
       ))
     }
@@ -105,7 +105,7 @@ class TemplateProcessorTest extends AnyFunSpec {
 
     it("should parse location tags (%L)") {
       verify(text = "assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> DatabaseObjectRef("assets"))))
-      verify(text = "@@assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> @@@("assets"))))
+      verify(text = "@assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> @@("assets"))))
       verify(text = "`the assets`", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> DatabaseObjectRef("the assets"))))
     }
 
@@ -143,9 +143,9 @@ class TemplateProcessorTest extends AnyFunSpec {
       }
     }
 
-    it("should parse direct query tags (%Q) - @@variable") {
-      verify(text = "@@addressBook", template = "%Q:variable")(SQLTemplateParams(instructions = Map(
-        "variable" -> @@@("addressBook")
+    it("should parse direct query tags (%Q) - @variable") {
+      verify(text = "@addressBook", template = "%Q:variable")(SQLTemplateParams(instructions = Map(
+        "variable" -> @@("addressBook")
       )))
     }
 

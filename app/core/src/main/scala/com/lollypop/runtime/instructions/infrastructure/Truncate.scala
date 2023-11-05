@@ -40,7 +40,7 @@ object Truncate extends ModifiableParser {
          |  | IWEC   | AMEX     | 132.1874 | 2023-08-03T00:09:42.282Z |
          |  | JIRD   | OTCBB    |  22.0003 | 2023-08-03T00:09:42.283Z |
          |  |---------------------------------------------------------|
-         |truncate @@stocks
+         |truncate @stocks
          |""".stripMargin
   ))
 

@@ -1,7 +1,7 @@
 namespace `demo.breakout`
 //////////////////////////////////////////////////////////////////////////////////////
 //      BREAKOUT DEMO
-// include './contrib/examples/src/main/lollypop/BreakOutDemo.sql'
+// include './app/examples/src/main/lollypop/BreakOutDemo.sql'
 //////////////////////////////////////////////////////////////////////////////////////
 
 import [
@@ -16,18 +16,18 @@ import [
 //////////////////////////////////////////////////////////////////////////////////////
 
 // define the block colors
-val colors = [Color.GREEN, Color.MAGENTA, Color.CYAN, Color.BLUE]
+colors = [Color.GREEN, Color.MAGENTA, Color.CYAN, Color.BLUE]
 
 // create the content pane & frame
-val world_width = 800
-val world_height = 600
+world_width = 800
+world_height = 600
 
 //////////////////////////////////////////////////////////////////////////////////////
 // functions
 //////////////////////////////////////////////////////////////////////////////////////
 
 def createFrame() := {
-    val frame = new JFrame('BreakOut Demo')
+    frame = new JFrame('BreakOut Demo')
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
     contentPane.setPreferredSize(new Dimension(world_width, world_height))
     frame.setContentPane(contentPane)
@@ -38,21 +38,21 @@ def createFrame() := {
 }
 
 def generateBlocks() := {
-    truncate @@blocks
+    truncate @blocks
     var by = 50
     while by < 250 {
         bx = 0
         while bx < world_width {
             b_color = Random.nextInt(colors.length())
-            insert into @@blocks (x, y, width, height, color) values(bx, by, 40, 20, b_color)
+            insert into @blocks (x, y, width, height, color) values(bx, by, 40, 20, b_color)
             bx += 45
         }
         by += 25
     }
-    count(@@blocks)
+    count(@blocks)
 }
 
-def moveBlocks() := update @@blocks y += 1
+def moveBlocks() := update @blocks y += 1
 
 def tick() := Random.nextInt(11) % 2
 
@@ -64,17 +64,17 @@ def tick() := Random.nextInt(11) % 2
 declare table blocks(x: Int, y: Int, width: Int, height: Int, color: Int)[150]
 
 // create the frame, content pane and image buffer
-val contentPane = new JPanel(true)
-val frame = createFrame()
-val buffer = contentPane.createImage(world_width, world_height)
-val onScreen = contentPane.getGraphics()
-val offScreen = buffer.getGraphics()
+contentPane = new JPanel(true)
+frame = createFrame()
+buffer = contentPane.createImage(world_width, world_height)
+onScreen = contentPane.getGraphics()
+offScreen = buffer.getGraphics()
 
 // create the ball variables
 let ball_x: Int = Random.nextInt(world_width)
 let ball_y: Int = world_height / 2
 var radius = 14
-val half = radius / 4
+half = radius / 4
 var distance = 2.857142 // speed * ct
 var direction = ['SW', 'NW'][tick()]
 
@@ -93,7 +93,7 @@ var n_bricks = 0
 //////////////////////////////////////////////////////////////////////////////////////
 
 import 'org.slf4j.LoggerFactory'
-val logger = LoggerFactory.getLogger('BreakOutDemo')
+logger = LoggerFactory.getLogger('BreakOutDemo')
 
 //////////////////////////////////////////////////////////////////////////////////////
 // main loop
@@ -105,7 +105,7 @@ def clearScreen() := {
 }
 
 def drawBlocks() := {
-    each block in @@blocks {
+    each block in @blocks {
         offScreen.setColor(colors[color])
         offScreen.fillRect(x, y, width, height)
     }
@@ -129,15 +129,15 @@ def drawFrameRate() := {
 
 def handleCollisions() := {
     val outcome =
-        delete from @@blocks
+        delete from @blocks
         where ball_x between (x - half) and (x + width + half)
           and ball_y between (y - half) and (y + height + half)
-    val killed = outcome.deleted
+    killed = outcome.deleted
     killed
 }
 
 def handledDeadBlocks() := {
-    val n_bricks = count(blocks)
+    n_bricks = count(blocks)
     if n_bricks is 0 {
         level += 1
         if level >= 3 {
@@ -156,7 +156,7 @@ def main(args: String[]) := {
         clearScreen()
         drawBlocks()
         drawTheBall()
-        val killed = handleCollisions()
+        killed = handleCollisions()
         if killed > 0 n_bricks = handledDeadBlocks()
 
         drawBlockCount()
@@ -167,8 +167,8 @@ def main(args: String[]) := {
         n_frames += 1
 
         // compute the frame rate
-        val moment = DateTime()
-        val diff = (moment - lastUpdate) / 1000
+        moment = DateTime()
+        diff = (moment - lastUpdate) / 1000
         if diff >= 1 {
             fps = n_frames / diff
             n_frames = 0

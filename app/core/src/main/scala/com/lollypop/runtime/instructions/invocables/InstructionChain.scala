@@ -17,7 +17,7 @@ object InstructionChain extends InstructionPostfixParser {
    * @param stream      the given [[TokenStream token stream]]
    * @param instruction the source [[Instruction instruction]]
    * @return a new instruction having the specified instruction
-   * @example @@stocks where lastSale <= 1 order by symbol limit 5
+   * @example @stocks where lastSale <= 1 order by symbol limit 5
    */
   def apply(stream: TokenStream, instruction: Instruction)(implicit compiler: SQLCompiler): Instruction = {
     val t0 = stream.peek

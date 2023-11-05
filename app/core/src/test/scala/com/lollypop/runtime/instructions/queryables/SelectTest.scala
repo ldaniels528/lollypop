@@ -36,8 +36,8 @@ class SelectTest extends AnyFunSpec with VerificationTools {
       verify(text = "AddressBook", template = "%q:table")(SQLTemplateParams(instructions = Map(
         "table" -> DatabaseObjectRef("AddressBook")
       )))
-      verify(text = "@@addressBook", template = "%q:variable")(SQLTemplateParams(instructions = Map(
-        "variable" -> @@@("addressBook")
+      verify(text = "@addressBook", template = "%q:variable")(SQLTemplateParams(instructions = Map(
+        "variable" -> @@("addressBook")
       )))
     }
 
@@ -48,8 +48,8 @@ class SelectTest extends AnyFunSpec with VerificationTools {
       verify(text = "values (1, 2, 3)", template = "%V:values")(SQLTemplateParams(instructions = Map(
         "values" -> RowsOfValues(List(List(1d, 2d, 3d)))
       )))
-      verify(text = "@@addressBook", template = "%V:variable")(SQLTemplateParams(instructions = Map(
-        "variable" -> @@@("addressBook")
+      verify(text = "@addressBook", template = "%V:variable")(SQLTemplateParams(instructions = Map(
+        "variable" -> @@("addressBook")
       )))
     }
 
@@ -89,11 +89,11 @@ class SelectTest extends AnyFunSpec with VerificationTools {
 
     it("should support select from a variable source") {
       val results = compiler.compile(
-        """|select * from @@results where symbol == 'ABC'
+        """|select * from @results where symbol == 'ABC'
            |""".stripMargin)
       assert(results == Select(
         fields = Seq("*".f),
-        from = Some(@@@("results")),
+        from = Some(@@("results")),
         where = "symbol".f === "ABC"
       ))
     }
@@ -170,8 +170,8 @@ class SelectTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support set variable") {
-      val results = compiler.compile("set @customers = @customers + 1")
-      assert(results == SetAnyVariable(ref = "customers".f, @@("customers") + 1))
+      val results = compiler.compile("set $customers = $customers + 1")
+      assert(results == SetAnyVariable(ref = "customers".f, $("customers") + 1))
     }
 
     it("should support set row variable") {
@@ -202,7 +202,7 @@ class SelectTest extends AnyFunSpec with VerificationTools {
 
     it("should decompile select from a variable source") {
       verify(
-        """|select * from @@results where symbol == 'ABC'
+        """|select * from @results where symbol == 'ABC'
            |""".stripMargin)
     }
 

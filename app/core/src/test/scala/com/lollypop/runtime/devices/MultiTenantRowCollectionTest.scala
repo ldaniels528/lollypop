@@ -1,6 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.runtime.{LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should retrieve only rows that belong to it and insert new rows into the host collection") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -30,7 +30,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // get the source collection
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       assert(source.toMapGraph == List(
         Map("symbol" -> "AAXX", "exchange" -> "NYSE", "lastSale" -> 56.12),
         Map("symbol" -> "UPEX", "exchange" -> "NYSE", "lastSale" -> 116.24),
@@ -53,8 +53,8 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
 
       // insert a new row
       val (_, cost, _) = LollypopVM.executeSQL(scope1,
-        """|insert into @@viewA (symbol, exchange, lastSale) values ("PMP", "AMEX", 137.80), ("TNT", "NASDAQ", 45.11) &&
-           |insert into @@viewB (symbol, exchange, lastSale) values ("XL", "OTCBB", 1.80), ("GMS", "NYSE", 123.45)
+        """|insert into @viewA (symbol, exchange, lastSale) values ("PMP", "AMEX", 137.80), ("TNT", "NASDAQ", 45.11) &&
+           |insert into @viewB (symbol, exchange, lastSale) values ("XL", "OTCBB", 1.80), ("GMS", "NYSE", 123.45)
            |""".stripMargin)
       assert(cost.inserted == 4)
 
@@ -92,7 +92,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should remove only rows that belong to it") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -108,7 +108,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // put the resources in the scope
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0, 1, 3, 7))
       val viewB = MultiTenantRowCollection(source, visibility = BitArray(2, 4, 5, 6))
       val scope1 = scope0
@@ -116,10 +116,10 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
         .withVariable("viewB", Some(viewB), isReadOnly = true)
 
       LollypopVM.executeSQL(scope1,
-        """|delete from @@viewA where symbol is "UPEX"
-           |delete from @@viewA where symbol is "XYZ"
-           |delete from @@viewB where symbol is "ZZY"
-           |delete from @@viewB where symbol is "ABC"
+        """|delete from @viewA where symbol is "UPEX"
+           |delete from @viewA where symbol is "XYZ"
+           |delete from @viewB where symbol is "ZZY"
+           |delete from @viewB where symbol is "ABC"
            |""".stripMargin)
 
       // verify the results of view A
@@ -146,7 +146,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should read fields from rows that belong to it") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -162,7 +162,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // put the resources in the scope
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0, 1, 3, 7))
       assert(viewA.readField(rowID = 2, columnID = 0).value.isEmpty)
       assert(viewA.readField(rowID = 3, columnID = 0).value contains "ABC")
@@ -171,7 +171,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should update fields from rows that belong to it") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -187,7 +187,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // put the resources in the scope
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0, 1, 3, 7))
       assert(viewA.updateField(rowID = 2, columnID = 0, newValue = Some("DUMMY")).updated == 0)
       assert(viewA.updateField(rowID = 3, columnID = 0, newValue = Some("JUNK")).updated == 1)
@@ -202,7 +202,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should update rows that belong to it") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -218,10 +218,10 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // put the resources in the scope
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0, 1, 3, 7))
       LollypopVM.executeSQL(scope0.withVariable("viewA", Some(viewA), isReadOnly = true),
-        """|update @@viewA set lastSale = 14.07 where symbol is "GABY"
+        """|update @viewA set lastSale = 14.07 where symbol is "GABY"
            |""".stripMargin)
       assert(viewA.toMapGraph == List(
         Map("symbol" -> "AAXX", "exchange" -> "NYSE", "lastSale" -> 56.12),
@@ -234,7 +234,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
     it("should truncate rows that belong to it") {
       val (scope0, _, _) = LollypopVM.executeSQL(Scope(),
         """|val stocks = Table(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks
+           |insert into @stocks
            |    |------------------------------|
            |    | symbol | exchange | lastSale |
            |    |------------------------------|
@@ -250,7 +250,7 @@ class MultiTenantRowCollectionTest extends AnyFunSpec {
            |""".stripMargin)
 
       // put the resources in the scope
-      val source = scope0.getRowCollection(@@@("stocks"))
+      val source = scope0.getRowCollection(@@("stocks"))
       val viewA = MultiTenantRowCollection(source, visibility = BitArray(0L until source.getLength: _*))
       assert(viewA.setLength(1).deleted == 7)
       assert(viewA.toMapGraph == List(

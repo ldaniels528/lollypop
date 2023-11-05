@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.language.models.Operation.RichOperation
@@ -92,12 +92,12 @@ class MacroCallTest extends AnyFunSpec with VerificationTools {
     it("should replace template parameters in: 'update %L:name %i:modification ?where +?%c:condition ?limit +?%e:limit'") {
       val template = "update %L:name %i:modification ?where +?%c:condition ?limit +?%e:limit"
       val result = template.replaceTags(Map(
-        "name" -> @@@("stocks"),
+        "name" -> @@("stocks"),
         "modification" -> SetAnyVariable("lastSale".f, 78.11.v),
         "condition" -> ("symbol".f is "AAPL".v),
         "limit" -> 20.v
       ))
-      assert(result == """update @@stocks set lastSale = 78.11 where symbol is "AAPL" limit 20""")
+      assert(result == """update @stocks set lastSale = 78.11 where symbol is "AAPL" limit 20""")
     }
 
   }

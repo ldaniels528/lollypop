@@ -1,7 +1,7 @@
 namespace `demo.aws`
 //////////////////////////////////////////////////////////////////////////////////////
 //      GENERATE VIN-MAPPING DEMO
-// include './contrib/examples/src/main/lollypop/GenerateVinMapping.sql'
+// include('./app/examples/src/main/lollypop/GenerateVinMapping.sql')
 //////////////////////////////////////////////////////////////////////////////////////
 
 def main(args: String[]) := {
@@ -15,20 +15,19 @@ def main(args: String[]) := {
     ].toTable()
 
     sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    out = new BufferedWriter(new FileWriter('./vin-mapping.json'))
-    each item in @@items {
-        createTime = sdf.format(DateTime())
-        payload = {'Item':{
-            'CreatedTime':{'S': createTime},
-            'MaskedVin':{'S': masked},
-            'Vin':{'S': vin},
-            'aws:rep:deleting':{'BOOL':false},
-            'aws:rep:updateregion':{'S':'us-east-1'},
-            'aws:rep:updatetime':{'N':'1590600503.813001'}}}
-        out.write(payload.toJsonString())
-        out.newLine()
-    }
-    out.close()
+    with new BufferedWriter(new FileWriter('./vin-mapping.json')) out =>
+        each item in @items {
+            createTime = sdf.format(DateTime())
+            payload = {'Item':{
+                'CreatedTime':{'S': createTime},
+                'MaskedVin':{'S': masked},
+                'Vin':{'S': vin},
+                'aws:rep:deleting':{'BOOL':false},
+                'aws:rep:updateregion':{'S':'us-east-1'},
+                'aws:rep:updatetime':{'N':'1590600503.813001'}}}
+            out.write(payload.toJsonString())
+            out.newLine()
+        }
     OS.read('./vin-mapping.json')
 }
 

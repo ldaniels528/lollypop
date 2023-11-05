@@ -14,7 +14,7 @@ import scala.io.Source
 
 class InlineBlobRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val ref = DatabaseObjectRef(getTestTableName)
-  private val file = new File("contrib") / "examples" / "src" / "main" / "lollypop" / "IngestDemo.sql"
+  private val file = new File("app") / "examples" / "src" / "main" / "lollypop" / "IngestDemo.sql"
 
   describe(classOf[InlineBlobRowCollection].getSimpleName) {
 

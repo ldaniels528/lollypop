@@ -33,7 +33,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
             |   exchange: String(6),
             |   lastSale: Double,
             |   transactionTime: DateTime
-            |) containing { location: './contrib/examples/stocks.csv', headers: false }
+            |) containing { location: './app/examples/stocks.csv', headers: false }
             |""".stripMargin)
       assert(cost0 == IOCost(destroyed = 1, created = 1))
 
@@ -79,7 +79,7 @@ class ExternalFilesTableRowCollectionTest extends AnyFunSpec with VerificationTo
             |   Industry: String(70),
             |   SummaryQuote: String(70),
             |   Reserved: String(20)
-            |) containing { location: './contrib/examples/companylist/csv/', headers: true, null_values: ['n/a'] }
+            |) containing { location: './app/examples/companylist/csv/', headers: true, null_values: ['n/a'] }
             |""".stripMargin)
       assert(cost.created == 1)
     }

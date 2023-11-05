@@ -121,15 +121,15 @@ class JDBCDatabaseMetaDataTest extends AnyFunSpec with JDBCTestServer {
         val rs = conn.createStatement().executeQuery(
           s"""|namespace "temp.jdbc"
               |declare table results(symbol: String(5), exchange: String(6), lastSale: Double)[5]
-              |insert into @@results (symbol, exchange, lastSale)
+              |insert into @results (symbol, exchange, lastSale)
               |values ('GMTQ', 'OTCBB', 0.1111), ('ABC', 'NYSE', 38.47), ('GE', 'NASDAQ', 57.89)
               |
               |drop if exists getStockQuote
               |create procedure getStockQuote(theExchange: String) := {
-              |    stdout <=== 'Selected Exchange: "{{ @theExchange }}"'
+              |    stdout <=== 'Selected Exchange: "{{ theExchange }}"'
               |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
-              |    from @@results
-              |    where exchange == @theExchange
+              |    from @results
+              |    where exchange == theExchange
               |    group by exchange
               |}
               |

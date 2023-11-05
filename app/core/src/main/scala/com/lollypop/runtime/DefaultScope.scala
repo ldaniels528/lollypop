@@ -11,6 +11,7 @@ import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
+import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.functions.{DataTypeConstructor, InternalFunctionCall}
 import com.lollypop.runtime.instructions.invocables.EOL
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
@@ -41,21 +42,22 @@ case class DefaultScope(superScope: Option[Scope] = None,
                         observed: Boolean = false,
                         references: Map[DatabaseObjectNS, AnyRef] = Map(),
                         tracers: List[TraceEventHandler] = Nil,
-                        valueReferences: Map[String, ValueReference] = Map()) extends Scope {
+                        valueReferences: Map[String, ValueReference] = Map())
+  extends Scope with TableExpression {
 
   private val specialVariables: Map[String, () => Any] = Map(
-    "__scope__" -> { () => this },
-    "__imports__" -> { () => getImports },
-    "__implicit_imports__" -> { () =>
+    __scope__ -> { () => this },
+    __imports__ -> { () => getImports },
+    __implicit_imports__ -> { () =>
       getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)
         .map { case (k, values) => k -> values.map(_._2).toSet }
     },
-    "__loaded__" -> { () => getUniverse.system.getReferencedEntities },
+    __loaded__ -> { () => getUniverse.system.getReferencedEntities },
     __namespace__ -> { () => (apply(__database__) || DEFAULT_DATABASE) + "." + (apply(__schema__) || DEFAULT_SCHEMA) },
-    "__resources__" -> { () => ResourceManager.getResources },
-    "__userHome__" -> { () => scala.util.Properties.userHome },
-    "__userName__" -> { () => scala.util.Properties.userName },
-    "__version__" -> { () => version }
+    __resources__ -> { () => ResourceManager.getResources },
+    __userHome__ -> { () => scala.util.Properties.userHome },
+    __userName__ -> { () => scala.util.Properties.userName },
+    __version__ -> { () => version }
   )
 
   override def ++(that: Scope): Scope = {
@@ -164,7 +166,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
 
   override def getRowCollection(ref: DatabaseObjectRef): RowCollection = {
     ref.realize(this) match {
-      case ns: DatabaseObjectNS if ns.name.startsWith("@@") => resolveTableVariable(ns.name.drop(2))
+      case ns: DatabaseObjectNS if ns.name.startsWith("@") => resolveTableVariable(ns.name.drop(2))
       case DatabaseObjectRef.InnerTable(TableVariableRef(baseName), _) => resolveTableVariable(baseName)
       case tvr: TableVariableRef => resolveTableVariable(tvr.name)
       case dor =>
@@ -316,6 +318,12 @@ case class DefaultScope(superScope: Option[Scope] = None,
     }
   }
 
+  override def returnType: TableType = TableType(columns = Seq(
+    TableColumn(name = "name", `type` = StringType),
+    TableColumn(name = "kind", `type` = StringType),
+    TableColumn(name = "value", `type` = StringType)
+  ))
+
   override def setVariable(name: String, instruction: Instruction): Scope = {
     val (scopeA, _, valueA) = LollypopVM.execute(this, instruction)
     scopeA.setVariable(name, valueA)
@@ -330,6 +338,14 @@ case class DefaultScope(superScope: Option[Scope] = None,
       case None => withVariable(name, value)
     }
     scopeA
+  }
+
+  override def toMap: Map[String, Any] = {
+    Seq(
+      getAliasedSources,
+      getImports,
+      getValueReferences.map { case (k, v) => k -> v.value(this) }
+    ).reduce(_ ++ _)
   }
 
   override def toRowCollection: RowCollection = {
@@ -373,6 +389,11 @@ case class DefaultScope(superScope: Option[Scope] = None,
     implicit val out: RowCollection = createQueryResultTable(returnType.columns)
     for (mapping <- rowsCR_Id ::: rowsCR_cols ::: rowsVars) out.insert(mapping.toRow)
     out
+  }
+
+  override def toString: String = {
+    val m = getAliasedRows ++ getAliasedSources ++ getValueReferences
+    s"${this.getClass.getSimpleName}(${m.size})"
   }
 
   override def withAliasedRows(aliasedRows: Map[String, Row]): Scope = {
@@ -454,6 +475,26 @@ case class DefaultScope(superScope: Option[Scope] = None,
   override def withVariable(name: String, `type`: DataType, value: Any, isReadOnly: Boolean): Scope = {
     val variable = Variable(name, `type`, initialValue = `type`.convert(value), isReadOnly = isReadOnly)
     this.withVariable(variable)
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //    Print I/O Streams
+  //////////////////////////////////////////////////////////////////////////////////
+
+  override def debug(s: => String): Unit = {
+    if (resolveAs("__debug__").contains(true)) getUniverse.system.stdOut.writer.println(s)
+  }
+
+  override def info(s: => String): Unit = {
+    if (resolveAs("__info__").contains(true)) getUniverse.system.stdOut.writer.println(s)
+  }
+
+  override def warn(s: => String): Unit = {
+    if (resolveAs("__warn__").contains(true)) getUniverse.system.stdErr.writer.println(s)
+  }
+
+  override def error(s: => String): Unit = {
+    if (resolveAs("__error__").contains(true)) getUniverse.system.stdErr.writer.println(s)
   }
 
 }

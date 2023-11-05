@@ -26,7 +26,7 @@ object Queryable {
    * @param stream    the given [[TokenStream token stream]]
    * @param queryable the source [[Queryable queryable]]
    * @return a new queryable having the specified modification
-   * @example @@stocks where lastSale <= 1 order by symbol limit 5
+   * @example @stocks where lastSale <= 1 order by symbol limit 5
    */
   def apply(stream: TokenStream, queryable: Queryable)(implicit compiler: SQLCompiler): Queryable = {
     val t0 = stream.peek

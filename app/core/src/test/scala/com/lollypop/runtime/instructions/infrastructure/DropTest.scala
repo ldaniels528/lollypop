@@ -38,7 +38,7 @@ class DropTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: drop if exists") {
       val (_, cost, _) = LollypopVM.executeSQL(Scope(),
-        """|drop if exists @@stocks
+        """|drop if exists @stocks
            |""".stripMargin)
       assert(cost.destroyed == 1)
     }

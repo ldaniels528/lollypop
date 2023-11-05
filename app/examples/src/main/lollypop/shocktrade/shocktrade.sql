@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 // Title: ShockTrade Demo
-// include('./contrib/examples/src/main/lollypop/shocktrade/shocktrade.sql')
+// include('./app/examples/src/main/lollypop/shocktrade/shocktrade.sql')
 //////////////////////////////////////////////////////////////////////////////////////
 namespace 'examples.shocktrade'
 
@@ -20,22 +20,22 @@ logger.info('Starting ShockTrade Demo Service...')
 //////////////////////////////////////////////////////////////////////////////////////
 
 // StockQuotes table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/StockQuotes.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/StockQuotes.sql')
 
 // Members table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/Members.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/Members.sql')
 
 // Contests table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/Contests.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/Contests.sql')
 
 // Participants table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/Participants.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/Participants.sql')
 
 // Orders table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/Orders.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/Orders.sql')
 
 // Positions table
-include('./contrib/examples/src/main/lollypop/shocktrade/tables/Positions.sql')
+include('./app/examples/src/main/lollypop/shocktrade/tables/Positions.sql')
 
 //////////////////////////////////////////////////////////////////////////////////////
 // startup a server
@@ -56,23 +56,23 @@ nodeAPI(port, '/ws/shocktrade', {
 })
 
 // Common Utilities
-include('./contrib/examples/src/main/lollypop/shocktrade/utils/commons.sql')
+include('./app/examples/src/main/lollypop/shocktrade/utils/commons.sql')
 
 // Stock APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/stock_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/stock_api.sql')
 
 // Member APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/member_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/member_api.sql')
 
 // Contest APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/contest_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/contest_api.sql')
 
 // Contest Participants APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/participant_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/participant_api.sql')
 
 // Contest Orders APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/order_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/order_api.sql')
 
 // Contest Positions APIs
-include('./contrib/examples/src/main/lollypop/shocktrade/api/position_api.sql')
+include('./app/examples/src/main/lollypop/shocktrade/api/position_api.sql')
 

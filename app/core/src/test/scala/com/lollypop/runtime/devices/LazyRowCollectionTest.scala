@@ -13,7 +13,7 @@ class LazyRowCollectionTest extends AnyFunSpec {
     val filterKeys: ((String, Any)) => Boolean = t => Set("canonicalPath", "lastModified", "length").contains(t._1)
 
     it("should lazily read rows from an iterator") {
-      val files = new File("./contrib/examples/src/main/lollypop").streamFiles
+      val files = new File("./app/examples/src/main/lollypop").streamFiles
       implicit val out: RowCollection = createFileTable()
       val rows = files.filter(filterFiles).sortBy(_.getName).map(toFileRow).iterator
       val lazyRC = LazyRowCollection(out, rows)
@@ -27,7 +27,7 @@ class LazyRowCollectionTest extends AnyFunSpec {
     }
 
     it("should use getLength() to determine the length of the device") {
-      val files = new File("./contrib/examples/src/main/lollypop").streamFiles
+      val files = new File("./app/examples/src/main/lollypop").streamFiles
       implicit val out: RowCollection = createFileTable()
       val rows = files.filter(filterFiles).map(toFileRow).iterator
       val lazyRC = LazyRowCollection(out, rows)

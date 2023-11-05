@@ -15,7 +15,7 @@ import java.util.{Timer, TimerTask}
  * every instruction
  * @param interval  the [[Expression frequency interval]] of execution
  * @param invokable the [[Instruction command(s)]] to execute
- * @example {{{ every '2 seconds' { delete from @@entries where attachID is null } }}}
+ * @example {{{ every '2 seconds' { delete from @entries where attachID is null } }}}
  */
 case class Every(interval: Expression, invokable: Instruction) extends RuntimeExpression {
 

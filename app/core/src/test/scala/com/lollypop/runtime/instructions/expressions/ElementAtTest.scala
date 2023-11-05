@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.{@@, @@@}
+import com.lollypop.language.models.{$, @@}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -26,9 +26,9 @@ class ElementAtTest extends AnyFunSpec {
       assert(model.toSQL == "items[18]")
     }
 
-    it("should decompile models: @@stocks[2500]") {
-      val model = ElementAt(@@@("stocks"), 2500.v)
-      assert(model.toSQL == "@@stocks[2500]")
+    it("should decompile models: @stocks[2500]") {
+      val model = ElementAt(@@("stocks"), 2500.v)
+      assert(model.toSQL == "@stocks[2500]")
     }
 
     it("should detect the return type: [99, 100, 101][1]") {
@@ -46,8 +46,8 @@ class ElementAtTest extends AnyFunSpec {
       assert(model.returnType == AnyType)
     }
 
-    it("should detect the return type: @@stocks[2500]") {
-      val model = ElementAt(@@@("stocks"), 2500.v)
+    it("should detect the return type: @stocks[2500]") {
+      val model = ElementAt(@@("stocks"), 2500.v)
       assert(model.returnType == AnyType)
     }
 
@@ -63,14 +63,14 @@ class ElementAtTest extends AnyFunSpec {
       assert(value == 'o')
     }
 
-    it("should evaluate: @@stocks[2]") {
+    it("should evaluate: @stocks[2]") {
       val (scope, _, _) = LollypopVM.executeSQL(Scope(),
         """|declare table stocks(symbol: String(4), exchange: String(6), lastSale: Float)
            |stocks.push({ symbol: 'ABC', exchange: 'OTCBB', lastSale: 37.89 })
            |stocks.push({ symbol: 'T', exchange: 'NYSE', lastSale: 22.77 })
            |stocks.push({ symbol: 'AAPL', exchange: 'NASDAQ', lastSale: 149.76 })
            |""".stripMargin)
-      val model = ElementAt(@@("stocks"), 2.v)
+      val model = ElementAt($("stocks"), 2.v)
       val value = model.execute()(scope)._3
       assert(value ==
         Row(id = 2, metadata = RowMetadata(),

@@ -1,12 +1,12 @@
-import sbt.Keys._
-import sbt._
+import sbt.Keys.*
+import sbt.*
 
 import scala.language.postfixOps
 
 val scalaVersion_2_13 = "2.13.10"
 val scalaVersion_3_00 = "3.0.1"
 
-val appVersion = "0.1.5.6"
+val appVersion = "0.1.6.0"
 val pluginVersion = "1.0.0"
 val scalaAppVersion = scalaVersion_2_13
 
@@ -35,14 +35,18 @@ lazy val testDependencies = Seq(
 //      Root Project - builds all artifacts
 /////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @example sbt "project root" package
+ * @example sbt "project root" test
+ */
 lazy val root = (project in file("./app")).
   aggregate(core, jdbc_driver).
-  dependsOn(core, jdbc_driver).
-  settings(testDependencies: _*).
+  dependsOn(core, jdbc_driver, examples).
+  settings(testDependencies *).
   settings(
-    name := "lollypop-platform",
+    name := "lollypop",
     organization := "com.lollypop",
-    description := "Lollypop Platform",
+    description := "Lollypop",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
@@ -55,10 +59,12 @@ lazy val root = (project in file("./app")).
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @example sbt "project core" assembly
+ * @example sbt "project core" package
  * @example sbt "project core" test
  */
 lazy val core = (project in file("./app/core")).
-  settings(testDependencies: _*).
+  settings(testDependencies *).
   settings(
     name := "core",
     organization := "com.lollypop",
@@ -93,13 +99,15 @@ lazy val core = (project in file("./app/core")).
       "org.apache.httpcomponents.client5" % "httpclient5-fluent" % "5.2.1",
       "org.commonmark" % "commonmark" % "0.21.0",
       "org.jfree" % "jfreechart" % "1.5.4",
+      "org.jfree" % "jfreechart-fx" % "1.0.1",
+      "org.jfree" % "jcommon" % "1.0.24",
       "org.ow2.asm" % "asm" % "9.4",
       "org.scala-lang" % "scala-reflect" % scalaAppVersion,
       "org.xerial.snappy" % "snappy-java" % snappyJavaVersion
     ))
 
 /////////////////////////////////////////////////////////////////////////////////
-//      Database Client Project
+//      JDBC Driver Project
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -107,11 +115,11 @@ lazy val core = (project in file("./app/core")).
  */
 lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
   dependsOn(core).
-  settings(testDependencies: _*).
+  settings(testDependencies *).
   settings(
     name := "jdbc-driver",
-    organization := "com.lollypop",
-    description := "Lollypop Database JDBC Driver",
+    organization := "com.lollypop.database.jdbc",
+    description := "Lollypop JDBC Driver",
     version := appVersion,
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
@@ -132,34 +140,15 @@ lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
     ))
 
 /////////////////////////////////////////////////////////////////////////////////
-//      Contrib Project
-/////////////////////////////////////////////////////////////////////////////////
-
-lazy val contrib = (project in file("./contrib")).
-  aggregate(root, examples).
-  dependsOn(root, examples).
-  settings(testDependencies: _*).
-  settings(
-    name := "lollypop-demos",
-    organization := "com.lollypop",
-    description := "Lollypop Demos",
-    version := appVersion,
-    scalaVersion := scalaAppVersion,
-    Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
-    Compile / doc / scalacOptions += "-no-link-warnings",
-    autoCompilerPlugins := true
-  )
-
-/////////////////////////////////////////////////////////////////////////////////
 //      Examples Project
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @example sbt "project examples" test
  */
-lazy val examples = (project in file("./contrib/examples")).
+lazy val examples = (project in file("./app/examples")).
   dependsOn(jdbc_driver).
-  settings(testDependencies: _*).
+  settings(testDependencies *).
   settings(
     name := "examples",
     organization := "com.lollypop.examples",

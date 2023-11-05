@@ -29,14 +29,14 @@ class StatsGeneratingRowCollectionTest extends AnyFunSpec with VerificationTools
       val scope1 = scope0.withVariable("stocks", device)
 
       // insert 5,000 records
-      val src = Source.fromFile("./contrib/examples/stocks-5k.csv")
+      val src = Source.fromFile("./app/examples/stocks-5k.csv")
       val lines = src.getLines()
       lines.next()
       lines foreach { line =>
         if (line.trim.nonEmpty) {
           val Array(symbol, exchange, lastSale, lastSaleTime) = line.split("[,]")
           val (_, cost, _) = LollypopVM.executeSQL(scope1,
-            s"""|insert into @@stocks (symbol, exchange, lastSale, lastSaleTime)
+            s"""|insert into @stocks (symbol, exchange, lastSale, lastSaleTime)
                 |values ($symbol, $exchange, $lastSale, $lastSaleTime)
                 |""".stripMargin)
           assert(cost.inserted == 1)

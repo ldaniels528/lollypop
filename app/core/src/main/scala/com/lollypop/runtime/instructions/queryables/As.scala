@@ -41,7 +41,7 @@ object As extends ExpressionChainParser {
          |       max(lastSale) as maxLastSale,
          |       min(lastSale) as minLastSale,
          |       sum(lastSale) as sumLastSale
-         |from @@stocks
+         |from @stocks
          |""".stripMargin
   ))
 

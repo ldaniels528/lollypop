@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.dieIllegalType
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.runtime.devices.PaginationSupport
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -202,7 +202,7 @@ class PaginationTest extends AnyFunSpec with VerificationTools {
            |stocksP = pagination(select symbol, lastSale, exchange from stocks)
            |stocksP.first(14)
            |""".stripMargin)
-      val stocksP = scope.getRowCollection(@@@("stocksP")) match {
+      val stocksP = scope.getRowCollection(@@("stocksP")) match {
         case rc: PaginationSupport => rc
         case x => dieIllegalType(x)
       }
@@ -234,7 +234,7 @@ class PaginationTest extends AnyFunSpec with VerificationTools {
            |stocksP = pagination(select symbol, lastSale, exchange from stocks)
            |stocksP.last(1)
            |""".stripMargin)
-      val stocksP = scope.getRowCollection(@@@("stocksP")) match {
+      val stocksP = scope.getRowCollection(@@("stocksP")) match {
         case rc: PaginationSupport => rc
         case x => dieIllegalType(x)
       }
@@ -265,7 +265,7 @@ class PaginationTest extends AnyFunSpec with VerificationTools {
            ||----------------------------------------------------------|
            |stocksP = pagination(select symbol, lastSale, exchange from stocks)
            |""".stripMargin)
-      val stocksP = scope.getRowCollection(@@@("stocksP")) match {
+      val stocksP = scope.getRowCollection(@@("stocksP")) match {
         case rc: PaginationSupport => rc
         case x => dieIllegalType(x)
       }
@@ -297,7 +297,7 @@ class PaginationTest extends AnyFunSpec with VerificationTools {
            |stocksP = pagination(select symbol, lastSale, exchange from stocks)
            |stocksP.last(1)
            |""".stripMargin)
-      val stocksP = scope.getRowCollection(@@@("stocksP")) match {
+      val stocksP = scope.getRowCollection(@@("stocksP")) match {
         case rc: PaginationSupport => rc
         case x => dieIllegalType(x)
       }

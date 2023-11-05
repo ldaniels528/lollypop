@@ -1,4 +1,4 @@
-Lollypop v0.1.5.6
+Lollypop v0.1.6.0
 ============
 
 ## Table of Contents
@@ -51,13 +51,13 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.5.6.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.0.jar`
 
 ### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.5.6.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.0.jar`
 
 ### Run Lollypop CLI
 ```bash
@@ -65,7 +65,7 @@ sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.5.6.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.0.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -126,7 +126,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-02T21:25:17.281Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-05T17:52:40.010Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +178,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-02T21:25:17.364Z"
+"2023-11-05T17:52:40.087Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -297,7 +297,7 @@ val stocks =
     | ABC    | NYSE     |    56.12 |
     | DNS    | AMEX     |    97.61 |
     |------------------------------|
-select avgLastSale: avg(lastSale) from @@stocks
+select avgLastSale: avg(lastSale) from @stocks
 ```
 ##### Results
 ```sql
@@ -364,7 +364,7 @@ stocks =
 | OTCBB    | JCJMT  |          | 2023-09-28T00:58:17.985Z |
 | NASDAQ   | EMY    |  24.6447 | 2023-09-28T00:58:22.595Z |
 |---------------------------------------------------------|
-select total: count(*) from @@stocks
+select total: count(*) from @stocks
 ```
 ##### Results
 ```sql
@@ -389,7 +389,7 @@ stocks =
 | OTCBB    | JCJMT  |          | 2023-09-28T00:58:17.985Z |
 | NASDAQ   | EMY    |  24.6447 | 2023-09-28T00:58:22.595Z |
 |---------------------------------------------------------|
-select total: count(lastSale) from @@stocks
+select total: count(lastSale) from @stocks
 ```
 ##### Results
 ```sql
@@ -413,7 +413,7 @@ stocks =
 | FQPY   | NASDAQ   |  75.4873 | 2023-07-29T05:06:56.238Z |
 | VNQR   | NASDAQ   |  38.5333 | 2023-07-29T05:06:56.239Z |
 |---------------------------------------------------------|
-select total: count(unique(exchange)) from @@stocks
+select total: count(unique(exchange)) from @stocks
 ```
 ##### Results
 ```sql
@@ -437,7 +437,7 @@ stocks =
 | FQPY   | NASDAQ   |  75.4873 | 2023-07-29T05:06:56.238Z |
 | VNQR   | NASDAQ   |  38.5333 | 2023-07-29T05:06:56.239Z |
 |---------------------------------------------------------|
-select total: countUnique(exchange) from @@stocks
+select total: countUnique(exchange) from @stocks
 ```
 ##### Results
 ```sql
@@ -513,7 +513,7 @@ val stocks =
     | ABC    | NYSE     |    56.12 |
     | DNS    | AMEX     |    97.61 |
     |------------------------------|
-select maxLastSale: max(lastSale) from @@stocks
+select maxLastSale: max(lastSale) from @stocks
 ```
 ##### Results
 ```sql
@@ -553,7 +553,7 @@ val stocks =
     | ABC    | NYSE     |    56.12 |
     | DNS    | AMEX     |    97.61 |
     |------------------------------|
-select minLastSale: min(lastSale) from @@stocks
+select minLastSale: min(lastSale) from @stocks
 ```
 ##### Results
 ```sql
@@ -674,18 +674,18 @@ faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q",
 suits = transpose(suit: ["♠", "♦", "♥", "♣"])
 deck = faces * suits
 deck.shuffle()
-@@deck limit 5
+@deck limit 5
 ```
 ##### Results
 ```sql
 |-------------|
 | face | suit |
 |-------------|
+| 3    | ♠    |
 | A    | ♥    |
-| 7    | ♣    |
-| J    | ♣    |
-| 9    | ♥    |
-| 2    | ♥    |
+| K    | ♥    |
+| 10   | ♥    |
+| 4    | ♥    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
@@ -739,7 +739,7 @@ val stocks =
   | YOKE   | NYSE     |    56.12 |
   | DNS    | AMEX     |    97.61 |
   |------------------------------|
-select exchange: unique(exchange) from @@stocks
+select exchange: unique(exchange) from @stocks
 ```
 ##### Results
 ```sql
@@ -754,7 +754,7 @@ select exchange: unique(exchange) from @@stocks
 
 ```sql
 declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[5])
-insert into @@stocks (symbol, exchange, transactions)
+insert into @stocks (symbol, exchange, transactions)
 values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('AMD',  'NASDAQ', {price:56.87, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('INTC', 'NYSE',   {price:89.44, transactionTime:"2021-08-05T19:23:11.000Z"}),
@@ -762,7 +762,7 @@ values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.00
        ('SHMN', 'OTCBB', [{price:0.0010, transactionTime:"2021-08-05T19:23:11.000Z"},
                           {price:0.0011, transactionTime:"2021-08-05T19:23:12.000Z"}])
 
-select symbol, exchange, unnest(transactions) from @@stocks where symbol is 'SHMN'
+select symbol, exchange, unnest(transactions) from @stocks where symbol is 'SHMN'
 ```
 ##### Results
 ```sql
@@ -802,9 +802,10 @@ async { OS.listFiles("./app") }
 |-------------------------------------------------------------------------------------------------------------------------------------|
 | name        | canonicalPath                                   | lastModified             | length | isDirectory | isFile | isHidden |
 |-------------------------------------------------------------------------------------------------------------------------------------|
-| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-10-30T21:46:39.057Z |   6148 | false       | true   | true     |
+| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-11-03T21:03:10.412Z |   8196 | false       | true   | true     |
 | core        | /Users/ldaniels/GitHub/lollypop/app/core        | 2023-05-23T21:20:11.818Z |    160 | true        | false  | false    |
-| target      | /Users/ldaniels/GitHub/lollypop/app/target      | 2023-06-29T22:26:20.958Z |    192 | true        | false  | false    |
+| target      | /Users/ldaniels/GitHub/lollypop/app/target      | 2023-11-03T20:21:11.085Z |    192 | true        | false  | false    |
+| examples    | /Users/ldaniels/GitHub/lollypop/app/examples    | 2023-11-05T17:51:30.933Z |    288 | true        | false  | false    |
 | jdbc-driver | /Users/ldaniels/GitHub/lollypop/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
 |-------------------------------------------------------------------------------------------------------------------------------------|
 ```
@@ -879,7 +880,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="041a7786-ed33-4960-a0b4-364ea0081c65")
+', message="OK", statusCode=200, responseID="6beb1e13-eea2-413a-9373-d920df28a70d")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -889,7 +890,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="3718be88-2a59-4db3-97a4-e741b64df278")
+HttpResponse(body=null, message=null, statusCode=200, responseID="055540f5-901d-4e9d-be9f-dda84c0097a2")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -899,7 +900,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="aa4113ae-cdd4-415b-90c7-bf98f7da27df")
+HttpResponse(body=null, message=null, statusCode=200, responseID="9d902219-ee72-4fcf-9874-f596b8c5831f")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -918,7 +919,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@41c07648", message="OK", statusCode=200, responseID="2d94e641-88fa-4143-b4b8-681d36c93669")
+HttpResponse(body="java.io.PrintStream@60d84f61", message="OK", statusCode=200, responseID="71b0c969-cb30-4388-af8a-5f09e0eb5ec2")
 ```
 ##### Console Output
 ```
@@ -940,11 +941,11 @@ nodeConsole(remotePort, [
 | name | category           | paradigm        | description                                                                      | example                                                                                                   |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | #    | Dataframe I/O      | Declarative     | Returns a column slice of a data frame                                           | declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTim ...  |
+| $    | Scope/Session      | Declarative     | used to disambiguate a variable from a field or other identifiers                | x = 1 $x                                                                                                  |
 | &&   | Control Flow       | Declarative     | Binds multiple statements together                                               | declare table if not exists TradingSystem ( stock_id: RowNumber, symbol: String(5), exchange: Enum ( ...  |
 | .!   | JVM and Reflection | Object-Oriented | Invokes a virtual method                                                         | val items = values ("NASDAQ", 1276), ("AMEX", 1259), ("NYSE", 1275), ("OTCBB", 1190) items.!toTable( ...  |
 | ...  | JVM and Reflection | Declarative     | The argument spread operator: can convert an array into individual arguments     | def p3d(x: Double, y: Double, z: Double) := (x, y, z)  p3d([ x: 123, y:13, z: 67 ]...)                    |
 | ...  | JVM and Reflection | Declarative     | The argument spread operator: can convert a dictionary into individual arguments | def p3d(x: Double, y: Double, z: Double) := (x, y, z)  p3d({ x: 123, y:13, z: 67 }...)                    |
-| .?   | JVM and Reflection | Object-Oriented | determines whether the method exists within the instance                         | val num = 5 num.?MAX_VALUE                                                                                |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### nodeExec (Asynchronous/Distributed/Reactive &#8212; Functional)
@@ -983,7 +984,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[10699, 12336, 12508]
+[12740, 14473, 11480]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Starts a Lollypop peer node.
@@ -993,7 +994,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9508
+10489
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: shuts down a running Lollypop peer node.
@@ -1055,7 +1056,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@41c07648
+java.io.PrintStream@60d84f61
 ```
 ##### Console Output
 ```
@@ -1075,7 +1076,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@41c07648
+java.io.PrintStream@60d84f61
 ```
 ##### Console Output
 ```
@@ -1108,10 +1109,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-02T21:25:21.851Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-02T21:25:21.851Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-02T21:25:21.851Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-02T21:25:21.851Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-05T17:52:43.735Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-05T17:52:43.735Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-05T17:52:43.735Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-05T17:52:43.735Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1126,7 +1127,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@41c07648
+java.io.PrintStream@60d84f61
 ```
 ##### Console Output
 ```
@@ -1154,7 +1155,7 @@ create procedure getStockQuote(theExchange: String,
                                --> maxPrice: Double,
                                --> minPrice: Double) as
   select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale)
-  from @@stockQuotes
+  from @stockQuotes
   where exchange is theExchange
   group by exchange
 
@@ -1203,15 +1204,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------|
-| exchange | symbol | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NASDAQ   | YCZD   |  98.6663 | 2023-11-02T21:24:23.096Z |
-| NASDAQ   | SEYR   |   0.5707 | 2023-11-02T21:24:38.562Z |
-| AMEX     | LZTMJ  |  65.8168 | 2023-11-02T21:24:56.079Z |
-| NYSE     | JPWX   |  17.3973 | 2023-11-02T21:24:35.263Z |
-| NYSE     | UF     |  52.9223 | 2023-11-02T21:24:42.116Z |
-|---------------------------------------------------------|
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| AMEX      | WW     |  14.8557 | 2023-11-05T17:52:37.945Z |
+| OTHER_OTC | DECO   |   0.0307 | 2023-11-05T17:52:17.219Z |
+| NASDAQ    | HISIY  |  85.8843 | 2023-11-05T17:51:49.146Z |
+| NYSE      | UA     |  33.9433 | 2023-11-05T17:52:26.551Z |
+| AMEX      | VN     |  13.1444 | 2023-11-05T17:52:04.503Z |
+|----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
 *Description*: Creates a database procedure
@@ -1235,8 +1236,8 @@ create procedure getStockQuote(theExchange: String,
                                --> maxPrice: Double,
                                --> minPrice: Double) :=
     select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale)
-    from @@stockQuotes
-    where exchange is @theExchange
+    from @stockQuotes
+    where exchange is theExchange
     group by exchange
 
 call getStockQuote("NASDAQ")
@@ -1279,7 +1280,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.662292, _2=720.0)
+Tuple2(_1=0.557791, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1333,7 +1334,7 @@ stocks =
 | EVDX   | OTCBB    |  77.1829 | 2023-07-29T04:09:04.533Z |
 |---------------------------------------------------------|
 var messages = []
-each item in (select symbol, lastSale from @@stocks where lastSale < 100)
+each item in (select symbol, lastSale from @stocks where lastSale < 100)
   messages = messages.push('{{item.symbol}} is {{item.lastSale}}/share')
 messages
 ```
@@ -1360,7 +1361,7 @@ stocks =
 | NYSE      | QOVGA  |   1.9199 | 2023-10-14T18:40:14.590Z |
 | NYSE      | ZJWL   |  17.3107 | 2023-10-14T18:40:13.205Z |
 |----------------------------------------------------------|
-each item in reverse (from @@stocks) yield item
+each item in reverse (from @stocks) yield item
 ```
 ##### Results
 ```sql
@@ -1435,7 +1436,7 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@41c07648
+java.io.PrintStream@60d84f61
 ```
 ##### Console Output
 ```
@@ -1450,7 +1451,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@781e7326
+java.io.PrintStream@324dcd31
 ```
 ##### Console Error
 ```
@@ -1470,9 +1471,9 @@ this
 | name   | kind                | value                                                                    |
 |---------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                       |
-| stdout | PrintStream         | java.io.PrintStream@41c07648                                             |
-| stdin  | BufferedReader      | java.io.BufferedReader@1fe8d51b                                          |
-| stderr | PrintStream         | java.io.PrintStream@781e7326                                             |
+| stdout | PrintStream         | java.io.PrintStream@60d84f61                                             |
+| stdin  | BufferedReader      | java.io.BufferedReader@39c11e6c                                          |
+| stderr | PrintStream         | java.io.PrintStream@324dcd31                                             |
 | OS     | OS                  | lollypop.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                        |
 | e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -1518,7 +1519,7 @@ create table `Stocks` (
     |------------------------------|
 )
 
-with ns("Stocks") { stocks => @@stocks where lastSale < 50 }
+with ns("Stocks") { stocks => @stocks where lastSale < 50 }
 ```
 ##### Results
 ```sql
@@ -1577,7 +1578,7 @@ val stocks =
 | NXSQ   | OTCBB    | 254.2278 |
 | LQRQ   | AMEX     |    88.42 |
 |------------------------------|
-delete from @@stocks where symbol is "EGXY"
+delete from @stocks where symbol is "EGXY"
 stocks
 ```
 ##### Results
@@ -1693,7 +1694,7 @@ stagedActors =
 |------------------------------------------|
 
 declare table Actors (name: String(64), popularity: Int)
-insert into Actors (name, popularity) select name, popularity from @@stagedActors
+insert into Actors (name, popularity) select name, popularity from @stagedActors
 
 graph { shape: "bar", title: "Popularity" } from Actors
 ```
@@ -1785,7 +1786,7 @@ from (
 | OTHER_OTC | PMBFY  |   0.0139 | 2023-09-21T04:57:46.146Z |
 | OTCBB     | CAVY   |   0.0047 | 2023-09-21T04:57:43.503Z |
 |----------------------------------------------------------|
-) where lastSale <= 0.02 into @@pennyStocks
+) where lastSale <= 0.02 into @pennyStocks
 ```
 ##### Results
 ```sql
@@ -1928,7 +1929,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-02T21:25:23.112Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-05T17:52:44.778Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative)
@@ -1977,8 +1978,8 @@ val stocks =
  | TGRV   | NYSE     |   80.225 | 2023-08-05T22:45:29.373Z |
  | XHMQ   | NASDAQ   |   98.445 | 2023-08-05T22:45:29.374Z |
  |---------------------------------------------------------|
-delete from @@stocks where symbol is "CMHA"
-undelete from @@stocks where symbol is "CMHA"
+delete from @stocks where symbol is "CMHA"
+undelete from @stocks where symbol is "CMHA"
 ```
 ##### Results
 ```sql
@@ -2070,7 +2071,7 @@ val stocks =
  | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
  | UKHT   | NASDAQ   |  71.1514 | 2023-08-05T22:34:20.283Z |
  |---------------------------------------------------------|
-update @@stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
+update @stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
 stocks
 ```
 ##### Results
@@ -2078,11 +2079,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-02T21:25:23.141Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-02T21:25:23.141Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-05T17:52:44.806Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-05T17:52:44.806Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-02T21:25:23.141Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-05T17:52:44.806Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative)
@@ -2090,7 +2091,7 @@ stocks
 
 ```sql
 declare table stocks (symbol: String(8), exchange: String(8), transactions: Table (price: Double, transactionTime: DateTime)[5])
-insert into @@stocks (symbol, exchange, transactions)
+insert into @stocks (symbol, exchange, transactions)
 values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
        ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
        ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
@@ -2098,7 +2099,7 @@ values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:1
        ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
                           {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
 
-update @@stocks#transactions
+update @stocks#transactions
 set price = 0.0012
 where symbol is 'SHMN'
 and transactions wherein (price is 0.001)
@@ -2219,12 +2220,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-02T21:25:23.262Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-02T21:25:23.262Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-02T21:25:23.262Z | VV     | OTCBB     |          |
-| 2023-11-02T21:25:23.263Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-02T21:25:23.263Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-02T21:25:23.263Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-05T17:52:44.947Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-05T17:52:44.947Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-05T17:52:44.947Z | VV     | OTCBB     |          |
+| 2023-11-05T17:52:44.947Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-05T17:52:44.947Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-05T17:52:44.947Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative)
@@ -2280,7 +2281,7 @@ drop if exists Stocks
 create table Stocks (symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
   containing (generateStocks(1000))
 
-graph { shape: "pie", title: "Small Caps" }
+graph { shape: "pie3d", title: "Small Caps" }
 select exchange, total: sum(lastSale) from Stocks
 where lastSale <= 5.0
 group by exchange
@@ -2429,14 +2430,14 @@ drop Stocks
 
 ```sql
 val stocks = Table(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[5])
-insert into @@stocks (symbol, exchange, transactions)
+insert into @stocks (symbol, exchange, transactions)
 values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('AMD',  'NASDAQ', {price:56.87, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('INTC', 'NYSE',   {price:89.44, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('AMZN', 'NASDAQ', {price:988.12, transactionTime:"2021-08-05T19:23:11.000Z"}),
        ('SHMN', 'OTCBB', [{price:0.0010, transactionTime:"2021-08-05T19:23:11.000Z"},
                           {price:0.0011, transactionTime:"2021-08-05T19:23:12.000Z"}])
-@@stocks
+@stocks
 ```
 ##### Results
 ```sql
@@ -2465,7 +2466,7 @@ val stocksA =
  | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
  |---------------------------------------------------------|
 val stocksB = tableLike(stocksA)
-insert into @@stocksB from stocksA where lastSale >= 120
+insert into @stocksB from stocksA where lastSale >= 120
 stocksB
 ```
 ##### Results
@@ -2486,7 +2487,7 @@ stocks =
   TableZoo(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
     .withMemorySupport(150)
     .build()
-insert into @@stocks
+insert into @stocks
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
@@ -2528,7 +2529,7 @@ val stocks =
   | IWEC   | AMEX     | 132.1874 | 2023-08-03T00:09:42.282Z |
   | JIRD   | OTCBB    |  22.0003 | 2023-08-03T00:09:42.283Z |
   |---------------------------------------------------------|
-truncate @@stocks
+truncate @stocks
 ```
 ##### Results
 ```sql
@@ -2641,7 +2642,7 @@ val stocks = (
 | NASDAQ   | CFF    | 107.4943 | 2023-09-26T21:30:06.283Z |
 |---------------------------------------------------------|
 )
-@@stocks where lastSale > 5 and exists(select symbol from @@stocks where exchange is 'OTCBB')
+@stocks where lastSale > 5 and exists(select symbol from @stocks where exchange is 'OTCBB')
 ```
 ##### Results
 ```sql
@@ -2697,7 +2698,7 @@ containing (
 )
 graph { shape: "bar", title: "Travelers" }
 select lastName, members: count(*)
-from @@travelers
+from @travelers
 group by lastName having members > 1
 ```
 ##### Results
@@ -2720,7 +2721,7 @@ val stocks = (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 )
-@@stocks where market in ["NASDAQ", "OTCBB"]
+@stocks where market in ["NASDAQ", "OTCBB"]
 ```
 ##### Results
 ```sql
@@ -2960,7 +2961,7 @@ from (
 
 ```sql
 stocks = Table(symbol: String(4), exchange: String(8), transactions: Table(price: Double, transactionTime: DateTime)[2])
-insert into @@stocks (symbol, exchange, transactions)
+insert into @stocks (symbol, exchange, transactions)
 values ('AAPL', 'NASDAQ', {price: 156.39, transactionTime: "2021-08-05T19:23:11.000Z"}),
        ('AMD',  'NASDAQ', {price:  56.87, transactionTime: "2021-08-05T19:23:11.000Z"}),
        ('INTC', 'NYSE',   {price:  89.44, transactionTime: "2021-08-05T19:23:11.000Z"}),
@@ -2969,7 +2970,7 @@ values ('AAPL', 'NASDAQ', {price: 156.39, transactionTime: "2021-08-05T19:23:11.
                           {price: 0.0011, transactionTime: "2021-08-05T19:23:12.000Z"}])
 
 select unnest(transactions)
-from @@stocks
+from @stocks
 where transactions wherein (price is 0.0011)
 ```
 ##### Results
@@ -3095,7 +3096,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-02T21:25:24.318Z
+2023-11-05T17:52:45.958Z
 ```
 ### new² (JVM and Reflection &#8212; Functional)
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3136,7 +3137,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@63f3366a
+scala.Function1$@752494dd
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -3163,6 +3164,17 @@ java.lang.Integer
 ## Scope/Session Examples
 <hr>
 
+### $ (Scope/Session &#8212; Declarative)
+*Description*: used to disambiguate a variable from a field or other identifiers
+
+```sql
+x = 1
+$x
+```
+##### Results
+```sql
+1
+```
 ### <|> (Scope/Session &#8212; Functional)
 *Description*: Horizontally combines two arrays.
 
@@ -3214,22 +3226,11 @@ f(5)
 |---------------------------------------------------------------------------|
 ```
 ### @ (Scope/Session &#8212; Declarative)
-*Description*: used to disambiguate a variable from a field or other identifiers
-
-```sql
-x = 1
-@x
-```
-##### Results
-```sql
-1
-```
-### @@ (Scope/Session &#8212; Declarative)
 *Description*: used to disambiguate a table variable from a field or other identifiers
 
 ```sql
 r = select value: 1
-@@r
+@r
 ```
 ##### Results
 ```sql
@@ -3279,7 +3280,7 @@ select count(*) as total,
        max(lastSale) as maxLastSale,
        min(lastSale) as minLastSale,
        sum(lastSale) as sumLastSale
-from @@stocks
+from @stocks
 ```
 ##### Results
 ```sql
@@ -3299,7 +3300,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-02T21:25:24.755Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-05T17:52:46.386Z")
 ```
 ### destroy (Scope/Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3434,9 +3435,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | lollypop.lang.Random            |
-| stdout | PrintStream    | java.io.PrintStream@41c07648    |
-| stdin  | BufferedReader | java.io.BufferedReader@1fe8d51b |
-| stderr | PrintStream    | java.io.PrintStream@781e7326    |
+| stdout | PrintStream    | java.io.PrintStream@60d84f61    |
+| stdin  | BufferedReader | java.io.BufferedReader@39c11e6c |
+| stderr | PrintStream    | java.io.PrintStream@324dcd31    |
 | OS     | OS             | lollypop.lang.OS                |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3478,7 +3479,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-02T21:25:24.777Z
+2023-11-05T17:52:46.406Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -3588,28 +3589,31 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-02T21:25:24.828Z"
+"2023-11-05T17:52:46.453Z"
 ```
 ### include (System Tools &#8212; Declarative)
 *Description*: incorporates the contents of an external file into current scope
 
 ```sql
-include('./contrib/examples/src/main/lollypop/Stocks.sql')
+include('./app/examples/src/main/lollypop/Stocks.sql')
 ```
 ### ns (System Tools &#8212; Functional)
 *Description*: Returns a persistent object (e.g. table, view, et al) from disk via a namespace
 
 ```sql
-from ns('examples.shocktrade.Contests') limit 5
+from ns('lollypop.public.Stocks') limit 5
 ```
 ##### Results
 ```sql
-|-----------------------------------------------------------------------------------------------|
-| contest_id                           | name               | funds  | creationTime             |
-|-----------------------------------------------------------------------------------------------|
-| 1830017a-c80f-4517-a35c-83fbab1f1689 | Winter is coming   | 2000.0 | 2023-11-01T01:03:51.580Z |
-| 14a87dcf-da7b-43b7-abf5-02d198580ecc | Winter has come!!! | 2000.0 | 2023-11-01T01:03:51.637Z |
-|-----------------------------------------------------------------------------------------------|
+|------------------------------|
+| symbol | exchange | lastSale |
+|------------------------------|
+| AAXX   | NYSE     |    56.12 |
+| UPEX   | NYSE     |   116.24 |
+| XYZ    | AMEX     |    31.95 |
+| ABC    | OTCBB    |    5.887 |
+| TRIX   | NYSE     |    77.88 |
+|------------------------------|
 ```
 ### require (System Tools &#8212; Object-Oriented)
 *Description*: Downloads a JVM dependency (jar) from a repository
@@ -3654,8 +3658,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000459ms] AnyLiteral 1 ~> 1 <Integer>
-[0.262084ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000375ms] AnyLiteral 1 ~> 1 <Integer>
+[0.318083ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3669,7 +3673,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@781e7326
+java.io.PrintStream@324dcd31
 ```
 ##### Console Error
 ```
@@ -3705,16 +3709,16 @@ insert into Travelers (id, lastName, firstName, destAirportCode)
 nodeAPI(port, '/api/temp/examples', {
   post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
      insert into Travelers (id, firstName, lastName, destAirportCode)
-     values (@id, @firstName, @lastName, @destAirportCode)
+     values ($id, $firstName, $lastName, $destAirportCode)
   },
   get: (firstName: String, lastName: String) => {
-     select * from Travelers where firstName is @firstName and lastName is @lastName
+     select * from Travelers where firstName is $firstName and lastName is $lastName
   },
   put: (id: Long, name: String) => {
-     update subscriptions set name = @name where id is @id
+     update subscriptions set name = $name where id is $id
   },
   delete: (id: UUID) => {
-     delete from Travelers where id is @id
+     delete from Travelers where id is $id
   }
 })
 
@@ -3868,7 +3872,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@41c07648
+java.io.PrintStream@60d84f61
 ```
 ##### Console Output
 ```

@@ -11,7 +11,7 @@ import lollypop.io.IOCost
 /**
  * return statement
  * @param value the given return value
- * @example {{{ return @@rowSet }}}
+ * @example {{{ return @rowSet }}}
  */
 case class Return(value: Option[Instruction] = None) extends RuntimeInvokable {
 
