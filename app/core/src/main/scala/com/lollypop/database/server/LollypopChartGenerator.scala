@@ -53,6 +53,9 @@ object LollypopChartGenerator {
       case DrawOp("pie", title, _, legend, tooltips, urls) =>
         val dataset = d.data.toPieDataset(d)
         ChartFactory.createPieChart(title, dataset, legend, tooltips, urls)
+      case DrawOp("pie3d", title, _, legend, tooltips, urls) =>
+        val dataset = d.data.toPieDataset(d)
+        ChartFactory.createPieChart3D(title, dataset, legend, tooltips, urls)
       case DrawOp("ring", title, _, legend, tooltips, urls) =>
         val dataset = d.data.toPieDataset(d)
         val chart = ChartFactory.createRingChart(title, dataset, legend, tooltips, urls)
