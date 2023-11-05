@@ -13,7 +13,7 @@ import lollypop.io.IOCost
  * @param chart a dictionary containing the chart options
  * @param from  the data source to graph
  * @example {{{
- * graph { shape: "pie" } from @@exposure
+ * graph { shape: "pie" } from @exposure
  * }}}
  */
 case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {

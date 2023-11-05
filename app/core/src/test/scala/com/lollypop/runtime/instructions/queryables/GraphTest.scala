@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.datatypes.{Int32Type, StringType}
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
@@ -15,9 +15,9 @@ class GraphTest extends AnyFunSpec {
 
     it("should compile a Graph model") {
       val model = LollypopCompiler().compile(
-        """|graph { "shape": "pie" } from @@exposure
+        """|graph { "shape": "pie" } from @exposure
            |""".stripMargin)
-      assert(model == Graph(chart = Dictionary("shape" -> "pie".v), from = From(@@@("exposure"))))
+      assert(model == Graph(chart = Dictionary("shape" -> "pie".v), from = From(@@("exposure"))))
     }
 
     it("should decompile a Graph model") {
@@ -29,7 +29,7 @@ class GraphTest extends AnyFunSpec {
       val (_, _, result) = LollypopVM.executeSQL(Scope(),
         """|declare table exposure(exchange: String(6), total: Int)
            |  containing values ("NASDAQ", 1276), ("AMEX", 1259), ("NYSE", 1275), ("OTCBB", 1190)
-           |graph { shape: "pie" } from @@exposure
+           |graph { shape: "pie" } from @exposure
            |""".stripMargin)
       val expected = GraphResult(
         options = Map("shape" -> "pie"),

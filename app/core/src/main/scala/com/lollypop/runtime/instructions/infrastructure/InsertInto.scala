@@ -106,7 +106,7 @@ object InsertInto extends ModifiableParser with InsertValues {
          ||------------------------------------------|
          |
          |declare table Actors (name: String(64), popularity: Int)
-         |insert into Actors (name, popularity) select name, popularity from @@stagedActors
+         |insert into Actors (name, popularity) select name, popularity from @stagedActors
          |
          |graph { shape: "bar", title: "Popularity" } from Actors
          |""".stripMargin

@@ -307,7 +307,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
     it("should execute an alter table to prepend, add and rename columns in memory") {
       val (scope0, _, device0) = LollypopVM.searchSQL(Scope(),
         """|declare table stocks(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@stocks (symbol, exchange, lastSale) from (
+           |insert into @stocks (symbol, exchange, lastSale) from (
            |  |------------------------------|
            |  | symbol | exchange | lastSale |
            |  |------------------------------|
@@ -328,7 +328,7 @@ class AlterTableTest extends AnyFunSpec with VerificationTools {
       ))
 
       val (_, _, device1) = LollypopVM.searchSQL(scope0,
-        """|alter table @@stocks
+        """|alter table @stocks
            |  prepend column saleDate: DateTime = DateTime('2023-06-20T03:52:14.543Z')
            |  rename column symbol to ticker
            |stocks

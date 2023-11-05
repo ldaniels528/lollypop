@@ -309,8 +309,8 @@ trait TemplateProcessor {
         }), ts)
       // scalar variable (e.g. "@results")?
       case ts if ts nextIf "$" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
-      // table variable (e.g. "@@name")?
-      case ts if ts nextIf "@@" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
+      // table variable (e.g. "@name")?
+      case ts if ts nextIf "@" => nextOpCodeWithOptionalAlias(nextTableVariable(ts), ts)
       // sub-query?
       case ts => nextOpCodeOrDie(ts)
     }
@@ -338,7 +338,7 @@ trait TemplateProcessor {
    */
   def nextTableOrVariable(stream: TokenStream): DatabaseObjectRef = stream match {
     case ts if ts nextIf "$" => nextTableVariable(ts)
-    case ts if ts nextIf "@@" => nextTableVariable(ts)
+    case ts if ts nextIf "@" => nextTableVariable(ts)
     case ts if ts.isBackticks | ts.isText | ts.isQuoted => ts.nextTableDotNotation()
     case ts => ts.dieExpectedEntityRef()
   }
@@ -351,14 +351,14 @@ trait TemplateProcessor {
   def nextVariableReference(stream: TokenStream): Option[VariableRef] = {
     val variable = stream match {
       case ts if ts nextIf "$" => ts.nextIdentifier.map(id => $(id))
-      case ts if ts nextIf "@@" => ts.nextIdentifier.map(id => @@@(id))
+      case ts if ts nextIf "@" => ts.nextIdentifier.map(id => @@(id))
       case ts => ts.nextIdentifier.map(id => $(id))
     }
     variable ?? stream.dieIllegalVariableName()
   }
 
   def nextTableVariable(ts: TokenStream): DatabaseObjectRef = {
-    var tblVar: DatabaseObjectRef = @@@(ts.nextIdentifier || ts.dieIllegalVariableName())
+    var tblVar: DatabaseObjectRef = @@(ts.nextIdentifier || ts.dieIllegalVariableName())
     if (ts.nextIf("#")) tblVar = DatabaseObjectRef.InnerTable(tblVar, ts.nextIdentifier || ts.dieIllegalVariableName())
     tblVar
   }
@@ -499,7 +499,7 @@ object TemplateProcessor {
     // Java Jar? (e.g. "%jj:jar" => "libs/utils.jar")
     case tag if tag.startsWith("%jj:") => JavaJarTemplateTag(tag drop 4)
 
-    // location or table? (e.g. "accounts" | "stocks#transactions" | @@accounts)
+    // location or table? (e.g. "accounts" | "stocks#transactions" | @accounts)
     case tag if tag.startsWith("%L:") => TableOrVariableTemplateTag(tag drop 3)
 
     // multi-tag? (e.g. "%c,%q")
@@ -524,10 +524,10 @@ object TemplateProcessor {
     // parameters? (e.g. "%P:params" => "name String, age INTEGER, dob DATE")
     case tag if tag.startsWith("%P:") => ListOfParametersTemplateTag(tag drop 3)
 
-    // indirect query source (queries, tables and variables)? (e.g. "%q:source" => "AddressBook" | "( select * from AddressBook )" | "@@addressBook")
+    // indirect query source (queries, tables and variables)? (e.g. "%q:source" => "AddressBook" | "( select * from AddressBook )" | "@addressBook")
     case tag if tag.startsWith("%q:") => QueryOrTableOrVariableTemplateTag(tag drop 3)
 
-    // direct query source (queries and variables)? (e.g. "%Q:query" => "select * from AddressBook" | "@@addressBook")
+    // direct query source (queries and variables)? (e.g. "%Q:query" => "select * from AddressBook" | "@addressBook")
     case tag if tag.startsWith("%Q:") => QueryOrVariableTemplateTag(tag drop 3)
 
     // regular expression match? (e.g. "%r`\\d{3,4}\\S+`" => "123ABC")

@@ -14,7 +14,7 @@ import java.util.{Timer, TimerTask}
  * after instruction
  * @param delay       the [[Expression delay interval]] of execution
  * @param instruction the [[Instruction command(s)]] to execute
- * @example {{{ after '2 seconds' { delete from @@entries where attachID is null } }}}
+ * @example {{{ after '2 seconds' { delete from @entries where attachID is null } }}}
  */
 case class After(delay: Expression, instruction: Instruction) extends RuntimeInvokable {
   private val timer = new Timer()

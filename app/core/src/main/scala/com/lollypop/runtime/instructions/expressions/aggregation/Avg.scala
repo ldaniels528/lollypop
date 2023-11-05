@@ -82,5 +82,5 @@ object Avg extends FunctionCallParserE1(
        |    | ABC    | NYSE     |    56.12 |
        |    | DNS    | AMEX     |    97.61 |
        |    |------------------------------|
-       |select avgLastSale: avg(lastSale) from @@stocks
+       |select avgLastSale: avg(lastSale) from @stocks
        |""".stripMargin))

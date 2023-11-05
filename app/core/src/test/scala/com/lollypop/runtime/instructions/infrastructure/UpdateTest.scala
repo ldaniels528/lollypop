@@ -153,13 +153,13 @@ class UpdateTest extends AnyFunSpec with VerificationTools {
            |  firstName String(32),
            |  airportCode String(3))[5]
            |
-           |insert into @@travelers (position, lastName, firstName, airportCode)
+           |insert into @travelers (position, lastName, firstName, airportCode)
            |values (5, 'JONES', 'GARRY', 'SNA'),
            |       (6, 'JONES', 'DEBBIE', 'SNA'),
            |       (8, 'JONES', 'TAMERA', 'SNA'),
            |       (7, 'JONES', 'ERIC', 'SNA') &&
            |
-           |update @@travelers
+           |update @travelers
            |set position = 4
            |where lastName is 'JONES' and firstName is 'TAMERA'
            |limit 1
@@ -185,13 +185,13 @@ class UpdateTest extends AnyFunSpec with VerificationTools {
            |  firstName String(32),
            |  airportCode String(3))
            |
-           |insert into @@travelers (position, lastName, firstName, airportCode)
+           |insert into @travelers (position, lastName, firstName, airportCode)
            |values (5, 'JONES', 'GARRY', 'SNA'),
            |       (6, 'JONES', 'DEBBIE', 'SNA'),
            |       (8, 'JONES', 'TAMERA', 'SNA'),
            |       (7, 'JONES', 'ERIC', 'SNA') &&
            |
-           |update @@travelers
+           |update @travelers
            |set airportCode = 'LAX', position -= 4
            |where lastName is 'JONES' and firstName is 'TAMERA'
            |limit 1

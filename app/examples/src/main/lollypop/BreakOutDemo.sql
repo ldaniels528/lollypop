@@ -38,21 +38,21 @@ def createFrame() := {
 }
 
 def generateBlocks() := {
-    truncate @@blocks
+    truncate @blocks
     var by = 50
     while by < 250 {
         bx = 0
         while bx < world_width {
             b_color = Random.nextInt(colors.length())
-            insert into @@blocks (x, y, width, height, color) values(bx, by, 40, 20, b_color)
+            insert into @blocks (x, y, width, height, color) values(bx, by, 40, 20, b_color)
             bx += 45
         }
         by += 25
     }
-    count(@@blocks)
+    count(@blocks)
 }
 
-def moveBlocks() := update @@blocks y += 1
+def moveBlocks() := update @blocks y += 1
 
 def tick() := Random.nextInt(11) % 2
 
@@ -105,7 +105,7 @@ def clearScreen() := {
 }
 
 def drawBlocks() := {
-    each block in @@blocks {
+    each block in @blocks {
         offScreen.setColor(colors[color])
         offScreen.fillRect(x, y, width, height)
     }
@@ -129,7 +129,7 @@ def drawFrameRate() := {
 
 def handleCollisions() := {
     val outcome =
-        delete from @@blocks
+        delete from @blocks
         where ball_x between (x - half) and (x + width + half)
           and ball_y between (y - half) and (y + height + half)
     killed = outcome.deleted

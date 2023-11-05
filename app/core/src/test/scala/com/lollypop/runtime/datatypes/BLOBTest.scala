@@ -63,7 +63,7 @@ class BLOBTest extends AnyFunSpec with VerificationTools {
            | | KNOW   | OTCBB    |   357.21 | 2020-08-19T21:33:11.000Z |
            | |---------------------------------------------------------|
            |val stocksBlob = BLOB(stocks)
-           |@@stocksBlob
+           |@stocksBlob
            |""".stripMargin)
       assert(stocksBlob.toMapGraph == List(
         Map("symbol" -> "BXXG", "exchange" -> "NASDAQ", "lastSale" -> 147.63, "lastSaleTime" -> DateHelper.from(1596317591000L)),

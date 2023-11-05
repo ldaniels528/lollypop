@@ -88,5 +88,5 @@ object Max extends FunctionCallParserE1(
        |    | ABC    | NYSE     |    56.12 |
        |    | DNS    | AMEX     |    97.61 |
        |    |------------------------------|
-       |select maxLastSale: max(lastSale) from @@stocks
+       |select maxLastSale: max(lastSale) from @stocks
        |""".stripMargin))

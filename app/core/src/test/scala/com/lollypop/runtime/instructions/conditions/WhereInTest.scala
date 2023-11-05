@@ -46,7 +46,7 @@ class WhereInTest extends AnyFunSpec with VerificationTools {
             |   transactions Table (price Double, transactionTime DateTime)[2]
             |)
             |
-            |insert into @@stocks (symbol, exchange, transactions)
+            |insert into @stocks (symbol, exchange, transactions)
             |values ('AAPL', 'NASDAQ', {price: 156.39, transactionTime: "2021-08-05T19:23:11.000Z"}),
             |       ('AMD',  'NASDAQ', {price:  56.87, transactionTime: "2021-08-05T19:23:11.000Z"}),
             |       ('INTC', 'NYSE',   {price:  89.44, transactionTime: "2021-08-05T19:23:11.000Z"}),
@@ -55,7 +55,7 @@ class WhereInTest extends AnyFunSpec with VerificationTools {
             |                          {price: 0.0011, transactionTime: "2021-08-05T19:23:12.000Z"}])
             |
             |select unnest(transactions)
-            |from @@stocks
+            |from @stocks
             |where transactions wherein (price is 0.0011)
             |""".stripMargin)
       assert(result.toMapGraph == List(

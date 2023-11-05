@@ -24,14 +24,14 @@ object VariableRef extends ExpressionParser {
          |$x
          |""".stripMargin
   ), HelpDoc(
-    name = "@@",
+    name = "@",
     category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = "@@`variable`",
+    syntax = "@`variable`",
     description = "used to disambiguate a table variable from a field or other identifiers",
     example =
       """|r = select value: 1
-         |@@r
+         |@r
          |""".stripMargin
   ))
 
@@ -39,11 +39,11 @@ object VariableRef extends ExpressionParser {
     stream match {
       // is it a variable? (e.g. @totalCost)
       case ts if ts is "$" => compiler.nextVariableReference(ts)
-      case ts if ts nextIf "@@" => Option(compiler.nextTableVariable(ts))
+      case ts if ts nextIf "@" => Option(compiler.nextTableVariable(ts))
       case _ => None
     }
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = Seq("$", "@@").exists(ts is _)
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = Seq("$", "@").exists(ts is _)
 
 }

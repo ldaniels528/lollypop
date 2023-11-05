@@ -24,10 +24,10 @@ class TruncateTest extends AnyFunSpec with VerificationTools {
     it("should support execution") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         """|declare table results(symbol: String(5), exchange: String(6), lastSale: Double)
-           |insert into @@results (symbol, exchange, lastSale)
+           |insert into @results (symbol, exchange, lastSale)
            |values ('GMTQ', 'OTCBB', 0.1111), ('ABC', 'NYSE', 38.47), ('GE', 'NASDAQ', 57.89)
-           |truncate @@results
-           |select n: count(*) from @@results
+           |truncate @results
+           |select n: count(*) from @results
            |""".stripMargin)
       device.tabulate() foreach logger.info
       assert(device.toMapGraph == List(Map("n" -> 0)))

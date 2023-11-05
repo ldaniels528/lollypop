@@ -113,7 +113,7 @@ object Transpose extends FunctionCallParserE1(
        |suits = transpose(suit: ["♠", "♦", "♥", "♣"])
        |deck = faces * suits
        |deck.shuffle()
-       |@@deck limit 5
+       |@deck limit 5
        |""".stripMargin,
     "transpose(help('select'))",
     """|transpose(new Matrix([

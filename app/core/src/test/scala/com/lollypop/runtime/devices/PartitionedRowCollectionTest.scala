@@ -23,7 +23,7 @@ class PartitionedRowCollectionTest extends AnyFunSpec {
         TableColumn(name = "lastSaleTime", `type` = DateTimeType)),
         partitionColumnIndex = 1)
       val (scope0, cost0, _) = LollypopVM.executeSQL(Scope().withVariable("stocks", device),
-        """|insert into @@stocks (symbol, exchange, lastSale, lastSaleTime)
+        """|insert into @stocks (symbol, exchange, lastSale, lastSaleTime)
            |from (
            |    |---------------------------------------------------------|
            |    | symbol | exchange | lastSale | lastSaleTime             |

@@ -67,8 +67,7 @@ class CreateIndexTest extends AnyFunSpec with VerificationTools {
       // perform a query against the index
       val (_, cost1, device1) = LollypopVM.searchSQL(
         scope0.withVariable(name = "stocks", value = hashIndex, isReadOnly = true),
-        s"""|@@stocks
-            |where exchange is "NYSE" and lastSale < 100
+        s"""|@stocks where exchange is "NYSE" and lastSale < 100
             |""".stripMargin)
       device1.tabulate().foreach(logger.info)
       assert(cost1 == IOCost(matched = 1, scanned = 3))
@@ -109,8 +108,7 @@ class CreateIndexTest extends AnyFunSpec with VerificationTools {
       // perform a query against the exchange index
       val (_, _, device1) = LollypopVM.searchSQL(
         scope0.withVariable(name = "stocks", value = multiIndex, isReadOnly = true),
-        s"""|@@stocks
-            |where exchange is "NYSE" and lastSale < 100
+        s"""|@stocks where exchange is "NYSE" and lastSale < 100
             |""".stripMargin)
       assert(device1.toMapGraph == List(
         Map("symbol" -> "INTC", "exchange" -> "NYSE", "lastSale" -> 56.55)
@@ -119,8 +117,7 @@ class CreateIndexTest extends AnyFunSpec with VerificationTools {
       // perform a query against the symbol index
       val (_, _, device2) = LollypopVM.searchSQL(
         scope0.withVariable(name = "stocks", value = multiIndex, isReadOnly = true),
-        s"""|@@stocks
-            |where symbol is "AMZN"
+        s"""|@stocks where symbol is "AMZN"
             |""".stripMargin)
       assert(device2.toMapGraph == List(
         Map("symbol" -> "AMZN", "exchange" -> "NYSE", "lastSale" -> 1234.55)

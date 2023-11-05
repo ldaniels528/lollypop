@@ -82,7 +82,7 @@ class DeclareViewTest extends AnyFunSpec with VerificationTools {
             |    | BOOTY  | OTCBB    |  13.12   | 2022-09-04T09:51:13.111Z |
             |    |---------------------------------------------------------|
             |)
-            |@@stocks_view limit 5
+            |@stocks_view limit 5
             |""".stripMargin)
       assert(device.toMapGraph == List(
         Map("symbol" -> "ABC", "exchange" -> "OTCBB", "lastSale" -> 8.0985, "lastSaleTime" -> DateHelper("2022-09-04T09:36:47.846Z")),

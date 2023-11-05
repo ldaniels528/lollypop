@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.{$, @@@}
+import com.lollypop.language.models.{$, @@}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.functions.ArgumentBlock
@@ -32,9 +32,9 @@ class ApplyToTest extends AnyFunSpec {
       assert(model.toSQL == "items(17)")
     }
 
-    it("should decompile models: @@stocks(2500)") {
-      val model = ApplyTo(@@@("stocks"), 2500.v)
-      assert(model.toSQL == "@@stocks(2500)")
+    it("should decompile models: @stocks(2500)") {
+      val model = ApplyTo(@@("stocks"), 2500.v)
+      assert(model.toSQL == "@stocks(2500)")
     }
 
     it("should detect the return type: [99, 100, 101][1]") {
@@ -52,8 +52,8 @@ class ApplyToTest extends AnyFunSpec {
       assert(model.returnType == AnyType)
     }
 
-    it("should detect the return type: @@stocks[2500]") {
-      val model = ApplyTo(@@@("stocks"), 2500.v)
+    it("should detect the return type: @stocks[2500]") {
+      val model = ApplyTo(@@("stocks"), 2500.v)
       assert(model.returnType == AnyType)
     }
 

@@ -260,14 +260,14 @@ class RuntimePlatformTest extends AnyFunSpec {
       val (_, _, result) = LollypopVM.searchSQL(Scope(),
         """|declare table myQuotes(symbol: String(4), exchange: String(6), lastSale: Float, lastSaleTime: DateTime)
            |[1 to 5].foreach((n: Int) => {
-           |  insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+           |  insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
            |  select
            |    lastSaleTime: DateTime(),
            |    lastSale: scaleTo(500 * Random.nextDouble(0.99), 4),
            |    exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
            |    symbol: Random.nextString(['A' to 'Z'], 4)
            |})
-           |return @@myQuotes
+           |return @myQuotes
            |""".stripMargin)
       assert(result.getLength == 5)
     }

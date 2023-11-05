@@ -33,7 +33,7 @@ class DescribeTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support decompiling describe variable reference") {
-      verify("describe @@stocks")
+      verify("describe @stocks")
     }
 
     it("should perform describe a select without a source") {

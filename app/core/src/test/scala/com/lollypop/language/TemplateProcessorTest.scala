@@ -105,7 +105,7 @@ class TemplateProcessorTest extends AnyFunSpec {
 
     it("should parse location tags (%L)") {
       verify(text = "assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> DatabaseObjectRef("assets"))))
-      verify(text = "@@assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> @@@("assets"))))
+      verify(text = "@assets", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> @@("assets"))))
       verify(text = "`the assets`", template = "%L:table")(SQLTemplateParams(locations = Map("table" -> DatabaseObjectRef("the assets"))))
     }
 
@@ -143,9 +143,9 @@ class TemplateProcessorTest extends AnyFunSpec {
       }
     }
 
-    it("should parse direct query tags (%Q) - @@variable") {
-      verify(text = "@@addressBook", template = "%Q:variable")(SQLTemplateParams(instructions = Map(
-        "variable" -> @@@("addressBook")
+    it("should parse direct query tags (%Q) - @variable") {
+      verify(text = "@addressBook", template = "%Q:variable")(SQLTemplateParams(instructions = Map(
+        "variable" -> @@("addressBook")
       )))
     }
 

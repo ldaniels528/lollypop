@@ -17,7 +17,7 @@ import lollypop.io.IOCost
  *   'Hello World'[4] // 'o'
  * }}}
  * @example {{{
- *   @@stocks[12175] // { symbol: 'T', exchange: 'NYSE', lastSale: 22.77 }
+ *   @stocks[12175] // { symbol: 'T', exchange: 'NYSE', lastSale: 22.77 }
  * }}}
  */
 case class ElementAt(host: Expression, args: List[Expression]) extends RuntimeExpression with FunctionCall with LollypopNative {

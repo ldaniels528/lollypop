@@ -58,8 +58,8 @@ object UnDelete extends ModifiableParser {
          | | TGRV   | NYSE     |   80.225 | 2023-08-05T22:45:29.373Z |
          | | XHMQ   | NASDAQ   |   98.445 | 2023-08-05T22:45:29.374Z |
          | |---------------------------------------------------------|
-         |delete from @@stocks where symbol is "CMHA"
-         |undelete from @@stocks where symbol is "CMHA"
+         |delete from @stocks where symbol is "CMHA"
+         |undelete from @stocks where symbol is "CMHA"
          |""".stripMargin
   ))
 

@@ -57,13 +57,13 @@ class DefineFunctionTest extends AnyFunSpec with VerificationTools {
         """|((total: Int) => {
            |    declare table myQuotes(id RowNumber, symbol: String(4), exchange: String(6), lastSale Float, lastSaleTime: DateTime);
            |    [1 to total].foreach((cnt: Int) => {
-           |        insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+           |        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
            |        select lastSaleTime: DateTime() - Interval(Random.nextInt(25000000) + ' milli'),
            |               lastSale: scaleTo(150 * Random.nextDouble(0.99), 4),
            |               exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
            |               symbol: Random.nextString(['A' to 'Z'], 4)
            |    })
-           |    val summary = select exchange, total: count(*) from @@myQuotes group by exchange
+           |    val summary = select exchange, total: count(*) from @myQuotes group by exchange
            |    summary.show(5)
            |    myQuotes
            |})(8)

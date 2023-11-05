@@ -122,7 +122,7 @@ object Each extends ExpressionParser {
          || EVDX   | OTCBB    |  77.1829 | 2023-07-29T04:09:04.533Z |
          ||---------------------------------------------------------|
          |var messages = []
-         |each item in (select symbol, lastSale from @@stocks where lastSale < 100)
+         |each item in (select symbol, lastSale from @stocks where lastSale < 100)
          |  messages = messages.push('{{item.symbol}} is {{item.lastSale}}/share')
          |messages
          |""".stripMargin
@@ -148,7 +148,7 @@ object Each extends ExpressionParser {
          || NYSE      | QOVGA  |   1.9199 | 2023-10-14T18:40:14.590Z |
          || NYSE      | ZJWL   |  17.3107 | 2023-10-14T18:40:13.205Z |
          ||----------------------------------------------------------|
-         |each item in reverse (from @@stocks) yield item
+         |each item in reverse (from @stocks) yield item
          |""".stripMargin
   ))
 

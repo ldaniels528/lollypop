@@ -111,7 +111,7 @@ class JSONSupportTest extends AnyFunSpec {
            |       transactionTime DateTime
            |   )[3]
            |)[3]
-           |insert into @@stockQuotes (symbol, exchange, transactions)
+           |insert into @stockQuotes (symbol, exchange, transactions)
            |values ('AAPL', 'NASDAQ', '{"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
            |       ('AMD', 'NASDAQ', '{"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}'),
            |       ('SHMN', 'OTCBB', '[{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},{"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}]')

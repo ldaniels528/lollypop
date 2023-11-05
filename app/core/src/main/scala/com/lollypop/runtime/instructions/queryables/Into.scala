@@ -11,7 +11,7 @@ import lollypop.io.IOCost
  * Into - copies rows from a source to a target
  * @param source the queryable [[Instruction source]]
  * @param target the appendable [[DatabaseObjectRef target]]
- * @example {{{ from @@stocks where lastSale < 1.0 into @@pennyStocks }}}
+ * @example {{{ from @stocks where lastSale < 1.0 into @pennyStocks }}}
  */
 case class Into(source: Instruction, target: DatabaseObjectRef)
   extends RuntimeQueryable with Modifiable {
@@ -62,7 +62,7 @@ object Into extends QueryableChainParser {
          || OTHER_OTC | PMBFY  |   0.0139 | 2023-09-21T04:57:46.146Z |
          || OTCBB     | CAVY   |   0.0047 | 2023-09-21T04:57:43.503Z |
          ||----------------------------------------------------------|
-         |) where lastSale <= 0.02 into @@pennyStocks
+         |) where lastSale <= 0.02 into @pennyStocks
          |""".stripMargin
   ))
 
