@@ -5,6 +5,7 @@ import com.lollypop.runtime.datatypes.{BooleanType, Float64Type, StringType}
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import org.jfree.chart.plot.{PlotOrientation, RingPlot}
+import org.jfree.chart.util.TableOrder
 import org.jfree.chart.{ChartFactory, ChartUtils, JFreeChart}
 import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.general.DefaultPieDataset
@@ -28,6 +29,10 @@ object LollypopChartGenerator {
         val (labelX, labelY) = get2P(d)
         val dataset = d.data.toCategoryDataset(d)
         ChartFactory.createBarChart(title, labelX, labelY, dataset, orientation, legend, tooltips, urls)
+      case DrawOp("polar", title, _, legend, tooltips, urls) =>
+        val (labelX, labelY) = get2P(d)
+        val dataset = d.data.toXYSeries(d)
+        ChartFactory.createPolarChart(title, dataset, legend, tooltips, urls)
       case DrawOp("bubble", title, orientation, legend, tooltips, urls) =>
         val (labelX, labelY) = get2P(d)
         val dataset = new DefaultXYZDataset()
