@@ -29,7 +29,7 @@ object TableZoo extends FunctionCallParserP(
        |  TableZoo(symbol: String(10), exchange: String(10), lastSale: Double, lastSaleTime: DateTime)
        |    .withMemorySupport(150)
        |    .build()
-       |insert into @@stocks
+       |insert into @stocks
        ||----------------------------------------------------------|
        || exchange  | symbol | lastSale | lastSaleTime             |
        ||----------------------------------------------------------|

@@ -164,7 +164,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
 
   override def getRowCollection(ref: DatabaseObjectRef): RowCollection = {
     ref.realize(this) match {
-      case ns: DatabaseObjectNS if ns.name.startsWith("@@") => resolveTableVariable(ns.name.drop(2))
+      case ns: DatabaseObjectNS if ns.name.startsWith("@") => resolveTableVariable(ns.name.drop(2))
       case DatabaseObjectRef.InnerTable(TableVariableRef(baseName), _) => resolveTableVariable(baseName)
       case tvr: TableVariableRef => resolveTableVariable(tvr.name)
       case dor =>

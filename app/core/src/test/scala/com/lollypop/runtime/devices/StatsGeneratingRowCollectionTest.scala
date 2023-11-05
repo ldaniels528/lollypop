@@ -36,7 +36,7 @@ class StatsGeneratingRowCollectionTest extends AnyFunSpec with VerificationTools
         if (line.trim.nonEmpty) {
           val Array(symbol, exchange, lastSale, lastSaleTime) = line.split("[,]")
           val (_, cost, _) = LollypopVM.executeSQL(scope1,
-            s"""|insert into @@stocks (symbol, exchange, lastSale, lastSaleTime)
+            s"""|insert into @stocks (symbol, exchange, lastSale, lastSaleTime)
                 |values ($symbol, $exchange, $lastSale, $lastSaleTime)
                 |""".stripMargin)
           assert(cost.inserted == 1)

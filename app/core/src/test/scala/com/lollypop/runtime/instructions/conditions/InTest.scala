@@ -70,7 +70,7 @@ class InTest extends AnyFunSpec with VerificationTools {
            || NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
            ||-------------------------------------------------------------------------|
            |)
-           |@@stocks where market in ["OTCBB"]
+           |@stocks where market in ["OTCBB"]
            |""".stripMargin)
       assert(device.toMapGraph == List(Map(
         "market" -> "OTCBB", "roundedLastSale" -> 98.9, "lastSale" -> 98.9501,

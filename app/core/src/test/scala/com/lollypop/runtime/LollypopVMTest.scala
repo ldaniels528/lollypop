@@ -67,7 +67,7 @@ class LollypopVMTest extends AnyFunSpec {
     it("should be able to produce records containing Random.nextInt(om) data") {
       val (_, _, device_?) = LollypopVM.executeSQL(Scope(),
         """|declare table stockQuotes(symbol: String(4), exchange: String(5), lastSale: Double, lastSaleTime: DateTime)
-           |insert into @@stockQuotes (lastSaleTime, lastSale, exchange, symbol)
+           |insert into @stockQuotes (lastSaleTime, lastSale, exchange, symbol)
            |select lastSaleTime: new `java.util.Date`(),
            |       lastSale: Random.nextDouble(0.99),
            |       exchange: 'OTCBB',
@@ -157,14 +157,14 @@ class LollypopVMTest extends AnyFunSpec {
     it(s"should perform aggregate queries using HAVING") {
       val (_, _, device_?) = LollypopVM.executeSQL(Scope(),
         s"""|declare table Travelers(id UUID, lastName String(12), firstName String(12), destAirportCode String(3))
-            |insert into @@Travelers (id, lastName, firstName, destAirportCode)
+            |insert into @Travelers (id, lastName, firstName, destAirportCode)
             |values (UUID(), 'JONES', 'GARRY', 'SNA'), (UUID(), 'JONES', 'DEBBIE', 'SNA'),
             |       (UUID(), 'JONES', 'TAMERA', 'SNA'), (UUID(), 'JONES', 'ERIC', 'SNA'),
             |       (UUID(), 'ADAMS', 'KAREN', 'DTW'), (UUID(), 'ADAMS', 'MIKE', 'DTW'),
             |       (UUID(), 'JONES', 'SAMANTHA', 'BUR'), (UUID(), 'SHARMA', 'PANKAJ', 'LAX')
             |
             |select lastName, members: count(*)
-            |from @@Travelers
+            |from @Travelers
             |group by lastName
             |having members > 2
             |order by lastName
@@ -305,14 +305,14 @@ class LollypopVMTest extends AnyFunSpec {
            |    set total = 1000
            |    declare table myQuotes(symbol: String(5), exchange: String(6), lastSale: Float, lastSaleTime: DateTime)[1000]
            |    [1 to total].foreach((cnt: Int) => {
-           |        insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+           |        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
            |        select lastSaleTime: new `java.util.Date`(),
            |               lastSale: scaleTo(150 * Random.nextDouble(0.99), 4),
            |               exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
            |               symbol: Random.nextString(['A' to 'Z'], 5)
            |    })
            |
-           |    delete from @@myQuotes
+           |    delete from @myQuotes
            |    where __id between 0 and 25
            |    or    __id between 50 and 100
            |    or    __id between 250 and 300
@@ -341,7 +341,7 @@ class LollypopVMTest extends AnyFunSpec {
             |       (UUID(), 'SHARMA', 'PANKAJ', 'LAX')
             |
             |Travelers.swap(1, 2)
-            |select firstName, lastName from @@Travelers limit 3
+            |select firstName, lastName from @Travelers limit 3
             |""".stripMargin)
       val device_? = Option(returned).collect { case device: RowCollection => device }.toList
       device_?.flatMap(_.tabulate()) foreach logger.info

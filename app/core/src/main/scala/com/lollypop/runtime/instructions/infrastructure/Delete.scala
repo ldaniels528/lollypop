@@ -66,7 +66,7 @@ object Delete extends ModifiableParser {
          || NXSQ   | OTCBB    | 254.2278 |
          || LQRQ   | AMEX     |    88.42 |
          ||------------------------------|
-         |delete from @@stocks where symbol is "EGXY"
+         |delete from @stocks where symbol is "EGXY"
          |stocks
          |""".stripMargin
   ))

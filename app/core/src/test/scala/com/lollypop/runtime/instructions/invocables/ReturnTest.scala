@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.language.models.Operation.RichOperation
-import com.lollypop.language.models.{$, @@@, AllFields}
+import com.lollypop.language.models.{@@, AllFields}
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.Select
@@ -27,8 +27,8 @@ class ReturnTest extends AnyFunSpec with VerificationTools {
       assert(compiler.compile("return x*2") == Return("x".f * 2))
     }
 
-    it("should compile return @@stocks") {
-      assert(compiler.compile("return @@stocks") == Return(@@@("stocks")))
+    it("should compile return @stocks") {
+      assert(compiler.compile("return @stocks") == Return(@@("stocks")))
     }
 
     it("should compile return (select * from stocks)") {

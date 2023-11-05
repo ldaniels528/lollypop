@@ -16,7 +16,7 @@ def main(args: String[]) := {
 
     sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     with new BufferedWriter(new FileWriter('./vin-mapping.json')) out =>
-        each item in @@items {
+        each item in @items {
             createTime = sdf.format(DateTime())
             payload = {'Item':{
                 'CreatedTime':{'S': createTime},

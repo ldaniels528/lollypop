@@ -44,7 +44,7 @@ object TableLike extends FunctionCallParserE1(
        | | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
        | |---------------------------------------------------------|
        |val stocksB = tableLike(stocksA)
-       |insert into @@stocksB from stocksA where lastSale >= 120
+       |insert into @stocksB from stocksA where lastSale >= 120
        |stocksB
        |""".stripMargin)
 

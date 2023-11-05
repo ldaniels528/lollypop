@@ -420,7 +420,7 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
     it("should write data to a file in CSV format") {
       val (_, _, tempFile) = LollypopVM.executeSQL(Scope(),
         s"""|val passengers = Table(lastName String(12), firstName String(12), destAirportCode String(3))
-            |insert into @@passengers (lastName, firstName, destAirportCode)
+            |insert into @passengers (lastName, firstName, destAirportCode)
             |values
             |   ('JONES', 'GARRY', 'SNA'), ('JONES', 'DEBBIE', 'SNA'),
             |   ('JONES', 'TAMERA', 'SNA'), ('JONES', 'ERIC', 'SNA'),
@@ -449,7 +449,7 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
     it("should write data to a file in JSON format") {
       val (_, _, tempFile) = LollypopVM.executeSQL(Scope(),
         s"""|val passengers = Table(lastName String(12), firstName String(12), destAirportCode String(3))
-            |insert into @@passengers(lastName, firstName, destAirportCode)
+            |insert into @passengers(lastName, firstName, destAirportCode)
             |values
             |   ('JONES', 'GARRY', 'SNA'), ('JONES', 'DEBBIE', 'SNA'),
             |   ('JONES', 'TAMERA', 'SNA'), ('JONES', 'ERIC', 'SNA'),

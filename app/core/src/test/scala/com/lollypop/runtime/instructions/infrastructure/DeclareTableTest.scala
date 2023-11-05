@@ -42,12 +42,12 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
            |declare table myStocks (symbol: String(8), exchange: String(8), lastSale: Double, ranking String(8))
            |
            |select symbol, exchange, lastSale: scaleTo(lastSale, 4), ranking: iff(lastSale < 1, 'Penny', 'Standard')
-           |from @@stocks
+           |from @stocks
            |where lastSale < 100.0
            |order by symbol
-           |into @@myStocks limit 5
+           |into @myStocks limit 5
            |
-           |@@myStocks
+           |@myStocks
            |""".stripMargin
       )
       device.tabulate().foreach(logger.info)
@@ -128,7 +128,7 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support executing declare table w/an inner-table") {
-      val ref = @@@("stocks")
+      val ref = @@("stocks")
       val (scope, cost, _) = LollypopVM.executeSQL(Scope(),
         """|declare table stocks (
            |   symbol: String(8),
@@ -145,7 +145,7 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support executing declare table w/a BLOB inner-table") {
-      val ref = @@@("stocks")
+      val ref = @@("stocks")
       val (scope, cost, _) = LollypopVM.executeSQL(Scope(),
         s"""|declare table ${ref.name} (
             |   symbol: String(8),
@@ -162,7 +162,7 @@ class DeclareTableTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support executing declare table w/a multi-tenant inner-table") {
-      val ref = @@@("Stocks")
+      val ref = @@("Stocks")
       val (scope, cost, _) = LollypopVM.executeSQL(Scope(),
         s"""|declare table ${ref.name} (
             |   symbol: String(8),

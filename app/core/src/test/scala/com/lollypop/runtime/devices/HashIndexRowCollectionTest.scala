@@ -63,7 +63,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
 
       // update a row
       val (_, cost3, _) = LollypopVM.executeSQL(scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
-        s"""|update @@stocks set symbol = 'XXX' where symbol is 'ZZY'
+        s"""|update @stocks set symbol = 'XXX' where symbol is 'ZZY'
             |""".stripMargin)
       assert(cost3.updated == 1)
 
@@ -101,7 +101,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
 
       // update a row
       val (_, cost3, _) = LollypopVM.executeSQL(scope2.withVariable(name = "stocks", value = Some(hashIndex), isReadOnly = true),
-        s"""|update @@stocks set exchange = 'NASDAQ' where symbol is 'ZZY'
+        s"""|update @stocks set exchange = 'NASDAQ' where symbol is 'ZZY'
             |""".stripMargin)
       assert(cost3.updated == 1)
 
@@ -267,7 +267,7 @@ class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
   private def insertData[A <: RowCollection](rc: A)(implicit scope1: Scope): (Scope, A) = {
     // insert some data
     val (scope2, cost2, _) = LollypopVM.executeSQL(scope1.withVariable(name = "stocks", value = Some(rc), isReadOnly = true),
-      s"""|insert into @@stocks (symbol, exchange, lastSale)
+      s"""|insert into @stocks (symbol, exchange, lastSale)
           |from
           |    |------------------------------|
           |    | symbol | exchange | lastSale |

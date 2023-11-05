@@ -156,7 +156,7 @@ class ScopeTest extends AnyFunSpec {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         s"""|declare table travelers(lastName String(12), firstName String(12), destAirportCode String(3))
             |{
-            |   insert into @@travelers (lastName, firstName, destAirportCode)
+            |   insert into @travelers (lastName, firstName, destAirportCode)
             |   values ('JONES', 'GARRY', 'SNA'), ('JONES', 'DEBBIE', 'SNA'),
             |          ('JONES', 'TAMERA', 'SNA'), ('JONES', 'ERIC', 'SNA'),
             |          ('ADAMS', 'KAREN', 'DTW'), ('ADAMS', 'MIKE', 'DTW'),

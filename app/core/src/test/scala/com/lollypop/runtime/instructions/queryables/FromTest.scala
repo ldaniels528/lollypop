@@ -55,7 +55,7 @@ class FromTest extends AnyFunSpec with VerificationTools {
         """|declare table stocks(symbol: String(5), exchange: String(6), lastSale: Double) =
            | values ("AMD", "NASDAQ", 67.55), ("AAPL", "NYSE", 123.55), ("GE", "NASDAQ", 89.55),
            |        ("PEREZ", "OTCBB", 0.001), ("AMZN", "NYSE", 1234.55), ("INTC", "NYSE", 56.55)
-           |from @@stocks
+           |from @stocks
            |""".stripMargin)
       assert(Option(device_?).collect { case d: RowCollection => d }.toList.flatMap(_.toMapGraph) == List(
         Map("symbol" -> "AMD", "exchange" -> "NASDAQ", "lastSale" -> 67.55),
@@ -78,10 +78,10 @@ class FromTest extends AnyFunSpec with VerificationTools {
             |declare table travelersJones(lastName String(12), firstName String(12), destAirportCode String(3))
             |this.toTable().show()
             |
-            |from @@travelers
+            |from @travelers
             |where lastName is 'JONES'
             |limit 4
-            |into @@travelersJones
+            |into @travelersJones
             |""".stripMargin)
       assert(device.toMapGraph == List(
         Map("lastName" -> "JONES", "firstName" -> "GARRY", "destAirportCode" -> "SNA"),
@@ -108,8 +108,8 @@ class FromTest extends AnyFunSpec with VerificationTools {
             ||----------------------------------------|
             |)
             |declare table manifest(line: String)
-            |each row in (@@travelers order by destAirportCode) {
-            |   insert into @@manifest (line)
+            |each row in (@travelers order by destAirportCode) {
+            |   insert into @manifest (line)
             |   values ("[{{__id}}] Destination: {{destAirportCode}}, Name: {{lastName}}, {{firstName}}")
             |}
             |manifest

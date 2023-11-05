@@ -44,13 +44,13 @@ class NodeExecTest extends AnyFunSpec with VerificationTools {
             |    var n: Int = 0
             |    while n < total {
             |        n += 1
-            |        insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+            |        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
             |        select lastSaleTime: DateTime(),
             |        lastSale: scaleTo(500 * Random.nextDouble(0.99), 4),
             |        exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
             |        symbol: Random.nextString(['A' to 'Z'], 4)
             |    }
-            |    @@myQuotes
+            |    @myQuotes
             |}
             |
             |// start the remote peers
@@ -64,7 +64,7 @@ class NodeExecTest extends AnyFunSpec with VerificationTools {
             |}
             |val stocksA = nodeExec(portA, "STOCKS 3")
             |val stocksB = nodeExec(portB, "STOCKS 3")
-            |@@stocksA union @@stocksB
+            |@stocksA union @stocksB
             |""".stripMargin)
       result.tabulate().foreach(logger.info)
     }

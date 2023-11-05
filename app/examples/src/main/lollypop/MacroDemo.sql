@@ -40,7 +40,7 @@ macro 'tickers %e:amount' := {
     declare table myQuotes(id: RowNumber, symbol: String(4), exchange: String(9), lastSale: Float, lastSaleTime: DateTime)[100000]
     while cnt < amount {
         cnt += 1
-        insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
         select lastSaleTime: DateTime(),
                lastSale: scaleTo(150 * Random.nextDouble(0.99), 4),
                exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)],

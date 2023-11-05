@@ -63,7 +63,7 @@ class UniqueTest extends AnyFunSpec with VerificationTools {
            || BOOTY  | OTCBB    |  17.5776 | 2022-09-04T09:37:11.332Z |
            ||---------------------------------------------------------|
            |select symbol: unique(symbol)
-           |from @@stocks
+           |from @stocks
            |order by symbol
            |""".stripMargin)
       assert(results.toMapGraph.map(_.map { case (k: String, v: Array[_]) => k -> v.toSet }) == List(
@@ -126,7 +126,7 @@ class UniqueTest extends AnyFunSpec with VerificationTools {
            || BOOTY  | OTCBB    |  17.5776 | 2022-09-04T09:37:11.332Z |
            ||---------------------------------------------------------|
            |select symbol, exchange, lastSale, lastSaleTime
-           |from @@stocks
+           |from @stocks
            |group by symbol, exchange, lastSale, lastSaleTime
            |order by symbol
            |""".stripMargin)

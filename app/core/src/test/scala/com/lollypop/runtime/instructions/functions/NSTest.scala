@@ -48,7 +48,7 @@ class NSTest extends AnyFunSpec with VerificationTools {
             |})
             |
             |set stockQuotes = ns('$stocksTable')
-            |select total: count(*) from @@stockQuotes
+            |select total: count(*) from @stockQuotes
             |""".stripMargin)
       val device_? = Option(result1).collect { case device: RowCollection => device }
       device_?.foreach(_.tabulate().foreach(logger.info))

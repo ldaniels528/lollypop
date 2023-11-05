@@ -67,7 +67,7 @@ object IN extends ExpressionToConditionPostParser {
          || NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
          ||-------------------------------------------------------------------------|
          |)
-         |@@stocks where market in ["NASDAQ", "OTCBB"]
+         |@stocks where market in ["NASDAQ", "OTCBB"]
          |""".stripMargin
   ))
 

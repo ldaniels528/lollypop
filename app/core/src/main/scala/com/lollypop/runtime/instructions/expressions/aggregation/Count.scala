@@ -90,7 +90,7 @@ object Count extends FunctionCallParserE1(
        || OTCBB    | JCJMT  |          | 2023-09-28T00:58:17.985Z |
        || NASDAQ   | EMY    |  24.6447 | 2023-09-28T00:58:22.595Z |
        ||---------------------------------------------------------|
-       |select total: count(*) from @@stocks
+       |select total: count(*) from @stocks
        |""".stripMargin,
     """|stocks =
        ||---------------------------------------------------------|
@@ -103,5 +103,5 @@ object Count extends FunctionCallParserE1(
        || OTCBB    | JCJMT  |          | 2023-09-28T00:58:17.985Z |
        || NASDAQ   | EMY    |  24.6447 | 2023-09-28T00:58:22.595Z |
        ||---------------------------------------------------------|
-       |select total: count(lastSale) from @@stocks
+       |select total: count(lastSale) from @stocks
        |""".stripMargin))

@@ -74,7 +74,7 @@ object Update extends ModifiableParser {
          | | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
          | | UKHT   | NASDAQ   |  71.1514 | 2023-08-05T22:34:20.283Z |
          | |---------------------------------------------------------|
-         |update @@stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
+         |update @stocks set lastSaleTime = DateTime() where exchange is "NASDAQ"
          |stocks
          |""".stripMargin
   ), HelpDoc(
@@ -85,7 +85,7 @@ object Update extends ModifiableParser {
     description = "Modifies rows matching a conditional expression from a table",
     example =
       """|declare table stocks (symbol: String(8), exchange: String(8), transactions: Table (price: Double, transactionTime: DateTime)[5])
-         |insert into @@stocks (symbol, exchange, transactions)
+         |insert into @stocks (symbol, exchange, transactions)
          |values ('AAPL', 'NASDAQ', {"price":156.39, "transactionTime":"2021-08-05T19:23:11.000Z"}),
          |       ('AMD', 'NASDAQ',  {"price":56.87, "transactionTime":"2021-08-05T19:23:11.000Z"}),
          |       ('INTC','NYSE',    {"price":89.44, "transactionTime":"2021-08-05T19:23:11.000Z"}),
@@ -93,7 +93,7 @@ object Update extends ModifiableParser {
          |       ('SHMN', 'OTCBB', [{"price":0.0010, "transactionTime":"2021-08-05T19:23:11.000Z"},
          |                          {"price":0.0011, "transactionTime":"2021-08-05T19:23:12.000Z"}])
          |
-         |update @@stocks#transactions
+         |update @stocks#transactions
          |set price = 0.0012
          |where symbol is 'SHMN'
          |and transactions wherein (price is 0.001)

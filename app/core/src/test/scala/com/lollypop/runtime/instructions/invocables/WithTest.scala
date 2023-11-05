@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.Inequality.InequalityExtensions
-import com.lollypop.language.models.{@@@, AllFields, Parameter}
+import com.lollypop.language.models.{@@, AllFields, Parameter}
 import com.lollypop.runtime.errors.ResourceNotAutoCloseableException
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NS}
@@ -21,10 +21,10 @@ class WithTest extends AnyFunSpec with VerificationTools {
         resource = NS("temp.instructions.stocks".v),
         code = AnonymousFunction(
           params = List(new Parameter(name = "quotes", `type` = "Any".ct)),
-          code = Select(fields = Seq(AllFields), from = @@@("quotes"), where = "lastSale".f < 100.v),
+          code = Select(fields = Seq(AllFields), from = @@("quotes"), where = "lastSale".f < 100.v),
           origin = None))
       assert(model.toSQL ==
-        """|with ns("temp.instructions.stocks") (quotes: Any) => select * from @@quotes where lastSale < 100
+        """|with ns("temp.instructions.stocks") (quotes: Any) => select * from @quotes where lastSale < 100
            |""".stripMargin.split("\n").map(_.trim).mkString(" "))
     }
 
@@ -48,7 +48,7 @@ class WithTest extends AnyFunSpec with VerificationTools {
            |    |------------------------------|
            |)
            |
-           |with ns("temp.instructions.stocks") quotes => select * from @@quotes where lastSale < 100
+           |with ns("temp.instructions.stocks") quotes => select * from @quotes where lastSale < 100
            |""".stripMargin)
       assert(results.toMapGraph == List(
         Map("symbol" -> "AAXX", "exchange" -> "NYSE", "lastSale" -> 56.12),

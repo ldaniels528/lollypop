@@ -23,7 +23,7 @@ import scala.collection.concurrent.TrieMap
  * Represents a Remote Row Collection (HTTP transport)
  * @example {{{
  *  val remoteStocks = q("//0.0.0.0/ldaniels.portfolio.stocks")
- *  select * from @@remoteStocks limit 5
+ *  select * from @remoteStocks limit 5
  * }}}
  * @param host the remote host
  * @param port the remote port

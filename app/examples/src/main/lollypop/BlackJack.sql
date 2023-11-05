@@ -25,7 +25,7 @@ def getCardScore(hand) := {
                                case "A" ~> aceScore
                                case face between "2" and "9" ~> Int(face)
                                case _ ~> 10)
-        from @@hand)[0][0]
+        from @hand)[0][0]
     }
 
     v11 = computeScore(11)
@@ -34,7 +34,7 @@ def getCardScore(hand) := {
 
 def dealerScore() := getCardScore(dealer)
 
-def hit(hand) := insert into @@hand from deck.pop()
+def hit(hand) := insert into @hand from deck.pop()
 
 def playerScore() := getCardScore(player)
 
@@ -97,7 +97,7 @@ while(isAlive) {
     deck.shuffle()
 
     // put some cards into the hands of the player and dealer
-    [dealer, player].foreach(hand => { truncate @@hand; hit(hand) })
+    [dealer, player].foreach(hand => { truncate @hand; hit(hand) })
 
     isJousting = true
     betFactor = 1.0

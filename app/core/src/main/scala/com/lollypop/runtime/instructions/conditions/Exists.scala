@@ -51,7 +51,7 @@ object Exists extends ExpressionParser {
          || NASDAQ   | CFF    | 107.4943 | 2023-09-26T21:30:06.283Z |
          ||---------------------------------------------------------|
          |)
-         |@@stocks where lastSale > 5 and exists(select symbol from @@stocks where exchange is 'OTCBB')
+         |@stocks where lastSale > 5 and exists(select symbol from @stocks where exchange is 'OTCBB')
          |""".stripMargin
   ))
 

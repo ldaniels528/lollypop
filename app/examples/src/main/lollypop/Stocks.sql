@@ -10,7 +10,7 @@ create macro `tickers` := 'tickers %e:total' {
     stdout <=== 'Generating {{total}} random stock quotes...\n'
     declare table myQuotes(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
     [1 to total].foreach((n: Int) => {
-        insert into @@myQuotes (lastSaleTime, lastSale, exchange, symbol)
+        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
         select
             lastSaleTime: DateTime(),
             lastSale: scaleTo(500 * Random.nextDouble(0.99), 4),

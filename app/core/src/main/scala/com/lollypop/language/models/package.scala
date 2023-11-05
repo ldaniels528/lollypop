@@ -17,6 +17,6 @@ package object models {
    * @param name the name of the table variable
    * @return a new [[TableVariableRef table variable reference]]
    */
-  def @@@(name: String): TableVariableRef = TableVariableRef(name)
+  def @@(name: String): TableVariableRef = TableVariableRef(name)
 
 }

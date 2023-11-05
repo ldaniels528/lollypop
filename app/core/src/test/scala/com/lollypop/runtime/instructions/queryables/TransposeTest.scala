@@ -43,7 +43,7 @@ class TransposeTest extends AnyFunSpec with VerificationTools {
            |   | JUNK   | AMEX     |    97.61 |
            |   |------------------------------|
            |)
-           |transpose(@@rows[0])
+           |transpose(@rows[0])
            |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(

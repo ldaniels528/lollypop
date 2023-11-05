@@ -24,14 +24,14 @@ class ProcedureCallTest extends AnyFunSpec with VerificationTools {
     it("should support execution via call") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(),
         s"""|declare table results(symbol: String(5), exchange: String(6), lastSale: Double)[5]
-            |insert into @@results (symbol, exchange, lastSale)
+            |insert into @results (symbol, exchange, lastSale)
             |values ('GMTQ', 'OTCBB', 0.1111), ('ABC', 'NYSE', 38.47), ('GE', 'NASDAQ', 57.89)
             |
             |drop if exists temp.jdbc.getStockQuote
             |create procedure temp.jdbc.getStockQuote(theExchange String) := {
             |    stdout <=== 'Selected Exchange: "{{ theExchange }}"'
             |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
-            |    from @@results
+            |    from @results
             |    where exchange is theExchange
             |    group by exchange
             |}
@@ -45,15 +45,15 @@ class ProcedureCallTest extends AnyFunSpec with VerificationTools {
     it("should support execution via select") {
       val (_, _, results) = LollypopVM.searchSQL(Scope(),
         s"""|declare table results(symbol: String(5), exchange: String(6), lastSale: Double)[5]
-            |insert into @@results (symbol, exchange, lastSale)
+            |insert into @results (symbol, exchange, lastSale)
             |values ('GMTQ', 'OTCBB', 0.1111), ('ABC', 'NYSE', 38.47), ('GE', 'NASDAQ', 57.89)
-            |select * from @@results
+            |select * from @results
             |
             |drop if exists temp.jdbc.getStockQuote
             |create procedure temp.jdbc.getStockQuote(theExchange String) := {
             |    stdout <=== 'Selected Exchange: "{{ theExchange }}"'
             |    select exchange, count(*) as total, max(lastSale) as maxPrice, min(lastSale) as minPrice
-            |    from @@results
+            |    from @results
             |    where exchange is theExchange
             |    group by exchange
             |}

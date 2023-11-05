@@ -42,7 +42,7 @@ object Expression {
    * @param stream     the given [[TokenStream token stream]]
    * @param expression the source [[Expression expression]]
    * @return a new queryable having the specified modification
-   * @example @@stocks where lastSale <= 1 order by symbol limit 5
+   * @example @stocks where lastSale <= 1 order by symbol limit 5
    */
   @tailrec
   def apply(stream: TokenStream, expression: Expression)(implicit compiler: SQLCompiler): Expression = {

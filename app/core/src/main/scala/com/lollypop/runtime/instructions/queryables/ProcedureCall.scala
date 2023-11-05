@@ -82,7 +82,7 @@ object ProcedureCall extends QueryableParser {
          |                               --> maxPrice: Double,
          |                               --> minPrice: Double) as
          |  select exchange, total: count(*), maxPrice: max(lastSale), minPrice: min(lastSale)
-         |  from @@stockQuotes
+         |  from @stockQuotes
          |  where exchange is theExchange
          |  group by exchange
          |

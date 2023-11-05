@@ -42,7 +42,7 @@ object Having extends QueryableChainParser {
          |)
          |graph { shape: "bar", title: "Travelers" }
          |select lastName, members: count(*)
-         |from @@travelers
+         |from @travelers
          |group by lastName having members > 1
          |""".stripMargin
   ))

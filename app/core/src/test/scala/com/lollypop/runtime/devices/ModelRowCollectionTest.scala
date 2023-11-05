@@ -1,6 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.@@@
+import com.lollypop.language.models.@@
 import com.lollypop.runtime.datatypes.{DateTimeType, Float64Type, StringType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -39,10 +39,10 @@ class ModelRowCollectionTest extends AnyFunSpec {
 
     it("should support updating rows") {
       val (scope, cost, _) = LollypopVM.executeSQL(Scope().withVariable("stocks", createTestTable),
-        """|update @@stocks set lastSale = 358.21 where symbol is 'KNOW'
+        """|update @stocks set lastSale = 358.21 where symbol is 'KNOW'
            |""".stripMargin)
       assert(cost.updated == 1)
-      assert(scope.getRowCollection(@@@("stocks")).toMapGraph == List(
+      assert(scope.getRowCollection(@@("stocks")).toMapGraph == List(
         Map("symbol" -> "BXXG", "exchange" -> "NASDAQ", "lastSale" -> 147.63, "lastSaleTime" -> DateHelper.from(1596317591000L)),
         Map("symbol" -> "KFFQ", "exchange" -> "NYSE", "lastSale" -> 22.92, "lastSaleTime" -> DateHelper.from(1596317591000L)),
         Map("symbol" -> "GTKK", "exchange" -> "NASDAQ", "lastSale" -> 240.14, "lastSaleTime" -> DateHelper.from(1596835991000L)),
@@ -52,10 +52,10 @@ class ModelRowCollectionTest extends AnyFunSpec {
 
     it("should support deleting rows") {
       val (scope, cost, _) = LollypopVM.executeSQL(Scope().withVariable("stocks", createTestTable),
-        """|delete from @@stocks where symbol is 'KFFQ'
+        """|delete from @stocks where symbol is 'KFFQ'
            |""".stripMargin)
       assert(cost.deleted == 1)
-      assert(scope.getRowCollection(@@@("stocks")).toMapGraph == List(
+      assert(scope.getRowCollection(@@("stocks")).toMapGraph == List(
         Map("symbol" -> "BXXG", "exchange" -> "NASDAQ", "lastSale" -> 147.63, "lastSaleTime" -> DateHelper.from(1596317591000L)),
         Map("symbol" -> "GTKK", "exchange" -> "NASDAQ", "lastSale" -> 240.14, "lastSaleTime" -> DateHelper.from(1596835991000L)),
         Map("symbol" -> "KNOW", "exchange" -> "OTCBB", "lastSale" -> 357.21, "lastSaleTime" -> DateHelper.from(1597872791000L))

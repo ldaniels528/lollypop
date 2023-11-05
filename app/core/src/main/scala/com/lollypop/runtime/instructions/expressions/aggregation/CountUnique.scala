@@ -41,7 +41,7 @@ object CountUnique extends FunctionCallParserE1(
        || FQPY   | NASDAQ   |  75.4873 | 2023-07-29T05:06:56.238Z |
        || VNQR   | NASDAQ   |  38.5333 | 2023-07-29T05:06:56.239Z |
        ||---------------------------------------------------------|
-       |select total: count(unique(exchange)) from @@stocks
+       |select total: count(unique(exchange)) from @stocks
        |""".stripMargin,
     """|stocks =
        ||---------------------------------------------------------|
@@ -53,5 +53,5 @@ object CountUnique extends FunctionCallParserE1(
        || FQPY   | NASDAQ   |  75.4873 | 2023-07-29T05:06:56.238Z |
        || VNQR   | NASDAQ   |  38.5333 | 2023-07-29T05:06:56.239Z |
        ||---------------------------------------------------------|
-       |select total: countUnique(exchange) from @@stocks
+       |select total: countUnique(exchange) from @stocks
        |""".stripMargin))
