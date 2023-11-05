@@ -99,6 +99,8 @@ lazy val core = (project in file("./app/core")).
       "org.apache.httpcomponents.client5" % "httpclient5-fluent" % "5.2.1",
       "org.commonmark" % "commonmark" % "0.21.0",
       "org.jfree" % "jfreechart" % "1.5.4",
+      "org.jfree" % "jfreechart-fx" % "1.0.1",
+      "org.jfree" % "jcommon" % "1.0.24",
       "org.ow2.asm" % "asm" % "9.4",
       "org.scala-lang" % "scala-reflect" % scalaAppVersion,
       "org.xerial.snappy" % "snappy-java" % snappyJavaVersion
