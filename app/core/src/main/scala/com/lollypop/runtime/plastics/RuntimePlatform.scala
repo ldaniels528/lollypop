@@ -43,6 +43,7 @@ object RuntimePlatform {
   private val ARRAY_TYPE = Some(classOf[Array[AnyRef]].getName.ct)
   private val BYTE_ARRAY_TYPE = Some(classOf[Array[Byte]].getName.ct)
   private val BOOLEAN_TYPE = Some("Boolean".ct)
+  private val CHAR_TYPE = Some("Char".ct)
   private val DATETIME_TYPE = Some("DateTime".ct)
   private val JSON_TYPE = Some("JSON".ct)
   private val INT_TYPE = Some("Int".ct)
@@ -650,11 +651,26 @@ object RuntimePlatform {
       // Parses a JSON-formatted string returning the object representation: "Hello World".fromJson()
       stringFunction0(name = "fromJson", _.fromJSON[Map[String, Any]], returnType_? = ANY_TYPE)
 
-      // Parses a Hex-encoded string returning the byte array: "deadbeef0001a3f5".fromHex()
+      // Parses a Hex-encoded string returning the byte array: "dead00beef01a3f5".fromHex()
       stringFunction0(name = "fromHex", s => Hex.decodeHex(s.filterNot(_ == '.')), returnType_? = BYTE_ARRAY_TYPE)
+
+      // Returns the tail of the string: "Welcome".head()
+      stringFunction0(name = "head", _.head, returnType_? = CHAR_TYPE)
+
+      // Returns the tail of the string: "cool".headOption()
+      stringFunction0(name = "headOption", _.headOption, returnType_? = CHAR_TYPE)
+
+      // Returns the index of the value if found in the collection: "Accept-Code".indexOf('C')
+      stringFunction1[Any](name = "indexOf", (arr, v) => arr.toSeq.indexOf(v), returnType_? = INT_TYPE)
 
       // Returns a string in reverse order: "Hello World".reverse()
       stringFunction0(name = "reverse", _.reverse, returnType_? = STRING_TYPE)
+
+      // Returns a string with the margin removed: "HelloWorld".forall(c => Character.isAlphabetic(c))
+      stringFunction1[Any](name = "forall", {
+        case (s, f: AnonymousFunction) => safeCast[Char => Boolean](f.toScala).exists(s.forall)
+        case (_, x) => dieIllegalType(x)
+      }, returnType_? = BOOLEAN_TYPE)
 
       // Returns a string with the margin removed: "|Hello World".stripMargin('|')
       stringFunction1[Char](name = "stripMargin", (s, c) => s.stripMargin(c), returnType_? = STRING_TYPE)
@@ -729,7 +745,9 @@ object RuntimePlatform {
 
     def arg2: Expression
 
-    override def toSQL: String = s"${value.toSQL}.$name${Seq(arg1, arg2).mkString("(", ", ", ")")}"
+    override def toSQL: String = {
+      Seq(value.toSQL, name, Seq(arg1, arg2).map(_.toSQL).mkString("(", ", ", ")")).mkString
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////
