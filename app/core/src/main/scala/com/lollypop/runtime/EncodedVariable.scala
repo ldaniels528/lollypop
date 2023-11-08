@@ -1,6 +1,7 @@
 package com.lollypop.runtime
 
 import com.lollypop.language.models.{Expression, Instruction, LambdaFunction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 
 import scala.collection.concurrent.TrieMap
@@ -25,7 +26,7 @@ case class EncodedVariable(name: String, codec: LambdaFunction, initialValue: In
 
   private def eval(value: Instruction)(implicit scope: Scope): Any = {
     val fx = codec.call(args = List(value).collect { case e: Expression => e })
-    LollypopVM.execute(scope, fx)._3
+    fx.execute(scope)._3
   }
 
 }

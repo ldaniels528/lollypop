@@ -3,11 +3,12 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Atom, Expression}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, FunctionArguments}
 import com.lollypop.runtime.instructions.jvm.DeclareClass
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -80,7 +81,7 @@ case class New(typeName: Atom, args: Expression, methods: Option[Dictionary] = N
               case af@AnonymousFunction(params, code, origin) =>
                 val scope0 = (origin || scope).withArguments(params, methodArgs)
                 af.updateScope(scope0)
-                LollypopVM.execute(scope0, code)._3
+                code.execute(scope0)._3
               case expr => expr.dieIllegalType()
             }
           case "hashCode" => mapping.hashCode

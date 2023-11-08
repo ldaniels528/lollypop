@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.database.server.LollypopServers
 import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.Int32Type
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -23,11 +24,11 @@ case class NodeConsole(portExpr: Expression, commandsExpr: Option[Expression])
   private val logger = LoggerFactory.getLogger(getClass)
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (_, cost1, result1) = LollypopVM.execute(scope, portExpr)
+    val (_, cost1, result1) = portExpr.execute(scope)
     val port = Int32Type.convert(result1)
     val commands_? = for {
       commandsE <- commandsExpr
-      array = LollypopVM.execute(scope, commandsE)._3 match {
+      array = commandsE.execute(scope)._3 match {
         case array: Array[String] => array
         case other => commandsE.dieIllegalType(other)
       }

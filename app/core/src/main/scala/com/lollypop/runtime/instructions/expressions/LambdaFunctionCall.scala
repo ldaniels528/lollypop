@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, FunctionCall, LambdaFunction, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, AnonymousNamedFunction, DataTypeConstructor}
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -19,12 +20,12 @@ case class LambdaFunctionCall(fx: LambdaFunction, args: List[Expression]) extend
     fx match {
       case af@AnonymousFunction(params, code, origin_?) =>
         val fxScope = origin_?.getOrElse(Scope(parentScope = scope)).withParameters(params, args)
-        val (s, c, r) = LollypopVM.execute(fxScope, code)
+        val (s, c, r) = code.execute(fxScope)
         (af.updateScope(s), c, r)
       case AnonymousNamedFunction(name) =>
-        LollypopVM.execute(scope, NamedFunctionCall(name, args))
+        NamedFunctionCall(name, args).execute(scope)
       case dtf: DataTypeConstructor =>
-        val (scopeA, costA, values) = LollypopVM.transform(scope, args)
+        val (scopeA, costA, values) = args.transform(scope)
         val r = dtf.provider.construct(values)
         (scopeA, costA, r)
       case xx => xx.dieExpectedFunctionRef()

@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, Literal}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.devices.QMap
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 import scala.collection.mutable
@@ -23,7 +24,7 @@ import scala.collection.mutable
 case class Dictionary(value: List[(String, Expression)]) extends Literal with RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, mutable.LinkedHashMap[String, Any]) = {
-    val result = mutable.LinkedHashMap(value.map { case (name, expr) => name -> LollypopVM.execute(scope, expr)._3 }: _*)
+    val result = mutable.LinkedHashMap(value.map { case (name, expr) => name -> expr.execute(scope)._3 }: _*)
     (scope, IOCost.empty, result)
   }
 

@@ -1,6 +1,7 @@
 package com.lollypop.runtime.instructions
 
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.ResourceHelper.AutoClose
@@ -29,12 +30,12 @@ object Streamable {
       case z => recurse(z.toString)
     }
 
-    val (_, cost0, result0) = LollypopVM.execute(scope, expr)
+    val (_, cost0, result0) = expr.execute(scope)
     recurse(result0)
   }
 
   def getOutputStream(expr: Expression)(implicit scope: Scope): OutputStream = {
-    val (_, cost0, result0) = LollypopVM.execute(scope, expr)
+    val (_, cost0, result0) = expr.execute(scope)
     result0 match {
       case b: java.sql.Blob => b.setBinaryStream(0)
       case c: java.sql.Clob => c.setAsciiStream(0)
@@ -50,7 +51,7 @@ object Streamable {
   }
 
   def getReader(expr: Expression)(implicit scope: Scope): Reader = {
-    val (_, cost0, result0) = LollypopVM.execute(scope, expr)
+    val (_, cost0, result0) = expr.execute(scope)
     result0 match {
       case f: File => new FileReader(f)
       case r: Reader => r
@@ -60,7 +61,7 @@ object Streamable {
   }
 
   def getWriter(expr: Expression)(implicit scope: Scope): Writer = {
-    val (_, cost0, result0) = LollypopVM.execute(scope, expr)
+    val (_, cost0, result0) = expr.execute(scope)
     result0 match {
       case f: File => new FileWriter(f)
       case s: String =>

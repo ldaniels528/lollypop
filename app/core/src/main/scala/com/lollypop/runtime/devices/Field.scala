@@ -1,5 +1,6 @@
 package com.lollypop.runtime.devices
 
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.{LollypopVM, Scope}
 
 /**
@@ -19,7 +20,7 @@ object Field {
 
     @inline
     def toField(fmd: FieldMetadata = FieldMetadata())(implicit scope: Scope): Field = {
-      val defaultValue = column.defaultValue.flatMap(expr => Option(LollypopVM.execute(scope, expr)._3))
+      val defaultValue = column.defaultValue.flatMap(expr => Option(expr.execute(scope)._3))
       Field(column.name, fmd, value = defaultValue)
     }
 

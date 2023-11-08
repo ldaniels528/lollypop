@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.ConstructorSupport
 import com.lollypop.runtime.instructions.functions.InternalFunctionCall
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -26,11 +27,11 @@ case class NamedFunctionCall(name: String, args: List[Expression]) extends Funct
 
     try {
       val result = scope.resolveAny(name, myArgs) match {
-        case fx: LambdaFunction => LollypopVM.execute(scope, LambdaFunctionCall(fx, myArgs))._3
-        case fx: InternalFunctionCall => LollypopVM.execute(scope, fx)._3
-        case fx: Procedure => LollypopVM.execute(scope.withParameters(fx.params, myArgs), fx.code)._3
-        case fx: TypicalFunction => LollypopVM.execute(Scope(scope).withParameters(fx.params, myArgs), fx.code)._3
-        case cs: ConstructorSupport[_] => cs.construct(LollypopVM.evaluate(scope, myArgs))
+        case fx: LambdaFunction => LambdaFunctionCall(fx, myArgs).execute(scope)._3
+        case fx: InternalFunctionCall => fx.execute(scope)._3
+        case fx: Procedure => fx.code.execute(scope.withParameters(fx.params, myArgs))._3
+        case fx: TypicalFunction => fx.code.execute(Scope(scope).withParameters(fx.params, myArgs))._3
+        case cs: ConstructorSupport[_] => cs.construct(myArgs.transform(scope)._3)
         case _ => processInternalOps(name.f, myArgs)
       }
       (scope, IOCost.empty, result)

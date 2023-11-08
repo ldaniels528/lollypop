@@ -2,6 +2,7 @@ package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.{$, CodeBlock, Column, Literal}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.LambdaFunctionCall
 import com.lollypop.runtime.instructions.operators.Plus
@@ -51,7 +52,7 @@ class LambdaFunctionCallTest extends AnyFunSpec with VerificationTools {
         ),
         args = List(Literal("World"))
       )
-      val result = LollypopVM.execute(scope, call)._3
+      val result = call.execute(scope)._3
       assert(result == "Hello World")
     }
 

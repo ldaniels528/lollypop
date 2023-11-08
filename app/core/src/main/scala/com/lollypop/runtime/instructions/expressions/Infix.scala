@@ -3,11 +3,11 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models._
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.RichScalaAny
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, RichScalaAny}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.{RuntimeClassExpressionSugar, RuntimeClassInstanceSugar}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.JSONSupport._
 import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.OptionHelper.OptionEnrichment
@@ -34,7 +34,7 @@ case class Infix(instance: Expression, member: Expression) extends RuntimeExpres
   override def toSQL: String = Seq(instance, member).map(_.wrapSQL).mkString(".")
 
   private def getAttribute(expression: Expression, fieldName: String)(implicit scope: Scope): Any = {
-    val rawValue = LollypopVM.execute(scope, expression)._3
+    val rawValue = expression.execute(scope)._3
     rawValue.normalizeJava match {
       case m: QMap[String, _] if m.contains(fieldName) => m.get(fieldName).orNull
       case js: JsValue =>

@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.{LambdaFunctionCall, RuntimeExpression}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -70,7 +71,7 @@ object AnonymousFunction extends AnonymousFunctionSymbol {
   private def invoke(af: AnonymousFunction)(args: Any*): Object = {
     val scope0 = af.origin || Scope()
     val scope1 = if (args.isEmpty) scope0 else scope0.withArguments(af.params, args)
-    LollypopVM.execute(scope1, af.code)._3.asInstanceOf[Object]
+    af.code.execute(scope1)._3.asInstanceOf[Object]
   }
 
   class F0(af: AnonymousFunction) extends scala.Function0[Object] {
