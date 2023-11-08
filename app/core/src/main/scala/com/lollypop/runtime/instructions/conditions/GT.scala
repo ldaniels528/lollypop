@@ -2,8 +2,9 @@ package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -14,8 +15,9 @@ import lollypop.io.IOCost
 case class GT(a: Expression, b: Expression) extends RuntimeInequality {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val result = Option(LollypopVM.execute(scope, a)._3) > Option(LollypopVM.execute(scope, b)._3)
-    (scope, IOCost.empty, result)
+    val (sa, ca, ra) = a.execute(scope)
+    val (sb, cb, rb) = b.execute(sa)
+    (sb, ca ++ cb, Option(ra) > Option(rb))
   }
 
   override def operator: String = ">"

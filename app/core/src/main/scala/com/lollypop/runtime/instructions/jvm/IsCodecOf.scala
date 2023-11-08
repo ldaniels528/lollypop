@@ -4,10 +4,11 @@ import com.lollypop.language.ColumnTypeParser.nextColumnType
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{ColumnType, Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.instructions.jvm.IsCodecOf.keyword
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -18,7 +19,7 @@ import lollypop.io.IOCost
  */
 case class IsCodecOf(expr: Expression, `type`: ColumnType) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val v = LollypopVM.execute(scope, expr)._3
+    val v = expr.execute(scope)._3
     val result = Inferences.fromValue(v).name == DataType.load(`type`).name
     (scope, IOCost.empty, result)
   }

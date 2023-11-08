@@ -3,9 +3,10 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.Between.keyword
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -16,11 +17,11 @@ import lollypop.io.IOCost
  */
 case class Between(value: Expression, from: Expression, to: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (s0, c0, v) = LollypopVM.execute(scope, value)
-    val (s1, c1, a) = LollypopVM.execute(s0, from)
-    val (s2, c2, b) = LollypopVM.execute(s1, to)
+    val (sa, ca, v) = value.execute(scope)
+    val (sb, cb, a) = from.execute(sa)
+    val (sc, cc, b) = to.execute(sb)
     val (vv, aa, bb) = (Option(v), Option(a), Option(b))
-    (s2, c0 ++ c1 ++ c2, (vv >= aa) && (vv <= bb))
+    (sc, ca ++ cb ++ cc, (vv >= aa) && (vv <= bb))
   }
 
   override def toSQL: String = Seq(value.toSQL, keyword, from.toSQL, "and", to.toSQL).mkString(" ")

@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_IMPERATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Inequality._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.conditions.AssumeCondition.EnrichedAssumeCondition
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE2, ScalarFunctionCall}
@@ -21,11 +22,11 @@ case class Assert(condition: Expression, message: Expression) extends ScalarFunc
 
   override def determineMismatches(scope: Scope): List[String] = {
     val inequalities = toInequalities(condition.asCondition)
-    inequalities.collect { case inEq if LollypopVM.execute(scope, inEq)._3 == false => inEq.negate.toSQL }
+    inequalities.collect { case inEq if inEq.execute(scope)._3 == false => inEq.negate.toSQL }
   }
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (s, c, r) = LollypopVM.execute(scope, condition)
+    val (s, c, r) = condition.execute(scope)
     (s, c, if (r == true) true else die(message.asString || "Assertion failed"))
   }
 

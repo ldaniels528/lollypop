@@ -1,10 +1,10 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec
@@ -22,7 +22,8 @@ case class IsNotNull(expr: Expression) extends ScalarFunctionCall with RuntimeCo
       case _ => true
     }
 
-    LollypopVM.execute(scope, expr) ~> { case (s, c, result1) => (s, c, isntNull(result1)) }
+    val (s, c, r) = expr.execute(scope)
+    (s, c, isntNull(r))
   }
 
   override def toSQL: String = s"${expr.toSQL} is not null"

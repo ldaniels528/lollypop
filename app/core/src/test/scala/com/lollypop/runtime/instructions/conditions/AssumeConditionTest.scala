@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.LollypopException
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import AssumeCondition.EnrichedAssumeCondition
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.{LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
@@ -22,7 +23,7 @@ class AssumeConditionTest extends AnyFunSpec {
     it("should fail if the host instruction does not evaluate as a Condition") {
       assertThrows[LollypopException] {
         val model = new Date().v.asCondition
-        LollypopVM.execute(Scope(), model)
+        model.execute(Scope())
       }
     }
 

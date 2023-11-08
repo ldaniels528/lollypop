@@ -3,15 +3,18 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.QMap
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 case class Contains(items: Expression, item: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
+    val (sa, ca, ra) = items.execute(scope)
+    val (sb, cb, rb) = item.execute(sa)
     val result = (for {
-      container <- Option(LollypopVM.execute(scope, items)._3)
-      elem <- Option(LollypopVM.execute(scope, item)._3)
+      container <- Option(ra)
+      elem <- Option(rb)
     } yield {
       container match {
         case a: Array[Any] => a.contains(elem)
@@ -20,7 +23,7 @@ case class Contains(items: Expression, item: Expression) extends RuntimeConditio
         case _ => false
       }
     }).contains(true)
-    (scope, IOCost.empty, result)
+    (sb, ca ++ cb, result)
   }
 
   override def toSQL: String = s"${items.toSQL} contains ${item.toSQL}"
