@@ -2,8 +2,9 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.FunctionCallParserN
-import com.lollypop.runtime.{LollypopVM, Scope}
 
 import scala.collection.mutable
 
@@ -18,7 +19,7 @@ case class Unique(expressions: List[Expression]) extends AggregateFunctionCall {
     val values = mutable.Set[Any]() // TODO use a device to store the values
     new Aggregator {
       override def update(implicit scope: Scope): Unit = {
-        val value = expressions.headOption.flatMap(v => Option(LollypopVM.execute(scope, v)._3))
+        val value = expressions.headOption.flatMap(v => Option(v.execute(scope)._3))
         value.foreach(values += _)
       }
 

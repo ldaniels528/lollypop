@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.LongIntExpression
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
-import com.lollypop.runtime.{LollypopVM, Scope}
 
 import scala.collection.mutable
 
@@ -17,7 +18,9 @@ case class CountUnique(expression: Expression) extends AggregateFunctionCall wit
   override def aggregate: Aggregator = {
     val values = mutable.Set[Any]()
     new Aggregator {
-      override def update(implicit scope: Scope): Unit = Option(LollypopVM.execute(scope, expression)._3).foreach(values += _)
+      override def update(implicit scope: Scope): Unit = {
+        Option(expression.execute(scope)._3).foreach(values += _)
+      }
 
       override def collect(implicit scope: Scope): Option[Long] = Some(values.size)
     }

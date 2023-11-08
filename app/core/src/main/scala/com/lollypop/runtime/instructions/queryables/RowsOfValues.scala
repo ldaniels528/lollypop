@@ -2,13 +2,14 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.models.{@@, Expression, Queryable}
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Inferences, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
-import com.lollypop.runtime.{LollypopVM, Scope}
 
 /**
  * Represents rows of values (e.g. "values (2, 5, 7, 11), (13, 17, 19, 23)")
@@ -28,7 +29,7 @@ case class RowsOfValues(values: List[List[Expression]]) extends Queryable with T
     for {
       row <- values
       mapping = Map((columns.map(_.name) zip row).map { case (name, expr) =>
-        name -> LollypopVM.execute(scope, expr)._3
+        name -> expr.execute(scope)._3
       }: _*)
     } rc.insert(mapping.toRow(rc))
     rc

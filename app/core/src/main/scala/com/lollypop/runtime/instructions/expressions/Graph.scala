@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Expression, Queryable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -19,7 +20,7 @@ import lollypop.io.IOCost
 case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, GraphResult) = {
-    val (scope1, cost1, rc) = LollypopVM.search(scope, from)
+    val (scope1, cost1, rc) = from.search(scope)
     val dict = chart.asDictionary(scope1) || dieXXXIsNull("Dictionary")
     dict.get("shape").collect { case s: String => s } || dieXXXIsNull("Attribute 'shape'")
     (scope, cost1, GraphResult(options = dict.toMap, data = rc))
@@ -31,6 +32,7 @@ case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {
 
 object Graph extends ExpressionParser {
   import com.lollypop.util.OptionHelper.implicits.risky._
+
   private val template = "graph %e:chart %i:source"
 
   override def help: List[HelpDoc] = List(
@@ -42,7 +44,7 @@ object Graph extends ExpressionParser {
       featureTitle = "Dataframe Literals",
       description = "Produces graphical charts",
       example =
-        """|graph { shape: "ring", title: "Ring Demo" } from (
+        """|graph { shape: "pie3d", title: "Powered By Lollypop" } from (
            |  |------------------|
            |  | exchange | total |
            |  |------------------|

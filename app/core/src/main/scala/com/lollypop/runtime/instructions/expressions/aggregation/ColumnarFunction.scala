@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.models.{Expression, IdentifierRef}
 import com.lollypop.runtime.DatabaseObjectRef.SubTable
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.queryables.HashTag
-import com.lollypop.runtime.{LollypopVM, Scope}
 
 /**
  * Columnar Function
@@ -24,7 +25,7 @@ trait ColumnarFunction {
   }
 
   private def resolve(ref: Expression)(implicit scope: Scope): RowCollection = {
-    LollypopVM.execute(scope, ref)._3 match {
+    ref.execute(scope)._3 match {
       case rc: RowCollection => rc
       case _ => ref.dieIllegalType()
     }

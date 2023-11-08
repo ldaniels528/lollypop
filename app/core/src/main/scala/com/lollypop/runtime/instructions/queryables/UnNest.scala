@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -15,7 +16,7 @@ import lollypop.io.IOCost
 case class UnNest(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable {
   override val functionName: String = "unnest"
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = LollypopVM.search(scope, expression)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = expression.search(scope)
 }
 
 object UnNest extends FunctionCallParserE1(

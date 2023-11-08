@@ -2,10 +2,11 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{AllFields, Expression}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.{LongIntExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -36,7 +37,7 @@ case class Count(expression: Expression) extends AggregateFunctionCall
     expression match {
       case AllFields => 1L
       case _ =>
-        val (_, _, result) = LollypopVM.execute(scope, expression)
+        val (_, _, result) = expression.execute(scope)
         result match {
           case null => 0L
           case rc: RowCollection => rc.countWhereMetadata(_.isActive)

@@ -4,17 +4,18 @@ import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_FUNCTI
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.DatabaseManagementSystem.readPhysicalTable
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 case class TableLike(source: Expression) extends ScalarFunctionCall with RuntimeExpression with RuntimeQueryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    val (scope1, cost1, result1) = LollypopVM.execute(scope, source)
+    val (scope1, cost1, result1) = source.execute(scope)
     val result2 = result1 match {
       case collection: RowCollection => createTempTable(collection)
       case path: String => createTempTable(readPhysicalTable(DatabaseObjectRef(path).toNS))

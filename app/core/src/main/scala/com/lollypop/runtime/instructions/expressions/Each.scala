@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Expression, Instruction, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection, TableColumn}
@@ -20,7 +21,6 @@ import scala.collection.concurrent.TrieMap
  * @param variable  the given [[Atom variable]]
  * @param queryable the given [[Queryable rows]]
  * @param code      the [[Instruction statements]] to execute
- * @param isReverse indicates reverse order
  * @param isYield   indicates whether a table result is to be generated and returned
  * @param limit     the optional [[Expression maximum number]] of rows to retrieve from the source
  * @example
@@ -32,7 +32,7 @@ import scala.collection.concurrent.TrieMap
  * @example
  * {{{
  * set pennyStocks =
- *    each item in reverse (select symbol, lastSale from Securities where lastSale < 1.0) yield {
+ *    each item in (select symbol, lastSale from Securities where lastSale < 1.0) yield {
  *      select item.symbol, item.lastSale, item.exchange
  *    }
  * }}}
@@ -40,15 +40,10 @@ import scala.collection.concurrent.TrieMap
 case class Each(variable: Atom,
                 queryable: Instruction,
                 code: Instruction,
-                isReverse: Boolean = false,
                 isYield: Boolean = false,
                 limit: Option[Expression] = None) extends RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    (scope, IOCost.empty, run()(Scope(scope)))
-  }
-
-  private def run()(implicit scope: Scope): RowCollection = {
 
     def fixTypes(columns: TableColumn): TableColumn = columns match {
       case c if c.`type`.name == StringType.name =>
@@ -60,19 +55,18 @@ case class Each(variable: Atom,
       val newScope = scope
         .withVariable(variable.name, value = Some(row))
         .withCurrentRow(Some(row))
-      Option(LollypopVM.execute(newScope, code)._3)
+      Option(code.execute(newScope)._3)
     }
 
     def processSource(in: RowCollection): Option[RowCollection] = {
       val factory = TrieMap[Unit, RowCollection]()
       val _limit = limit.flatMap(_.asInt32)
       val processor = if (isYield) processYield(factory) else processRow _
-      if (isReverse) in.foreachWithLimitInReverse(_limit, processor) else in.foreachWithLimit(_limit, processor)
+      in.foreachWithLimit(_limit, processor)
       factory.get(())
     }
 
     def processYield(factory: TrieMap[Unit, RowCollection]): Row => Option[Any] = { row =>
-
       def write(src: RowCollection): Option[Any] = {
         val out = factory.getOrElseUpdate((), createQueryResultTable(src.columns.map(fixTypes)))
         src.foreach(row => out.insert(row))
@@ -89,20 +83,20 @@ case class Each(variable: Atom,
     }
 
     // iterate the rows (forward or reverse)
-    val rc = LollypopVM.search(scope, queryable)._3
-    (for {item <- processSource(rc)} yield item).orNull
+    val (s, c, rc) = queryable.search(scope)
+    (s, c, (for {item <- processSource(rc)} yield item).orNull)
   }
 
   override def toSQL: String = {
-    ("each" :: variable.toSQL :: "in" :: (if (isReverse) List("reverse") else Nil) :::
-      queryable.wrapSQL(true) :: limit.toList.flatMap(e => List("limit", e.toSQL)) :::
+    ("each" :: variable.toSQL :: "in" :: queryable.wrapSQL(true) ::
+      limit.toList.flatMap(e => List("limit", e.toSQL)) :::
       (if (isYield) List("yield") else Nil) ::: code.toSQL :: Nil).mkString(" ")
   }
 
 }
 
 object Each extends ExpressionParser {
-  val templateCard: String = "each %a:variable in ?reverse %q:rows ?limit +?%e:limit ?yield %N:code"
+  val templateCard: String = "each %a:variable in %q:rows ?limit +?%e:limit ?yield %N:code"
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "each",
@@ -148,14 +142,13 @@ object Each extends ExpressionParser {
          || NYSE      | QOVGA  |   1.9199 | 2023-10-14T18:40:14.590Z |
          || NYSE      | ZJWL   |  17.3107 | 2023-10-14T18:40:13.205Z |
          ||----------------------------------------------------------|
-         |each item in reverse (from @stocks) yield item
+         |each item in (stocks.reverse()) yield item
          |""".stripMargin
   ))
 
   override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Each] = {
     val params = SQLTemplateParams(ts, templateCard)
     Some(Each(variable = params.atoms("variable"), queryable = params.instructions("rows"),
-      isReverse = params.keywords.contains("reverse"),
       isYield = params.keywords.contains("yield"),
       limit = params.expressions.get("limit"),
       code = params.instructions("code")))
@@ -168,13 +161,6 @@ object Each extends ExpressionParser {
     def foreachWithLimit[U](limit: Option[Int] = None, callback: Row => U): Unit = {
       for {
         rowID <- 0L until (limit.map(_.toLong) || device.getLength)
-        row <- device.get(rowID)
-      } callback(row)
-    }
-
-    def foreachWithLimitInReverse[U](limit: Option[Int] = None, callback: Row => U): Unit = {
-      for {
-        rowID <- (((limit.map(_.toLong) || device.getLength) - 1) max 0) to 0L by -1
         row <- device.get(rowID)
       } callback(row)
     }

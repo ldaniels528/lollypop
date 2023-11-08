@@ -1,8 +1,9 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.models.Queryable
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -13,8 +14,8 @@ import lollypop.io.IOCost
 case class UnionDistinct(query0: Queryable, query1: Queryable) extends RuntimeQueryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    val (scopeA, costA, deviceA) = LollypopVM.search(scope, query0)
-    val (scopeB, costB, deviceB) = LollypopVM.search(scopeA, query1)
+    val (scopeA, costA, deviceA) = query0.search(scope)
+    val (scopeB, costB, deviceB) = query1.search(scopeA)
     (scopeB, costA ++ costB, deviceA unionDistinct deviceB)
   }
 

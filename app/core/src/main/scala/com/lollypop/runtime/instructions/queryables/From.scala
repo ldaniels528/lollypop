@@ -1,11 +1,12 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.{Instruction, Queryable}
+import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieNoResultSet}
 import com.lollypop.runtime.LollypopVM.convertToTable
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec
@@ -23,7 +24,7 @@ case class From(source: Instruction) extends RuntimeQueryable {
       case x => dieIllegalType(x)
     }
 
-    val (_, cost, result) = LollypopVM.execute(scope, source)
+    val (_, cost, result) = source.execute(scope)
     (scope, cost, recurse(result))
   }
 

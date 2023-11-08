@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Queryable}
 import com.lollypop.runtime.DatabaseManagementSystem.readProcedure
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RecordCollectionZoo._
 import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
@@ -29,7 +30,7 @@ case class ProcedureCall(ref: DatabaseObjectRef, args: List[Expression]) extends
     assert(paramsIN.length == args.length, this.dieArgumentMismatch(paramsIN.length, paramsIN.length, paramsIN.length))
 
     // execute the procedure
-    val (scope1, cost1, result1) = LollypopVM.execute(scope.withParameters(paramsIN, args), procedure.code)
+    val (scope1, cost1, result1) = procedure.code.execute(scope.withParameters(paramsIN, args))
 
     // interpret the result
     val result2 = Option(result1).collect { case d: RowCollection => d } || this.dieIllegalType(result1)
@@ -41,7 +42,7 @@ case class ProcedureCall(ref: DatabaseObjectRef, args: List[Expression]) extends
         // create a Map containing the output properties
         val values = result2(0).toMap
         val result3 = paramsOUT.foldLeft[Map[String, Any]](Map.empty) { case (agg, param) =>
-          agg + (param.name -> (values.get(param.name) ?? param.defaultValue.map(LollypopVM.execute(scope, _)._3)).orNull)
+          agg + (param.name -> (values.get(param.name) ?? param.defaultValue.map(_.execute(scope)._3)).orNull)
         }
         val result4 = result3.toRow(0L)(new RecordStructure {
           override val columns: Seq[TableColumn] = paramsOUT.map(_.toColumn).map(_.toTableColumn)
