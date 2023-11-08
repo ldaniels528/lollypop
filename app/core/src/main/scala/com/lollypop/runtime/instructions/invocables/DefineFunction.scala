@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Expression, TypicalFunction}
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NamedFunction}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -14,7 +15,7 @@ import lollypop.io.IOCost
  */
 case class DefineFunction(function: TypicalFunction) extends RuntimeInvokable with Expression {
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = LollypopVM.execute(scope, function)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = function.execute(scope)
 
   override def toSQL: String = {
     function match {

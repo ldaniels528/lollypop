@@ -1,11 +1,12 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.{Atom, Queryable, TableModel}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempTable
 import com.lollypop.runtime.devices.{Field, FieldMetadata}
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.runtime.{LollypopVM, Scope, Variable}
+import com.lollypop.runtime.{Scope, Variable}
 import lollypop.io.IOCost
 
 import scala.collection.mutable
@@ -32,7 +33,7 @@ case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, 
         val fields = tableModel.columns.map(c => Field(name = c.name, metadata = FieldMetadata(), value = c.defaultValue))
         out.insertRows(fields.map(_.name), values)
       case queryable =>
-        val (_, cost2, device1) = LollypopVM.search(scope, queryable)
+        val (_, cost2, device1) = queryable.search(scope)
         cost2 ++ out.insert(device1)
     }
 
