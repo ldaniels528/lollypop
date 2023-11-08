@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
 import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -18,7 +19,7 @@ case class Synchronized(value: Expression, code: Instruction) extends RuntimeInv
     value.asAny match {
       case Some(lock) =>
         lock.asInstanceOf[AnyRef].synchronized {
-          LollypopVM.execute(scope, code)
+          code.execute(scope)
         }
       case None => (scope, IOCost.empty, null)
     }

@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -21,7 +22,7 @@ case class After(delay: Expression, instruction: Instruction) extends RuntimeInv
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     timer.schedule(new TimerTask {
-      override def run(): Unit = LollypopVM.execute(scope, instruction)
+      override def run(): Unit = instruction.execute(scope)
     }, (delay.asInterval || dieExpectedInterval()).toMillis)
     (scope, IOCost.empty, timer)
   }

@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_OBJECT_ORIENTED}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.plastics.RuntimeClass.{downloadDependencies, loadJarFiles}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -16,7 +17,7 @@ case class Require(target: Expression) extends RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // download the dependencies as jars
-    val (s, c, r) = LollypopVM.execute(scope, target)
+    val (s, c, r) = target.execute(scope)
     val files_? = Option(r) map {
       case array: Array[_] =>
         val dependencies = array.map { case s: String => s; case x => dieIllegalType(x) }
@@ -27,7 +28,7 @@ case class Require(target: Expression) extends RuntimeInvokable {
 
     // load the jars
     files_?.foreach(loadJarFiles)
-    (scope, c, null)
+    (s, c, null)
   }
 
   override def toSQL: String = s"require ${target.toSQL}"

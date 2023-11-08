@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.operators.Plus
-import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{LollypopCompiler, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class ChainedCodeBlockTest extends AnyFunSpec with VerificationTools {
@@ -32,7 +33,7 @@ class ChainedCodeBlockTest extends AnyFunSpec with VerificationTools {
         SetAnyVariable(ref = "x".f, 7.v),
         SetAnyVariable(ref = "y".f, 5.v),
         SetAnyVariable(ref = "z".f, Plus("x".f, "y".f)))
-      val (scope, _, _) = LollypopVM.execute(Scope(), codeBlock)
+      val (scope, _, _) = codeBlock.execute(Scope())
       assert(scope.resolveAs[Int](path = "x") contains 7)
       assert(scope.resolveAs[Int](path = "y") contains 5)
       assert(scope.resolveAs[Double](path = "z") contains 12.0)
@@ -43,7 +44,7 @@ class ChainedCodeBlockTest extends AnyFunSpec with VerificationTools {
         SetAnyVariable(ref = "x".f, 7.v),
         SetAnyVariable(ref = "y".f, 5.v),
         Plus("x".f, "y".f))
-      val (scope, _, result) = LollypopVM.execute(Scope(), codeBlock)
+      val (scope, _, result) = codeBlock.execute(Scope())
       assert(result == 12.0)
     }
 
@@ -52,7 +53,7 @@ class ChainedCodeBlockTest extends AnyFunSpec with VerificationTools {
         SetAnyVariable(ref = "x".f, 7.v),
         SetAnyVariable(ref = "y".f, 5.v),
         Return(Some(Plus("x".f, "y".f))))
-      assert(LollypopVM.execute(Scope(), codeBlock)._3 == 12.0)
+      assert(codeBlock.execute(Scope())._3 == 12.0)
     }
 
   }

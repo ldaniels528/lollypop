@@ -3,7 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 
@@ -26,7 +27,7 @@ case class Trace(instruction: Instruction) extends RuntimeInvokable {
 
       scope.stdErr.println(f"[$elapsedTime%.6fms] ${opCode(op)} ~> ${friendlyValue(result)} <${friendlyType(result)}>")
     })
-    val (s, c, r) = LollypopVM.execute(scope1, instruction)
+    val (s, c, r) = instruction.execute(scope1)
     (scope, c, r)
   }
 

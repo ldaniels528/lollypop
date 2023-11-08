@@ -4,7 +4,8 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models._
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
 /**
@@ -18,14 +19,14 @@ case class TryCatch(code: Instruction, onError: Instruction, `finally`: Option[I
   extends RuntimeInvokable with Expression with Queryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    try LollypopVM.execute(scope, code) catch {
+    try code.execute(scope) catch {
       case t: Throwable =>
-        LollypopVM.execute(scope, onError) match {
-          case (s, c, lf: LambdaFunction) => LollypopVM.execute(s, lf.call(List(t.v)))
+        onError.execute(scope) match {
+          case (s, c, lf: LambdaFunction) => lf.call(List(t.v)).execute(s)
           case x => x
         }
     } finally {
-      `finally`.foreach(LollypopVM.execute(scope, _))
+      `finally`.foreach(_.execute(scope))
     }
   }
 

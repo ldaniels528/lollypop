@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -15,7 +16,7 @@ import lollypop.io.IOCost
 case class ThrowException(error: Expression) extends RuntimeInvokable with Expression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    LollypopVM.execute(scope, error)._3 match {
+    error.execute(scope)._3 match {
       case cause: Throwable => throw cause
       case cause: String => this.die(cause)
       case x => error.dieIllegalType(x)

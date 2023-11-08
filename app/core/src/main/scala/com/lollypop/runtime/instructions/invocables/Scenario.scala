@@ -4,10 +4,11 @@ import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{CodeBlock, Expression, Instruction, Literal}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.Verification
 import com.lollypop.runtime.instructions.expressions.Http
 import com.lollypop.runtime.instructions.invocables.Scenario.{__AUTO_EXPAND__, __KUNGFU_BASE_URL__}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -31,7 +32,7 @@ case class Scenario(title: Expression,
 
   private def validate(acc: Accumulator, verify: Verification): Accumulator = {
     try {
-      val (scope1, cost1, result) = LollypopVM.execute(acc.scope, verify)
+      val (scope1, cost1, result) = verify.execute(acc.scope)
       val isPassed = result == true
       acc.copy(scope = scope1, outcome = acc.outcome && isPassed, cost = acc.cost ++ cost1)
     } catch {
@@ -42,7 +43,7 @@ case class Scenario(title: Expression,
 
   private def run(acc: Accumulator, instruction: Instruction): Accumulator = {
     try {
-      val (scope1, cost1, result1) = LollypopVM.execute(acc.scope, instruction)
+      val (scope1, cost1, result1) = instruction.execute(acc.scope)
       val scope2 = captureVariables(scope1, instruction)
       result1 match {
         case p: Product if scope1.resolve(__AUTO_EXPAND__).contains(true) =>

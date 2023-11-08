@@ -3,9 +3,10 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models._
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.{EQ, RuntimeCondition}
 import com.lollypop.runtime.instructions.invocables.Switch.keyword
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -35,7 +36,7 @@ case class Switch(term: Expression, cases: List[Switch.Case]) extends RuntimeInv
     var innerScope: Scope = scope
 
     def isSatisfied(lf: LambdaFunction): Boolean = {
-      val (sc, _, rv) = LollypopVM.execute(scope, lf.call(List(term)))
+      val (sc, _, rv) = lf.call(List(term)).execute(scope)
       innerScope = sc
       rv == true
     }
@@ -43,16 +44,16 @@ case class Switch(term: Expression, cases: List[Switch.Case]) extends RuntimeInv
     (cases collectFirst {
       // lambda: case n => n < 5.0 then 'Yes'
       case Switch.Case(lf: LambdaFunction, action) if isSatisfied(lf) =>
-        LollypopVM.execute(innerScope, action)
+        action.execute(innerScope)
       // literal: case n then n * 2
       case Switch.Case(value: Literal, action) if isTrue(EQ(term, value)) =>
-        LollypopVM.execute(scope, action)
+        action.execute(scope)
       // condition: case lvl > 5 then strength + 1
       case Switch.Case(cond: Condition, action) if isTrue(cond) =>
-        LollypopVM.execute(scope, action)
+        action.execute(scope)
       // pass-through: case n then n * 2
       case Switch.Case(ref: IdentifierRef, action) =>
-        LollypopVM.execute(scope.withVariable(ref.name, code = term, isReadOnly = true), action)
+        action.execute(scope.withVariable(ref.name, code = term, isReadOnly = true))
     }) || (scope, IOCost.empty, null)
   }
 

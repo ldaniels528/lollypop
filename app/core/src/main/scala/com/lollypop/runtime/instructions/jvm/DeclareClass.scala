@@ -4,9 +4,10 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_OBJECT_OR
 import com.lollypop.language.models.Expression.implicits.AsFunctionArguments
 import com.lollypop.language.models.{Atom, Expression, ParameterLike}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
 import com.lollypop.runtime.plastics.Plastic
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 import lollypop.lang.Null
@@ -33,7 +34,7 @@ case class DeclareClass(className: Atom, fields: List[ParameterLike]) extends Ru
     }
     // return the new scope and constructed object
     val (names, ops) = (nameValues.map(_._1), nameValues.map(_._2))
-    val values = LollypopVM.transform(scope, ops)._3
+    val values = ops.transform(scope)._3
     Plastic(this, names, values)
   }
 

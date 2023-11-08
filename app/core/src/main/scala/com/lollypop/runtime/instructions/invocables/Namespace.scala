@@ -3,7 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
 /**
@@ -13,13 +14,13 @@ import lollypop.io.IOCost
 case class Namespace(expression: Expression) extends RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (s, c, r) = LollypopVM.execute(scope, expression)
+    val (s, c, r) = expression.execute(scope)
     val s1 = r match {
       case null => scope
       case path: String =>
         path.split("[.]") match {
           case Array(database, schema) => scope.withDatabase(database).withSchema(schema)
-          case Array(database) => scope.withDatabase(database)
+          case Array(database) => s.withDatabase(database)
           case _ => expression.die("Incorrect arguments: namespace 'myDatabase[.mySchema]'")
         }
       case value => dieUnsupportedType(value)

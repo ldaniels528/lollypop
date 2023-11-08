@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{CodeBlock, Condition, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec
@@ -31,7 +32,7 @@ case class DoWhile(code: Instruction, condition: Condition) extends RuntimeInvok
         case CodeBlock(ops) => InlineCodeBlock(ops)
         case op => op
       }
-      val (s, c, r) = LollypopVM.execute(scope, _code)
+      val (s, c, r) = _code.execute(scope)
       if (!s.isReturned && RuntimeCondition.isTrue(condition)(s)) recurse(s) else (s, c, r)
     }
 

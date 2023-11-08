@@ -4,10 +4,11 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATI
 import com.lollypop.language._
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.{QMap, Row}
 import com.lollypop.runtime.instructions.expressions.Infix
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -76,7 +77,7 @@ case class ScopeModificationBlock(instructions: List[ScopeModification]) extends
       case (aggScope, SetAnyVariable(name, instruction)) =>
         aggScope.setVariable(name.getNameOrDie, instruction)
       case (aggScope, instruction) =>
-        LollypopVM.execute(aggScope, instruction)._1
+        instruction.execute(aggScope)._1
     }
     (s, IOCost.empty, null)
   }
@@ -114,13 +115,13 @@ case class SetVariableExpression(ref: Expression, expression: Expression) extend
           // invoke the segment's setter
           (inst, names.last) match {
             case (r: Row, fieldName) =>
-              (r.getField(fieldName) || expression.dieNoSuchColumn(fieldName)).value = Option(LollypopVM.execute(scope, expression)._3)
+              (r.getField(fieldName) || expression.dieNoSuchColumn(fieldName)).value = Option(expression.execute(scope)._3)
             case (p: Product, fieldName) =>
               p.invokeMethod(name = s"${fieldName}_$$eq", params = List(expression))
             case (m: java.util.Map[String, Any], fieldName) =>
-              m.put(fieldName, LollypopVM.execute(scope, expression)._3)
+              m.put(fieldName, expression.execute(scope)._3)
             case (m: mutable.Map[String, Any], fieldName) =>
-              m.put(fieldName, LollypopVM.execute(scope, expression)._3)
+              m.put(fieldName, expression.execute(scope)._3)
             case _ => setter.dieIllegalType()
           }
           (scope, IOCost.empty, null)

@@ -3,7 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
 import java.util.concurrent.atomic.AtomicBoolean
@@ -15,7 +16,7 @@ case class Once(code: Instruction) extends RuntimeInvokable {
   private val invoked = new AtomicBoolean(false)
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    if (invoked.compareAndSet(false, true)) LollypopVM.execute(scope, code) else (scope, IOCost.empty, null)
+    if (invoked.compareAndSet(false, true)) code.execute(scope) else (scope, IOCost.empty, null)
   }
 
   override def toSQL: String = s"once ${code.toSQL}"

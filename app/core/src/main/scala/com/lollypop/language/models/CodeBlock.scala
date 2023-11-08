@@ -1,8 +1,9 @@
 package com.lollypop.language.models
 
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.invocables.ScopedCodeBlock
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -62,7 +63,7 @@ object CodeBlock extends InvokableParser {
 
   def summarize(scope0: Scope, instructions: List[Instruction]): (Scope, IOCost, Any) = {
     instructions.foldLeft[(Scope, IOCost, Any)]((scope0, IOCost.empty, None)) { case ((s0, c0, _), instruction) =>
-      val (s1, c1, r1) = LollypopVM.execute(s0, instruction)
+      val (s1, c1, r1) = instruction.execute(s0)
       (s1, c0 ++ c1, r1)
     }
   }

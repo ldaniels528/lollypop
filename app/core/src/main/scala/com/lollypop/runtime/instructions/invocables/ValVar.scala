@@ -4,9 +4,10 @@ import com.lollypop.language.ColumnTypeParser.nextColumnType
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, ColumnType, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.instructions.queryables.{RowsOfValues, TableLiteral}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -28,7 +29,7 @@ case class ValVar(ref: Atom, `type`: Option[ColumnType], initialValue: Option[In
   extends RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (scopeR, costR, resultR) = initialValue.map(LollypopVM.execute(scope, _)) || (scope, IOCost.empty, None)
+    val (scopeR, costR, resultR) = initialValue.map(_.execute(scope)) || (scope, IOCost.empty, None)
     val dataType = `type`.map(_type => DataType.load(_type)(scope)) || AnyType
     (scopeR.withVariable(ref.name, `type` = dataType, resultR, isReadOnly), costR, null)
   }
