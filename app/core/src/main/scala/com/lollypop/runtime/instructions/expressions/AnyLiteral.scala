@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.TokenStream
 import com.lollypop.language.models.Literal
-import com.lollypop.runtime.LollypopVM.execute
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 import com.lollypop.runtime.instructions.expressions.AnyLiteral.StringInterpolation
@@ -72,7 +72,7 @@ object AnyLiteral {
         if (!isDone) {
           // extract the tag's contents and parse the property (name and possibly property)
           val tag = sb.substring(start + 2, end).trim
-          val replacement = scope.getCompiler.nextExpression(TokenStream(tag)).flatMap(v => Option(execute(scope, v)._3)) ?? scope.apply(tag)
+          val replacement = scope.getCompiler.nextExpression(TokenStream(tag)).flatMap(v => Option(v.execute(scope)._3)) ?? scope.apply(tag)
           sb.replace(start, end + 2, replacement.map(_.toString).getOrElse(""))
         }
         last = start

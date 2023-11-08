@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{ArrayExpression, Expression, Instruction, Queryable}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedEntity}
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -20,12 +21,12 @@ case class IN(expr: Expression, source: Instruction) extends RuntimeCondition {
       case a: ArrayFromRange.Exclusive => Betwixt(expr, a.start, a.end).execute()
       case a: ArrayFromRange.Inclusive => Between(expr, a.start, a.end).execute()
       case a: ArrayLiteral =>
-        val (s1, c1, value) = LollypopVM.execute(scope, expr)
-        val (s2, c2, rows) = LollypopVM.transform(s1, a.value)
+        val (s1, c1, value) = expr.execute(scope)
+        val (s2, c2, rows) = a.value.transform(s1)
         (s2, c1 ++ c2, rows.contains(value))
       case q: Queryable =>
-        val (s1, c1, value) = LollypopVM.execute(scope, expr)
-        val (s2, c2, device) = LollypopVM.search(s1, q)
+        val (s1, c1, value) = expr.execute(scope)
+        val (s2, c2, device) = q.search(s1)
         (s2, c1 ++ c2, device.exists(_.getField(0).value == value))
       case unknown => dieUnsupportedEntity(unknown, entityName = "queryable")
     }

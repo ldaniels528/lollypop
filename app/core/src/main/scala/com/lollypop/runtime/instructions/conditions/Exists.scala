@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -13,7 +14,7 @@ import lollypop.io.IOCost
  */
 case class Exists(instruction: Instruction) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (s, c, r) = LollypopVM.execute(scope, instruction)
+    val (s, c, r) = instruction.execute(scope)
     (s, c, r match {
       case d: RowCollection => d.getLength > 0
       case _ => false

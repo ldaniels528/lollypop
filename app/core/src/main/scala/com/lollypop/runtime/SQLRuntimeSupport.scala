@@ -6,6 +6,7 @@ import com.lollypop.language.dieUnsupportedEntity
 import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models.Inequality.toInequalities
 import com.lollypop.language.models.{AllFields, Condition, Expression, FieldRef, Function, Inequality, Literal, OrderColumn, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
 import com.lollypop.runtime.LollypopVM.sort
 import com.lollypop.runtime.SQLRuntimeSupport.ColumnValidation
 import com.lollypop.runtime.datatypes.Inferences.{InstructionTyping, resolveType}
@@ -75,7 +76,7 @@ trait SQLRuntimeSupport {
    * @return a new [[RowCollection collection]] containing the results
    */
   private def selectAndAggregate(scope: Scope, select: Select): (IOCost, RowCollection) = {
-    val (scope0, cost0, source) = select.from.map(LollypopVM.search(scope, _)) || select.dieMissingSource()
+    val (scope0, cost0, source) = select.from.map(_.search(scope)) || select.dieMissingSource()
     val selectedColumns: Seq[TableColumn] = getTransformationColumns(select.fields, source.columns)
     val selectedFields: Seq[Expression] = expandSelection(select.fields, selectedColumns).validate
     val out = createQueryResultTable(selectedColumns)
@@ -137,7 +138,7 @@ trait SQLRuntimeSupport {
     val results = select.fields.map {
       case AllFields => die("All fields (*) cannot be expanded without a query source")
       case expr =>
-        val value = LollypopVM.execute(scope, expr)._3
+        val value = expr.execute(scope)._3
         val column = TableColumn(name = expr.getNameOrDie, `type` = Inferences.fromValue(value))
         (column, value)
     }
@@ -159,7 +160,7 @@ trait SQLRuntimeSupport {
    * @return a new [[RowCollection collection]] containing the results
    */
   private def selectAndTransform(select: Select)(implicit scope: Scope): (IOCost, RowCollection) = {
-    val (_, cost0, source) = select.from.map(LollypopVM.search(scope, _)) || select.dieMissingSource()
+    val (_, cost0, source) = select.from.map(_.search(scope)) || select.dieMissingSource()
     val selectedColumns = getTransformationColumns(select.fields, source.columns)
     val selectedFields = expandSelection(select.fields, selectedColumns)
     val isExpansion = selectedFields.exists(_.isInstanceOf[UnNest])
@@ -167,7 +168,7 @@ trait SQLRuntimeSupport {
     // generate the results
     val out = createMemoryTable(selectedColumns)
     val cost1 = source.iterateWhere(select.where, select.limit)(_.isActive) { (rowScope, incomingRow) =>
-      val rawValues = selectedFields.map(LollypopVM.execute(rowScope, _)._3)
+      val rawValues = selectedFields.map(_.execute(rowScope)._3)
       processOutgoingRow(selectedColumns, incomingRow, rawValues.map(Option.apply), isExpansion)(out)
     }
 
@@ -255,7 +256,7 @@ trait SQLRuntimeSupport {
     val out = createQueryResultTable(selectedColumns)
     joinRows(primary, secondaries, select.limit) { case (scope2, row) =>
       assert(scope2.getCurrentRow contains row)
-      val (_, c2, values) = LollypopVM.transform(scope2, selectedFields)
+      val (_, c2, values) = selectedFields.transform(scope2)
       val targetRow = Map(selectedColumns.map(_.name) zip values: _*) ++ Map(SRC_ROWID_NAME -> row.id)
       out.insert(targetRow.toRow(out))
     }(scope1)
@@ -379,7 +380,7 @@ trait SQLRuntimeSupport {
   }
 
   private def createJoinDevice(q: Queryable, joinColumnNames: String*)(implicit scope: Scope): (IOCost, RowCollection with CursorSupport) = {
-    val (_, cost0, rc0) = LollypopVM.search(scope, q)
+    val (_, cost0, rc0) = q.search(scope)
     val (cost1, rc1) = sort(rc0, joinColumnNames.map(column => OrderColumn(name = column, isAscending = true)))
     (cost0 ++ cost1, CursorSupport(rc1))
   }

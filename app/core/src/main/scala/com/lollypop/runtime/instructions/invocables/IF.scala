@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.isTrue
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -18,7 +19,7 @@ case class IF(condition: Condition, onTrue: Instruction, onFalse: Option[Instruc
   extends RuntimeInvokable with Expression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    @inline def run(op: Instruction): (Scope, IOCost, Any) = LollypopVM.execute(scope, op)
+    @inline def run(op: Instruction): (Scope, IOCost, Any) = op.execute(scope)
 
     if (isTrue(condition)) run(onTrue) else onFalse.map(run).getOrElse((scope, IOCost.empty, null))
   }

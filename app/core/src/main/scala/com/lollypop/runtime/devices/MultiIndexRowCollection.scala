@@ -2,6 +2,7 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.die
 import com.lollypop.language.models.{Condition, Expression, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.IndexedRowCollection.{BUCKETS, getHashIndexTableColumns}
 import com.lollypop.runtime.devices.errors.{UniqueKeyAlreadyExistsError, UniqueKeyCannotBeDisabledError}
 import com.lollypop.runtime.{DatabaseObjectNS, LollypopVM, ROWID, Scope}
@@ -40,7 +41,7 @@ class MultiIndexRowCollection(val baseTable: RowCollection,
     if (args.nonEmpty) {
       (for {
         (columnID, instruction) <- args
-        searchValue = Option(LollypopVM.execute(scope, instruction)._3)
+        searchValue = Option(instruction.execute(scope)._3)
       } yield indices(columnID).processIndex(searchValue, condition, limit)(includeRow)(process)) match {
         case Nil => IOCost()
         case list => list.reduce(_ ++ _)

@@ -3,11 +3,12 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
@@ -27,12 +28,12 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
     val featureState = scenarios.foldLeft[FeatureState](fs0) {
       // is it a scenario?
       case (state, scenario: Scenario) =>
-        val (scopeA, costA, resultA) = LollypopVM.execute(resolveScope(scenario, state), scenario)
+        val (scopeA, costA, resultA) = scenario.execute(resolveScope(scenario, state))
         if (resultA == true) completedScenario(scenario, state, scopeA)
         else failedScenario(scenario, state, scopeA)
       // any other instruction
       case (state, instruction) =>
-        val (scopeA, costA, _) = LollypopVM.execute(state.scope, instruction)
+        val (scopeA, costA, _) = instruction.execute(state.scope)
         state.copy(scope = scopeA)
     }
     featureState.println(s"completed: passed: ${featureState.passed}, failed: ${featureState.failed}")
@@ -83,7 +84,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
 
     scenario.inherits match {
       case Some(titleExpr) =>
-        LollypopVM.execute(scope, titleExpr)._3 match {
+        titleExpr.execute(scope)._3 match {
           case title: String => getReferencedScope(title, titleExpr)
           case titles: Array[String] =>
             titles.foldLeft(scope) { case (aggScope, title) =>
@@ -129,85 +130,85 @@ object Feature extends InvokableParser {
     syntax = template,
     description = "Feature-based test declaration",
     example =
-     s"""|namespace 'temp.examples'
-         |
-         |// startup a listener node
-         |val port = nodeStart()
-         |
-         |// create a table
-         |drop if exists Travelers
-         |create table Travelers (id: UUID, lastName: String(32), firstName: String(32), destAirportCode: String(3))
-         |insert into Travelers (id, lastName, firstName, destAirportCode)
-         ||-------------------------------------------------------------------------------|
-         || id                                   | lastName | firstName | destAirportCode |
-         ||-------------------------------------------------------------------------------|
-         || 7bd0b461-4eb9-400a-9b63-713af85a43d0 | JONES    | GARRY     | SNA             |
-         || 73a3fe49-df95-4a7a-9809-0bb4009f414b | JONES    | DEBBIE    | SNA             |
-         || e015fc77-45bf-4a40-9721-f8f3248497a1 | JONES    | TAMERA    | SNA             |
-         || 33e31b53-b540-45e3-97d7-d2353a49f9c6 | JONES    | ERIC      | SNA             |
-         || e4dcba22-56d6-4e53-adbc-23fd84aece72 | ADAMS    | KAREN     | DTW             |
-         || 3879ba60-827e-4535-bf4e-246ca8807ba1 | ADAMS    | MIKE      | DTW             |
-         || 3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b | JONES    | SAMANTHA  | BUR             |
-         || 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 | SHARMA   | PANKAJ    | LAX             |
-         ||-------------------------------------------------------------------------------|
-         |
-         |// create the webservice that reads from the table
-         |nodeAPI(port, '/api/temp/examples', {
-         |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
-         |     insert into Travelers (id, firstName, lastName, destAirportCode)
-         |     values ($$id, $$firstName, $$lastName, $$destAirportCode)
-         |  },
-         |  get: (firstName: String, lastName: String) => {
-         |     select * from Travelers where firstName is $$firstName and lastName is $$lastName
-         |  },
-         |  put: (id: Long, name: String) => {
-         |     update subscriptions set name = $$name where id is $$id
-         |  },
-         |  delete: (id: UUID) => {
-         |     delete from Travelers where id is $$id
-         |  }
-         |})
-         |
-         |// test the service
-         |feature "Traveler information service" {
-         |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
-         |    scenario "Testing that DELETE requests produce the correct result" {
-         |       http delete "http://0.0.0.0:{{port}}/api/temp/examples"
-         |           <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }
-         |       verify statusCode is 200
-         |    }
-         |    scenario "Testing that GET response contains specific field" {
-         |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
-         |       verify statusCode is 200
-         |           and body.size() >= 0
-         |           and body[0].id is '7bd0b461-4eb9-400a-9b63-713af85a43d0'
-         |    }
-         |    scenario "Testing that POST creates a new record" {
-         |        http post "http://0.0.0.0:{{port}}/api/temp/examples"
-         |           <~ { id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }
-         |        verify statusCode is 200
-         |    }
-         |    scenario "Testing that we GET the record we previously created" {
-         |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
-         |       verify statusCode is 200
-         |          and body matches [{
-         |              id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
-         |              firstName: "CHRIS",
-         |              lastName: "DANIELS",
-         |              destAirportCode: "DTW"
-         |          }]
-         |    }
-         |    scenario "Testing what happens when a response does not match the expected value" {
-         |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
-         |       verify statusCode is 200
-         |          and body.size() >= 0
-         |          and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
-         |          and body[0].firstName is "SAMANTHA"
-         |          and body[0].lastName is "JONES"
-         |          and body[0].destAirportCode is "BUR"
-         |    }
-         |}
-         |""".stripMargin
+      s"""|namespace 'temp.examples'
+          |
+          |// startup a listener node
+          |val port = nodeStart()
+          |
+          |// create a table
+          |drop if exists Travelers
+          |create table Travelers (id: UUID, lastName: String(32), firstName: String(32), destAirportCode: String(3))
+          |insert into Travelers (id, lastName, firstName, destAirportCode)
+          ||-------------------------------------------------------------------------------|
+          || id                                   | lastName | firstName | destAirportCode |
+          ||-------------------------------------------------------------------------------|
+          || 7bd0b461-4eb9-400a-9b63-713af85a43d0 | JONES    | GARRY     | SNA             |
+          || 73a3fe49-df95-4a7a-9809-0bb4009f414b | JONES    | DEBBIE    | SNA             |
+          || e015fc77-45bf-4a40-9721-f8f3248497a1 | JONES    | TAMERA    | SNA             |
+          || 33e31b53-b540-45e3-97d7-d2353a49f9c6 | JONES    | ERIC      | SNA             |
+          || e4dcba22-56d6-4e53-adbc-23fd84aece72 | ADAMS    | KAREN     | DTW             |
+          || 3879ba60-827e-4535-bf4e-246ca8807ba1 | ADAMS    | MIKE      | DTW             |
+          || 3d8dc7d8-cd86-48f4-b364-d2f40f1ae05b | JONES    | SAMANTHA  | BUR             |
+          || 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 | SHARMA   | PANKAJ    | LAX             |
+          ||-------------------------------------------------------------------------------|
+          |
+          |// create the webservice that reads from the table
+          |nodeAPI(port, '/api/temp/examples', {
+          |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
+          |     insert into Travelers (id, firstName, lastName, destAirportCode)
+          |     values ($$id, $$firstName, $$lastName, $$destAirportCode)
+          |  },
+          |  get: (firstName: String, lastName: String) => {
+          |     select * from Travelers where firstName is $$firstName and lastName is $$lastName
+          |  },
+          |  put: (id: Long, name: String) => {
+          |     update subscriptions set name = $$name where id is $$id
+          |  },
+          |  delete: (id: UUID) => {
+          |     delete from Travelers where id is $$id
+          |  }
+          |})
+          |
+          |// test the service
+          |feature "Traveler information service" {
+          |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
+          |    scenario "Testing that DELETE requests produce the correct result" {
+          |       http delete "http://0.0.0.0:{{port}}/api/temp/examples"
+          |           <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }
+          |       verify statusCode is 200
+          |    }
+          |    scenario "Testing that GET response contains specific field" {
+          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
+          |       verify statusCode is 200
+          |           and body.size() >= 0
+          |           and body[0].id is '7bd0b461-4eb9-400a-9b63-713af85a43d0'
+          |    }
+          |    scenario "Testing that POST creates a new record" {
+          |        http post "http://0.0.0.0:{{port}}/api/temp/examples"
+          |           <~ { id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }
+          |        verify statusCode is 200
+          |    }
+          |    scenario "Testing that we GET the record we previously created" {
+          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
+          |       verify statusCode is 200
+          |          and body matches [{
+          |              id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
+          |              firstName: "CHRIS",
+          |              lastName: "DANIELS",
+          |              destAirportCode: "DTW"
+          |          }]
+          |    }
+          |    scenario "Testing what happens when a response does not match the expected value" {
+          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
+          |       verify statusCode is 200
+          |          and body.size() >= 0
+          |          and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
+          |          and body[0].firstName is "SAMANTHA"
+          |          and body[0].lastName is "JONES"
+          |          and body[0].destAirportCode is "BUR"
+          |    }
+          |}
+          |""".stripMargin
   ))
 
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Feature] = {

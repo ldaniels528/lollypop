@@ -4,6 +4,7 @@ import com.lollypop.die
 import com.lollypop.language.models._
 import com.lollypop.language.{TokenStream, dieFunctionNotCompilable, dieNoSuchColumn, dieObjectAlreadyExists, dieObjectIsNotAUserFunction}
 import com.lollypop.runtime.DatabaseObjectConfig._
+import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.ResourceManager.RowCollectionTracker
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
@@ -442,7 +443,7 @@ trait DatabaseManagementSystem {
       ns.createRoot()
 
       // create the virtual table configuration file
-      val (_, cost0, result1) = LollypopVM.searchSQL(scope, view.query.toSQL)
+      val (_, cost0, result1) = view.query.toSQL.searchSQL(scope)
 
       // write the config
       val queryB64 = view.query.toSQL.getBytes().toBase64

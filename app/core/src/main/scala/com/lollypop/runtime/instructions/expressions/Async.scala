@@ -3,7 +3,8 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
 import com.lollypop.language.models.{Instruction, Invokable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
 import scala.concurrent.Future
@@ -16,7 +17,7 @@ case class Async(code: Instruction) extends RuntimeExpression with Invokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Future[Any]) = {
     import scala.concurrent.ExecutionContext.Implicits.global
-    (scope, IOCost.empty, Future(LollypopVM.execute(scope, code)._3))
+    (scope, IOCost.empty, Future(code.execute(scope)._3))
   }
 
   override def toSQL: String = s"async ${code.toSQL}"

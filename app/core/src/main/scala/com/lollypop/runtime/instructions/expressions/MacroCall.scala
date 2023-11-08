@@ -1,10 +1,11 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, Instruction, Modifiable, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.MacroCall.MacroTemplateTagReplacement
 import com.lollypop.runtime.instructions.infrastructure.Macro
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -24,7 +25,7 @@ case class MacroCall(_macro: Macro, params: Map[String, Any]) extends RuntimeInv
       case (agg, (key, instruction: Instruction)) => agg.withVariable(key, instruction, isReadOnly = true)
       case (agg, (key, value)) => agg.withVariable(key, value, isReadOnly = true)
     }
-    val (_, costA, resultA) = LollypopVM.execute(scope1, _macro.code)
+    val (_, costA, resultA) = _macro.code.execute(scope1)
     (scope, costA, resultA)
   }
 

@@ -3,6 +3,7 @@ package lollypop.lang
 import com.lollypop.AppConstants
 import com.lollypop.database.QueryResponse
 import com.lollypop.language.LollypopUniverse
+import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.lollypop.runtime.instructions.VerificationTools
@@ -21,26 +22,22 @@ class OSTest extends AnyFunSpec with VerificationTools {
   describe(classOf[OS].getSimpleName) {
 
     it("should change the current working directory") {
-      val (scope, _, _) = LollypopVM.executeSQL(Scope(),
-        """|OS.chdir('./app/examples')
-           |""".stripMargin)
+      val (scope, _, _) = "OS.chdir('./app/examples')".executeSQL(Scope())
       assert(scope.getUniverse.system.currentDirectory contains new File("./app/examples"))
     }
 
     it("""should compile and execute: "select 'Hello World' as message".evaluate()""") {
-      val (_, _, result) = LollypopVM.searchSQL(Scope(),
+      val (_, _, result) =
         """|val a = "select 'Hello World'"
            |val b = "message"
            |val code = OS.compile(a + " as " + b)
            |OS.run(code)
-           |""".stripMargin)
+           |""".stripMargin.searchSQL(Scope())
       assert(result.toMapGraph == List(Map("message" -> "Hello World")))
     }
 
     it("should execute: OS.getEnv()") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
-        """|from OS.getEnv() where name is 'HOME'
-           |""".stripMargin)
+      val (_, _, device) = "from OS.getEnv() where name is 'HOME'".searchSQL(Scope())
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
         Map("name" -> "HOME", "value" -> scala.util.Properties.userHome),
@@ -49,26 +46,22 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
     it("should execute: OS.exec('whoami')") {
       Try {
-        val (_, _, device) = LollypopVM.searchSQL(Scope(),
-          """|OS.exec('whoami')
-             |""".stripMargin)
+        val (_, _, device) = "OS.exec('whoami')".searchSQL(Scope())
         device.tabulate() foreach logger.info
       }
     }
 
     it("should execute: OS.execSystem('iostat 1 5')") {
       Try {
-        val (_, _, device) = LollypopVM.searchSQL(Scope(),
-          """|OS.execSystem('iostat 1 5').toList().toArray().toTable()
-             |""".stripMargin)
+        val (_, _, device) = "OS.execSystem('iostat 1 5').toList().toArray().toTable()".searchSQL(Scope())
         device.tabulate() foreach logger.info
       }
     }
 
     it("should execute: OS.listFiles('./app/examples/src/main/lollypop')") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|from OS.listFiles('./app/examples/src/main/lollypop') where name matches '.*[.]sql'
-           |""".stripMargin)
+           |""".stripMargin.searchSQL(Scope())
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
         "BlackJack.sql", "GenerateVinMapping.sql", "SwingDemo.sql", "MacroDemo.sql", "IngestDemo.sql",
@@ -77,9 +70,9 @@ class OSTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute: OS.listFiles('/examples/src/main/lollypop', true)") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|from OS.listFiles('./app/examples/src/', true) where name matches '.*[.]sql'
-           |""".stripMargin)
+           |""".stripMargin.searchSQL(Scope())
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
         "Contests.sql", "position_api.sql", "stock_api.sql", "StockQuotes.sql", "order_api.sql", "Participants.sql",
@@ -90,7 +83,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute: OS.read('README.md')") {
-      val (_, _, results) = LollypopVM.searchSQL(Scope(), "OS.read('README.md')")
+      val (_, _, results) = "OS.read('README.md')".searchSQL(Scope())
       results.tabulate(5) foreach logger.info
       assert(results.tabulate(5).mkString("\n") ==
         s"""||--------------------------------------------|
@@ -106,112 +99,104 @@ class OSTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute: OS.sizeOf(BitArray(3, 6, 9))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(BitArray(3, 6, 9))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 20)
     }
 
     it("should execute: OS.sizeOf(Byte(6))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Byte(6))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 1)
     }
 
     it("should execute: OS.sizeOf(ByteBuffer.allocate(32))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|import 'java.nio.ByteBuffer'
            |OS.sizeOf(ByteBuffer.allocate(32))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 32)
     }
 
     it("should execute: OS.sizeOf(Char('z'))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Char('z'))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 2)
     }
 
     it("should execute: OS.sizeOf(DateTime('2023-05-02T11:22:33.000Z'))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(DateTime('2023-05-02T11:22:33.000Z'))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 8)
     }
 
     it("should execute: OS.sizeOf(Double(5.8))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Double(5.8))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 8)
     }
 
     it("should execute: OS.sizeOf(new File('./build.sbt'))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|import 'java.io.File'
            |OS.sizeOf(new File('./build.sbt'))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == new File("./build.sbt").length())
     }
 
     it("should execute: OS.sizeOf(Float(5.8))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Float(5.8))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 4)
     }
 
     it("should execute: OS.sizeOf(Int(100))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Int(100))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 4)
     }
 
     it("should execute: OS.sizeOf(Long(100))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|OS.sizeOf(Long(100))
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 8)
     }
 
     it("should execute: OS.sizeOf(Short(100))") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
-        """|OS.sizeOf(Short(100))
-           |""".stripMargin)
+      val (_, _, value) = "OS.sizeOf(Short(100))".executeSQL(Scope())
       assert(value == 2)
     }
 
     it("should execute: OS.sizeOf(1.0)") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
-        """|OS.sizeOf(1.0)
-           |""".stripMargin)
+      val (_, _, value) = "OS.sizeOf(1.0)".executeSQL(Scope())
       assert(value == 8)
     }
 
     it("should execute: OS.sizeOf(DateTime())") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
-        """|OS.sizeOf(DateTime())
-           |""".stripMargin)
+      val (_, _, value) = "OS.sizeOf(DateTime())".executeSQL(Scope())
       assert(value == 8)
     }
 
     it("should execute: OS.sizeOf('Hello World')") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
-        """|OS.sizeOf('Hello World')
-           |""".stripMargin)
+      val (_, _, value) = "OS.sizeOf('Hello World')".executeSQL(Scope())
       assert(value == 11)
     }
 
     it("should execute: OS.sizeOf(stocks)") {
-      val (_, _, value) = LollypopVM.executeSQL(Scope(),
+      val (_, _, value) =
         """|val stocks = TableZoo(symbol: String(7), exchange: String(6), lastSale: Double, lastSaleTime: DateTime)
            |  .withMemorySupport(150)
            |  .build()
            |OS.sizeOf(stocks)
-           |""".stripMargin)
+           |""".stripMargin.executeSQL(Scope())
       assert(value == 6300)
     }
 

@@ -3,20 +3,22 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.Isnt.keyword
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
- * Isnt: `a` is not equal to `b`
+ * Returns true if the `a` is not exactly `b`
  * @param a the left-side [[Expression expression]]
  * @param b the right-side [[Expression expression]]
  */
 case class Isnt(a: Expression, b: Expression) extends RuntimeInequality {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val result = LollypopVM.execute(scope, a)._3 != LollypopVM.execute(scope, b)._3
-    (scope, IOCost.empty, result)
+    val (sa, ca, ra) = a.execute(scope)
+    val (sb, cb, rb) = b.execute(sa)
+    (sb, ca ++ cb, ra != rb)
   }
 
   override def operator: String = keyword

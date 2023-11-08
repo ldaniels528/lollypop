@@ -2,10 +2,11 @@ package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.dieUnsupportedEntity
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.BooleanType
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -29,7 +30,7 @@ object RuntimeCondition {
   def isTrue(expression: Expression)(implicit scope: Scope): Boolean = expression match {
     case c: RuntimeCondition => c.isTrue
     case e: RuntimeExpression => BooleanType.convert(e.execute()._3)
-    case q: RuntimeQueryable => BooleanType.convert(LollypopVM.search(scope, q)._3)
+    case q: RuntimeQueryable => BooleanType.convert(q.search(scope)._3)
     case u => dieUnsupportedEntity(u, entityName = "condition")
   }
 

@@ -3,15 +3,16 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Expression, Queryable}
 import com.lollypop.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.devices.RowCollectionZoo._
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 case class Limit(source: Queryable, limit: Option[Expression] = None) extends RuntimeQueryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    val (scope1, cost1, in) = LollypopVM.search(scope, source)
+    val (scope1, cost1, in) = source.search(scope)
     val out = createQueryResultTable(in.columns)
     val cost2 = in.iterateWhere(limit = limit)(_.isActive) { case (_, row) => out.insert(row) }(scope1)
     (scope1, cost1 ++ cost2, out)

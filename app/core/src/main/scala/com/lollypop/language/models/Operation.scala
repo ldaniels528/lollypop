@@ -1,6 +1,7 @@
 package com.lollypop.language.models
 
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.datatypes.Inferences.fastTypeResolve
 import com.lollypop.runtime.datatypes.Matrix
@@ -74,7 +75,8 @@ sealed trait Operation extends Expression with RuntimeInstruction {
 
     op match {
       case BinaryOperation(a, b) =>
-        val (aa, bb) = (LollypopVM.execute(scope, a)._3, LollypopVM.execute(scope, b)._3)
+        val (sa, ca, aa) = a.execute(scope)
+        val (sb, cb, bb) = b.execute(sa)
         (aa, bb) match {
           // dates & durations
           case (d: FiniteDuration, t: Date) => evaluateAny(t, d)

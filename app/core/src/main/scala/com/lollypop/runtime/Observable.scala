@@ -1,6 +1,7 @@
 package com.lollypop.runtime
 
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 
 import scala.language.implicitConversions
@@ -78,9 +79,9 @@ object Observable {
   private case class ObservableCondition(condition: Condition, refs: List[String], code: Instruction) extends Observable {
     override def execute(instruction: Instruction, name: String, result: Any)(implicit scope0: Scope): Unit = {
       // is the whenever condition satisfied?
-      val (scope1, cost1, result1) = LollypopVM.execute(scope0, condition)
+      val (scope1, cost1, result1) = condition.execute(scope0)
       // if so, execute the code
-      if (result1 == true) LollypopVM.execute(scope1, code)
+      if (result1 == true) code.execute(scope1)
     }
 
     override def understands(instruction: Instruction, name: String): Boolean = refs contains name
@@ -96,7 +97,7 @@ object Observable {
       val scope1 = scope0
         .withVariable(__INSTRUCTION__, value = instruction.toSQL)
         .withVariable(__RETURNED__, value = result)
-      LollypopVM.execute(scope1, code)
+      code.execute(scope1)
     }
 
     override def understands(instruction: Instruction, name: String): Boolean = instruction.toSQL.matches(pattern)

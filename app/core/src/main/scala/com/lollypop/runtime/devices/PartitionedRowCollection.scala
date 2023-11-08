@@ -2,11 +2,12 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.die
 import com.lollypop.language.models.{Condition, Expression}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
 import com.lollypop.runtime.devices.PartitionedRowCollection.PartitionedRange
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{EQ, Is}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, LollypopVM, ROWID, Scope, safeCast}
+import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope, safeCast}
 import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
@@ -69,16 +70,18 @@ class PartitionedRowCollection[T](val ns: DatabaseObjectNS,
     })
 
     // evaluate the search keys and convert them to Option[T]
-    val searchKeys = LollypopVM.evaluate(scope, searchKeyExpressions).map(safeCast[T])
+    val (s, c, r) = searchKeyExpressions.transform(scope)
+    val searchKeys = r.map(safeCast[T])
 
     // if EQ condition(s) based on partition key(s) were found ...
-    if (searchKeys.exists(_.nonEmpty)) {
+    val cost = if (searchKeys.exists(_.nonEmpty)) {
       (for {
         searchKey_? <- searchKeys
         searchKey <- searchKey_?
         device <- partitionMap.get(searchKey)
       } yield device.iterateWhere(condition, limit)(includeRow)(process)).reduce(_ ++ _)
     } else super.iterateWhere(condition, limit)(includeRow)(process)
+    cost ++ c
   }
 
   override def readField(rowID: ROWID, columnID: Int): Field = {

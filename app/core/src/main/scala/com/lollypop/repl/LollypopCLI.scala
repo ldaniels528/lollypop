@@ -3,9 +3,12 @@ package com.lollypop.repl
 import com.lollypop.AppConstants._
 import com.lollypop.database.server.LollypopChartGenerator
 import com.lollypop.language.LollypopUniverse
+import com.lollypop.language.LollypopUniverse.overwriteOpCodesConfig
 import com.lollypop.repl.LollypopCLI.logger
 import com.lollypop.repl.REPLTools.getResourceFile
 import com.lollypop.runtime.LollypopCodeDebugger.createInteractiveConsoleReader
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo._
 import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
@@ -13,14 +16,14 @@ import com.lollypop.runtime.devices.{Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopCodeDebugger, LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopCodeDebugger, LollypopCompiler, LollypopVM, Scope, getServerRootDirectory}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
+import lollypop.io.IOCost
 import org.jfree.chart.ChartPanel
 import org.slf4j.LoggerFactory
-import lollypop.io.IOCost
 
 import java.awt.Dimension
 import java.io.{File, FileInputStream}
@@ -41,9 +44,20 @@ object LollypopCLI extends LollypopCLI {
     Console.println(s"$RESET${GREEN}Q${CYAN}W${MAGENTA}E${RED}R${BLUE}Y$YELLOW SHELL v$version$RESET")
     Console.println()
 
+    createOpCodesConfigIfNotExists()
+
     implicit val compiler: LollypopCompiler = LollypopCompiler()
     cli(args, scope0 = Scope(LollypopUniverse()))
     ()
+  }
+
+  private def createOpCodesConfigIfNotExists(): Unit = {
+    // create the "opcodes.txt" file?
+    val opCodesFile = getServerRootDirectory / "opcodes.txt"
+    if (!opCodesFile.exists() || opCodesFile.length() == 0) {
+      logger.info(s"creating '${opCodesFile.getPath}'...")
+      overwriteOpCodesConfig(opCodesFile)
+    }
   }
 
 }
@@ -100,7 +114,7 @@ trait LollypopCLI extends LollypopCodeDebugger {
     val scriptFile = new File(file)
     Console.println(s"Executing SQL file '${scriptFile.getAbsolutePath}'...")
     val code = new FileInputStream(scriptFile).use(scope0.getCompiler.compile)
-    LollypopVM.execute(scope0, code)
+    code.execute(scope0)
   }
 
   private def executeQuery(scope: Scope, sql: String): Scope = {

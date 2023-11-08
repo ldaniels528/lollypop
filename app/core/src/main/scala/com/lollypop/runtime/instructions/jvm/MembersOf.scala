@@ -2,6 +2,8 @@ package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Expression, ParameterLike}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType, StringType, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
@@ -14,7 +16,6 @@ import com.lollypop.runtime.plastics.Plastic.implicits.MethodNameConverter
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.decodeModifiers
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -31,7 +32,7 @@ case class MembersOf(expression: Expression) extends ScalarFunctionCall with Run
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     // get the class components
     val comp_? = for {
-      (_instance, _class) <- Option(LollypopVM.execute(scope, expression)._3) map {
+      (_instance, _class) <- Option(expression.execute(scope)._3) map {
         case c: Class[_] => c -> c
         case x => x -> x.getClass
       }

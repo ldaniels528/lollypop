@@ -3,12 +3,13 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.Instruction
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{BooleanType, StringType, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -18,7 +19,7 @@ import lollypop.io.IOCost
 case class Describe(queryable: Instruction) extends RuntimeQueryable with TableExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    val (scope1, cost1, result1) = LollypopVM.search(scope, queryable)
+    val (scope1, cost1, result1) = queryable.search(scope)
     val columns = result1.columns
     implicit val out: RowCollection = createQueryResultTable(columns = returnType.columns)
     val cost2 = columns map { column =>

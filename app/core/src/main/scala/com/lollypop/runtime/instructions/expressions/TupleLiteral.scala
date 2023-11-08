@@ -3,10 +3,11 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
 import com.lollypop.language.models._
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.instructions.functions.ArgumentBlock
 import com.lollypop.runtime.plastics.Tuples.seqToTuple
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -16,7 +17,7 @@ import lollypop.io.IOCost
 case class TupleLiteral(args: List[Expression]) extends RuntimeExpression with ArgumentBlock with Literal {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (scopeA, costA, values) = LollypopVM.transform(scope, args)
+    val (scopeA, costA, values) = args.transform(scope)
     (scopeA, costA, seqToTuple(values).orNull)
   }
 

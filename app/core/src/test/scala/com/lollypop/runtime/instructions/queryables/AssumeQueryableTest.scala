@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.LollypopException
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import AssumeQueryable.EnrichedAssumeQueryable
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
 import org.scalatest.funspec.AnyFunSpec
 
 class AssumeQueryableTest extends AnyFunSpec {
@@ -19,13 +20,13 @@ class AssumeQueryableTest extends AnyFunSpec {
     it("should fail if the host instruction does not evaluate as a Queryable") {
       assertThrows[LollypopException] {
         val model = ArrayLiteral(1.v, 2.v, 3.v).asQueryable
-        LollypopVM.search(Scope(), model)
+        model.search(Scope())
       }
     }
 
     it("should lazily evaluate a Queryable") {
       val model = AssumeQueryable(This())
-      LollypopVM.search(Scope(), model)
+      model.search(Scope())
     }
 
   }

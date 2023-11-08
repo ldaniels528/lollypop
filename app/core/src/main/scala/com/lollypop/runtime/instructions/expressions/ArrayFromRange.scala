@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.dieUnsupportedType
 import com.lollypop.language.models.{ArrayExpression, Expression}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -23,7 +24,9 @@ object ArrayFromRange {
   def unapply(r: ArrayFromRange): Option[(Expression, Expression)] = Some((r.start, r.end))
 
   private def evaluateRange(start: Expression, end: Expression)(implicit scope: Scope): Option[(Any, Any, DataType)] = {
-    for {a <- Option(LollypopVM.execute(scope, start)._3); b <- Option(LollypopVM.execute(scope, end)._3)} yield {
+    val (sa, ca, ra) = start.execute(scope)
+    val (sb, cb, rb) = end.execute(sa)
+    for {a <- Option(ra); b <- Option(rb)} yield {
       val (typeA, typeB) = (fromValue(a), fromValue(b))
       assert(typeA == typeB, "type mismatch")
       (a, b, typeA)

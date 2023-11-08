@@ -2,8 +2,9 @@ package com.lollypop.runtime.instructions.operators
 
 import com.lollypop.language.models.{Expression, UnaryOperation}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -15,7 +16,8 @@ case class NEG(a: Expression) extends RuntimeExpression with UnaryOperation {
   override val operator: String = "-"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val result = LollypopVM.execute(scope, a)._3 match {
+    val (sa, ca, ra) = a.execute(scope)
+    (sa, ca, ra match {
       case b: Byte => -b
       case d: Double => -d
       case f: Float => -f
@@ -30,8 +32,7 @@ case class NEG(a: Expression) extends RuntimeExpression with UnaryOperation {
       case s: Short => -s
       case n: Number => -n.doubleValue()
       case _ => a.dieExpectedNumeric()
-    }
-    (scope, IOCost.empty, result)
+    })
   }
 
 }

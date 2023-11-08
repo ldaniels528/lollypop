@@ -4,6 +4,7 @@ import com.lollypop.language.Token.TableToken
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, FieldRef, Literal}
 import com.lollypop.language.{ExpressionParser, HelpDoc, QueryableParser, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
@@ -39,7 +40,7 @@ case class TableLiteral(columns: List[TableColumn], value: List[List[Expression]
     val device = createTempTable(columns, fixedRowCount = value.size)
     val columnNames = columns.map(_.name)
     val cost = (for {
-      values <- value.map(_.map(LollypopVM.execute(scope, _)._3))
+      values <- value.map(_.map(_.execute(scope)._3))
       mapping = Map(columnNames zip values: _*)
     } yield device.insert(mapping.toRow(device))) reduce (_ ++ _)
     (scope, cost, device)

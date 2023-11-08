@@ -3,9 +3,10 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.database.server.LollypopServers
 import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
 import com.lollypop.language.models.{Expression, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Int32Type, StringType}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -21,8 +22,8 @@ import lollypop.io.IOCost
 case class NodeExec(portExpr: Expression, sqlExpr: Expression) extends ScalarFunctionCall
   with RuntimeExpression with Queryable {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (scope1, cost1, result1) = LollypopVM.execute(scope, portExpr)
-    val (scope2, cost2, result2) = LollypopVM.execute(scope1, sqlExpr)
+    val (scope1, cost1, result1) = portExpr.execute(scope)
+    val (scope2, cost2, result2) = sqlExpr.execute(scope1)
     val port = Int32Type.convert(result1)
     val sql = StringType.convert(result2)
     LollypopServers.evaluate(port, sql, scope2).get match {

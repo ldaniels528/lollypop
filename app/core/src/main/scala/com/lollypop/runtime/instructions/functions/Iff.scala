@@ -2,9 +2,10 @@ package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Condition, Expression}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.isTrue
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -18,7 +19,7 @@ case class Iff(condition: Expression, trueValue: Expression, falseValue: Express
   extends ScalarFunctionCall with RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    LollypopVM.execute(scope, if (isTrue(condition)) trueValue else falseValue)
+    (if (isTrue(condition)) trueValue else falseValue).execute(scope)
   }
 
 }

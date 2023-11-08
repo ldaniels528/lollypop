@@ -5,6 +5,7 @@ import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
 import com.lollypop.language.models._
 import com.lollypop.language.{LollypopUniverse, dieIllegalType, dieNoSuchColumnOrVariable, dieNoSuchFunction, dieObjectIsNotADatabaseDevice, dieUnsupportedType}
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
@@ -16,10 +17,10 @@ import com.lollypop.runtime.instructions.functions.{DataTypeConstructor, Interna
 import com.lollypop.runtime.instructions.invocables.EOL
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.util.LogUtil
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
+import com.lollypop.util.{ClassPathHelper, LogUtil}
 
 import java.io.{PrintWriter, StringWriter}
 import java.lang.reflect.Method
@@ -45,20 +46,25 @@ case class DefaultScope(superScope: Option[Scope] = None,
                         valueReferences: Map[String, ValueReference] = Map())
   extends Scope with TableExpression {
 
-  private val specialVariables: Map[String, () => Any] = Map(
-    __scope__ -> { () => this },
-    __imports__ -> { () => getImports },
-    __implicit_imports__ -> { () =>
-      getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)
-        .map { case (k, values) => k -> values.map(_._2).toSet }
-    },
-    __loaded__ -> { () => getUniverse.system.getReferencedEntities },
-    __namespace__ -> { () => (apply(__database__) || DEFAULT_DATABASE) + "." + (apply(__schema__) || DEFAULT_SCHEMA) },
-    __resources__ -> { () => ResourceManager.getResources },
-    __userHome__ -> { () => scala.util.Properties.userHome },
-    __userName__ -> { () => scala.util.Properties.userName },
-    __version__ -> { () => version }
-  )
+  private val specialVariables: Map[String, () => Any] = {
+    val m = Map(
+      __scope__ -> { () => this },
+      __classpath__ -> { () => ClassPathHelper },
+      __imports__ -> { () => getImports },
+      __implicit_imports__ -> { () =>
+        getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)
+          .map { case (k, values) => k -> values.map(_._2).toSet }
+      },
+      __keywords__ -> { () => getUniverse.getKeywords.distinct.toArray },
+      __loaded__ -> { () => getUniverse.system.getReferencedEntities },
+      __namespace__ -> { () => (apply(__database__) || DEFAULT_DATABASE) + "." + (apply(__schema__) || DEFAULT_SCHEMA) },
+      __resources__ -> { () => ResourceManager.getResources },
+      __userHome__ -> { () => scala.util.Properties.userHome },
+      __userName__ -> { () => scala.util.Properties.userName },
+      __version__ -> { () => version }
+    )
+    m ++ Map("__secret_variables__" -> { () => m.keys.toArray })
+  }
 
   override def ++(that: Scope): Scope = {
     DefaultScope(
@@ -325,7 +331,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
   ))
 
   override def setVariable(name: String, instruction: Instruction): Scope = {
-    val (scopeA, _, valueA) = LollypopVM.execute(this, instruction)
+    val (scopeA, _, valueA) = instruction.execute(this)
     scopeA.setVariable(name, valueA)
   }
 
@@ -405,7 +411,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
   }
 
   override def withArguments[A <: ParameterLike](params: Seq[A], args: Seq[Any]): Scope = {
-    val values = params.zipWithIndex.map { case (param, n) => if (args.length > n) args(n) else param.defaultValue.map(LollypopVM.execute(this, _)._3).orNull }
+    val values = params.zipWithIndex.map { case (param, n) => if (args.length > n) args(n) else param.defaultValue.map(_.execute(this)._3).orNull }
     withArguments(keyValues = params.map(_.name) zip values)
   }
 
@@ -431,7 +437,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
 
   override def withParameters[A <: ParameterLike](params: Seq[A], args: Seq[Instruction]): Scope = {
     val ops = params.zipWithIndex.map { case (param, n) => if (args.length > n) args(n) else param.defaultValue getOrElse EOL }
-    val values = ops.map(op => LollypopVM.execute(this, op)._3)
+    val values = ops.map(_.execute(this)._3)
     withArguments(keyValues = params.map(_.name) zip values)
   }
 
@@ -460,7 +466,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
     case udf: TypicalFunction =>
       withVariable(name, value = udf.asInstanceOf[Any], isReadOnly)
     case op =>
-      val (_, _, result) = LollypopVM.execute(this, op)
+      val (_, _, result) = op.execute(this)
       this.withVariable(name, value = result, isReadOnly)
   }
 

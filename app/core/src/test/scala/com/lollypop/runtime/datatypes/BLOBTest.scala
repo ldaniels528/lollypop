@@ -1,5 +1,6 @@
 package com.lollypop.runtime.datatypes
 
+import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -52,7 +53,7 @@ class BLOBTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should create a BLOB from a RowCollection") {
-      val (_, _, stocksBlob) = LollypopVM.searchSQL(Scope(),
+      val (_, _, stocksBlob) =
         """|val stocks = 
            | |---------------------------------------------------------|
            | | symbol | exchange | lastSale | lastSaleTime             |
@@ -64,7 +65,7 @@ class BLOBTest extends AnyFunSpec with VerificationTools {
            | |---------------------------------------------------------|
            |val stocksBlob = BLOB(stocks)
            |@stocksBlob
-           |""".stripMargin)
+           |""".stripMargin.searchSQL(Scope())
       assert(stocksBlob.toMapGraph == List(
         Map("symbol" -> "BXXG", "exchange" -> "NASDAQ", "lastSale" -> 147.63, "lastSaleTime" -> DateHelper.from(1596317591000L)),
         Map("symbol" -> "KFFQ", "exchange" -> "NYSE", "lastSale" -> 22.92, "lastSaleTime" -> DateHelper.from(1596317591000L)),

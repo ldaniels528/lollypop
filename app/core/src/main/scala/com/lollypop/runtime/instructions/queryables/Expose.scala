@@ -4,6 +4,7 @@ import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{BooleanType, StringType, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
@@ -30,7 +31,7 @@ case class Expose(expression: Expression) extends ScalarFunctionCall with Runtim
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     expression match {
       case Matches(source, pattern) =>
-        val rows = exposeMatch(src = LollypopVM.execute(scope, source)._3, pattern = LollypopVM.execute(scope, pattern)._3)
+        val rows = exposeMatch(src = source.execute(scope)._3, pattern = pattern.execute(scope)._3)
         val out = createQueryResultTable(returnType.columns)
         val cost = out.insert(rows.map(_.toRow(out)))
         (scope, cost, out)
@@ -73,7 +74,7 @@ object Expose extends FunctionCallParserE1(
   private def exposeAnonymousFunction(a: Any, b: AnonymousFunction)(implicit scope: Scope): Map[String, Any] = {
     val value = a.v
     val fx = b.call(List(value))
-    Map("expression" -> b.toSQL, "value" -> value.toSQL, "result" -> (LollypopVM.execute(scope, fx)._3 == true))
+    Map("expression" -> b.toSQL, "value" -> value.toSQL, "result" -> (fx.execute(scope)._3 == true))
   }
 
   private def exposeMatchMap(src: QMap[String, _], pattern: QMap[String, _])(implicit scope: Scope): List[QMap[String, Any]] = {

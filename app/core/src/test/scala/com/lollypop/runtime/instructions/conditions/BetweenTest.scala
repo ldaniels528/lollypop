@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, Scope}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 
@@ -52,7 +53,7 @@ class BetweenTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should execute a query against a table literal using between") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|from (
            ||-------------------------------------------------------------------------|
            || ticker | market | lastSale | roundedLastSale | lastSaleTime             |
@@ -65,7 +66,7 @@ class BetweenTest extends AnyFunSpec with VerificationTools {
            ||-------------------------------------------------------------------------|
            |) where lastSale between 28.2808 and 42.5934
            |  order by lastSale desc
-           |""".stripMargin)
+           |""".stripMargin.searchSQL(Scope())
       assert(device.toMapGraph == List(
         Map("market" -> "AMEX", "roundedLastSale" -> 42.5, "lastSale" -> 42.5934, "lastSaleTime" -> DateHelper("2022-09-04T23:36:47.865Z"), "ticker" -> "ESCN"),
         Map("market" -> "AMEX", "roundedLastSale" -> 28.2, "lastSale" -> 28.2808, "lastSaleTime" -> DateHelper("2022-09-04T23:36:47.864Z"), "ticker" -> "NFRK")

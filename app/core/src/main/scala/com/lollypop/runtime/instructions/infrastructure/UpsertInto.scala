@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.infrastructure
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression, FieldRef, Queryable}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.{Row, RowCollection}
 import com.lollypop.runtime.instructions.ReferenceInstruction
@@ -57,7 +58,7 @@ case class UpsertInto(ref: DatabaseObjectRef,
   private def extractRow(rc: RowCollection, rowValues: Seq[Seq[Expression]])(implicit scope: Scope): Row = {
     if (rowValues.size > 1) die("Upserting multiple rows is not supported")
     val fieldNames = if (fields.nonEmpty) fields.map(_.name) else rc.columns.map(_.name)
-    val values = rowValues.headOption.toList.flatMap(_.map(LollypopVM.execute(scope, _)._3))
+    val values = rowValues.headOption.toList.flatMap(_.map(_.execute(scope)._3))
     if (fieldNames.size != values.size) die(s"Field values mismatch: ${fieldNames.size} field(s), but ${values.size} value(s)")
     Map((fieldNames zip values).map { case (name, value) => name -> value }: _*).toRow(rc)
   }

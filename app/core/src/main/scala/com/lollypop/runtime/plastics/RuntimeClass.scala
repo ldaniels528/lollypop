@@ -3,17 +3,18 @@ package com.lollypop.runtime.plastics
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models._
 import com.lollypop.language.{LanguageParser, LollypopUniverse}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.DataTypeParser
 import com.lollypop.runtime.instructions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.{LollypopException, die}
 import dev.jeka.core.api.depmanagement.resolution.JkDependencyResolver
 import dev.jeka.core.api.depmanagement.{JkDependencySet, JkRepo, JkRepoSet}
-import org.slf4j.LoggerFactory
 import lollypop.io.IOCost
+import org.slf4j.LoggerFactory
 
 import java.io.File
 import java.lang.reflect.{Constructor, Executable, Field, Method}
@@ -120,7 +121,7 @@ object RuntimeClass {
       val vmScope = vmCandidates.foldLeft(scope) { case (aggScope, vmc) =>
         aggScope.withVariable(vmc.method.name, value = vmc.method, isReadOnly = true)
       }
-      LollypopVM.execute(vmScope, NamedFunctionCall(name, args = vmArgs))._3
+      NamedFunctionCall(name, vmArgs).execute(vmScope)._3
     }
   }
 
@@ -206,7 +207,7 @@ object RuntimeClass {
   }
 
   private def evaluate(expression: Expression)(implicit scope: Scope): Any = {
-    LollypopVM.execute(scope, expression)._3
+    expression.execute(scope)._3
   }
 
   private def getComponents(instance: Any): ClassComponents = {
@@ -383,7 +384,7 @@ object RuntimeClass {
     final implicit class RuntimeClassNameAtomConstructorSugar(val className: Atom) extends AnyVal {
       @inline
       def instantiate(args: Expression*)(implicit scope: Scope): Any = {
-        getClassByName(className.name).instantiate(args.map(LollypopVM.execute(scope, _)._3): _*)
+        getClassByName(className.name).instantiate(args.map(_.execute(scope)._3): _*)
       }
     }
 
@@ -394,7 +395,7 @@ object RuntimeClass {
     final implicit class RuntimeClassNameConstructorSugar(val className: String) extends AnyVal {
       @inline
       def instantiate(args: Expression*)(implicit scope: Scope): Any = {
-        getClassByName(className).instantiate(args.map(LollypopVM.execute(scope, _)._3): _*)
+        getClassByName(className).instantiate(args.map(_.execute(scope)._3): _*)
       }
     }
 
@@ -409,7 +410,7 @@ object RuntimeClass {
         Option(evaluate(expression)).map(_.asInstanceOf[AnyRef]) exists { instance =>
           member match {
             case NamedFunctionCall(name, args) =>
-              instance.containsMethod(name, params = args.map(LollypopVM.execute(scope, _)._3))
+              instance.containsMethod(name, params = args.map(_.execute(scope)._3))
             case FieldRef(name) => instance.containsField(name)
             case other => expression.dieIllegalType(other)
           }

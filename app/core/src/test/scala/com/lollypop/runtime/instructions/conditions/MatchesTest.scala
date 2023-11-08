@@ -101,8 +101,14 @@ class MatchesTest extends AnyFunSpec {
     it("should evaluate a Product instance with lambdas (match)") {
       val (_, _, result) = LollypopVM.executeSQL(rootScope,
         """|class Stock(symbol: String, exchange: String, lastSale: Double)
-           |stock = new Stock(symbol: "XYZ", exchange: "NASDAQ", lastSale: 234.57)
-           |stock matches Stock(symbol: isString, exchange: isExchange, lastSale: isNumber)
+           |stock = new Stock(symbol: "ATX", exchange: "NASDAQ", lastSale: 234.57)
+           |stock matches Stock(
+           |    symbol: x => (x.isString() is true) and
+           |                 (x.length() between 1 and 6) and
+           |                 (x.forall(c => Character.isAlphabetic(c)) is true),
+           |    exchange: x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB'],
+           |    lastSale: n => n >= 0 and n < 500
+           |)
            |""".stripMargin)
       assert(result == true)
     }

@@ -8,6 +8,7 @@ import com.lollypop.language.{LollypopUniverse, dieFileNotDirectory}
 import com.lollypop.runtime.DatabaseManagementSystem.PatternSearchWithOptions
 import com.lollypop.runtime.DatabaseObjectConfig.implicits.RichDatabaseEntityConfig
 import com.lollypop.runtime.DatabaseObjectNS.{configExt, readConfig}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
@@ -231,7 +232,7 @@ class OS(ctx: LollypopUniverse) {
    */
   def read(path: String): RowCollection = read(new File(path))
 
-  def run(code: Instruction): Any = LollypopVM.execute(Scope(), code)._3
+  def run(code: Instruction): Any = code.execute(Scope())._3
 
   override def toString: String = "lollypop.lang.OS"
 
@@ -259,7 +260,7 @@ object OS {
   def execQL(sql: String)(implicit scope: Scope): QueryResponse = {
     val compiledCode = scope.getCompiler.compile(sql)
     val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS }
-    val (_, _, result1) = LollypopVM.execute(scope, compiledCode)
+    val (_, _, result1) = compiledCode.execute(scope)
     result1.toQueryResponse(ns_?, limit = None)
   }
 

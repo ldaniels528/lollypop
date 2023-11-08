@@ -5,6 +5,7 @@ import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, 
 import com.lollypop.language.models._
 import com.lollypop.language.{dieExpectedArray, dieIllegalType}
 import com.lollypop.runtime.LollypopVM.convertToTable
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{DateTimeType, Inferences}
 import com.lollypop.runtime.devices.RowCollectionZoo.{MapToTableType, ProductToRowCollection}
 import com.lollypop.runtime.devices.{QMap, RowCollection}
@@ -43,6 +44,7 @@ object RuntimePlatform {
   private val ARRAY_TYPE = Some(classOf[Array[AnyRef]].getName.ct)
   private val BYTE_ARRAY_TYPE = Some(classOf[Array[Byte]].getName.ct)
   private val BOOLEAN_TYPE = Some("Boolean".ct)
+  private val CHAR_TYPE = Some("Char".ct)
   private val DATETIME_TYPE = Some("DateTime".ct)
   private val JSON_TYPE = Some("JSON".ct)
   private val INT_TYPE = Some("Int".ct)
@@ -253,7 +255,7 @@ object RuntimePlatform {
     private def filter(array: Array[_], fx: LambdaFunction)(implicit scope: Scope): Array[_] = {
       var list: List[_] = Nil
       array.foreach { value =>
-        val result = LollypopVM.execute(scope, fx.call(List(value.v)))._3
+        val result = fx.call(List(value.v)).execute(scope)._3
         if (result == true) list = value :: list
       }
       seqToArray(list.reverse)
@@ -262,7 +264,7 @@ object RuntimePlatform {
     private def filterNot(array: Array[_], fx: LambdaFunction)(implicit scope: Scope): Array[_] = {
       var list: List[_] = Nil
       array.foreach { value =>
-        val result = LollypopVM.execute(scope, fx.call(List(value.v)))._3
+        val result = fx.call(List(value.v)).execute(scope)._3
         if (result == false) list = value :: list
       }
       seqToArray(list.reverse)
@@ -270,7 +272,7 @@ object RuntimePlatform {
 
     private def foldLeft(array: Array[Expression], initialValue: Any, fx: LambdaFunction)(implicit scope: Scope): Any = {
       array.foldLeft[(Scope, Any)]((scope, initialValue)) { case ((aggScope, aggResult), param) =>
-        LollypopVM.execute(aggScope, fx.call(List(aggResult.v, param))) ~> { case (s, c, r) => (s, r) }
+        fx.call(List(aggResult.v, param)).execute(aggScope) ~> { case (s, c, r) => (s, r) }
       }._2
     }
 
@@ -278,7 +280,7 @@ object RuntimePlatform {
       @tailrec
       def recurse(scope0: Scope, index: Int = 0): Unit = {
         if (index < args.length) {
-          val (scope1, _, _) = LollypopVM.execute(scope0, fx.call(args = List(args(index))))
+          val (scope1, _, _) = fx.call(args = List(args(index))).execute(scope0)
           recurse(scope1, index = index + 1)
         }
       }
@@ -294,7 +296,7 @@ object RuntimePlatform {
     private def mapValues(args: Seq[Expression], fx: LambdaFunction)(implicit scope: Scope): Array[_] = {
       val (_, resultB) = args.foldLeft[(Scope, List[Any])](scope -> Nil) {
         case ((aggScope, aggResults), expression) =>
-          val (scopeA, _, resultA) = LollypopVM.execute(aggScope, fx.call(List(expression)))
+          val (scopeA, _, resultA) = fx.call(List(expression)).execute(aggScope)
           scopeA -> (resultA :: aggResults)
       }
       resultB.reverse.toArray
@@ -650,11 +652,26 @@ object RuntimePlatform {
       // Parses a JSON-formatted string returning the object representation: "Hello World".fromJson()
       stringFunction0(name = "fromJson", _.fromJSON[Map[String, Any]], returnType_? = ANY_TYPE)
 
-      // Parses a Hex-encoded string returning the byte array: "deadbeef0001a3f5".fromHex()
+      // Parses a Hex-encoded string returning the byte array: "dead00beef01a3f5".fromHex()
       stringFunction0(name = "fromHex", s => Hex.decodeHex(s.filterNot(_ == '.')), returnType_? = BYTE_ARRAY_TYPE)
+
+      // Returns the tail of the string: "Welcome".head()
+      stringFunction0(name = "head", _.head, returnType_? = CHAR_TYPE)
+
+      // Returns the tail of the string: "cool".headOption()
+      stringFunction0(name = "headOption", _.headOption, returnType_? = CHAR_TYPE)
+
+      // Returns the index of the value if found in the collection: "Accept-Code".indexOf('C')
+      stringFunction1[Any](name = "indexOf", (arr, v) => arr.toSeq.indexOf(v), returnType_? = INT_TYPE)
 
       // Returns a string in reverse order: "Hello World".reverse()
       stringFunction0(name = "reverse", _.reverse, returnType_? = STRING_TYPE)
+
+      // Returns a string with the margin removed: "HelloWorld".forall(c => Character.isAlphabetic(c))
+      stringFunction1[Any](name = "forall", {
+        case (s, f: AnonymousFunction) => safeCast[Char => Boolean](f.toScala).exists(s.forall)
+        case (_, x) => dieIllegalType(x)
+      }, returnType_? = BOOLEAN_TYPE)
 
       // Returns a string with the margin removed: "|Hello World".stripMargin('|')
       stringFunction1[Char](name = "stripMargin", (s, c) => s.stripMargin(c), returnType_? = STRING_TYPE)
@@ -729,7 +746,9 @@ object RuntimePlatform {
 
     def arg2: Expression
 
-    override def toSQL: String = s"${value.toSQL}.$name${Seq(arg1, arg2).mkString("(", ", ", ")")}"
+    override def toSQL: String = {
+      Seq(value.toSQL, name, Seq(arg1, arg2).map(_.toSQL).mkString("(", ", ", ")")).mkString
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -824,8 +843,8 @@ object RuntimePlatform {
     override val name = "$minus"
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      val (s1, c1, v1) = LollypopVM.execute(scope, value)
-      val (s2, c2, v2) = LollypopVM.execute(s1, arg1)
+      val (s1, c1, v1) = value.execute(scope)
+      val (s2, c2, v2) = arg1.execute(s1)
       (s2, c1 ++ c2, (for {
         date <- Option(DateTimeType.convert(v1))
         result <- Option(v2) map {
@@ -840,7 +859,7 @@ object RuntimePlatform {
 
   private class DateFunction0(val name: String, val value: Expression, f: Date => Any) extends RuntimeExpression with ZeroArguments {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      val (s, c, r) = LollypopVM.execute(scope, value)
+      val (s, c, r) = value.execute(scope)
       (s, c, r match {
         case d: Date => f(d)
         case x => value.dieIllegalType(x)
@@ -929,7 +948,7 @@ object RuntimePlatform {
     override val name = "toTale"
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-      val (scope1, cost1, result1) = LollypopVM.execute(scope, value)
+      val (scope1, cost1, result1) = value.execute(scope)
       val rc1 = result1.normalize match {
         case t: TableRendering => t.toTable
         case a: Array[_] => convertToTable(a)

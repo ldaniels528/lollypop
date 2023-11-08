@@ -4,7 +4,8 @@ import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.CATEGORY_CONTROL_FLOW
 import com.lollypop.language._
 import com.lollypop.language.models.Instruction
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -16,7 +17,7 @@ import lollypop.io.IOCost
 case class Return(value: Option[Instruction] = None) extends RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (s, c, r) = value.map(op => LollypopVM.execute(scope, op)) || (scope, IOCost.empty, null)
+    val (s, c, r) = value.map(_.execute(scope)) || (scope, IOCost.empty, null)
     (s.withReturned(isReturned = true), c, r)
   }
 

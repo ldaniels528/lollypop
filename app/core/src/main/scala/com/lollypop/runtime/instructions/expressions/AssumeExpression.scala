@@ -1,13 +1,14 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, Instruction}
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import lollypop.io.IOCost
 
 case class AssumeExpression(instruction: Instruction) extends RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    LollypopVM.execute(scope, instruction)
+    instruction.execute(scope)
   }
 
   override def toSQL: String = instruction.toSQL

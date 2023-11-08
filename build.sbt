@@ -3,10 +3,10 @@ import sbt.*
 
 import scala.language.postfixOps
 
-val scalaVersion_2_13 = "2.13.10"
+val scalaVersion_2_13 = "2.13.12"
 val scalaVersion_3_00 = "3.0.1"
 
-val appVersion = "0.1.6.0"
+val appVersion = "0.1.6.1"
 val pluginVersion = "1.0.0"
 val scalaAppVersion = scalaVersion_2_13
 
@@ -111,6 +111,8 @@ lazy val core = (project in file("./app/core")).
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @example sbt "project jdbc_driver" assembly
+ * @example sbt "project jdbc_driver" package
  * @example sbt "project jdbc_driver" test
  */
 lazy val jdbc_driver = (project in file("./app/jdbc-driver")).

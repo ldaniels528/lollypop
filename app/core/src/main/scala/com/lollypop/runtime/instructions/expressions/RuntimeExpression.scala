@@ -2,13 +2,13 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models._
 import com.lollypop.language.{dieUnsupportedConversion, dieUnsupportedType}
-import com.lollypop.runtime.LollypopVM.execute
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.functions.ArgumentBlock
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.{LollypopVM, Scope, safeCast}
+import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.JSONSupport.JSONProductConversion
 import com.lollypop.util.JVMSupport._
 import spray.json.JsArray
@@ -24,8 +24,8 @@ import scala.concurrent.duration.FiniteDuration
 trait RuntimeExpression extends Expression with RuntimeInstruction {
 
   def processInternalOps(host: Expression, args: List[Expression])(implicit scope: Scope): Any = {
-    val instance = LollypopVM.execute(scope, host)._3
-    val values = LollypopVM.evaluate(scope, args)
+    val instance = host.execute(scope)._3
+    val values = args.transform(scope)._3
     val tuple = this
     instance match {
       // array(5) | ['A' to 'Z'](8, 19)
@@ -43,7 +43,7 @@ trait RuntimeExpression extends Expression with RuntimeInstruction {
           case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // anonymousFx('a', 'b', 'c')
-      case fx: LambdaFunction => LollypopVM.execute(scope, fx.call(args))._3
+      case fx: LambdaFunction => fx.call(args).execute(scope)._3
       // ({ symbol: 'T', exchange: 'NYSE', lastSale: 22.77 })(0)
       case row: Row =>
         values match {
@@ -97,7 +97,7 @@ object RuntimeExpression {
     }
 
     @inline
-    def asAny(implicit scope: Scope): Option[Any] = Option(execute(scope, getValue)._3)
+    def asAny(implicit scope: Scope): Option[Any] = Option(getValue.execute(scope)._3)
 
     @inline
     def asArray(implicit scope: Scope): Option[Array[_]] = {
@@ -109,18 +109,18 @@ object RuntimeExpression {
         case x => dieUnsupportedConversion(x, typeName = "Array")
       }
 
-      Option(recurse(execute(scope, getValue)._3))
+      Option(recurse(getValue.execute(scope)._3))
     }
 
-    @inline def asBoolean(implicit scope: Scope): Option[Boolean] = Option(execute(scope, getValue)._3).map(BooleanType.convert)
+    @inline def asBoolean(implicit scope: Scope): Option[Boolean] = Option(getValue.execute(scope)._3).map(BooleanType.convert)
 
-    @inline def asByteArray(implicit scope: Scope): Option[Array[Byte]] = Option(execute(scope, getValue)._3).map(VarBinaryType.convert)
+    @inline def asByteArray(implicit scope: Scope): Option[Array[Byte]] = Option(getValue.execute(scope)._3).map(VarBinaryType.convert)
 
-    @inline def asDateTime(implicit scope: Scope): Option[Date] = Option(execute(scope, getValue)._3).map(DateTimeType.convert)
+    @inline def asDateTime(implicit scope: Scope): Option[Date] = Option(getValue.execute(scope)._3).map(DateTimeType.convert)
 
     @inline
     def asDictionary(implicit scope: Scope): Option[mutable.Map[String, _]] = {
-      Option(execute(scope, getValue)._3.normalize).map {
+      Option(getValue.execute(scope)._3.normalize).map {
         case m: QMap[_, _] => mutable.LinkedHashMap(m.toSeq.map { case (k, v) => String.valueOf(k) -> v }: _*)
         case x => dieUnsupportedType(x)
       }
@@ -128,17 +128,17 @@ object RuntimeExpression {
 
     @inline
     def asDictionaryOf[A](implicit scope: Scope): Option[mutable.Map[String, A]] = {
-      Option(execute(scope, getValue)._3.normalize).map {
+      Option(getValue.execute(scope)._3.normalize).map {
         case m: QMap[_, _] => mutable.LinkedHashMap[String, A](m.toSeq.flatMap { case (k, v) => safeCast[A](v).map(vv => String.valueOf(k) -> vv) }: _*)
         case x => dieUnsupportedType(x)
       }
     }
 
-    @inline def asDouble(implicit scope: Scope): Option[Double] = Option(execute(scope, getValue)._3).map(Float64Type.convert)
+    @inline def asDouble(implicit scope: Scope): Option[Double] = Option(getValue.execute(scope)._3).map(Float64Type.convert)
 
-    @inline def asInt32(implicit scope: Scope): Option[Int] = Option(execute(scope, getValue)._3).map(Int32Type.convert)
+    @inline def asInt32(implicit scope: Scope): Option[Int] = Option(getValue.execute(scope)._3).map(Int32Type.convert)
     
-    @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(execute(scope, getValue)._3).map(IntervalType.convert)
+    @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(getValue.execute(scope)._3).map(IntervalType.convert)
 
     @inline
     def asJsArray(implicit scope: Scope): Option[JsArray] = {
@@ -149,14 +149,14 @@ object RuntimeExpression {
         case x => dieUnsupportedConversion(x, typeName = "JsArray")
       }
 
-      Option(recurse(execute(scope, getValue)._3))
+      Option(recurse(getValue.execute(scope)._3))
     }
 
-    @inline def asNumeric(implicit scope: Scope): Option[Number] = Option(execute(scope, getValue)._3).map(NumericType.convert)
+    @inline def asNumeric(implicit scope: Scope): Option[Number] = Option(getValue.execute(scope)._3).map(NumericType.convert)
 
-    @inline def asString(implicit scope: Scope): Option[String] = Option(execute(scope, getValue)._3).map(StringType.convert)
+    @inline def asString(implicit scope: Scope): Option[String] = Option(getValue.execute(scope)._3).map(StringType.convert)
 
-    @inline def get(implicit scope: Scope): Option[Any] = Option(execute(scope, getValue)._3)
+    @inline def get(implicit scope: Scope): Option[Any] = Option(getValue.execute(scope)._3)
 
     private def getValue: Expression = expression match {
       case ArgumentBlock(List(arg)) => arg

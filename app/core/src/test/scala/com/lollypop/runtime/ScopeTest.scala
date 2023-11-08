@@ -6,6 +6,7 @@ import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{Float64Type, Int32Type, Int64Type, StringType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices._
@@ -63,7 +64,7 @@ class ScopeTest extends AnyFunSpec {
       val scope = scope0
         .withCurrentRow(Some(Row(id = 1001, metadata = RowMetadata(), columns = columns, fields = columns.map(c =>
           Field(name = c.name, metadata = FieldMetadata(), value =
-            c.defaultValue.flatMap(v => Option(LollypopVM.execute(scope0, v)._3)).map(c.`type`.convert))
+            c.defaultValue.flatMap(v => Option(v.execute(scope0)._3)).map(c.`type`.convert))
         ))))
       assert(scope.resolve("__id") contains 1001)
       assert(scope.resolve("symbol") contains "ABC")
@@ -78,7 +79,7 @@ class ScopeTest extends AnyFunSpec {
       val scope = scope0
         .withVariable(name = "symbol", value = Some("BROK"))
         .withCurrentRow(Some(Row(id = 1001, metadata = RowMetadata(), columns = columns, fields = columns.map(c =>
-          Field(name = c.name, metadata = FieldMetadata(), value = c.defaultValue.flatMap(v => Option(LollypopVM.execute(scope0, v)._3)).map(c.`type`.convert))
+          Field(name = c.name, metadata = FieldMetadata(), value = c.defaultValue.flatMap(v => Option(v.execute(scope0)._3)).map(c.`type`.convert))
         ))))
       assert(LollypopVM.executeSQL(scope, "symbol")._3 == "ABC")
       assert(LollypopVM.executeSQL(scope, "$symbol")._3 == "BROK")
@@ -94,7 +95,7 @@ class ScopeTest extends AnyFunSpec {
       val parentScope = Scope().withVariable(name = "x", `type` = Int32Type, value = Some(5), isReadOnly = false)
       val scope = Scope(parentScope).withVariable(name = "y", `type` = Int32Type, value = Some(2), isReadOnly = false)
       val expr: Expression = "x".f + "y".f + 7
-      val (_, _, result) = LollypopVM.execute(scope, expr)
+      val (_, _, result) = expr.execute(scope)
       assert(result == 14)
     }
 
@@ -121,7 +122,7 @@ class ScopeTest extends AnyFunSpec {
         .withVariable(name = "index", `type` = Int32Type, value = Some(1), isReadOnly = false)
         .withCurrentRow(Some(Map("symbol" -> "ABC", "exchange" -> "OTCBB").toRow(rowID = 0)))
 
-      val (_, _, device) = LollypopVM.search(scope, From(This()))
+      val (_, _, device) = From(This()).search(scope)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph.filterNot(_.exists {
         case ("name", "π") => true

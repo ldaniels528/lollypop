@@ -3,9 +3,10 @@ package com.lollypop.runtime.instructions.jvm
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.{NamedFunctionCall, RuntimeExpression}
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -21,7 +22,7 @@ case class InvokeVirtualMethod(instance: Expression, method: Expression) extends
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val result = method match {
       case NamedFunctionCall(name, args) =>
-        val inst = LollypopVM.execute(scope, instance)._3
+        val inst = instance.execute(scope)._3
         inst.invokeVirtualMethod(name, args)
       case x => x.dieIllegalType()
     }

@@ -1,9 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{ArrayExpression, Expression, Literal}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{ArrayType, DataType, Inferences}
 import com.lollypop.runtime.plastics.Tuples.seqToArray
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -15,7 +16,7 @@ case class ArrayLiteral(value: List[Expression]) extends Literal
   private lazy val _type = ArrayType(Inferences.resolveType(value.map(Inferences.inferType)), capacity = Some(value.size))
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Array[_]) = {
-    val (s, c, values) = LollypopVM.transform(scope, value)
+    val (s, c, values) = value.transform(scope)
     (s, c, seqToArray(values))
   }
 

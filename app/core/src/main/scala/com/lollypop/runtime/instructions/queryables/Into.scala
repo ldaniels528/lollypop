@@ -3,8 +3,9 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Instruction, Modifiable, Queryable}
 import com.lollypop.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -17,7 +18,7 @@ case class Into(source: Instruction, target: DatabaseObjectRef)
   extends RuntimeQueryable with Modifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    val (scope1, cost0, in) = LollypopVM.search(scope, source)
+    val (scope1, cost0, in) = source.search(scope)
     val out = scope1.getRowCollection(target)
     val cost1 = in.iterateWhere()(_.isActive) { case (_, row) => out.insert(row) }
     (scope1, cost0 ++ cost1, out)

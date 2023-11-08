@@ -4,8 +4,9 @@ import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTION
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, LambdaFunction}
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.Monadic.__symbol
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -28,11 +29,10 @@ case class Monadic(expr0: Expression, expr1: Expression) extends RuntimeExpressi
   import scala.concurrent.ExecutionContext.Implicits.global
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val monad = LollypopVM.execute(scope, expr0)._3
-    val result = LollypopVM.execute(scope, expr1)._3 match {
+    val monad = expr0.execute(scope)._3
+    val result = expr1.execute(scope)._3 match {
       case lf: LambdaFunction =>
-        def exec(v: Expression): Any = LollypopVM.execute(scope, lf.call(List(v)))._3
-
+        val exec: Expression => Any = v => lf.call(List(v)).execute(scope)._3
         monad match {
           case f: Future[_] => f.map(v => exec(v.v))
           case o: Option[_] => o.map(v => exec(v.v))

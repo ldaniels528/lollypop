@@ -1,6 +1,7 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
@@ -14,7 +15,7 @@ class VerifyTest extends AnyFunSpec with VerificationTools {
       val scope0 = Scope()
         .withVariable(name = "status", code = 200.v, isReadOnly = false)
       val verify = Verify(EQ("status".f, 200.v))
-      val (_, _, result) = LollypopVM.execute(scope0, verify)
+      val (_, _, result) = verify.execute(scope0)
       assert(result == true)
     }
 
@@ -22,7 +23,7 @@ class VerifyTest extends AnyFunSpec with VerificationTools {
       val scope0 = Scope()
         .withVariable(name = "status", code = 200.v, isReadOnly = false)
       val verify = Verify(NEQ("status".f, 200.v))
-      val (_, _, result) = LollypopVM.execute(scope0, verify)
+      val (_, _, result) = verify.execute(scope0)
       assert(result == false)
     }
 

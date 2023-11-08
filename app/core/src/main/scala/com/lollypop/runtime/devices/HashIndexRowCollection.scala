@@ -10,7 +10,7 @@ import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{EQ, Is, Isnt, NEQ}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{DatabaseObjectNS, LollypopVM, ROWID, ResourceManager, Scope}
+import com.lollypop.runtime.{DatabaseObjectNS, ROWID, ResourceManager, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 import lollypop.lang.BitArray
@@ -50,7 +50,7 @@ class HashIndexRowCollection(override val ns: DatabaseObjectNS,
                            (includeRow: RowMetadata => Boolean)(process: (Scope, Row) => Any)(implicit scope: Scope): IOCost = {
     val args = condition.toList.flatMap(indexCriterion).distinct
     if (args.nonEmpty) {
-      val (s, c, r) = LollypopVM.transform(scope, args)
+      val (s, c, r) = args.transform(scope)
       (for {
         searchValue <- r.map(Option.apply)
         cost = processIndex(searchValue, condition, limit)(includeRow)(process)

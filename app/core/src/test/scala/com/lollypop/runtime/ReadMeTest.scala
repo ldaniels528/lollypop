@@ -55,7 +55,7 @@ class ReadMeTest extends AnyFunSpec {
 
         // include the instruction examples in the ToC
         out.println("""* <a href="#Examples">Featured Examples By Category</a>""")
-        val categoryMappings = ctx.helpDocs.groupBy(_.category).toList.sortBy(_._1.toLowerCase())
+        val categoryMappings = ctx.helpDocs.filter(_.featureTitle.isEmpty).groupBy(_.category).toList.sortBy(_._1.toLowerCase())
         for {
           (category, instructions) <- categoryMappings
         } out.println(s"""  * <a href="#${toAnchor(category)}">$category</a> (${instructions.size})""")
@@ -86,6 +86,10 @@ class ReadMeTest extends AnyFunSpec {
   }
 
   private def processCategory(out: PrintWriter, category: String, instructions: Seq[HelpDoc]): Unit = {
+    val superScript: Int => String = {
+      val array = Array("¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰")
+      n => if (n < array.length) array(n) else ""
+    }
     out.println(
       s"""|<a name="${toAnchor(category)}"></a>
           |## $category Examples
@@ -94,12 +98,7 @@ class ReadMeTest extends AnyFunSpec {
     val instructionsByName = instructions.groupBy(_.name).toList.sortBy(_._1.toLowerCase)
     instructionsByName foreach { case (_, helps) =>
       helps.zipWithIndex.foreach { case (help, n) =>
-        val nth = if (helps.size > 1) n match {
-          case 0 => "¹"
-          case 1 => "²"
-          case 2 => "³"
-          case _ => ""
-        } else ""
+        val nth = if (helps.size > 1) superScript(n) else ""
 
         // execute and produce results
         implicit val scope: Scope = ctx.createRootScope()
@@ -242,7 +241,7 @@ class ReadMeTest extends AnyFunSpec {
       """|<a name="Project_Status"></a>
          |## Project Status
          |
-         |Unstable/Preview &#8212; it works... but the language parser is a little temperamental.
+         |Preview &#8212; there are still a number of experimental features to sort out.
          |""".stripMargin)
   }
 

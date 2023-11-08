@@ -13,18 +13,14 @@ import scala.util.{Failure, Success, Try}
  */
 object ClassPathHelper {
 
-  def searchClassPath(): List[String] = {
-    searchClassPath(pattern = "")
-  }
-
-  def searchClassPath(pattern: String): List[String] = {
+  def searchClassPath(pattern: String): Array[String] = {
     val classpath = System.getProperty("java.class.path")
     val classpathEntries = classpath.split(File.pathSeparatorChar).toList
     classpathEntries.flatMap {
       case path if path.endsWith(".jar") => getClassNamesFromJar(path, pattern)
       case path if Files.isDirectory(Paths.get(path)) => getClassNamesFromDirectory(path, pattern)
       case _ => Nil
-    }
+    }.toArray
   }
 
   private def getClassNamesFromJar(jarPath: String, pattern: String): List[String] = {
