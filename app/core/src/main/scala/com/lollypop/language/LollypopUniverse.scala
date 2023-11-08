@@ -16,8 +16,11 @@ import com.lollypop.runtime.instructions.jvm._
 import com.lollypop.runtime.instructions.operators._
 import com.lollypop.runtime.instructions.queryables._
 import com.lollypop.runtime.plastics.RuntimePlatform
+import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io._
 import lollypop.lang._
+
+import java.io.{File, FileWriter, PrintWriter}
 
 /**
  * Lollypop Universe - repository for long-lived state
@@ -41,18 +44,18 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
 
   def createRootScope(): Scope = {
     DefaultScope(universe = this)
-      .withVariable("π", Math.PI)
-      .withVariable("OS", system)
-      .withVariable("Random", lollypop.lang.Random)
-      .withVariable("stderr", system.stdErr.writer)
-      .withVariable("stdout", system.stdOut.writer)
-      .withVariable("stdin", system.stdIn.reader)
+      .withVariable(name = "π", value = Math.PI)
+      .withVariable(name = "OS", value = system)
+      .withVariable(name = "Random", value = lollypop.lang.Random)
+      .withVariable(name = "stderr", value = system.stdErr.writer)
+      .withVariable(name = "stdout", value = system.stdOut.writer)
+      .withVariable(name = "stdin", value = system.stdIn.reader)
       .withImports(Map(Seq(
-        classOf[BitArray], classOf[ComplexNumber], classOf[java.util.Date], classOf[IOCost],
-        classOf[Matrix], classOf[Pointer], classOf[RowIDRange]
+        classOf[BitArray], classOf[Character], classOf[ComplexNumber], classOf[java.util.Date],
+        classOf[IOCost], classOf[Matrix], classOf[Pointer], classOf[RowIDRange]
       ).map(c => c.getSimpleName -> c.getName): _*))
+      .withVariable(name = "Character", value = classOf[Character])
   }
-
 
   /**
    * Returns a database entity by namespace
@@ -190,7 +193,7 @@ object LollypopUniverse {
     Int64Type, Float32Type, Float64Type, NumericType, IntervalType, JsonType, MatrixType, PointerType, RowIDRangeType,
     RowNumberType, SQLXMLType, TableType, UserDefinedDataType, UUIDType, StringType, VarBinaryType, VarCharType, AnyType
   )
-  private val _languageParsers: List[LanguageParser] = List[LanguageParser](
+  val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
     Bar, BarBar, Between, Betwixt, BooleanType,
     CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
@@ -201,11 +204,11 @@ object LollypopUniverse {
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
     HashTag, Having, Help, Http,
-    IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InterfacesOf, Intersect, Into, InvokeVirtualMethod,
-    Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
+    IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
+    Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
     LessLess, LessLessLess, Let, Limit, Literal, LT, LTE,
-    Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, InstructionChain, Monadic,
+    Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,
     Namespace, NEG, NEQ, New, NodeAPI, NodeConsole, NodeExec, NodeScan, NodeStart, NodeStop, NodeWWW, Not,
     NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
@@ -220,6 +223,14 @@ object LollypopUniverse {
     WhileDo, WhenEver, Where, WhereIn, With,
     ZipWith
   )
+
+  def overwriteOpCodesConfig(file: File): Unit = {
+    new PrintWriter(new FileWriter(file)) use { out =>
+      _languageParsers.foreach { lp =>
+        out.println(lp.getClass.getTypeName)
+      }
+    }
+  }
 
   RuntimePlatform.init()
 
