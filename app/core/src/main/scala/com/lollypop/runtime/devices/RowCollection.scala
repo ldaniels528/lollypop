@@ -4,7 +4,7 @@ import com.lollypop.die
 import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models.{AllFields, Condition, Expression, ScopeModification}
 import com.lollypop.language.{dieIllegalType, dieNoSuchColumn}
-import com.lollypop.runtime.LollypopVM.implicits.RichScalaAny
+import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, RichScalaAny}
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{IBLOB, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
@@ -277,7 +277,7 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
    */
   def insertRows(columns: Seq[String], rowValues: Seq[Seq[Expression]])(implicit scope: Scope): IOCost = {
     (for {
-      values <- rowValues.map(_.map(LollypopVM.execute(scope, _)._3))
+      values <- rowValues.map(_.map(_.execute(scope)._3))
       row = Map(columns zip values map { case (column, value) => column -> value }: _*)
     } yield insert(row.toRow(this))).reduce(_ ++ _)
   }
@@ -618,7 +618,7 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
    * }}}
    */
   def updateRow(rowID: ROWID, modification: ScopeModification, row: Row)(implicit scope: Scope): IOCost = {
-    val (scope1, cost1, _) = LollypopVM.execute(scope, modification)
+    val (scope1, cost1, _) = modification.execute(scope)
     val updatedRow = Map(columns.map(_.name) flatMap { name =>
       (scope1.resolve(name) ?? row.getField(name).flatMap(_.value)).map(name -> _)
     }: _*)
@@ -629,7 +629,7 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
                   condition: Option[Condition],
                   limit: Option[Expression] = None)(implicit scope0: Scope): IOCost = {
     iterateWhere(condition, limit)(_.isActive) { case (scope, row) =>
-      val (scope1, cost1, _) = LollypopVM.execute(scope, modification)
+      val (scope1, cost1, _) = modification.execute(scope)
       val updatedRow = Map(columns.map(_.name) flatMap {
         case name if scope1.getValueReferences.contains(name) =>
           for {valueRef <- scope1.getValueReferences.get(name); value <- Option(valueRef.value)} yield name -> value

@@ -2,7 +2,8 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.Queryable
 import com.lollypop.runtime.DatabaseManagementSystem.{getUpdatedTime, readVirtualTable}
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, LollypopVM, ROWID, Scope}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
 import com.lollypop.util.LogUtil
 import lollypop.io.IOCost
 
@@ -26,7 +27,7 @@ class VirtualTableRowCollection(val queryable: Queryable,
   def rebuild(): IOCost = {
     LogUtil(this).info(s"$ns: rebuilding view...")
     host.setLength(0)
-    val (_, cost0, result1) = LollypopVM.search(scope, queryable)
+    val (_, cost0, result1) = queryable.search(scope)
     val cost1 = host.insert(result1)
     val cost2 = host match {
       case rc: IndexedRowCollection => rc.rebuild()
@@ -43,7 +44,7 @@ class VirtualTableRowCollection(val queryable: Queryable,
     } else IOCost()
   }
 
-  def isOutOfSync: Boolean = {
+  private def isOutOfSync: Boolean = {
     val myUpdatedTime = getUpdatedTime(ns)
     val depUpdatedTimes = dependencies.map(getUpdatedTime)
     depUpdatedTimes.exists(_ >= myUpdatedTime)

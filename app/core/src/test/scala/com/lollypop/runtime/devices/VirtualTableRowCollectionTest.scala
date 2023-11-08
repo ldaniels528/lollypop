@@ -13,8 +13,8 @@ import scala.io.Source
  */
 class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val tableRef: DatabaseObjectRef = DatabaseObjectRef(getTestTableName)
-  private val viewRef: DatabaseObjectRef = DatabaseObjectRef(s"${getTestTableName}_50")
+  private val tableRef = DatabaseObjectRef(getTestTableName)
+  private val viewRef = DatabaseObjectRef(getTestTableName + "_50K")
 
   describe(classOf[VirtualTableRowCollection].getName) {
 
@@ -47,8 +47,8 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
       src.close()
     }
 
-    it("should perform create view") {
-      val (_, cost, _) = LollypopVM.executeSQL(Scope(),
+    it("should perform create view and pull records from it") {
+      val (scopeA, costA, _) = LollypopVM.executeSQL(Scope(),
         s"""|drop if exists $viewRef &&
             |create view $viewRef
             |as
@@ -62,16 +62,18 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
             |order by lastSale desc
             |limit 50
             |""".stripMargin)
-      assert(cost.created == 1)
-    }
+      assert(costA.created == 1)
 
-    it("should pull records from the view") {
-      val (scope, cost, results) = LollypopVM.searchSQL(Scope(),
+      // remove the view from cache
+      ResourceManager.close(viewRef.toNS(scopeA))
+      ResourceManager.close(tableRef.toNS(scopeA))
+
+      val (scopeB, costB, resultsB) = LollypopVM.searchSQL(scopeA,
         s"""|select symbol, exchange, lastSale from $viewRef where symbol is 'SBYY'
             |""".stripMargin)
-      cost.toTable(scope).tabulate().foreach(logger.info)
-      //assert(cost == IOCost(matched = 1, scanned = 1))
-      assert(results.toMapGraph == List(Map("symbol" -> "SBYY", "exchange" -> "OTCBB", "lastSale" -> 0.4246)))
+      costB.toTable(scopeB).tabulate().foreach(logger.info)
+      assert(costB == IOCost(matched = 1, scanned = 50))
+      assert(resultsB.toMapGraph == List(Map("symbol" -> "SBYY", "exchange" -> "OTCBB", "lastSale" -> 0.4246)))
     }
 
     it("should accelerate queries via an index on the view") {
@@ -80,13 +82,13 @@ class VirtualTableRowCollectionTest extends AnyFunSpec with VerificationTools {
       // remove the view from cache
       ResourceManager.close(viewRef.toNS)
 
-      val (_, cost1, _) = LollypopVM.executeSQL(scope,
+      val (scope1, cost1, _) = LollypopVM.executeSQL(scope,
         s"""|drop if exists $viewRef#symbol
             |create index $viewRef#symbol
             |""".stripMargin)
       assert(cost1 == IOCost(created = 1, destroyed = 1, shuffled = 50))
 
-      val (_, cost2, results2) = LollypopVM.searchSQL(scope,
+      val (_, cost2, results2) = LollypopVM.searchSQL(scope1,
         s"""|select symbol, exchange, lastSale from $viewRef where symbol is 'SBYY'
             |""".stripMargin)
       assert(cost2 == IOCost(matched = 1, scanned = 1))

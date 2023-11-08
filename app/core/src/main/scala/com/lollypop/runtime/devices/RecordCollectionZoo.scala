@@ -1,6 +1,7 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.runtime.{LollypopVM, ROWID, ROWID_NAME}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.{ROWID, ROWID_NAME}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 
 /**
@@ -41,7 +42,7 @@ object RecordCollectionZoo {
     def toRow(rowID: ROWID, columns: Seq[TableColumn]): Row = {
       Row(id = rowID, metadata = RowMetadata(), columns = columns, fields = columns map { column =>
         Field(name = column.name, metadata = FieldMetadata(column), value = mappings.get(column.name).flatMap(Option(_)) ??
-          column.defaultValue.map(LollypopVM.evaluatePure).flatMap(Option(_)))
+          column.defaultValue.map(_.evaluate()._3).flatMap(Option(_)))
       })
     }
 

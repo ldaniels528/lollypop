@@ -2,7 +2,8 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.die
 import com.lollypop.language.dieNoSuchColumn
-import com.lollypop.runtime.{LollypopVM, ROWID}
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.ROWID
 import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 
@@ -100,7 +101,7 @@ trait RecordStructure {
   }
 
   private def encodeFull(column: TableColumn, field: Field): ByteBuffer = {
-    column.`type`.encodeFull(field.value ?? column.defaultValue.flatMap(v => Option(LollypopVM.evaluatePure(v))))
+    column.`type`.encodeFull(field.value ?? column.defaultValue.flatMap(v => Option(v.evaluate()._3)))
   }
 
   def toFields(buf: ByteBuffer): Seq[Field] = {
