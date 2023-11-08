@@ -1,4 +1,4 @@
-Lollypop v0.1.6.0
+Lollypop v0.1.6.1
 ============
 
 ## Table of Contents
@@ -22,14 +22,14 @@ Lollypop v0.1.6.0
   * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (23)
   * <a href="#Asynchronous_Distributed_Reactive">Asynchronous/Distributed/Reactive</a> (16)
   * <a href="#Control_Flow">Control Flow</a> (21)
-  * <a href="#Dataframe_I_O">Dataframe I/O</a> (23)
+  * <a href="#Dataframe_I_O">Dataframe I/O</a> (22)
   * <a href="#Dataframe_Management">Dataframe Management</a> (14)
   * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (25)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
-  * <a href="#Scope_Session">Scope/Session</a> (23)
-  * <a href="#System_Tools">System Tools</a> (12)
+  * <a href="#Scope_Session">Scope/Session</a> (15)
+  * <a href="#System_Tools">System Tools</a> (10)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
-  * <a href="#Transformation">Transformation</a> (9)
+  * <a href="#Transformation">Transformation</a> (8)
 <a name="Introduction"></a>
 ## Introduction
 Lollypop is a general-purpose programming/scripting language for the JVM.
@@ -43,7 +43,7 @@ Features include:
 <a name="Project_Status"></a>
 ## Project Status
 
-Unstable/Preview &#8212; it works... but the language parser is a little temperamental.
+Preview &#8212; there are still a number of experimental features to sort out.
 
 <a name="Getting_Started"></a>
 ## Getting Started
@@ -51,13 +51,13 @@ Unstable/Preview &#8212; it works... but the language parser is a little tempera
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.0.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.1.jar`
 
 ### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.0.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.1.jar`
 
 ### Run Lollypop CLI
 ```bash
@@ -65,7 +65,7 @@ sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.0.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.1.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -98,7 +98,7 @@ java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.0.jar
 *Description*: Produces graphical charts
 
 ```sql
-graph { shape: "ring", title: "Ring Demo" } from (
+graph { shape: "pie3d", title: "Powered By Lollypop" } from (
   |------------------|
   | exchange | total |
   |------------------|
@@ -112,7 +112,7 @@ graph { shape: "ring", title: "Ring Demo" } from (
 ```
 ##### Results
 <div style="width: 100%">
-<img src="./docs/images/Ring_Demo.png">
+<img src="./docs/images/Powered_By_Lollypop.png">
 </div>
 
 <a name="Define_and_Instantiate_JVM_classes"></a>
@@ -126,7 +126,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-05T17:52:40.010Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-08T18:43:01.691Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +178,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-05T17:52:40.087Z"
+"2023-11-08T18:43:01.767Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -374,7 +374,7 @@ select total: count(*) from @stocks
 |     6 |
 |-------|
 ```
-### count (Aggregation/Sorting &#8212; Functional)
+### count⁴ (Aggregation/Sorting &#8212; Functional)
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -681,11 +681,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 3    | ♠    |
-| A    | ♥    |
-| K    | ♥    |
-| 10   | ♥    |
-| 4    | ♥    |
+| 6    | ♦    |
+| 5    | ♦    |
+| A    | ♦    |
+| 9    | ♣    |
+| J    | ♥    |
 |-------------|
 ```
 ### transpose³ (Aggregation/Sorting &#8212; Declarative)
@@ -706,7 +706,7 @@ transpose(help('select'))
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
-### transpose (Aggregation/Sorting &#8212; Declarative)
+### transpose⁴ (Aggregation/Sorting &#8212; Declarative)
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -802,10 +802,10 @@ async { OS.listFiles("./app") }
 |-------------------------------------------------------------------------------------------------------------------------------------|
 | name        | canonicalPath                                   | lastModified             | length | isDirectory | isFile | isHidden |
 |-------------------------------------------------------------------------------------------------------------------------------------|
-| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-11-03T21:03:10.412Z |   8196 | false       | true   | true     |
+| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-11-06T23:51:28.295Z |   8196 | false       | true   | true     |
 | core        | /Users/ldaniels/GitHub/lollypop/app/core        | 2023-05-23T21:20:11.818Z |    160 | true        | false  | false    |
 | target      | /Users/ldaniels/GitHub/lollypop/app/target      | 2023-11-03T20:21:11.085Z |    192 | true        | false  | false    |
-| examples    | /Users/ldaniels/GitHub/lollypop/app/examples    | 2023-11-05T17:51:30.933Z |    288 | true        | false  | false    |
+| examples    | /Users/ldaniels/GitHub/lollypop/app/examples    | 2023-11-07T01:06:35.137Z |    288 | true        | false  | false    |
 | jdbc-driver | /Users/ldaniels/GitHub/lollypop/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
 |-------------------------------------------------------------------------------------------------------------------------------------|
 ```
@@ -880,7 +880,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="6beb1e13-eea2-413a-9373-d920df28a70d")
+', message="OK", statusCode=200, responseID="10940e88-41a8-4c0d-b7a0-9598f4993471")
 ```
 ### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -890,7 +890,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="055540f5-901d-4e9d-be9f-dda84c0097a2")
+HttpResponse(body=null, message=null, statusCode=200, responseID="d05022ba-d727-4fce-b7a1-7a413d628089")
 ```
 ### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
 *Description*: Returns a URL based on a relative path.
@@ -900,7 +900,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="9d902219-ee72-4fcf-9874-f596b8c5831f")
+HttpResponse(body=null, message=null, statusCode=200, responseID="7b90732c-145d-4f37-8e8d-ade4c2e3395e")
 ```
 ### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Creates a new REST API endpoint
@@ -919,7 +919,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@60d84f61", message="OK", statusCode=200, responseID="71b0c969-cb30-4388-af8a-5f09e0eb5ec2")
+HttpResponse(body="java.io.PrintStream@3caa4757", message="OK", statusCode=200, responseID="60de8a02-a178-4dc4-88da-68676ae24662")
 ```
 ##### Console Output
 ```
@@ -984,7 +984,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[12740, 14473, 11480]
+[15239, 13552, 8310]
 ```
 ### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: Starts a Lollypop peer node.
@@ -994,7 +994,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-10489
+11715
 ```
 ### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
 *Description*: shuts down a running Lollypop peer node.
@@ -1056,7 +1056,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@60d84f61
+java.io.PrintStream@3caa4757
 ```
 ##### Console Output
 ```
@@ -1076,7 +1076,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@60d84f61
+java.io.PrintStream@3caa4757
 ```
 ##### Console Output
 ```
@@ -1109,10 +1109,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-05T17:52:43.735Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-05T17:52:43.735Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-05T17:52:43.735Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-05T17:52:43.735Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-08T18:43:05.397Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-08T18:43:05.397Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-08T18:43:05.397Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-08T18:43:05.397Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative)
@@ -1127,7 +1127,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@60d84f61
+java.io.PrintStream@3caa4757
 ```
 ##### Console Output
 ```
@@ -1207,11 +1207,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| AMEX      | WW     |  14.8557 | 2023-11-05T17:52:37.945Z |
-| OTHER_OTC | DECO   |   0.0307 | 2023-11-05T17:52:17.219Z |
-| NASDAQ    | HISIY  |  85.8843 | 2023-11-05T17:51:49.146Z |
-| NYSE      | UA     |  33.9433 | 2023-11-05T17:52:26.551Z |
-| AMEX      | VN     |  13.1444 | 2023-11-05T17:52:04.503Z |
+| NYSE      | HPPV   |  22.6246 | 2023-11-08T18:43:02.967Z |
+| OTCBB     | JBUKG  |   1.0102 | 2023-11-08T18:42:24.911Z |
+| OTHER_OTC | HOWJ   |   0.2783 | 2023-11-08T18:42:23.920Z |
+| NASDAQ    | FYC    |    82.82 | 2023-11-08T18:42:14.789Z |
+| AMEX      | NEA    |  53.4993 | 2023-11-08T18:42:58.748Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural)
@@ -1280,7 +1280,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.557791, _2=720.0)
+Tuple2(_1=0.447875, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional)
 *Description*: Defines a named user-defined function
@@ -1361,7 +1361,7 @@ stocks =
 | NYSE      | QOVGA  |   1.9199 | 2023-10-14T18:40:14.590Z |
 | NYSE      | ZJWL   |  17.3107 | 2023-10-14T18:40:13.205Z |
 |----------------------------------------------------------|
-each item in reverse (from @stocks) yield item
+each item in (stocks.reverse()) yield item
 ```
 ##### Results
 ```sql
@@ -1436,7 +1436,7 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@60d84f61
+java.io.PrintStream@3caa4757
 ```
 ##### Console Output
 ```
@@ -1451,7 +1451,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@324dcd31
+java.io.PrintStream@3a80515c
 ```
 ##### Console Error
 ```
@@ -1471,9 +1471,9 @@ this
 | name   | kind                | value                                                                    |
 |---------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                       |
-| stdout | PrintStream         | java.io.PrintStream@60d84f61                                             |
-| stdin  | BufferedReader      | java.io.BufferedReader@39c11e6c                                          |
-| stderr | PrintStream         | java.io.PrintStream@324dcd31                                             |
+| stdout | PrintStream         | java.io.PrintStream@3caa4757                                             |
+| stdin  | BufferedReader      | java.io.BufferedReader@1804f60d                                          |
+| stderr | PrintStream         | java.io.PrintStream@3a80515c                                             |
 | OS     | OS                  | lollypop.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                        |
 | e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -1627,27 +1627,6 @@ from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]
 *Description*: Produces graphical charts
 
 ```sql
-graph { shape: "ring", title: "Ring Demo" } from (
-  |------------------|
-  | exchange | total |
-  |------------------|
-  | NASDAQ   |    24 |
-  | AMEX     |     5 |
-  | NYSE     |    28 |
-  | OTCBB    |    32 |
-  | OTHEROTC |     7 |
-  |------------------|
-)
-```
-##### Results
-<div style="width: 100%">
-<img src="./docs/images/Ring_Demo.png">
-</div>
-
-### graph² (Dataframe I/O &#8212; Declarative)
-*Description*: Produces graphical charts
-
-```sql
 chart = { shape: "pie", title: "Member Types of OS" }
 graph chart from (
   select memberType, total: count(*) from (membersOf(OS))
@@ -1659,7 +1638,7 @@ graph chart from (
 <img src="./docs/images/Member_Types_of_OS.png">
 </div>
 
-### graph³ (Dataframe I/O &#8212; Declarative)
+### graph² (Dataframe I/O &#8212; Declarative)
 *Description*: Produces graphical charts
 
 ```sql
@@ -1929,7 +1908,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-05T17:52:44.778Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-08T18:43:06.446Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative)
@@ -2079,11 +2058,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-05T17:52:44.806Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-05T17:52:44.806Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-08T18:43:06.497Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-08T18:43:06.498Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-05T17:52:44.806Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-08T18:43:06.498Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative)
@@ -2220,12 +2199,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-05T17:52:44.947Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-05T17:52:44.947Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-05T17:52:44.947Z | VV     | OTCBB     |          |
-| 2023-11-05T17:52:44.947Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-05T17:52:44.947Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-05T17:52:44.947Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-08T18:43:06.609Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-08T18:43:06.609Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-08T18:43:06.609Z | VV     | OTCBB     |          |
+| 2023-11-08T18:43:06.609Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-08T18:43:06.609Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-08T18:43:06.609Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative)
@@ -2258,7 +2237,7 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
 ### create table (Dataframe Management &#8212; Declarative)
@@ -2880,49 +2859,52 @@ from (
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-"Hello 123" matches "H.* \d+"
+"Hello World 123" matches "H(.*) W(.*) \d+"
 ```
 ##### Results
 ```sql
 true
 ```
-### matches² (Filtering/Pattern Matching &#8212; Declarative)
+### matches² (Filtering/Pattern Matching &#8212; Functional)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-isNumeric = x => x.isNumber()
-5678 matches isNumeric
+isEven = x => (x.isNumber() is true) and ((x % 2) is 0)
+5678 matches isEven
 ```
 ##### Results
 ```sql
 true
 ```
-### matches³ (Filtering/Pattern Matching &#8212; Declarative)
+### matches³ (Filtering/Pattern Matching &#8212; Functional)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
-isNumber = x => x.isNumber()
-isString = x => x.isString()
-
 response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
-response matches { id: isNumber, symbol: isString, exchange: isExchange, lastSale: isNumber }
+response matches {
+   id: _ => true,
+   symbol: "DOG",
+   exchange: "NYSE",
+   lastSale: 90.67
+}
 ```
 ##### Results
 ```sql
 true
 ```
-### matches (Filtering/Pattern Matching &#8212; Declarative)
+### matches⁴ (Filtering/Pattern Matching &#8212; Functional)
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
-isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
-isNumber = x => x.isNumber()
-isString = x => x.isString()
-
 class Stock(symbol: String, exchange: String, lastSale: Double)
-stock = new Stock(symbol: "IBM", exchange: "NASDAQ", lastSale: 234.57)
-stock matches Stock(symbol: isString, exchange: isExchange, lastSale: isNumber)
+ stock = new Stock(symbol: "ATX", exchange: "NASDAQ", lastSale: 234.57)
+ stock matches Stock(
+    symbol: x => (x.isString() is true) and
+                 (x.length() between 1 and 6) and
+                 (x.forall(c => Character.isAlphabetic(c)) is true),
+    exchange: x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB'],
+    lastSale: n => n >= 0 and n < 500
+)
 ```
 <img src="docs/images/experimental.png" alt="matches is marked as experimental">
 
@@ -3096,7 +3078,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-05T17:52:45.958Z
+2023-11-08T18:43:07.632Z
 ```
 ### new² (JVM and Reflection &#8212; Functional)
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3137,7 +3119,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@752494dd
+scala.Function1$@1c62d2ad
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
 *Description*: Returns the super-classes extended by a class or instance
@@ -3240,26 +3222,6 @@ r = select value: 1
 |     1 |
 |-------|
 ```
-### [] (Scope/Session &#8212; Declarative)
-*Description*: Define arrays and apply monadic functions
-
-```sql
-[1, 3, 5, 7].foldLeft(0, (a, b) => a + b)
-```
-##### Results
-```sql
-16
-```
-### [_ to _] (Scope/Session &#8212; Declarative)
-*Description*: Define logical arrays
-
-```sql
-['A' to 'F'].reverse()
-```
-##### Results
-```sql
-['F', 'E', 'D', 'C', 'B', 'A']
-```
 ### as (Scope/Session &#8212; Declarative)
 *Description*: Applies an alias to an expression or query
 
@@ -3289,18 +3251,6 @@ from @stocks
 |----------------------------------------------------------------------------|
 |     6 | 44.34686666666666 |     155.021 |      0.0401 | 266.08119999999997 |
 |----------------------------------------------------------------------------|
-```
-### class (Scope/Session &#8212; Object-Oriented)
-*Description*: Creates a new ephemeral (in-memory) JVM-compatible class
-
-```sql
-class StockQuote(symbol: String, exchange: String, lastSale: Double, lastSaleTime: Date)
-stock = new StockQuote("ABC", "OTCBB", 0.0231, DateTime())
-stock.toString()
-```
-##### Results
-```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-05T17:52:46.386Z")
 ```
 ### destroy (Scope/Session &#8212; Procedural)
 *Description*: Removes a variable from the active scope
@@ -3363,66 +3313,6 @@ x.a.b.c
 ```sql
 98
 ```
-### String¹ (Scope/Session &#8212; Declarative)
-*Description*: Declare strings
-
-```sql
-item = { name : "Larry" }
-"Hello {{ item.name }},\nhow are you?\nFine, I hope!"
-```
-##### Results
-```sql
-Hello Larry,
-how are you?
-Fine, I hope!
-```
-### String² (Scope/Session &#8212; Declarative)
-*Description*: Declare strings
-
-```sql
-item = { name : "Larry" }
-'Hello {{ item.name }},\nhow are you?\nFine, I hope!'
-```
-##### Results
-```sql
-Hello Larry,
-how are you?
-Fine, I hope!
-```
-### String³ (Scope/Session &#8212; Declarative)
-*Description*: Declare multiline strings
-
-```sql
-item = { name : "Larry" }
-'''|Hello {{ item.name }},
-   |how are you?
-   |Fine, I hope!
-   |'''.stripMargin('|')
-```
-##### Results
-```sql
-Hello Larry,
-how are you?
-Fine, I hope!
-
-```
-### String (Scope/Session &#8212; Declarative)
-*Description*: Declare multiline strings
-
-```sql
-item = { name : "Larry" }
-"""|Hello {{ item.name }},
-   |how are you?
-   |Fine, I hope!
-   |""".stripMargin('|')
-```
-##### Results
-```sql
-Hello Larry,
-how are you?
-Fine, I hope!
-
-```
 ### this (Scope/Session &#8212; Declarative)
 *Description*: Table representation of the current scope
 
@@ -3435,9 +3325,9 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | lollypop.lang.Random            |
-| stdout | PrintStream    | java.io.PrintStream@60d84f61    |
-| stdin  | BufferedReader | java.io.BufferedReader@39c11e6c |
-| stderr | PrintStream    | java.io.PrintStream@324dcd31    |
+| stdout | PrintStream    | java.io.PrintStream@3caa4757    |
+| stdin  | BufferedReader | java.io.BufferedReader@1804f60d |
+| stderr | PrintStream    | java.io.PrintStream@3a80515c    |
 | OS     | OS             | lollypop.lang.OS                |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
@@ -3454,19 +3344,6 @@ val greeting: String = 'Hello World'
 ```sql
 var customer_id: Int = 5
 ```
-### {} (Scope/Session &#8212; Declarative)
-*Description*: Dynamically create objects (e.g. JSON)
-
-```sql
-response = { 'message1' : 'Hello World' }
-response.message2 = 'Hallo Monde'
-response.message3 = ['Hello', 'Hallo', 'World', 'Monde']
-response
-```
-##### Results
-```sql
-{"message1": "Hello World", "message2": "Hallo Monde", "message3": ["Hello", "Hallo", "World", "Monde"]}
-```
 <a name="System_Tools"></a>
 ## System Tools Examples
 <hr>
@@ -3479,7 +3356,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-05T17:52:46.406Z
+2023-11-08T18:43:08.058Z
 ```
 ### help¹ (System Tools &#8212; Declarative)
 *Description*: Provides offline manual pages for instructions.
@@ -3545,31 +3422,6 @@ graph chart from (
 <img src="./docs/images/Help_By_Category.png">
 </div>
 
-### implicit (System Tools &#8212; Object-Oriented)
-*Description*: Binds a virtual method to a class
-
-```sql
-implicit class `java.lang.String` {
-    def reverseString(self) := {
-        import "java.lang.StringBuilder"
-        val src = self.toCharArray()
-        val dest = new StringBuilder(self.length())
-        val eol = self.length() - 1
-        var n = 0
-        while (n <= eol) {
-          dest.append(src[eol - n])
-          n += 1
-        }
-        dest.toString()
-    }
-}
-
-"Hello World".reverseString()
-```
-##### Results
-```sql
-dlroW olleH
-```
 ### import (System Tools &#8212; Object-Oriented)
 *Description*: Imports a JVM class
 
@@ -3579,17 +3431,6 @@ import 'java.util.Date'
 ##### Results
 ```sql
 java.util.Date
-```
-### import implicit (System Tools &#8212; Object-Oriented)
-*Description*: Imports the methods of a Scala implicit class
-
-```sql
-import implicit "com.lollypop.util.StringRenderHelper$StringRenderer"
-DateTime().renderAsJson()
-```
-##### Results
-```sql
-"2023-11-05T17:52:46.453Z"
 ```
 ### include (System Tools &#8212; Declarative)
 *Description*: incorporates the contents of an external file into current scope
@@ -3659,7 +3500,7 @@ true
 ##### Console Error
 ```
 [0.000375ms] AnyLiteral 1 ~> 1 <Integer>
-[0.318083ms] SetAnyVariable set x = 1 ~> null <null>
+[0.264250ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural)
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3673,7 +3514,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@324dcd31
+java.io.PrintStream@3a80515c
 ```
 ##### Console Error
 ```
@@ -3872,7 +3713,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@60d84f61
+java.io.PrintStream@3caa4757
 ```
 ##### Console Output
 ```
@@ -3918,22 +3759,6 @@ c
 ##### Results
 ```sql
 Success(value={"value": 100})
-```
-### Matrix (Transformation &#8212; Functional)
-*Description*: Creates a new matrix
-
-```sql
-vector = [2.0, 1.0, 3.0]
-matrixA = new Matrix([
-  [1.0, 2.0, 3.0],
-  [4.0, 5.0, 6.0],
-  [7.0, 8.0, 9.0]
-])
-matrixA * vector
-```
-##### Results
-```sql
-[13.0, 31.0, 49.0]
 ```
 ### scaleTo (Transformation &#8212; Functional)
 *Description*: Returns the the numeric expression truncated after `scale` decimal places.
