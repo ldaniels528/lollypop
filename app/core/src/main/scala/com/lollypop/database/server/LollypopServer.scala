@@ -16,6 +16,7 @@ import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models._
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
@@ -32,9 +33,9 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{AppConstants, die}
+import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
-import lollypop.io.IOCost
 import spray.json._
 
 import java.io.{File, FileOutputStream}
@@ -172,11 +173,11 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
         val response = apiRoutes.collectFirst { case (url, mappings) if mappings.exists { case (method, _) => method == "ws" } =>
           mappings("ws") match {
             case af: AnonymousFunction =>
-              val (scopeA, _, resultA) = LollypopVM.execute(scope, af.call(List(tm.getStrictText.v)))
+              val (scopeA, _, resultA) = af.call(List(tm.getStrictText.v)).execute(scope)
               scope = scopeA
               resultA
             case code: Instruction =>
-              val (scopeA, _, resultA) = LollypopVM.execute(scope, code)
+              val (scopeA, _, resultA) = code.execute(scope)
               scope = scopeA
               resultA
             case other =>
@@ -315,7 +316,7 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
           methods.get(method) flatMap {
             case instruction: Instruction =>
               val scopeB = scopeA.withVariable(name = "API_HTTP_METHOD", value = method.toUpperCase())
-              val (scopeC, _, mixed) = LollypopVM.execute(scopeB, instruction)
+              val (scopeC, _, mixed) = instruction.execute(scopeB)
               Option(mixed) flatMap {
                 case fx: AnonymousFunction =>
                   val converter: ParameterLike => Any => Expression = (p: ParameterLike) => {
@@ -323,8 +324,8 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
                     (v: Any) => dataType.convert(v).v
                   }
                   val args = fx.params.toList.map(c => input.get(c.name).map(converter(c)).orNull)
-                  Option(LollypopVM.execute(scopeC, fx.call(args))._3)
-                case op: Instruction => Option(LollypopVM.execute(scopeC, op)._3)
+                  Option(fx.call(args).execute(scopeC)._3)
+                case op: Instruction => Option(op.execute(scopeC)._3)
                 case x => instruction.dieIllegalType(x)
               }
             case option: Option[_] => option
@@ -477,7 +478,7 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
   private def runQuery(scope1: Scope, sql: String, limit: Option[Int]): (Scope, Route) = {
     val compiledCode = compiler.compile(sql)
     val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS(scope1) }
-    val (scope2, cost1, result1) = LollypopVM.execute(scope1, compiledCode)
+    val (scope2, cost1, result1) = compiledCode.execute(scope1)
     result1 match {
       case jsValue: JsValue => (scope2, complete(jsValue))
       case _ =>
@@ -766,7 +767,7 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
 
   private def toExpressions(jsObject: JsObject)(implicit scope: Scope, rc: RowCollection): Row = {
     Map(jsObject.fields.toSeq.map { case (k, js) =>
-      k -> Option(LollypopVM.execute(scope, js.toExpression)._3)
+      k -> Option(js.toExpression.execute(scope)._3)
     }: _*).toRow
   }
 

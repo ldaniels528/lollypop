@@ -3,6 +3,7 @@ package com.lollypop.runtime
 import com.lollypop.language.SQLCompiler
 import com.lollypop.language.models.{CodeBlock, Instruction, Queryable}
 import com.lollypop.runtime.LollypopCodeDebugger.QApplication
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.invocables.InlineCodeBlock
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
@@ -94,7 +95,7 @@ object LollypopCodeDebugger {
 
     def executeCode(): Unit = {
       getInstruction foreach { op =>
-        val (scope0, _, result0) = LollypopVM.execute(scope, op)
+        val (scope0, _, result0) = op.execute(scope)
         scope = scope0
         result = result0
         position += 1

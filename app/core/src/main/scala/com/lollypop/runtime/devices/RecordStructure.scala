@@ -68,7 +68,7 @@ trait RecordStructure {
   /**
    * @return a name to column mapping
    */
-  def nameToColumnMap: () => Map[String, TableColumn] = {
+  private def nameToColumnMap: () => Map[String, TableColumn] = {
     val mapping = Map(columns.map(c => c.name -> c): _*)
     () => mapping
   }

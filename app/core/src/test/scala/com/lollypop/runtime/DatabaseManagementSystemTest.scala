@@ -1,5 +1,6 @@
 package com.lollypop.runtime
 
+import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
@@ -13,10 +14,9 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
   describe(classOf[DatabaseManagementSystem].getSimpleName) {
 
     it("should provide the collection of environment tables") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|from (OS.getEnv()) where name is 'HOME'
-           |""".stripMargin
-      )
+           |""".stripMargin.searchSQL(Scope())
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph == List(
         Map("name" -> "HOME", "value" -> scala.util.Properties.userHome),
@@ -24,7 +24,6 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
     }
 
     it("should create a table for testing") {
-      LollypopVM.executeSQL(Scope(), sql =
         s"""|drop if exists temp.stocks.stocksDMS
             |create table if not exists temp.runtime.stocksDMS (
             |   symbol: String(8),
@@ -32,15 +31,14 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
             |   lastSale: Double,
             |   lastSaleTime: DateTime
             |)
-            |""".stripMargin)
+            |""".stripMargin.executeSQL(Scope())
     }
 
     it("should retrieve the details for a specific table") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|namespace 'temp.runtime'
            |from (OS.getDatabaseObjects()) where name matches '.*stocksDM.*'
-           |""".stripMargin
-      )
+           |""".stripMargin.searchSQL(Scope())
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.map(_.filterNot(t => Seq("lastModifiedTime", SRC_ROWID_NAME).contains(t._1))) == List(
         Map("database" -> "temp", "name" -> "stocksDMS", "schema" -> "runtime", "comment" -> "", "qname" -> "temp.runtime.stocksDMS", "type" -> "table")
@@ -48,11 +46,10 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
     }
 
     it("should search for columns from within a specific table") {
-      val (_, _, device) = LollypopVM.searchSQL(Scope(),
+      val (_, _, device) =
         """|namespace 'temp.runtime'
            |from (OS.getDatabaseColumns()) where name matches '.*stocksDM.*'
-           |""".stripMargin
-      )
+           |""".stripMargin.searchSQL(Scope())
       device.tabulate(limit = 20).foreach(logger.info)
       assert(device.toMapGraph.map(_.filterNot(t => Seq("lastModifiedTime", SRC_ROWID_NAME).contains(t._1))) == List(
         Map("database" -> "temp", "name" -> "stocksDMS", "columnTypeName" -> "String", "columnName" -> "symbol", "JDBCType" -> 12, "columnType" -> "String(8)", "schema" -> "runtime", "qname" -> "temp.runtime.stocksDMS", "maxSizeInBytes" -> 8, "type" -> "table"),

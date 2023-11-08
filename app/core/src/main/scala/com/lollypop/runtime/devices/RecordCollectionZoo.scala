@@ -8,12 +8,6 @@ import com.lollypop.util.OptionHelper.OptionEnrichment
  */
 object RecordCollectionZoo {
 
-  final implicit class ProductToRow[A <: Product](val product: A) extends AnyVal {
-    def productToRow(implicit collection: RecordMetadataIO): Row = {
-      Map(product.productElementNames.toSeq zip product.productIterator: _*).toRow
-    }
-  }
-
   final implicit class MapToRow(val mappings: QMap[String, Any]) extends AnyVal {
 
     /**
