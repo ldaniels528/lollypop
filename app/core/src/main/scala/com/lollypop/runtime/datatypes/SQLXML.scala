@@ -4,8 +4,8 @@ import com.lollypop.AppConstants
 import com.lollypop.runtime.DatabaseObjectNS
 import com.lollypop.runtime.datatypes.SQLXML.SYSTEM_ID
 import com.lollypop.runtime.devices.RowCollectionZoo._
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
 import com.lollypop.util.ResourceHelper._
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 import org.apache.commons.io.IOUtils
 import org.xml.sax.InputSource
 import org.xml.sax.ext.DefaultHandler2

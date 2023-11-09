@@ -2,7 +2,7 @@ package com.lollypop.database.jdbc
 
 import com.lollypop.database.QueryRequest
 import com.lollypop.database.jdbc.types.JDBCValueConversion.JDBCStringRenderer
-import com.lollypop.util.CodecHelper.EnrichedByteArray
+import com.lollypop.util.IOTools.EnrichedByteArray
 
 import scala.collection.mutable
 

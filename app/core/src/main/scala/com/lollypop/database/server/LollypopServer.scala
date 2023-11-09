@@ -27,10 +27,10 @@ import com.lollypop.runtime.instructions.conditions.{AND, EQ}
 import com.lollypop.runtime.instructions.functions.AnonymousFunction
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.util.CodecHelper.EnrichedByteString
 import com.lollypop.util.JSONSupport.JsValueConversion
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.util.IOTools.EnrichedByteString
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{AppConstants, die}
 import lollypop.io.IOCost

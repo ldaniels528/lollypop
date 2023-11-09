@@ -7,7 +7,7 @@ import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.{DatabaseObjectNS, ROWID, safeCast}
 import com.lollypop.util.ByteBufferHelper.DataTypeByteBuffer
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 import lollypop.io.{Encodable, IOCost}
 
 import java.io.{InputStream, Reader}

@@ -2,11 +2,11 @@ package com.lollypop.runtime.datatypes
 
 import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
 import com.lollypop.util.DateHelper
 import com.lollypop.util.ResourceHelper._
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{ByteArrayInputStream, File, FileReader}

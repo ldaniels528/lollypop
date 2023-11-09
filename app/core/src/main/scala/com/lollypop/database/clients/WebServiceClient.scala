@@ -1,12 +1,13 @@
 package com.lollypop.database.clients
 
 import com.lollypop.AppConstants.lollypopSessionID
+import com.lollypop.util.IOTools
 import com.lollypop.util.ResourceHelper._
 import org.apache.commons.io.IOUtils
 import spray.json._
 
 import java.io._
-import java.net.{HttpURLConnection, URL}
+import java.net.{HttpURLConnection, URI}
 import java.util.UUID
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.io.Source
@@ -42,7 +43,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
    * <tr><td>Cacheable</td> <td>No</td></tr>
    * <tr><td>Allowed in HTML forms</td> <td>No</td></tr>
    * </table>
-   * @param url the web service URL
+   * @param url  the web service URL
    * @param body the request body
    * @return the response as a [[JsValue JSON value]]
    */
@@ -97,7 +98,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
    */
   def getAsFile(url: String): File = {
     val file = File.createTempFile("lollypop", "download")
-    new FileOutputStream(file) use { out => httpDownload(url, out) }
+    new FileOutputStream(file).use(httpDownload(url, _))
     file
   }
 
@@ -126,7 +127,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
    * <tr><td>Cacheable</td> <td>No</td></tr>
    * <tr><td>Allowed in HTML forms</td> <td>No</td></tr>
    * </table>
-   * @param url the web service URL
+   * @param url  the web service URL
    * @param body the request body
    * @return the response as a [[JsValue JSON value]]
    */
@@ -142,7 +143,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
    * <tr><td>Cacheable</td> <td>No</td></tr>
    * <tr><td>Allowed in HTML forms</td> <td>No</td></tr>
    * </table>
-   * @param url the web service URL
+   * @param url  the web service URL
    * @param file the request body as a [[File file]]
    * @return the response as a [[JsValue JSON value]]
    */
@@ -221,7 +222,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
    *  <tr><td>Cacheable</td> <td>No</td></tr>
    *  <tr><td>Allowed in HTML forms</td> <td>No</td></tr>
    * </table>
-   * @param url     the web service URL
+   * @param url  the web service URL
    * @param body the request body
    */
   def put(url: String, body: Array[Byte]): Unit = httpXXX(method = "PUT", url, body, doInput = false)
@@ -243,7 +244,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
 
   private def httpDownload(url: String, out: OutputStream): Int = {
     val method = "GET"
-    new URL(url).openConnection() match {
+    new URI(url).toURL.openConnection() match {
       case conn: HttpURLConnection =>
         conn.setConnectTimeout(connectionTimeout.toMillis.toInt)
         conn.setRequestMethod(method)
@@ -256,7 +257,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
   }
 
   private def httpXXX(method: String, url: String): JsValue = {
-    new URL(url).openConnection() match {
+    new URI(url).toURL.openConnection() match {
       case conn: HttpURLConnection =>
         conn.setConnectTimeout(connectionTimeout.toMillis.toInt)
         conn.setRequestMethod(method)
@@ -269,7 +270,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
   }
 
   private def httpXXX(method: String, url: String, body: Array[Byte], doInput: Boolean): JsValue = {
-    new URL(url).openConnection() match {
+    new URI(url).toURL.openConnection() match {
       case conn: HttpURLConnection =>
         conn.setConnectTimeout(connectionTimeout.toMillis.toInt)
         conn.setReadTimeout(readTimeout.toMillis.toInt)
@@ -294,7 +295,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
   }
 
   private def httpXXX(method: String, url: String, file: File, doInput: Boolean): JsValue = {
-    new URL(url).openConnection() match {
+    new URI(url).toURL.openConnection() match {
       case conn: HttpURLConnection =>
         conn.setConnectTimeout(connectionTimeout.toMillis.toInt)
         conn.setReadTimeout(readTimeout.toMillis.toInt)
@@ -306,7 +307,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
         conn.setRequestProperty("Cookie", getCookieString)
         conn.setDoOutput(true)
         if (doInput) conn.setDoInput(doInput)
-        new FileInputStream(file).use(in => conn.getOutputStream.use(out => IOUtils.copy(in, out)))
+        IOTools.transfer(file, conn)
         conn.getResponseCode match {
           case HttpURLConnection.HTTP_OK =>
             if (doInput) toJSON(Source.fromInputStream(conn.getInputStream).use(_.mkString)) else JsObject()

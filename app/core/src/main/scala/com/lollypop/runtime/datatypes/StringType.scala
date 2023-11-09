@@ -6,10 +6,10 @@ import com.lollypop.runtime.devices.{FieldMetadata, QMap, RowCollection}
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.{INT_BYTES, Scope}
 import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
-import com.lollypop.util.CodecHelper.RichInputStream
 import com.lollypop.util.DateHelper
 import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.util.IOTools.RichInputStream
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import spray.json.JsValue
 
