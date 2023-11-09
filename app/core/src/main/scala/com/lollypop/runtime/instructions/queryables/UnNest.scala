@@ -14,7 +14,7 @@ import lollypop.io.IOCost
  * @param expression the [[Expression expression]] to unnest
  */
 case class UnNest(expression: Expression) extends ScalarFunctionCall with RuntimeQueryable {
-  override val functionName: String = "unnest"
+  override val name: String = "unnest"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = expression.search(scope)
 }

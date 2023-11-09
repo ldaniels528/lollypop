@@ -33,9 +33,7 @@ case class ApplyTo(host: Expression, tuple: Expression) extends RuntimeExpressio
     case FunctionArguments(args) => args
   }
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    (scope, IOCost.empty, processInternalOps(host, args))
-  }
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = processInternalOps(host, args)
 
   override def returnType: DataType = {
     host.returnType match {

@@ -44,6 +44,8 @@ object NamedExpression extends ExpressionParser {
     }).map(_.updateLocation(_token))
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts.isFunctionCall || ts.isField
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
+    ts.isFunctionCall || ts.isField
+  }
 
 }

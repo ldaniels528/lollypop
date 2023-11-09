@@ -21,6 +21,8 @@ trait AppConstants {
 
   val __loaded__ = "__loaded__"
   val __resources__ = "__resources__"
+  val __secret_variables__ = "__secret_variables__"
+  val __self__ = "__self__"
   val __userHome__ = "__userHome__"
   val __userName__ = "__userName__"
   val __version__ = "__version__"

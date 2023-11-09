@@ -22,9 +22,7 @@ import lollypop.io.IOCost
  */
 case class ElementAt(host: Expression, args: List[Expression]) extends RuntimeExpression with FunctionCall with LollypopNative {
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    (scope, IOCost.empty, processInternalOps(host, args))
-  }
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = processInternalOps(host, args)
 
   override def returnType: DataType = {
     host.returnType match {

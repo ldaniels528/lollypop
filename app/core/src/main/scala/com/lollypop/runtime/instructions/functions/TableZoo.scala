@@ -9,13 +9,13 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import lollypop.io.IOCost
 
 case class TableZoo(columns: List[Column]) extends ScalarFunctionCall with RuntimeExpression {
-  override val functionName: String = "TableZoo"
+  override val name: String = "TableZoo"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollectionBuilder) = {
     (scope, IOCost.empty, RowCollectionBuilder(columns = columns.map(_.toTableColumn)))
   }
 
-  override def toSQL: String = List(functionName, columns.map(_.toSQL).mkString("(", ", ", ")")).mkString
+  override def toSQL: String = List(name, columns.map(_.toSQL).mkString("(", ", ", ")")).mkString
 
 }
 

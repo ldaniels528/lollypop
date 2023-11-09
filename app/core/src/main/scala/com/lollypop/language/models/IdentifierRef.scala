@@ -1,5 +1,7 @@
 package com.lollypop.language.models
 
+import com.lollypop.util.OptionHelper.OptionEnrichment
+
 /**
  * Represents an identifier (e.g. field or variable)
  */
@@ -11,6 +13,6 @@ trait IdentifierRef extends NamedExpression {
 
 object IdentifierRef {
 
-  def unapply(identifier: IdentifierRef): Option[String] = Option(identifier.name)
+  def unapply(identifier: IdentifierRef): Option[String] = identifier.alias ?? Some(identifier.name)
 
 }

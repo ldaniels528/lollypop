@@ -13,7 +13,7 @@ import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.expressions.TableExpression
-import com.lollypop.runtime.instructions.functions.{DataTypeConstructor, InternalFunctionCall}
+import com.lollypop.runtime.instructions.functions.DataTypeConstructor
 import com.lollypop.runtime.instructions.invocables.EOL
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
@@ -63,7 +63,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
       __userName__ -> { () => scala.util.Properties.userName },
       __version__ -> { () => version }
     )
-    m ++ Map("__secret_variables__" -> { () => m.keys.toArray })
+    m ++ Map(__secret_variables__ -> { () => m.keys.toArray })
   }
 
   override def ++(that: Scope): Scope = {
@@ -274,10 +274,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
   }
 
   override def resolveReferenceName(instruction: Instruction): String = instruction match {
-    case FieldRef(name) => name
-    case VariableRef(name) => name
-    case f: InternalFunctionCall => f.functionName
-    case n: NamedExpression => n.name
+    case NamedExpression(name) => name
     case other => dieIllegalType(other)
   }
 
