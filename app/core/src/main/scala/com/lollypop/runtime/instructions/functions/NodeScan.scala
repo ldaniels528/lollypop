@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
+import com.lollypop.language.HelpDoc.CATEGORY_CONCURRENCY
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import lollypop.io.IOCost
@@ -17,7 +17,7 @@ case class NodeScan() extends ScalarFunctionCall with RuntimeExpression {
 
 object NodeScan extends FunctionCallParserE0(
   name = "nodeScan",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   description =
     """|Returns an array of Lollypop peer node port numbers.
        |""".stripMargin,

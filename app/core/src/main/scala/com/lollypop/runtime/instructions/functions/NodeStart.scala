@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_FUNCTIONAL}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
@@ -27,7 +27,7 @@ case class NodeStart(port: Option[Expression]) extends ScalarFunctionCall with R
 
 object NodeStart extends FunctionCallParserE0Or1(
   name = "nodeStart",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   paradigm = PARADIGM_FUNCTIONAL,
   description =
     """|Starts a Lollypop peer node.

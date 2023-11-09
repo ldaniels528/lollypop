@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
+import com.lollypop.language.HelpDoc.CATEGORY_CONCURRENCY
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
@@ -16,7 +16,7 @@ case class NodeStop(expression: Expression) extends ScalarFunctionCall with Runt
 
 object NodeStop extends FunctionCallParserE1(
   name = "nodeStop",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   description =
     """|shuts down a running Lollypop peer node.
        |""".stripMargin,

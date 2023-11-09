@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language.models.{Instruction, Invokable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
@@ -29,7 +29,7 @@ object Async extends ExpressionParser with InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "async",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = templateCard,
     description = "Asynchronously executes an instruction",
