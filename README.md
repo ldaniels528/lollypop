@@ -30,8 +30,6 @@ Lollypop v0.1.6.2
   * <a href="#System_Tools">System Tools</a> (10)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
   * <a href="#Transformation">Transformation</a> (8)
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-cz+94GcRl56VKb89rA9eLsFAos4WmPyykj6CYYsXEfpeIsRmuWcd5jhEM4CrC5CE" crossorigin="anonymous">
-
 <a name="Introduction"></a>
 ## Introduction
 Lollypop is a general-purpose programming/scripting language for the JVM.
@@ -128,7 +126,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-10T07:37:13.461Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-10T08:34:49.191Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -180,7 +178,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-10T07:37:13.537Z"
+"2023-11-10T08:34:49.269Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -683,10 +681,10 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| J    | ♠    |
-| 4    | ♣    |
-| 5    | ♣    |
-| 7    | ♥    |
+| 5    | ♦    |
+| 10   | ♥    |
+| J    | ♣    |
+| Q    | ♣    |
 | 6    | ♦    |
 |-------------|
 ```
@@ -882,9 +880,9 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="515e2207-af3e-4b9a-a360-849a8d475962")
+', message="OK", statusCode=200, responseID="53ef7d1b-5704-4258-b1b9-4f3b47a9bbd7")
 ```
-### http² (Concurrency &#8212; Reactive) <i class='fa fa-flask'></i>
+### http² (Concurrency &#8212; Reactive) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Returns a URL based on a relative path.
 
 ```sql
@@ -892,9 +890,9 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="e7ac3f61-4dab-4dd6-9be9-620fc8b0a1b0")
+HttpResponse(body=null, message=null, statusCode=200, responseID="af1e74f0-a3fc-4b25-90a5-f7e4b6d5ac96")
 ```
-### http³ (Concurrency &#8212; Reactive) <i class='fa fa-flask'></i>
+### http³ (Concurrency &#8212; Reactive) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Returns a URI based on a relative path.
 
 ```sql
@@ -902,7 +900,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="eb2c4fff-2ad7-4a85-b0a2-113c3d95f74f")
+HttpResponse(body=null, message=null, statusCode=200, responseID="f2d7ae8c-db7c-4544-b9cd-aab735e02d1a")
 ```
 ### nodeAPI (Concurrency &#8212; Functional) 
 *Description*: Creates a new REST API endpoint
@@ -921,7 +919,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@3a80515c", message="OK", statusCode=200, responseID="ca9f4100-b1ce-4fa6-a632-924b2c92fbd0")
+HttpResponse(body="java.io.PrintStream@3a80515c", message="OK", statusCode=200, responseID="d9b4b377-268e-48be-8079-584b3fb03f4e")
 ```
 ##### Console Output
 ```
@@ -986,7 +984,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[11776, 14892, 13317]
+[12948, 14957, 10795]
 ```
 ### nodeStart (Concurrency &#8212; Functional) 
 *Description*: Starts a Lollypop peer node.
@@ -996,7 +994,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-8015
+9473
 ```
 ### nodeStop (Concurrency &#8212; Functional) 
 *Description*: shuts down a running Lollypop peer node.
@@ -1111,10 +1109,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-10T07:37:17.139Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-10T07:37:17.139Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-10T07:37:17.139Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-10T07:37:17.139Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-10T08:34:52.882Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-10T08:34:52.882Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-10T08:34:52.882Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-10T08:34:52.882Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative) 
@@ -1206,15 +1204,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| exchange  | symbol | lastSale | lastSaleTime             |
-|----------------------------------------------------------|
-| NYSE      | NQUG   |  64.9519 | 2023-11-10T07:36:48.430Z |
-| NASDAQ    | BF     |  66.5472 | 2023-11-10T07:36:38.952Z |
-| NASDAQ    | RIWV   |   3.3994 | 2023-11-10T07:37:15.001Z |
-| OTHER_OTC | UXXO   |   0.2705 | 2023-11-10T07:36:44.660Z |
-| OTHER_OTC | XXNQO  |   0.7384 | 2023-11-10T07:36:38.833Z |
-|----------------------------------------------------------|
+|---------------------------------------------------------|
+| exchange | symbol | lastSale | lastSaleTime             |
+|---------------------------------------------------------|
+| NASDAQ   | OKVBO  |  46.3666 | 2023-11-10T08:34:11.021Z |
+| OTCBB    | QAKRB  |   1.4861 | 2023-11-10T08:33:54.774Z |
+| NASDAQ   | LD     |     1.91 | 2023-11-10T08:34:29.170Z |
+| NYSE     | QKTKP  |  40.2147 | 2023-11-10T08:34:21.415Z |
+| AMEX     | RWLL   |  59.0805 | 2023-11-10T08:34:39.087Z |
+|---------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural) 
 *Description*: Creates a database procedure
@@ -1282,7 +1280,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.4485, _2=720.0)
+Tuple2(_1=0.50625, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
@@ -1910,7 +1908,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-10T07:37:18.228Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-10T08:34:54.018Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative) 
@@ -2060,11 +2058,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-10T07:37:18.254Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-10T07:37:18.254Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-10T08:34:54.076Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-10T08:34:54.077Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-10T07:37:18.254Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-10T08:34:54.077Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative) 
@@ -2099,7 +2097,7 @@ stocks
 | SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
 |-----------------------------------------------------------------------------|
 ```
-### upsert¹ (Dataframe I/O &#8212; Declarative) <i class='fa fa-flask'></i>
+### upsert¹ (Dataframe I/O &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2131,7 +2129,7 @@ ns('Stocks')
 | AAPL   | NASDAQ   |   156.39 |
 |------------------------------|
 ```
-### upsert² (Dataframe I/O &#8212; Declarative) <i class='fa fa-flask'></i>
+### upsert² (Dataframe I/O &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2197,12 +2195,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-10T07:37:18.372Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-10T07:37:18.372Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-10T07:37:18.372Z | VV     | OTCBB     |          |
-| 2023-11-10T07:37:18.372Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-10T07:37:18.372Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-10T07:37:18.372Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-10T08:34:54.207Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-10T08:34:54.207Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-10T08:34:54.207Z | VV     | OTCBB     |          |
+| 2023-11-10T08:34:54.207Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-10T08:34:54.207Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-10T08:34:54.207Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative) 
@@ -2890,7 +2888,7 @@ response matches {
 ```sql
 true
 ```
-### matches⁴ (Filtering and Matching &#8212; Functional) <i class='fa fa-flask'></i>
+### matches⁴ (Filtering and Matching &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -3074,7 +3072,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-10T07:37:19.584Z
+2023-11-10T08:34:55.254Z
 ```
 ### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3115,7 +3113,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@2842c098
+scala.Function1$@688d2a5d
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the super-classes extended by a class or instance
@@ -3254,7 +3252,7 @@ from @stocks
 ```sql
 destroy stocks
 ```
-### let (Scope and Session &#8212; Functional) <i class='fa fa-flask'></i>
+### let (Scope and Session &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Creates a variable that automatically applies a CODEC function when mutated.
 
 ```sql
@@ -3277,7 +3275,7 @@ __namespace__
 ```sql
 stocks_demo.public
 ```
-### package (Scope and Session &#8212; Declarative) <i class='fa fa-flask'></i>
+### package (Scope and Session &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Declares the default JVM package namespace
 
 ```sql
@@ -3348,7 +3346,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-10T07:37:20.019Z
+2023-11-10T08:34:55.745Z
 ```
 ### help¹ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
@@ -3491,8 +3489,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000792ms] AnyLiteral 1 ~> 1 <Integer>
-[0.418250ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000167ms] AnyLiteral 1 ~> 1 <Integer>
+[0.354084ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3719,7 +3717,7 @@ import "java.io.File"
 f = new File("./test.json")
 f ===> stdout
 ```
-### =>>¹ (Transformation &#8212; Functional) <i class='fa fa-flask'></i>
+### =>>¹ (Transformation &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Monadic comprehension
 
 ```sql
@@ -3733,7 +3731,7 @@ c
 ```sql
 Success(value=150)
 ```
-### =>>² (Transformation &#8212; Functional) <i class='fa fa-flask'></i>
+### =>>² (Transformation &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
 *Description*: Monadic comprehension
 
 ```sql

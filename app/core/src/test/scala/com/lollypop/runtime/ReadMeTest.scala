@@ -60,11 +60,6 @@ class ReadMeTest extends AnyFunSpec {
           (category, instructions) <- categoryMappings
         } out.println(s"""  * <a href="#${toAnchor(category)}">$category</a> (${instructions.size})""")
 
-        // add HTML stuff
-        out.println(
-          """|<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-cz+94GcRl56VKb89rA9eLsFAos4WmPyykj6CYYsXEfpeIsRmuWcd5jhEM4CrC5CE" crossorigin="anonymous">
-             |""".stripMargin)
-
         // include the introduction and project status
         introduction(out)
         projectStatus(out)
@@ -141,10 +136,16 @@ class ReadMeTest extends AnyFunSpec {
     }
   }
 
+  private def handleExperimental(help: HelpDoc): String = {
+    if (help.isExperimental)
+      """<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">"""
+    else ""
+  }
+
   private def invoke(out: PrintWriter, help: HelpDoc, nth: String)(implicit scope: Scope): Unit = {
     // header section
     out.println(
-      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm}) ${if (help.isExperimental)"<i class='fa fa-flask'></i>" else ""}
+      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm}) ${handleExperimental(help)}
           |*Description*: ${help.description.trim}
           |""".stripMargin)
     out.println("```sql")
