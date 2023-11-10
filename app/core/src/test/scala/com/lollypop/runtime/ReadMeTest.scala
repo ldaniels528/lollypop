@@ -137,9 +137,10 @@ class ReadMeTest extends AnyFunSpec {
   }
 
   private def handleExperimental(help: HelpDoc): String = {
-    if (help.isExperimental)
-      """<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">"""
-    else ""
+    if (help.isExperimental) {
+      val iconFile = imageDirectory / "flask.svg"
+      s"""<img src="${iconFile.getPath}" width="24" height="24">"""
+    } else ""
   }
 
   private def invoke(out: PrintWriter, help: HelpDoc, nth: String)(implicit scope: Scope): Unit = {

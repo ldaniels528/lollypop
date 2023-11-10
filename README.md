@@ -126,7 +126,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-10T08:34:49.191Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-10T08:43:44.453Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +178,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-10T08:34:49.269Z"
+"2023-11-10T08:43:44.526Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -681,11 +681,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 5    | ♦    |
-| 10   | ♥    |
-| J    | ♣    |
-| Q    | ♣    |
-| 6    | ♦    |
+| K    | ♠    |
+| 4    | ♣    |
+| 7    | ♦    |
+| 6    | ♥    |
+| 2    | ♣    |
 |-------------|
 ```
 ### transpose³ (Aggregation and Sorting &#8212; Declarative) 
@@ -824,7 +824,7 @@ n
 ```
 ##### Results
 ```sql
-50
+51
 ```
 ### http¹ (Concurrency &#8212; Reactive) 
 *Description*: Lollypop-native HTTP client
@@ -880,9 +880,9 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="53ef7d1b-5704-4258-b1b9-4f3b47a9bbd7")
+', message="OK", statusCode=200, responseID="4931936c-bc14-4daf-99a3-2be0f3057ae7")
 ```
-### http² (Concurrency &#8212; Reactive) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### http² (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URL based on a relative path.
 
 ```sql
@@ -890,9 +890,9 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="af1e74f0-a3fc-4b25-90a5-f7e4b6d5ac96")
+HttpResponse(body=null, message=null, statusCode=200, responseID="01ce5fac-513d-43e0-b636-cf9dbe21babd")
 ```
-### http³ (Concurrency &#8212; Reactive) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### http³ (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URI based on a relative path.
 
 ```sql
@@ -900,7 +900,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="f2d7ae8c-db7c-4544-b9cd-aab735e02d1a")
+HttpResponse(body=null, message=null, statusCode=200, responseID="84a467d5-81e2-48a0-a2d8-60ba931d4904")
 ```
 ### nodeAPI (Concurrency &#8212; Functional) 
 *Description*: Creates a new REST API endpoint
@@ -919,7 +919,7 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@3a80515c", message="OK", statusCode=200, responseID="d9b4b377-268e-48be-8079-584b3fb03f4e")
+HttpResponse(body="java.io.PrintStream@3a80515c", message="OK", statusCode=200, responseID="efcf9f58-a175-4399-8598-5d41f663b571")
 ```
 ##### Console Output
 ```
@@ -984,7 +984,7 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[12948, 14957, 10795]
+[11787, 8986, 15400]
 ```
 ### nodeStart (Concurrency &#8212; Functional) 
 *Description*: Starts a Lollypop peer node.
@@ -994,7 +994,7 @@ nodeStart()
 ```
 ##### Results
 ```sql
-9473
+13660
 ```
 ### nodeStop (Concurrency &#8212; Functional) 
 *Description*: shuts down a running Lollypop peer node.
@@ -1109,10 +1109,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-10T08:34:52.882Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-10T08:34:52.882Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-10T08:34:52.882Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-10T08:34:52.882Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-10T08:43:48.116Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-10T08:43:48.116Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-10T08:43:48.116Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-10T08:43:48.116Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative) 
@@ -1204,15 +1204,15 @@ tickers 5
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------|
-| exchange | symbol | lastSale | lastSaleTime             |
-|---------------------------------------------------------|
-| NASDAQ   | OKVBO  |  46.3666 | 2023-11-10T08:34:11.021Z |
-| OTCBB    | QAKRB  |   1.4861 | 2023-11-10T08:33:54.774Z |
-| NASDAQ   | LD     |     1.91 | 2023-11-10T08:34:29.170Z |
-| NYSE     | QKTKP  |  40.2147 | 2023-11-10T08:34:21.415Z |
-| AMEX     | RWLL   |  59.0805 | 2023-11-10T08:34:39.087Z |
-|---------------------------------------------------------|
+|----------------------------------------------------------|
+| exchange  | symbol | lastSale | lastSaleTime             |
+|----------------------------------------------------------|
+| OTHER_OTC | VNFJ   |   0.2455 | 2023-11-10T08:42:51.314Z |
+| NASDAQ    | RRH    |   5.2046 | 2023-11-10T08:43:21.508Z |
+| NASDAQ    | ET     |   1.1514 | 2023-11-10T08:43:44.445Z |
+| OTHER_OTC | NEDCD  |   0.0364 | 2023-11-10T08:43:21.223Z |
+| OTCBB     | XGXNM  |   2.1853 | 2023-11-10T08:43:39.155Z |
+|----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural) 
 *Description*: Creates a database procedure
@@ -1280,7 +1280,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.50625, _2=720.0)
+Tuple2(_1=0.516209, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
@@ -1908,7 +1908,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-10T08:34:54.018Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-10T08:43:49.268Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative) 
@@ -2058,11 +2058,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-10T08:34:54.076Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-10T08:34:54.077Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-10T08:43:49.322Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-10T08:43:49.323Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-10T08:34:54.077Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-10T08:43:49.323Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative) 
@@ -2097,7 +2097,7 @@ stocks
 | SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
 |-----------------------------------------------------------------------------|
 ```
-### upsert¹ (Dataframe I/O &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### upsert¹ (Dataframe I/O &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2129,7 +2129,7 @@ ns('Stocks')
 | AAPL   | NASDAQ   |   156.39 |
 |------------------------------|
 ```
-### upsert² (Dataframe I/O &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### upsert² (Dataframe I/O &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2195,12 +2195,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-10T08:34:54.207Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-10T08:34:54.207Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-10T08:34:54.207Z | VV     | OTCBB     |          |
-| 2023-11-10T08:34:54.207Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-10T08:34:54.207Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-10T08:34:54.207Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-10T08:43:49.447Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-10T08:43:49.451Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-10T08:43:49.452Z | VV     | OTCBB     |          |
+| 2023-11-10T08:43:49.452Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-10T08:43:49.452Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-10T08:43:49.452Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative) 
@@ -2888,7 +2888,7 @@ response matches {
 ```sql
 true
 ```
-### matches⁴ (Filtering and Matching &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### matches⁴ (Filtering and Matching &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -3072,7 +3072,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-10T08:34:55.254Z
+2023-11-10T08:43:50.508Z
 ```
 ### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3113,7 +3113,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@688d2a5d
+scala.Function1$@2842c098
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the super-classes extended by a class or instance
@@ -3252,7 +3252,7 @@ from @stocks
 ```sql
 destroy stocks
 ```
-### let (Scope and Session &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### let (Scope and Session &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Creates a variable that automatically applies a CODEC function when mutated.
 
 ```sql
@@ -3275,7 +3275,7 @@ __namespace__
 ```sql
 stocks_demo.public
 ```
-### package (Scope and Session &#8212; Declarative) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### package (Scope and Session &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Declares the default JVM package namespace
 
 ```sql
@@ -3346,7 +3346,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-10T08:34:55.745Z
+2023-11-10T08:43:51.081Z
 ```
 ### help¹ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
@@ -3489,8 +3489,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000167ms] AnyLiteral 1 ~> 1 <Integer>
-[0.354084ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000125ms] AnyLiteral 1 ~> 1 <Integer>
+[0.420042ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3717,7 +3717,7 @@ import "java.io.File"
 f = new File("./test.json")
 f ===> stdout
 ```
-### =>>¹ (Transformation &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### =>>¹ (Transformation &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Monadic comprehension
 
 ```sql
@@ -3731,7 +3731,7 @@ c
 ```sql
 Success(value=150)
 ```
-### =>>² (Transformation &#8212; Functional) <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.x/svgs/solid/flask.svg" width="24" height="24">
+### =>>² (Transformation &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Monadic comprehension
 
 ```sql
