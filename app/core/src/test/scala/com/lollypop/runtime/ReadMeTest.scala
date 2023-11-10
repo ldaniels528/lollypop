@@ -60,6 +60,11 @@ class ReadMeTest extends AnyFunSpec {
           (category, instructions) <- categoryMappings
         } out.println(s"""  * <a href="#${toAnchor(category)}">$category</a> (${instructions.size})""")
 
+        // add HTML stuff
+        out.println(
+          """|<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-cz+94GcRl56VKb89rA9eLsFAos4WmPyykj6CYYsXEfpeIsRmuWcd5jhEM4CrC5CE" crossorigin="anonymous">
+             |""".stripMargin)
+
         // include the introduction and project status
         introduction(out)
         projectStatus(out)
@@ -139,18 +144,12 @@ class ReadMeTest extends AnyFunSpec {
   private def invoke(out: PrintWriter, help: HelpDoc, nth: String)(implicit scope: Scope): Unit = {
     // header section
     out.println(
-      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm})
+      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm}) ${if (help.isExperimental)"<i class='fa fa-flask'></i>" else ""}
           |*Description*: ${help.description.trim}
           |""".stripMargin)
     out.println("```sql")
     out.println(help.example.trim)
     out.println("```")
-
-    if (help.isExperimental) {
-      out.println(
-        s"""|<img src="docs/images/experimental.png" alt="${help.name} is marked as experimental">
-            |""".stripMargin)
-    }
 
     // detail section
     for {
