@@ -7,7 +7,7 @@ import com.lollypop.runtime.errors.{MatrixDimensionMismatchError, MatrixMustBeSq
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.{INT_BYTES, LONG_BYTES, LollypopNative, Scope}
 import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
-import com.lollypop.util.CodecHelper.EnrichedByteArray
+import com.lollypop.util.IOTools.EnrichedByteArray
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{LollypopException, die}
 import org.apache.commons.math3.linear._

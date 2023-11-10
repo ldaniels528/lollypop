@@ -27,10 +27,10 @@ import com.lollypop.runtime.instructions.conditions.{AND, EQ}
 import com.lollypop.runtime.instructions.functions.AnonymousFunction
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.util.CodecHelper.EnrichedByteString
 import com.lollypop.util.JSONSupport.JsValueConversion
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.util.IOTools.EnrichedByteString
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{AppConstants, die}
 import lollypop.io.IOCost
@@ -692,16 +692,13 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
   }
 
   private def getSession(sessionID: String): Scope = {
-    implicit val scope: Scope = scopes.getOrElseUpdate(sessionID, Scope(rootScope))
+    implicit val scope: Scope = scopes.getOrElseUpdate(sessionID, rootScope)
     if (!scope.getValueReferences.contains("sessionID"))
       scope.withVariable(name = "sessionID", `type` = UUIDType, value = Some(sessionID), isReadOnly = false)
     scope
   }
 
-  private def newSession: Scope = {
-    val scope = Scope(rootScope)
-    scope
-  }
+  private def newSession: Scope = rootScope
 
   private def updateSession(sessionID: String, scope: Scope): Scope = {
     scopes.put(sessionID, scope)

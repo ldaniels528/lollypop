@@ -11,6 +11,7 @@ import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstance
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.JSONSupport.JSONProductConversion
 import com.lollypop.util.JVMSupport._
+import lollypop.io.IOCost
 import spray.json.JsArray
 
 import java.util.Date
@@ -23,11 +24,11 @@ import scala.concurrent.duration.FiniteDuration
  */
 trait RuntimeExpression extends Expression with RuntimeInstruction {
 
-  def processInternalOps(host: Expression, args: List[Expression])(implicit scope: Scope): Any = {
-    val instance = host.execute(scope)._3
-    val values = args.transform(scope)._3
+  def processInternalOps(host: Expression, args: List[Expression])(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val (sa, ca, instance) = host.execute(scope)
+    val (sb, cb, values) = args.transform(sa)
     val tuple = this
-    instance match {
+    val result = instance match {
       // array(5) | ['A' to 'Z'](8, 19)
       case array: Array[_] =>
         values match {
@@ -43,7 +44,7 @@ trait RuntimeExpression extends Expression with RuntimeInstruction {
           case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // anonymousFx('a', 'b', 'c')
-      case fx: LambdaFunction => fx.call(args).execute(scope)._3
+      case fx: LambdaFunction => fx.call(args).execute(sb)._3
       // ({ symbol: 'T', exchange: 'NYSE', lastSale: 22.77 })(0)
       case row: Row =>
         values match {
@@ -72,8 +73,9 @@ trait RuntimeExpression extends Expression with RuntimeInstruction {
           case xxx => tuple.dieArgumentMismatch(args = xxx.size, minArgs = 1, maxArgs = 2)
         }
       // instance.apply(1, 78, 'H')
-      case inst => inst.invokeMethod(name = "apply", params = args)
+      case inst => inst.invokeMethod(name = "apply", params = args)(sb)
     }
+    (sb, ca ++ cb, result)
   }
 
 }
@@ -137,7 +139,7 @@ object RuntimeExpression {
     @inline def asDouble(implicit scope: Scope): Option[Double] = Option(getValue.execute(scope)._3).map(Float64Type.convert)
 
     @inline def asInt32(implicit scope: Scope): Option[Int] = Option(getValue.execute(scope)._3).map(Int32Type.convert)
-    
+
     @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(getValue.execute(scope)._3).map(IntervalType.convert)
 
     @inline

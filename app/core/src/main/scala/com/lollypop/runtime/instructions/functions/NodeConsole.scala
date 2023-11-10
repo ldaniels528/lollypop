@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
+import com.lollypop.language.HelpDoc.CATEGORY_CONCURRENCY
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.Int32Type
@@ -49,7 +49,7 @@ case class NodeConsole(portExpr: Expression, commandsExpr: Option[Expression])
 
 object NodeConsole extends FunctionCallParserE1Or2(
   name = "nodeConsole",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   description =
     """|Opens a commandline interface to a remote Lollypop peer node.
        |""".stripMargin,

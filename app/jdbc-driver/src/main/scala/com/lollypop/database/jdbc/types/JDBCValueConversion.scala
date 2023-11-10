@@ -3,7 +3,7 @@ package com.lollypop.database.jdbc.types
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes._
-import com.lollypop.util.CodecHelper.RichReader
+import com.lollypop.util.IOTools.RichReader
 import com.lollypop.util.DateHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
 

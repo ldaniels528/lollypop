@@ -21,7 +21,7 @@ import lollypop.io.IOCost
  */
 case class NS(expression: Expression) extends ScalarFunctionCall
   with RuntimeExpression with Queryable {
-  override val functionName: String = "ns"
+  override val name: String = "ns"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val result = (expression.asString flatMap {

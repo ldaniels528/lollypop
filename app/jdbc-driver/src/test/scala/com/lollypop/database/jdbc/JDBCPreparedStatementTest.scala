@@ -3,7 +3,7 @@ package com.lollypop.database.jdbc
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes.CLOB
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 import com.lollypop.util.DateHelper
 import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec

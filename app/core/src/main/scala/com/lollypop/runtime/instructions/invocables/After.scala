@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
@@ -36,7 +36,7 @@ object After extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "after",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = templateCard,
     description = "Schedules a one-time execution of command(s) after a specific delay period",

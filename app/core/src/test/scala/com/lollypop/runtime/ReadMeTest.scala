@@ -136,21 +136,22 @@ class ReadMeTest extends AnyFunSpec {
     }
   }
 
+  private def handleExperimental(help: HelpDoc): String = {
+    if (help.isExperimental) {
+      val iconFile = imageDirectory / "flask.svg"
+      s"""<img src="${iconFile.getPath}" width="24" height="24">"""
+    } else ""
+  }
+
   private def invoke(out: PrintWriter, help: HelpDoc, nth: String)(implicit scope: Scope): Unit = {
     // header section
     out.println(
-      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm})
+      s"""|### ${help.name}$nth (${help.category} &#8212; ${help.paradigm}) ${handleExperimental(help)}
           |*Description*: ${help.description.trim}
           |""".stripMargin)
     out.println("```sql")
     out.println(help.example.trim)
     out.println("```")
-
-    if (help.isExperimental) {
-      out.println(
-        s"""|<img src="docs/images/experimental.png" alt="${help.name} is marked as experimental">
-            |""".stripMargin)
-    }
 
     // detail section
     for {

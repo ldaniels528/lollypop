@@ -5,7 +5,6 @@ import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
-import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{Float64Type, Int32Type, Int64Type, StringType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
@@ -34,7 +33,7 @@ class ScopeTest extends AnyFunSpec {
 
     it("should override the database from a parent scope") {
       val (parentScope, _, _) = LollypopVM.executeSQL(Scope(), "namespace 'slovett.work'")
-      val (childScope, _, _) = LollypopVM.executeSQL(Scope(parentScope = parentScope), "namespace 'ldaniels.work'")
+      val (childScope, _, _) = LollypopVM.executeSQL(parentScope, "namespace 'ldaniels.work'")
       assert(childScope.getDatabase contains "ldaniels")
       assert(childScope.getSchema contains "work")
     }
@@ -44,15 +43,9 @@ class ScopeTest extends AnyFunSpec {
       assert(scope.resolve("__id") contains 1001)
     }
 
-    it("should provide the row ID of the current row from a parent scope") {
-      val parentScope = Scope().withCurrentRow(Some(Row(id = 1001, metadata = RowMetadata(), columns = Nil, fields = Nil)))
-      val childScope = Scope(parentScope)
-      assert(childScope.resolve("__id") contains 1001)
-    }
-
     it("should override the row ID of the current row from a parent scope") {
       val parentScope = Scope().withCurrentRow(Some(Row(id = 1001, metadata = RowMetadata(), columns = Nil, fields = Nil)))
-      val childScope = Scope(parentScope = parentScope).withCurrentRow(Some(Row(id = 1002, metadata = RowMetadata(), columns = Nil, fields = Nil)))
+      val childScope = parentScope.withCurrentRow(Some(Row(id = 1002, metadata = RowMetadata(), columns = Nil, fields = Nil)))
       assert(childScope.resolve("__id") contains 1002)
     }
 
@@ -93,7 +86,7 @@ class ScopeTest extends AnyFunSpec {
     it("should provide the state for expressions") {
       import com.lollypop.language.models.Expression.implicits._
       val parentScope = Scope().withVariable(name = "x", `type` = Int32Type, value = Some(5), isReadOnly = false)
-      val scope = Scope(parentScope).withVariable(name = "y", `type` = Int32Type, value = Some(2), isReadOnly = false)
+      val scope = parentScope.withVariable(name = "y", `type` = Int32Type, value = Some(2), isReadOnly = false)
       val expr: Expression = "x".f + "y".f + 7
       val (_, _, result) = expr.execute(scope)
       assert(result == 14)
@@ -142,22 +135,9 @@ class ScopeTest extends AnyFunSpec {
       ))
     }
 
-    it("should read the database from a parent scope") {
-      val (parentScope, _, _) = LollypopVM.executeSQL(Scope(), "namespace 'ldaniels.work'")
-      val childScope = Scope(parentScope)
-      assert(childScope.getDatabase contains "ldaniels")
-      assert(childScope.getSchema contains "work")
-    }
-
-    it("should update the name upon realizing an object reference from a parent scope") {
-      val (parentScope, _, _) = LollypopVM.executeSQL(Scope(), "namespace `securities.stocks`")
-      val childScope = Scope(parentScope)
-      assert(DatabaseObjectRef("nasdaq").realize(childScope) == DatabaseObjectNS(databaseName = "lollypop", schemaName = "public", name = "nasdaq"))
-    }
-
     it("should read variables from a parent scope") {
       val parentScope = Scope().withVariable(name = "x", `type` = Int32Type, value = Some(5), isReadOnly = true)
-      val childScope = Scope(parentScope).withVariable(name = "y", `type` = Int32Type, value = Some(7), isReadOnly = false)
+      val childScope = parentScope.withVariable(name = "y", `type` = Int32Type, value = Some(7), isReadOnly = false)
       assert(parentScope.resolve("x") contains 5)
       assert(parentScope.getVariable("y").isEmpty)
       assert(childScope.resolve("y") contains 7)

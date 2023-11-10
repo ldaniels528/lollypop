@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language.models.{Atom, Expression}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream, dieIllegalType}
 import com.lollypop.runtime.devices.QMap
@@ -9,13 +9,13 @@ import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpre
 import com.lollypop.runtime.instructions.invocables.Scenario.__KUNGFU_BASE_URL__
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.JSONSupport.JSONProductConversion
+import com.lollypop.util.IOTools
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
-import org.apache.commons.io.IOUtils
 
-import java.io.{File, FileInputStream}
+import java.io.File
 import java.net.{HttpURLConnection, URI}
 import java.util.UUID
 import scala.concurrent.duration.{Duration, DurationInt}
@@ -46,8 +46,7 @@ case class Http(method: Atom, url: Expression, body: Option[Expression] = None, 
       (for {
         path <- url.asString
         url <- (scope.resolve("url") ?? scope.resolve(__KUNGFU_BASE_URL__)).flatMap(safeCast[String])
-        uri = new URI(url)
-      } yield uri.resolve(path).toString).orNull
+      } yield new URI(url).resolve(path).toString).orNull
     }
 
     val result = method.name.toLowerCase() match {
@@ -76,28 +75,30 @@ object Http extends ExpressionParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "http",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
-    description = "Query-native HTTP client",
+    description = "Lollypop-native HTTP client",
     example =
       """|http get('https://example.com/')
          |""".stripMargin
   ), HelpDoc(
     name = "http",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
     description = "Returns a URL based on a relative path.",
+    isExperimental = true,
     example =
       """|http path('users')
          |""".stripMargin
   ), HelpDoc(
     name = "http",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
-    description = "Returns a URL based on a relative path.",
+    description = "Returns a URI based on a relative path.",
+    isExperimental = true,
     example =
       """|http uri('users')
          |""".stripMargin
@@ -139,7 +140,7 @@ object Http extends ExpressionParser {
           conn.setDoOutput(body.nonEmpty)
           if (expectResponse) conn.setDoInput(expectResponse)
           body foreach {
-            case f: File => new FileInputStream(f).use(in => conn.getOutputStream.use(out => IOUtils.copy(in, out)))
+            case f: File => IOTools.transfer(f, conn)
             case j: JsValue => conn.getOutputStream.use(_.write(j.toString().getBytes))
             case s: String => conn.getOutputStream.use(_.write(s.getBytes))
             case x => dieIllegalType(x)

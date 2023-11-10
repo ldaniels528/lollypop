@@ -1,17 +1,22 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.{Expression, FunctionCall, Instruction}
+import com.lollypop.language.models.{Expression, FunctionCall, Instruction, NamedExpression}
+import com.lollypop.runtime.instructions.expressions.AssumeExpression.EnrichedAssumeExpression
 import com.lollypop.util.StringHelper.StringEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 
 /**
- * Represents an internal function call
+ * Represents a Lollypop-native function call
  */
-trait InternalFunctionCall extends FunctionCall {
-  val functionName: String = getClass.getSimpleName.toCamelCase
+trait InternalFunctionCall extends FunctionCall with NamedExpression {
+
+  def name: String = getClass.getSimpleName.toCamelCase
 
   override def args: List[Expression] = this match {
-    case p: Product => p.productIterator.toList.collect { case expr: Expression => expr }
+    case p: Product => p.productIterator.toList.collect {
+      case expr: Expression => expr
+      case ins: Instruction => ins.asExpression
+    }
     case _ => Nil
   }
 
@@ -25,16 +30,16 @@ trait InternalFunctionCall extends FunctionCall {
       }
       case _ => Nil
     }
-    Seq(functionName, myArgs.mkString("(", ", ", ")")).mkString
+    Seq(name, myArgs.mkString("(", ", ", ")")).mkString
   }
 
 }
 
 /**
- * NativeFunction Companion
+ * NativeFunctionCall Companion
  */
 object InternalFunctionCall {
 
-  def unapply(rowFx: InternalFunctionCall): Option[(String, List[Expression])] = Some(rowFx.functionName -> rowFx.args)
+  def unapply(rowFx: InternalFunctionCall): Option[(String, List[Expression])] = Some(rowFx.name -> rowFx.args)
 
 }

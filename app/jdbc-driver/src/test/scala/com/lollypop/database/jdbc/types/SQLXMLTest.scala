@@ -3,7 +3,7 @@ package com.lollypop.database.jdbc.types
 import com.lollypop.database.jdbc.JDBCTestServer
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes.{ISQLXML, SQLXML}
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 import com.lollypop.util.ResourceHelper._
 import org.apache.commons.io.IOUtils
 import org.scalatest.funspec.AnyFunSpec

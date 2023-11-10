@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.runtime.{Observable, Scope}
@@ -29,7 +29,7 @@ object WhenEver extends InvokableParser {
   override def help: List[HelpDoc] = List(
     HelpDoc(
       name = "whenever",
-      category = CATEGORY_ASYNC_REACTIVE,
+      category = CATEGORY_CONCURRENCY,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
       description = "Executes an instruction at the moment the expression evaluates as true",
@@ -41,7 +41,7 @@ object WhenEver extends InvokableParser {
            |""".stripMargin
     ), HelpDoc(
       name = "whenever",
-      category = CATEGORY_ASYNC_REACTIVE,
+      category = CATEGORY_CONCURRENCY,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
       description = "Executes an instruction at the moment the expression evaluates as true",

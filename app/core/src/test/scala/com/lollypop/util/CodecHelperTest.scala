@@ -2,6 +2,7 @@ package com.lollypop.util
 
 import com.lollypop.util.CodecHelper._
 import com.lollypop.util.ResourceHelper._
+import com.lollypop.util.IOTools._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{FileInputStream, FileReader}

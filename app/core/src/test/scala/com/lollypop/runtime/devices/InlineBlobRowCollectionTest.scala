@@ -5,8 +5,8 @@ import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectRef, Scope}
-import com.lollypop.util.CodecHelper.RichInputStream
 import com.lollypop.util.ResourceHelper._
+import com.lollypop.util.IOTools.RichInputStream
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File

@@ -293,30 +293,7 @@ object Scope {
    * Creates a new root scope
    * @return the new [[Scope scope]]
    */
-  def apply(): Scope = {
-    LollypopUniverse().createRootScope()
-  }
-
-  /**
-   * Creates a new local scope
-   * @param parentScope the parent [[Scope scope]]
-   * @return the new [[Scope scope]]
-   */
-  def apply(parentScope: Scope): Scope = {
-    DefaultScope(superScope = Some(parentScope), universe = parentScope.getUniverse)
-  }
-
-  /**
-   * Creates a new local scope having a predefined initial state
-   * @param parentScope  the [[Scope scope]]
-   * @param initialState the initial state of the [[Scope scope]]
-   * @return the new [[Scope scope]]
-   */
-  def apply(parentScope: Scope, initialState: Map[String, Any]): Scope = {
-    initialState.foldLeft[Scope](Scope(parentScope)) {
-      case (scope, (name, value)) => scope.withVariable(name, value = Option(value))
-    }
-  }
+  def apply(): Scope = LollypopUniverse().createRootScope()
 
   /**
    * Creates a new scope
@@ -325,6 +302,9 @@ object Scope {
    */
   def apply(ctx: LollypopUniverse): Scope = ctx.createRootScope()
 
-  case class ImplicitMethod(constructor: Constructor[_], method: Method, params: Seq[Parameter], returnType: Class[_])
+  case class ImplicitMethod(constructor: Constructor[_],
+                            method: Method,
+                            params: Seq[Parameter],
+                            returnType: Class[_])
 
 }

@@ -23,13 +23,13 @@ import lollypop.io.IOCost
  * @author lawrence.daniels@gmail.com
  */
 case class Table(columns: List[Column]) extends ScalarFunctionCall with RuntimeQueryable {
-  override val functionName: String = "Table"
+  override val name: String = "Table"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     (scope, IOCost(created = 1), createQueryResultTable(columns.map(_.toTableColumn)))
   }
 
-  override def toSQL: String = List(functionName, columns.map(_.toSQL).mkString("(", ", ", ")")).mkString
+  override def toSQL: String = List(name, columns.map(_.toSQL).mkString("(", ", ", ")")).mkString
 }
 
 object Table extends FunctionCallParserP(

@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.HelpDoc.{CATEGORY_ASYNC_REACTIVE, PARADIGM_REACTIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
@@ -27,7 +27,7 @@ object Once extends InvokableParser {
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "once",
-    category = CATEGORY_ASYNC_REACTIVE,
+    category = CATEGORY_CONCURRENCY,
     paradigm = PARADIGM_REACTIVE,
     syntax = template,
     description = "Invokes an instruction or set of instructions one-time only",

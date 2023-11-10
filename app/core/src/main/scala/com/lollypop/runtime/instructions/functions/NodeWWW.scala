@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
+import com.lollypop.language.HelpDoc.CATEGORY_CONCURRENCY
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
@@ -33,7 +33,7 @@ case class NodeWWW(port: Expression, url: Expression, files: Expression)
 
 object NodeWWW extends FunctionCallParserE3(
   name = "nodeWWW",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   description = "Creates a new HTML/CSS/File endpoint",
   example =
     """|import "java.lang.Thread"

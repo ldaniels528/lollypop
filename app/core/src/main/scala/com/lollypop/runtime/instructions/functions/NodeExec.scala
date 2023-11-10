@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.HelpDoc.CATEGORY_ASYNC_REACTIVE
+import com.lollypop.language.HelpDoc.CATEGORY_CONCURRENCY
 import com.lollypop.language.models.{Expression, Queryable}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
@@ -36,7 +36,7 @@ case class NodeExec(portExpr: Expression, sqlExpr: Expression) extends ScalarFun
 
 object NodeExec extends FunctionCallParserE2(
   name = "nodeExec",
-  category = CATEGORY_ASYNC_REACTIVE,
+  category = CATEGORY_CONCURRENCY,
   description = "Executes a query on a running Lollypop peer node.",
   example =
     """|val port = nodeStart()

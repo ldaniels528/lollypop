@@ -2,7 +2,7 @@ package com.lollypop.database
 package jdbc
 
 import com.lollypop.database.jdbc.types.JDBCValueConversion._
-import com.lollypop.util.CodecHelper.{RichInputStream, RichReader}
+import com.lollypop.util.IOTools.{RichInputStream, RichReader}
 
 import java.io.{InputStream, Reader}
 import java.net.URL

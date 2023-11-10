@@ -3,7 +3,7 @@ package com.lollypop.runtime.datatypes
 import com.lollypop.runtime.DatabaseObjectNS
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
-import com.lollypop.util.CodecHelper.RichInputStream
+import com.lollypop.util.IOTools.RichInputStream
 import com.lollypop.util.ResourceHelper._
 import org.apache.commons.io.IOUtils
 

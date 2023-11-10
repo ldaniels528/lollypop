@@ -18,15 +18,15 @@ import lollypop.io.IOCost
 
 /**
  * Help Database
- * @param name the name (or pattern) of text to search
+ * @param pattern the name (or pattern) of text to search
  * @example {{{
  * select paradigm, category, total: count(*) from (help()) group by paradigm, category order by paradigm
  * }}}
  */
-case class Help(name: Option[Expression]) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
+case class Help(pattern: Option[Expression]) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     implicit val ctx: LollypopUniverse = scope.getUniverse
-    gatherHelp(name_? = name.flatMap(_.asString)) ~> { case (c, r) => (scope, c, r) }
+    gatherHelp(name_? = pattern.flatMap(_.asString)) ~> { case (c, r) => (scope, c, r) }
   }
 
   override def returnType: TableType = TableType(commandColumns)

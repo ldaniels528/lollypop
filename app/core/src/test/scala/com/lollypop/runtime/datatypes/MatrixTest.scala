@@ -4,7 +4,7 @@ import com.lollypop.LollypopException
 import com.lollypop.runtime.datatypes.Vector.Vector
 import com.lollypop.runtime.errors.{MatrixDimensionMismatchError, MatrixMustBeSquareError}
 import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.CodecHelper.EnrichedByteArray
+import com.lollypop.util.IOTools.EnrichedByteArray
 import org.scalatest.funspec.AnyFunSpec
 
 import java.nio.ByteBuffer

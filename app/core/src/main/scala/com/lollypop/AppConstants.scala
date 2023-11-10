@@ -10,7 +10,7 @@ trait AppConstants {
   val MAJOR_VERSION: Int = 0
   val MINOR_VERSION: Int = 1
   val MINI_VERSION: Int = 6
-  val MICRO_VERSION: Int = 1
+  val MICRO_VERSION: Int = 2
 
   val version = s"$MAJOR_VERSION.$MINOR_VERSION.$MINI_VERSION.$MICRO_VERSION"
 
@@ -21,6 +21,8 @@ trait AppConstants {
 
   val __loaded__ = "__loaded__"
   val __resources__ = "__resources__"
+  val __secret_variables__ = "__secret_variables__"
+  val __self__ = "__self__"
   val __userHome__ = "__userHome__"
   val __userName__ = "__userName__"
   val __version__ = "__version__"
