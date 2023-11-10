@@ -1,4 +1,4 @@
-Lollypop v0.1.6.1
+Lollypop v0.1.6.2
 ============
 
 ## Table of Contents
@@ -19,17 +19,19 @@ Lollypop v0.1.6.1
   * <a href="#String_Literals_Triple_Double_quoted_">String Literals (Triple-Double-quoted)</a>
   * <a href="#String_Literals_Triple_Single_quoted_">String Literals (Triple-Single-quoted)</a>
 * <a href="#Examples">Featured Examples By Category</a>
-  * <a href="#Aggregation_Sorting">Aggregation/Sorting</a> (23)
-  * <a href="#Asynchronous_Distributed_Reactive">Asynchronous/Distributed/Reactive</a> (16)
+  * <a href="#Aggregation_and_Sorting">Aggregation and Sorting</a> (23)
+  * <a href="#Concurrency">Concurrency</a> (16)
   * <a href="#Control_Flow">Control Flow</a> (21)
   * <a href="#Dataframe_I_O">Dataframe I/O</a> (22)
   * <a href="#Dataframe_Management">Dataframe Management</a> (14)
-  * <a href="#Filtering_Pattern_Matching">Filtering/Pattern Matching</a> (25)
+  * <a href="#Filtering_and_Matching">Filtering and Matching</a> (25)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
-  * <a href="#Scope_Session">Scope/Session</a> (15)
+  * <a href="#Scope_and_Session">Scope and Session</a> (15)
   * <a href="#System_Tools">System Tools</a> (10)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
   * <a href="#Transformation">Transformation</a> (8)
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-cz+94GcRl56VKb89rA9eLsFAos4WmPyykj6CYYsXEfpeIsRmuWcd5jhEM4CrC5CE" crossorigin="anonymous">
+
 <a name="Introduction"></a>
 ## Introduction
 Lollypop is a general-purpose programming/scripting language for the JVM.
@@ -51,13 +53,13 @@ Preview &#8212; there are still a number of experimental features to sort out.
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.1.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.2.jar`
 
 ### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.1.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.2.jar`
 
 ### Run Lollypop CLI
 ```bash
@@ -65,7 +67,7 @@ sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.1.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.2.jar
 ```
 
 <a name="Basic_Examples"></a>
@@ -126,7 +128,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-08T18:43:01.691Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-10T07:37:13.461Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +180,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-08T18:43:01.767Z"
+"2023-11-10T07:37:13.537Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -263,11 +265,11 @@ Fine, I hope!
 ```
 <a name="Examples"></a>
 
-<a name="Aggregation_Sorting"></a>
-## Aggregation/Sorting Examples
+<a name="Aggregation_and_Sorting"></a>
+## Aggregation and Sorting Examples
 <hr>
 
-### avg¹ (Aggregation/Sorting &#8212; Functional)
+### avg¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Computes the average of a numeric expression.
 
 ```sql
@@ -285,7 +287,7 @@ avg(stocks#lastSale)
 ```sql
 61.89333333333334
 ```
-### avg² (Aggregation/Sorting &#8212; Functional)
+### avg² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Computes the average of a numeric expression.
 
 ```sql
@@ -307,7 +309,7 @@ select avgLastSale: avg(lastSale) from @stocks
 | 61.89333333333334 |
 |-------------------|
 ```
-### count¹ (Aggregation/Sorting &#8212; Functional)
+### count¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -328,7 +330,7 @@ count(stocks)
 ```sql
 6
 ```
-### count² (Aggregation/Sorting &#8212; Functional)
+### count² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -349,7 +351,7 @@ count(stocks#lastSale)
 ```sql
 6
 ```
-### count³ (Aggregation/Sorting &#8212; Functional)
+### count³ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -374,7 +376,7 @@ select total: count(*) from @stocks
 |     6 |
 |-------|
 ```
-### count⁴ (Aggregation/Sorting &#8212; Functional)
+### count⁴ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the number of rows matching the query criteria.
 
 ```sql
@@ -399,7 +401,7 @@ select total: count(lastSale) from @stocks
 |     4 |
 |-------|
 ```
-### countUnique¹ (Aggregation/Sorting &#8212; Functional)
+### countUnique¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the distinct number of rows matching the query criteria.
 
 ```sql
@@ -423,7 +425,7 @@ select total: count(unique(exchange)) from @stocks
 |     2 |
 |-------|
 ```
-### countUnique² (Aggregation/Sorting &#8212; Functional)
+### countUnique² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the distinct number of rows matching the query criteria.
 
 ```sql
@@ -447,7 +449,7 @@ select total: countUnique(exchange) from @stocks
 |     2 |
 |-------|
 ```
-### group by¹ (Aggregation/Sorting &#8212; Declarative)
+### group by¹ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Aggregates a result set by a column
 
 ```sql
@@ -467,11 +469,11 @@ group by kind
 | Double         |     1 |
 |------------------------|
 ```
-### group by² (Aggregation/Sorting &#8212; Declarative)
+### group by² (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Aggregates a result set by a column
 
 ```sql
-chart = { shape: "bar", title: "Types in Session" }
+chart = { shape: "pie3d", title: "Types in Session" }
 graph chart from (
     select kind, total: count(*)
     from (this.toTable())
@@ -483,7 +485,7 @@ graph chart from (
 <img src="./docs/images/Types_in_Session.png">
 </div>
 
-### max¹ (Aggregation/Sorting &#8212; Functional)
+### max¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the maximum value of a numeric expression.
 
 ```sql
@@ -501,7 +503,7 @@ max(stocks#lastSale)
 ```sql
 97.61
 ```
-### max² (Aggregation/Sorting &#8212; Functional)
+### max² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the maximum value of a numeric expression.
 
 ```sql
@@ -523,7 +525,7 @@ select maxLastSale: max(lastSale) from @stocks
 |       97.61 |
 |-------------|
 ```
-### min¹ (Aggregation/Sorting &#8212; Functional)
+### min¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the minimum value of a numeric expression.
 
 ```sql
@@ -541,7 +543,7 @@ min(stocks#lastSale)
 ```sql
 31.95
 ```
-### min² (Aggregation/Sorting &#8212; Functional)
+### min² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the minimum value of a numeric expression.
 
 ```sql
@@ -563,7 +565,7 @@ select minLastSale: min(lastSale) from @stocks
 |       31.95 |
 |-------------|
 ```
-### order by (Aggregation/Sorting &#8212; Declarative)
+### order by (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Sorts a result set by a column
 
 ```sql
@@ -593,7 +595,7 @@ from (
 | PTFY   | NYSE     |  19.9265 | 2023-08-06T18:33:08.676Z |
 |---------------------------------------------------------|
 ```
-### sum¹ (Aggregation/Sorting &#8212; Functional)
+### sum¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the sum of a numeric expression.
 
 ```sql
@@ -619,7 +621,7 @@ sum(stocks#lastSale)
 ```sql
 1497.2719
 ```
-### sum² (Aggregation/Sorting &#8212; Functional)
+### sum² (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the sum of a numeric expression.
 
 ```sql
@@ -648,7 +650,7 @@ select total: sum(lastSale) from (
 | 1497.2719 |
 |-----------|
 ```
-### transpose¹ (Aggregation/Sorting &#8212; Declarative)
+### transpose¹ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -666,7 +668,7 @@ transpose(items: [1 to 5])
 |     5 |
 |-------|
 ```
-### transpose² (Aggregation/Sorting &#8212; Declarative)
+### transpose² (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -681,14 +683,14 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
+| J    | ♠    |
+| 4    | ♣    |
+| 5    | ♣    |
+| 7    | ♥    |
 | 6    | ♦    |
-| 5    | ♦    |
-| A    | ♦    |
-| 9    | ♣    |
-| J    | ♥    |
 |-------------|
 ```
-### transpose³ (Aggregation/Sorting &#8212; Declarative)
+### transpose³ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -706,7 +708,7 @@ transpose(help('select'))
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
-### transpose⁴ (Aggregation/Sorting &#8212; Declarative)
+### transpose⁴ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
 ```sql
@@ -726,7 +728,7 @@ transpose(new Matrix([
 | 3.0 | 6.0 | 9.0 |
 |-----------------|
 ```
-### unique (Aggregation/Sorting &#8212; Functional)
+### unique (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns a unique collection of elements based on the query criteria.
 
 ```sql
@@ -749,7 +751,7 @@ select exchange: unique(exchange) from @stocks
 | ["AMEX", "NYSE"] |
 |------------------|
 ```
-### unnest (Aggregation/Sorting &#8212; Declarative)
+### unnest (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
 
 ```sql
@@ -773,11 +775,11 @@ select symbol, exchange, unnest(transactions) from @stocks where symbol is 'SHMN
 | SHMN   | OTCBB    | 0.0011 | 2021-08-05T19:23:12.000Z |
 |-------------------------------------------------------|
 ```
-<a name="Asynchronous_Distributed_Reactive"></a>
-## Asynchronous/Distributed/Reactive Examples
+<a name="Concurrency"></a>
+## Concurrency Examples
 <hr>
 
-### after (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### after (Concurrency &#8212; Reactive) 
 *Description*: Schedules a one-time execution of command(s) after a specific delay period
 
 ```sql
@@ -791,7 +793,7 @@ ticker is 8
 ```sql
 true
 ```
-### async (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### async (Concurrency &#8212; Reactive) 
 *Description*: Asynchronously executes an instruction
 
 ```sql
@@ -802,14 +804,14 @@ async { OS.listFiles("./app") }
 |-------------------------------------------------------------------------------------------------------------------------------------|
 | name        | canonicalPath                                   | lastModified             | length | isDirectory | isFile | isHidden |
 |-------------------------------------------------------------------------------------------------------------------------------------|
-| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-11-06T23:51:28.295Z |   8196 | false       | true   | true     |
+| .DS_Store   | /Users/ldaniels/GitHub/lollypop/app/.DS_Store   | 2023-11-09T14:00:47.789Z |   8196 | false       | true   | true     |
 | core        | /Users/ldaniels/GitHub/lollypop/app/core        | 2023-05-23T21:20:11.818Z |    160 | true        | false  | false    |
 | target      | /Users/ldaniels/GitHub/lollypop/app/target      | 2023-11-03T20:21:11.085Z |    192 | true        | false  | false    |
 | examples    | /Users/ldaniels/GitHub/lollypop/app/examples    | 2023-11-07T01:06:35.137Z |    288 | true        | false  | false    |
 | jdbc-driver | /Users/ldaniels/GitHub/lollypop/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
 |-------------------------------------------------------------------------------------------------------------------------------------|
 ```
-### every (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### every (Concurrency &#8212; Reactive) 
 *Description*: Schedules the execution of command(s) on a specific interval
 
 ```sql
@@ -824,10 +826,10 @@ n
 ```
 ##### Results
 ```sql
-51
+50
 ```
-### http¹ (Asynchronous/Distributed/Reactive &#8212; Reactive)
-*Description*: Query-native HTTP client
+### http¹ (Concurrency &#8212; Reactive) 
+*Description*: Lollypop-native HTTP client
 
 ```sql
 http get('https://example.com/')
@@ -880,9 +882,9 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="10940e88-41a8-4c0d-b7a0-9598f4993471")
+', message="OK", statusCode=200, responseID="515e2207-af3e-4b9a-a360-849a8d475962")
 ```
-### http² (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### http² (Concurrency &#8212; Reactive) <i class='fa fa-flask'></i>
 *Description*: Returns a URL based on a relative path.
 
 ```sql
@@ -890,19 +892,19 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="d05022ba-d727-4fce-b7a1-7a413d628089")
+HttpResponse(body=null, message=null, statusCode=200, responseID="e7ac3f61-4dab-4dd6-9be9-620fc8b0a1b0")
 ```
-### http³ (Asynchronous/Distributed/Reactive &#8212; Reactive)
-*Description*: Returns a URL based on a relative path.
+### http³ (Concurrency &#8212; Reactive) <i class='fa fa-flask'></i>
+*Description*: Returns a URI based on a relative path.
 
 ```sql
 http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="7b90732c-145d-4f37-8e8d-ade4c2e3395e")
+HttpResponse(body=null, message=null, statusCode=200, responseID="eb2c4fff-2ad7-4a85-b0a2-113c3d95f74f")
 ```
-### nodeAPI (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeAPI (Concurrency &#8212; Functional) 
 *Description*: Creates a new REST API endpoint
 
 ```sql
@@ -919,13 +921,13 @@ http post "http://0.0.0.0:{{port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="java.io.PrintStream@3caa4757", message="OK", statusCode=200, responseID="60de8a02-a178-4dc4-88da-68676ae24662")
+HttpResponse(body="java.io.PrintStream@3a80515c", message="OK", statusCode=200, responseID="ca9f4100-b1ce-4fa6-a632-924b2c92fbd0")
 ```
 ##### Console Output
 ```
 post 'Hello World'
 ```
-### nodeConsole (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeConsole (Concurrency &#8212; Functional) 
 *Description*: Opens a commandline interface to a remote Lollypop peer node.
 
 ```sql
@@ -941,14 +943,14 @@ nodeConsole(remotePort, [
 | name | category           | paradigm        | description                                                                      | example                                                                                                   |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | #    | Dataframe I/O      | Declarative     | Returns a column slice of a data frame                                           | declare table stocks(symbol: String(4), exchange: String(6), lastSale: Double, lastSaleTime: DateTim ...  |
-| $    | Scope/Session      | Declarative     | used to disambiguate a variable from a field or other identifiers                | x = 1 $x                                                                                                  |
+| $    | Scope and Session  | Declarative     | used to disambiguate a variable from a field or other identifiers                | x = 1 $x                                                                                                  |
 | &&   | Control Flow       | Declarative     | Binds multiple statements together                                               | declare table if not exists TradingSystem ( stock_id: RowNumber, symbol: String(5), exchange: Enum ( ...  |
 | .!   | JVM and Reflection | Object-Oriented | Invokes a virtual method                                                         | val items = values ("NASDAQ", 1276), ("AMEX", 1259), ("NYSE", 1275), ("OTCBB", 1190) items.!toTable( ...  |
 | ...  | JVM and Reflection | Declarative     | The argument spread operator: can convert an array into individual arguments     | def p3d(x: Double, y: Double, z: Double) := (x, y, z)  p3d([ x: 123, y:13, z: 67 ]...)                    |
 | ...  | JVM and Reflection | Declarative     | The argument spread operator: can convert a dictionary into individual arguments | def p3d(x: Double, y: Double, z: Double) := (x, y, z)  p3d({ x: 123, y:13, z: 67 }...)                    |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
-### nodeExec (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeExec (Concurrency &#8212; Functional) 
 *Description*: Executes a query on a running Lollypop peer node.
 
 ```sql
@@ -976,7 +978,7 @@ from (
 | NFRK   | AMEX   |  28.2808 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------|
 ```
-### nodeScan (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeScan (Concurrency &#8212; Functional) 
 *Description*: Returns an array of Lollypop peer node port numbers.
 
 ```sql
@@ -984,9 +986,9 @@ nodeScan()
 ```
 ##### Results
 ```sql
-[15239, 13552, 8310]
+[11776, 14892, 13317]
 ```
-### nodeStart (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeStart (Concurrency &#8212; Functional) 
 *Description*: Starts a Lollypop peer node.
 
 ```sql
@@ -994,9 +996,9 @@ nodeStart()
 ```
 ##### Results
 ```sql
-11715
+8015
 ```
-### nodeStop (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeStop (Concurrency &#8212; Functional) 
 *Description*: shuts down a running Lollypop peer node.
 
 ```sql
@@ -1006,7 +1008,7 @@ nodeStop(8233)
 ```sql
 false
 ```
-### nodeWWW (Asynchronous/Distributed/Reactive &#8212; Functional)
+### nodeWWW (Concurrency &#8212; Functional) 
 *Description*: Creates a new HTML/CSS/File endpoint
 
 ```sql
@@ -1023,7 +1025,7 @@ nodeWWW(port, '/www/notebooks/', {
 ```sql
 false
 ```
-### once (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### once (Concurrency &#8212; Reactive) 
 *Description*: Invokes an instruction or set of instructions one-time only
 
 ```sql
@@ -1045,7 +1047,7 @@ This happens every cycle 3
 This happens every cycle 4
 This happens every cycle 5
 ```
-### whenever¹ (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### whenever¹ (Concurrency &#8212; Reactive) 
 *Description*: Executes an instruction at the moment the expression evaluates as true
 
 ```sql
@@ -1056,7 +1058,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3caa4757
+java.io.PrintStream@3a80515c
 ```
 ##### Console Output
 ```
@@ -1064,7 +1066,7 @@ Setting n_bricks to 0
 n_bricks is empty
 Did it work?
 ```
-### whenever² (Asynchronous/Distributed/Reactive &#8212; Reactive)
+### whenever² (Concurrency &#8212; Reactive) 
 *Description*: Executes an instruction at the moment the expression evaluates as true
 
 ```sql
@@ -1076,7 +1078,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3caa4757
+java.io.PrintStream@3a80515c
 ```
 ##### Console Output
 ```
@@ -1087,7 +1089,7 @@ Did it work?
 ## Control Flow Examples
 <hr>
 
-### && (Control Flow &#8212; Declarative)
+### && (Control Flow &#8212; Declarative) 
 *Description*: Binds multiple statements together
 
 ```sql
@@ -1109,13 +1111,13 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-08T18:43:05.397Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-08T18:43:05.397Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-08T18:43:05.397Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-08T18:43:05.397Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-10T07:37:17.139Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-10T07:37:17.139Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-10T07:37:17.139Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-10T07:37:17.139Z |
 |--------------------------------------------------------------------|
 ```
-### ??? (Control Flow &#8212; Declarative)
+### ??? (Control Flow &#8212; Declarative) 
 *Description*: `???` can be used for marking methods that remain to be implemented.
 
 ```sql
@@ -1127,13 +1129,13 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3caa4757
+java.io.PrintStream@3a80515c
 ```
 ##### Console Output
 ```
 an implementation is missing on line 3 at 3
 ```
-### call (Control Flow &#8212; Procedural)
+### call (Control Flow &#8212; Procedural) 
 *Description*: Executes a stored procedure; returns a row set
 
 ```sql
@@ -1169,7 +1171,7 @@ call getStockQuote("NASDAQ")
 | NASDAQ   |   4.0 | 126.3182 |  44.3673 |
 |----------------------------------------|
 ```
-### create function (Control Flow &#8212; Procedural)
+### create function (Control Flow &#8212; Procedural) 
 *Description*: Creates a function
 
 ```sql
@@ -1183,7 +1185,7 @@ create function if not exists calc_add(a: Int, b: Int) := a + b
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### create macro (Control Flow &#8212; Declarative)
+### create macro (Control Flow &#8212; Declarative) 
 *Description*: Creates a persistent macro
 
 ```sql
@@ -1207,14 +1209,14 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| NYSE      | HPPV   |  22.6246 | 2023-11-08T18:43:02.967Z |
-| OTCBB     | JBUKG  |   1.0102 | 2023-11-08T18:42:24.911Z |
-| OTHER_OTC | HOWJ   |   0.2783 | 2023-11-08T18:42:23.920Z |
-| NASDAQ    | FYC    |    82.82 | 2023-11-08T18:42:14.789Z |
-| AMEX      | NEA    |  53.4993 | 2023-11-08T18:42:58.748Z |
+| NYSE      | NQUG   |  64.9519 | 2023-11-10T07:36:48.430Z |
+| NASDAQ    | BF     |  66.5472 | 2023-11-10T07:36:38.952Z |
+| NASDAQ    | RIWV   |   3.3994 | 2023-11-10T07:37:15.001Z |
+| OTHER_OTC | UXXO   |   0.2705 | 2023-11-10T07:36:44.660Z |
+| OTHER_OTC | XXNQO  |   0.7384 | 2023-11-10T07:36:38.833Z |
 |----------------------------------------------------------|
 ```
-### create procedure (Control Flow &#8212; Procedural)
+### create procedure (Control Flow &#8212; Procedural) 
 *Description*: Creates a database procedure
 
 ```sql
@@ -1250,7 +1252,7 @@ call getStockQuote("NASDAQ")
 | NASDAQ   |   4.0 | 126.3182 |  44.3673 |
 |----------------------------------------|
 ```
-### def¹ (Control Flow &#8212; Functional)
+### def¹ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
 
 ```sql
@@ -1262,7 +1264,7 @@ def ¡(n: Double) := iff(n <= 1.0, 1.0, n * ¡(n - 1.0))
 ```sql
 120.0
 ```
-### def² (Control Flow &#8212; Functional)
+### def² (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
 
 ```sql
@@ -1280,9 +1282,9 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.447875, _2=720.0)
+Tuple2(_1=0.4485, _2=720.0)
 ```
-### def³ (Control Flow &#8212; Functional)
+### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
 
 ```sql
@@ -1306,7 +1308,7 @@ roman(1023)
 ```sql
 MXXIII
 ```
-### do (Control Flow &#8212; Procedural)
+### do (Control Flow &#8212; Procedural) 
 *Description*: Creates a loop that executes enclosed statement(s) until the test condition evaluates to false
 
 ```sql
@@ -1319,7 +1321,7 @@ y
 ```sql
 120
 ```
-### each¹ (Control Flow &#8212; Declarative)
+### each¹ (Control Flow &#8212; Declarative) 
 *Description*: Iterates over a dataframe applying a function to each entry
 
 ```sql
@@ -1342,7 +1344,7 @@ messages
 ```sql
 ["LORI is 89.6033/share", "EVDX is 77.1829/share"]
 ```
-### each² (Control Flow &#8212; Declarative)
+### each² (Control Flow &#8212; Declarative) 
 *Description*: Iterates a dataframe in reverse order applying a function to each entry
 
 ```sql
@@ -1380,7 +1382,7 @@ each item in (stocks.reverse()) yield item
 | OTHER_OTC | WAEQK  |   0.6713 | 2023-10-14T18:40:32.998Z |
 |----------------------------------------------------------|
 ```
-### if (Control Flow &#8212; Procedural)
+### if (Control Flow &#8212; Procedural) 
 *Description*: If the `expression` is true, then `outcomeA` otherwise `outcomeB`
 
 ```sql
@@ -1391,7 +1393,7 @@ if(value > 99) "Yes!" else "No."
 ```sql
 Yes!
 ```
-### iff (Control Flow &#8212; Functional)
+### iff (Control Flow &#8212; Functional) 
 *Description*: If the `condition` is true, then `trueValue` otherwise `falseValue`
 
 ```sql
@@ -1402,7 +1404,7 @@ iff(value > 99, 'Yes!', 'No.')
 ```sql
 Yes!
 ```
-### macro (Control Flow &#8212; Declarative)
+### macro (Control Flow &#8212; Declarative) 
 *Description*: Creates a user-defined instruction
 
 ```sql
@@ -1416,7 +1418,7 @@ stdout <=== drawCircle(100)@(80, 650)
 ```sql
 Circle(100) <- (160, 325)
 ```
-### return (Control Flow &#8212; Procedural)
+### return (Control Flow &#8212; Procedural) 
 *Description*: Returns a result set (from a daughter scope)
 
 ```sql
@@ -1426,7 +1428,7 @@ return 'Hello World'
 ```sql
 Hello World
 ```
-### throw (Control Flow &#8212; Procedural)
+### throw (Control Flow &#8212; Procedural) 
 *Description*: Throws a JVM exception
 
 ```sql
@@ -1436,13 +1438,13 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3caa4757
+java.io.PrintStream@3a80515c
 ```
 ##### Console Output
 ```
 A processing error occurred on line 2 at 3
 ```
-### try¹ (Control Flow &#8212; Functional)
+### try¹ (Control Flow &#8212; Functional) 
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
 
 ```sql
@@ -1451,13 +1453,13 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3a80515c
+java.io.PrintStream@238b521e
 ```
 ##### Console Error
 ```
 Connection error on line 1 at 17 on line 2 at 5
 ```
-### try² (Control Flow &#8212; Functional)
+### try² (Control Flow &#8212; Functional) 
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
 
 ```sql
@@ -1471,9 +1473,9 @@ this
 | name   | kind                | value                                                                    |
 |---------------------------------------------------------------------------------------------------------|
 | n      | Integer             | -1                                                                       |
-| stdout | PrintStream         | java.io.PrintStream@3caa4757                                             |
-| stdin  | BufferedReader      | java.io.BufferedReader@1804f60d                                          |
-| stderr | PrintStream         | java.io.PrintStream@3a80515c                                             |
+| stdout | PrintStream         | java.io.PrintStream@3a80515c                                             |
+| stdin  | BufferedReader      | java.io.BufferedReader@1c807b1d                                          |
+| stderr | PrintStream         | java.io.PrintStream@238b521e                                             |
 | OS     | OS                  | lollypop.lang.OS                                                         |
 | π      | Double              | 3.141592653589793                                                        |
 | e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
@@ -1484,7 +1486,7 @@ this
 ```
 Division by zero: n / 0
 ```
-### while (Control Flow &#8212; Procedural)
+### while (Control Flow &#8212; Procedural) 
 *Description*: Repeats the `command` while the `expression` is true
 
 ```sql
@@ -1497,7 +1499,7 @@ y
 ```sql
 120
 ```
-### with (Control Flow &#8212; Functional)
+### with (Control Flow &#8212; Functional) 
 *Description*: Provides a closure over a resource; closing it upon completion.
 
 ```sql
@@ -1534,7 +1536,7 @@ with ns("Stocks") { stocks => @stocks where lastSale < 50 }
 ## Dataframe I/O Examples
 <hr>
 
-### # (Dataframe I/O &#8212; Declarative)
+### # (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns a column slice of a data frame
 
 ```sql
@@ -1564,7 +1566,7 @@ stocks#[symbol, lastSale]
 | QFHM   | 148.6447 |
 |-------------------|
 ```
-### delete (Dataframe I/O &#8212; Declarative)
+### delete (Dataframe I/O &#8212; Declarative) 
 *Description*: Deletes rows matching an expression from a table
 
 ```sql
@@ -1592,7 +1594,7 @@ stocks
 | LQRQ   | AMEX     |    88.42 |
 |------------------------------|
 ```
-### describe (Dataframe I/O &#8212; Declarative)
+### describe (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns a table representing the layout of the query expression
 
 ```sql
@@ -1607,7 +1609,7 @@ describe (select v1: 123, v2: 'abc')
 | v2   | String(3) |             |              |            |
 |------------------------------------------------------------|
 ```
-### from (Dataframe I/O &#8212; Declarative)
+### from (Dataframe I/O &#8212; Declarative) 
 *Description*: Retrieves rows from a datasource
 
 ```sql
@@ -1623,7 +1625,7 @@ from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]
 | Cherry |
 |--------|
 ```
-### graph¹ (Dataframe I/O &#8212; Declarative)
+### graph¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Produces graphical charts
 
 ```sql
@@ -1638,7 +1640,7 @@ graph chart from (
 <img src="./docs/images/Member_Types_of_OS.png">
 </div>
 
-### graph² (Dataframe I/O &#8212; Declarative)
+### graph² (Dataframe I/O &#8212; Declarative) 
 *Description*: Produces graphical charts
 
 ```sql
@@ -1657,7 +1659,7 @@ graph chart from samples
 <img src="./docs/images/Scatter_Demo.png">
 </div>
 
-### insert¹ (Dataframe I/O &#8212; Declarative)
+### insert¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Appends new row(s) to a table
 
 ```sql
@@ -1682,7 +1684,7 @@ graph { shape: "bar", title: "Popularity" } from Actors
 <img src="./docs/images/Popularity.png">
 </div>
 
-### insert² (Dataframe I/O &#8212; Declarative)
+### insert² (Dataframe I/O &#8212; Declarative) 
 *Description*: Appends new row(s) to a table
 
 ```sql
@@ -1709,7 +1711,7 @@ where symbol is 'AMD'
 |       0 |       0 |         0 |       0 |        3 |       1 |       5 |        0 |       0 | [6, 7, 8] |
 |---------------------------------------------------------------------------------------------------------|
 ```
-### intersect (Dataframe I/O &#8212; Declarative)
+### intersect (Dataframe I/O &#8212; Declarative) 
 *Description*: Computes the intersection of two queries
 
 ```sql
@@ -1741,7 +1743,7 @@ from (
 | ABC    | OTCBB    |    5.887 |
 |------------------------------|
 ```
-### into (Dataframe I/O &#8212; Declarative)
+### into (Dataframe I/O &#8212; Declarative) 
 *Description*: Inserts a result set into a table
 
 ```sql
@@ -1779,7 +1781,7 @@ from (
 | CAVY   | OTCBB     |   0.0047 | 2023-09-21T04:57:43.503Z |
 |----------------------------------------------------------|
 ```
-### pagination¹ (Dataframe I/O &#8212; Declarative)
+### pagination¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Setups a pagination query
 
 ```sql
@@ -1818,7 +1820,7 @@ stocksP.first(5)
 | NASDAQ    | HLOQW  | 159.1307 | 2023-10-02T01:57:50.139Z |
 |----------------------------------------------------------|
 ```
-### pagination² (Dataframe I/O &#8212; Declarative)
+### pagination² (Dataframe I/O &#8212; Declarative) 
 *Description*: Setups a pagination query
 
 ```sql
@@ -1857,7 +1859,7 @@ stocksP.last(5)
 | OTCBB     | YGIVQ  |   0.8364 | 2023-10-02T01:57:38.882Z |
 |----------------------------------------------------------|
 ```
-### pagination³ (Dataframe I/O &#8212; Declarative)
+### pagination³ (Dataframe I/O &#8212; Declarative) 
 *Description*: Setups a pagination query
 
 ```sql
@@ -1897,7 +1899,7 @@ stocksP.next(5)
 | NASDAQ   | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
 |---------------------------------------------------------|
 ```
-### select (Dataframe I/O &#8212; Declarative)
+### select (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns row(s) of data based on the expression and options
 
 ```sql
@@ -1908,10 +1910,10 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-08T18:43:06.446Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-10T07:37:18.228Z |
 |---------------------------------------------------------|
 ```
-### subtract (Dataframe I/O &#8212; Declarative)
+### subtract (Dataframe I/O &#8212; Declarative) 
 *Description*: Computes the subtraction of two queries
 
 ```sql
@@ -1943,7 +1945,7 @@ from (
 | UPEX   | NYSE     |   116.24 |
 |------------------------------|
 ```
-### undelete (Dataframe I/O &#8212; Declarative)
+### undelete (Dataframe I/O &#8212; Declarative) 
 *Description*: Restores rows matching an expression from a table
 
 ```sql
@@ -1968,7 +1970,7 @@ undelete from @stocks where symbol is "CMHA"
 |       0 |       0 |         0 |       0 |        0 |       1 |       1 |        0 |       1 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### union (Dataframe I/O &#8212; Declarative)
+### union (Dataframe I/O &#8212; Declarative) 
 *Description*: Combines two (or more) result sets (vertically)
 
 ```sql
@@ -2001,7 +2003,7 @@ from (
 | ABC    | OTC BB   |    5.887 |
 |------------------------------|
 ```
-### union distinct (Dataframe I/O &#8212; Declarative)
+### union distinct (Dataframe I/O &#8212; Declarative) 
 *Description*: Combines two (or more) result sets (vertically) retaining only distinct rows
 
 ```sql
@@ -2036,7 +2038,7 @@ from (
 | JUNK   | AMEX     |    97.61 |
 |------------------------------|
 ```
-### update¹ (Dataframe I/O &#8212; Declarative)
+### update¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Modifies rows matching a conditional expression from a table
 
 ```sql
@@ -2058,14 +2060,14 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-08T18:43:06.497Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-08T18:43:06.498Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-10T07:37:18.254Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-10T07:37:18.254Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-08T18:43:06.498Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-10T07:37:18.254Z |
 |---------------------------------------------------------|
 ```
-### update² (Dataframe I/O &#8212; Declarative)
+### update² (Dataframe I/O &#8212; Declarative) 
 *Description*: Modifies rows matching a conditional expression from a table
 
 ```sql
@@ -2097,7 +2099,7 @@ stocks
 | SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
 |-----------------------------------------------------------------------------|
 ```
-### upsert¹ (Dataframe I/O &#8212; Declarative)
+### upsert¹ (Dataframe I/O &#8212; Declarative) <i class='fa fa-flask'></i>
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2117,8 +2119,6 @@ insert into Stocks (symbol, exchange, lastSale)
 upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
 ns('Stocks')
 ```
-<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
-
 ##### Results
 ```sql
 |------------------------------|
@@ -2131,7 +2131,7 @@ ns('Stocks')
 | AAPL   | NASDAQ   |   156.39 |
 |------------------------------|
 ```
-### upsert² (Dataframe I/O &#8212; Declarative)
+### upsert² (Dataframe I/O &#8212; Declarative) <i class='fa fa-flask'></i>
 *Description*: Inserts (or updates) new row(s) into a table
 
 ```sql
@@ -2152,8 +2152,6 @@ insert into Stocks (symbol, exchange, lastSale)
 upsert into Stocks (symbol, exchange, lastSale) values ('AAPL', 'NASDAQ', 156.39) where symbol is 'AAPL'
 ns('Stocks')
 ```
-<img src="docs/images/experimental.png" alt="upsert is marked as experimental">
-
 ##### Results
 ```sql
 |------------------------------|
@@ -2170,7 +2168,7 @@ ns('Stocks')
 ## Dataframe Management Examples
 <hr>
 
-### alter (Dataframe Management &#8212; Declarative)
+### alter (Dataframe Management &#8212; Declarative) 
 *Description*: Modifies the structure of a table
 
 ```sql
@@ -2199,15 +2197,15 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-08T18:43:06.609Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-08T18:43:06.609Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-08T18:43:06.609Z | VV     | OTCBB     |          |
-| 2023-11-08T18:43:06.609Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-08T18:43:06.609Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-08T18:43:06.609Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-10T07:37:18.372Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-10T07:37:18.372Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-10T07:37:18.372Z | VV     | OTCBB     |          |
+| 2023-11-10T07:37:18.372Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-10T07:37:18.372Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-10T07:37:18.372Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
-### create external table (Dataframe Management &#8212; Declarative)
+### create external table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates an external table
 
 ```sql
@@ -2226,7 +2224,7 @@ create external table if not exists customers (
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### create index (Dataframe Management &#8212; Declarative)
+### create index (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a table index
 
 ```sql
@@ -2240,7 +2238,7 @@ create index if not exists stocks#symbol
 |       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### create table (Dataframe Management &#8212; Declarative)
+### create table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a persistent database table
 
 ```sql
@@ -2270,7 +2268,7 @@ group by exchange
 <img src="./docs/images/Small_Caps.png">
 </div>
 
-### create type (Dataframe Management &#8212; Declarative)
+### create type (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a database type
 
 ```sql
@@ -2284,7 +2282,7 @@ create type mood := Enum (sad, okay, happy)
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### create unique index (Dataframe Management &#8212; Declarative)
+### create unique index (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a unique index
 
 ```sql
@@ -2306,7 +2304,7 @@ create unique index Stocks#symbol
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### create view (Dataframe Management &#8212; Declarative)
+### create view (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a view
 
 ```sql
@@ -2336,7 +2334,7 @@ ns('A_Students')
 | Audrey Hepburn | A     | 0.9161 |
 |---------------------------------|
 ```
-### declare table (Dataframe Management &#8212; Declarative)
+### declare table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a durable database table
 
 ```sql
@@ -2354,7 +2352,7 @@ lastSaleTime: DateTime)
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### declare view (Dataframe Management &#8212; Declarative)
+### declare view (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a view
 
 ```sql
@@ -2381,7 +2379,7 @@ A_Students
 | Audrey Hepburn | A     | 0.9161 |
 |---------------------------------|
 ```
-### drop (Dataframe Management &#8212; Declarative)
+### drop (Dataframe Management &#8212; Declarative) 
 *Description*: Deletes a database object
 
 ```sql
@@ -2404,7 +2402,7 @@ drop Stocks
 |       0 |       0 |         1 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-### Table (Dataframe Management &#8212; Functional)
+### Table (Dataframe Management &#8212; Functional) 
 *Description*: Returns a new transient table
 
 ```sql
@@ -2430,7 +2428,7 @@ values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.00
 | SHMN   | OTCBB    | ByteArrayRowCollection(price, transactionTime) |
 |--------------------------------------------------------------------|
 ```
-### tableLike (Dataframe Management &#8212; Functional)
+### tableLike (Dataframe Management &#8212; Functional) 
 *Description*: Creates a new table file, which will be identical to the source table.
 
 ```sql
@@ -2458,7 +2456,7 @@ stocksB
 | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
 |---------------------------------------------------------|
 ```
-### TableZoo (Dataframe Management &#8212; Functional)
+### TableZoo (Dataframe Management &#8212; Functional) 
 *Description*: Returns a Table builder
 
 ```sql
@@ -2494,7 +2492,7 @@ stocks
 | ZIYBG  | OTCBB     |   0.0167 | 2023-09-21T04:58:03.392Z |
 |----------------------------------------------------------|
 ```
-### truncate (Dataframe Management &#8212; Declarative)
+### truncate (Dataframe Management &#8212; Declarative) 
 *Description*: Removes all of the data from a table
 
 ```sql
@@ -2518,11 +2516,11 @@ truncate @stocks
 |       0 |       0 |         0 |       5 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
-<a name="Filtering_Pattern_Matching"></a>
-## Filtering/Pattern Matching Examples
+<a name="Filtering_and_Matching"></a>
+## Filtering and Matching Examples
 <hr>
 
-### between (Filtering/Pattern Matching &#8212; Declarative)
+### between (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` is between the `to` and `from` (inclusive)
 
 ```sql
@@ -2548,7 +2546,7 @@ from (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 ```
-### betwixt (Filtering/Pattern Matching &#8212; Declarative)
+### betwixt (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` is between the `to` and `from` (non-inclusive)
 
 ```sql
@@ -2573,7 +2571,7 @@ from (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 ```
-### contains¹ (Filtering/Pattern Matching &#8212; Declarative)
+### contains¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2584,7 +2582,7 @@ string contains "World"
 ```sql
 true
 ```
-### contains² (Filtering/Pattern Matching &#8212; Declarative)
+### contains² (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2595,7 +2593,7 @@ dict contains "name"
 ```sql
 true
 ```
-### contains³ (Filtering/Pattern Matching &#8212; Declarative)
+### contains³ (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2606,7 +2604,7 @@ array contains {"name":"Tom"}
 ```sql
 true
 ```
-### exists (Filtering/Pattern Matching &#8212; Declarative)
+### exists (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether at least one row is found within the query
 
 ```sql
@@ -2633,7 +2631,7 @@ val stocks = (
 | NASDAQ   | CFF    | 107.4943 | 2023-09-26T21:30:06.283Z |
 |---------------------------------------------------------|
 ```
-### expose (Filtering/Pattern Matching &#8212; Declarative)
+### expose (Filtering and Matching &#8212; Declarative) 
 *Description*: Exposes the components of a `matches` expression
 
 ```sql
@@ -2654,7 +2652,7 @@ expose(response matches { id: isUUID, symbol: isString, exchange: isString, last
 | (v: Any) => v.isNumber() | "35.76"                                | false  |
 |----------------------------------------------------------------------------|
 ```
-### having (Filtering/Pattern Matching &#8212; Declarative)
+### having (Filtering and Matching &#8212; Declarative) 
 *Description*: Applies a filter condition to an aggregate query
 
 ```sql
@@ -2685,7 +2683,7 @@ group by lastName having members > 1
 <img src="./docs/images/Travelers.png">
 </div>
 
-### in (Filtering/Pattern Matching &#8212; Declarative)
+### in (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2711,7 +2709,7 @@ val stocks = (
 | NKWI   | OTCBB  |  98.9501 |            98.9 | 2022-09-04T23:36:47.846Z |
 |-------------------------------------------------------------------------|
 ```
-### inner join (Filtering/Pattern Matching &#8212; Declarative)
+### inner join (Filtering and Matching &#8212; Declarative) 
 *Description*: Computes the inner join of two queries
 
 ```sql
@@ -2745,7 +2743,7 @@ inner join companies_A as B on A.symbol is B.symbol
 | GreedIsGood.com | GREED  | NASDAQ   |  2345.78 |
 |------------------------------------------------|
 ```
-### is¹ (Filtering/Pattern Matching &#8212; Declarative)
+### is¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
 
 ```sql
@@ -2756,7 +2754,7 @@ x is 200
 ```sql
 true
 ```
-### is² (Filtering/Pattern Matching &#8212; Declarative)
+### is² (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
 
 ```sql
@@ -2767,7 +2765,7 @@ x is 200
 ```sql
 false
 ```
-### isCodecOf (Filtering/Pattern Matching &#8212; Declarative)
+### isCodecOf (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `expression` is compatible with the `CODEC`
 
 ```sql
@@ -2777,7 +2775,7 @@ false
 ```sql
 true
 ```
-### isDefined (Filtering/Pattern Matching &#8212; Declarative)
+### isDefined (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the field or variable exists within the scope.
 
 ```sql
@@ -2787,7 +2785,7 @@ isDefined(counter)
 ```sql
 false
 ```
-### isNotNull (Filtering/Pattern Matching &#8212; Declarative)
+### isNotNull (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the expression is not null, otherwise false.
 
 ```sql
@@ -2797,7 +2795,7 @@ isNotNull('yes')
 ```sql
 true
 ```
-### isnt¹ (Filtering/Pattern Matching &#8212; Declarative)
+### isnt¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is not exactly the `expression`; otherwise false
 
 ```sql
@@ -2808,7 +2806,7 @@ x isnt 200
 ```sql
 true
 ```
-### isnt² (Filtering/Pattern Matching &#8212; Declarative)
+### isnt² (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is not exactly the `expression`; otherwise false
 
 ```sql
@@ -2819,7 +2817,7 @@ x isnt 200
 ```sql
 false
 ```
-### isNull (Filtering/Pattern Matching &#8212; Declarative)
+### isNull (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the expression is null, otherwise false.
 
 ```sql
@@ -2829,7 +2827,7 @@ isNull(null)
 ```sql
 true
 ```
-### limit (Filtering/Pattern Matching &#8212; Declarative)
+### limit (Filtering and Matching &#8212; Declarative) 
 *Description*: Limits the maximum number of rows returned by a query
 
 ```sql
@@ -2855,7 +2853,7 @@ from (
 | WRGB   | AMEX   |  46.8355 |            46.8 | 2022-09-04T23:36:47.862Z |
 |-------------------------------------------------------------------------|
 ```
-### matches¹ (Filtering/Pattern Matching &#8212; Declarative)
+### matches¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2865,7 +2863,7 @@ from (
 ```sql
 true
 ```
-### matches² (Filtering/Pattern Matching &#8212; Functional)
+### matches² (Filtering and Matching &#8212; Functional) 
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2876,7 +2874,7 @@ isEven = x => (x.isNumber() is true) and ((x % 2) is 0)
 ```sql
 true
 ```
-### matches³ (Filtering/Pattern Matching &#8212; Functional)
+### matches³ (Filtering and Matching &#8212; Functional) 
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2892,7 +2890,7 @@ response matches {
 ```sql
 true
 ```
-### matches⁴ (Filtering/Pattern Matching &#8212; Functional)
+### matches⁴ (Filtering and Matching &#8212; Functional) <i class='fa fa-flask'></i>
 *Description*: determines whether the `value` matches the `expression`
 
 ```sql
@@ -2906,13 +2904,11 @@ class Stock(symbol: String, exchange: String, lastSale: Double)
     lastSale: n => n >= 0 and n < 500
 )
 ```
-<img src="docs/images/experimental.png" alt="matches is marked as experimental">
-
 ##### Results
 ```sql
 true
 ```
-### where (Filtering/Pattern Matching &#8212; Declarative)
+### where (Filtering and Matching &#8212; Declarative) 
 *Description*: Filters a result set
 
 ```sql
@@ -2938,7 +2934,7 @@ from (
 | PTFY   | NYSE     |  19.9265 | 2023-08-06T18:33:08.676Z |
 |---------------------------------------------------------|
 ```
-### wherein (Filtering/Pattern Matching &#8212; Declarative)
+### wherein (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
 ```sql
@@ -2968,7 +2964,7 @@ where transactions wherein (price is 0.0011)
 ## JVM and Reflection Examples
 <hr>
 
-### .! (JVM and Reflection &#8212; Object-Oriented)
+### .! (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Invokes a virtual method
 
 ```sql
@@ -2986,7 +2982,7 @@ items.!toTable()
 | OTCBB  | 1190 |
 |---------------|
 ```
-### ...¹ (JVM and Reflection &#8212; Declarative)
+### ...¹ (JVM and Reflection &#8212; Declarative) 
 *Description*: The argument spread operator: can convert an array into individual arguments
 
 ```sql
@@ -2998,7 +2994,7 @@ p3d([ x: 123, y:13, z: 67 ]...)
 ```sql
 Tuple3(_1=123, _2=13, _3=67)
 ```
-### ...² (JVM and Reflection &#8212; Declarative)
+### ...² (JVM and Reflection &#8212; Declarative) 
 *Description*: The argument spread operator: can convert a dictionary into individual arguments
 
 ```sql
@@ -3010,7 +3006,7 @@ p3d({ x: 123, y:13, z: 67 }...)
 ```sql
 Tuple3(_1=123, _2=13, _3=67)
 ```
-### .? (JVM and Reflection &#8212; Object-Oriented)
+### .? (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: determines whether the method exists within the instance
 
 ```sql
@@ -3021,7 +3017,7 @@ num.?MAX_VALUE
 ```sql
 true
 ```
-### classOf (JVM and Reflection &#8212; Object-Oriented)
+### classOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns a class instance by name (e.g. "Class.forName")
 
 ```sql
@@ -3031,7 +3027,7 @@ classOf('java.io.File')
 ```sql
 `java.io.File`
 ```
-### codecOf (JVM and Reflection &#8212; Functional)
+### codecOf (JVM and Reflection &#8212; Functional) 
 *Description*: Returns the CODEC (encoder/decoder) of an expression.
 
 ```sql
@@ -3042,7 +3038,7 @@ codecOf(counter)
 ```sql
 Int
 ```
-### interfacesOf (JVM and Reflection &#8212; Object-Oriented)
+### interfacesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the interfaces implemented by a class or instance
 
 ```sql
@@ -3052,7 +3048,7 @@ interfacesOf(classOf('java.util.ArrayList'))
 ```sql
 [`java.util.List`, `java.util.RandomAccess`, `java.lang.Cloneable`, `java.io.Serializable`, `java.util.Collection`, `java.lang.Iterable`]
 ```
-### membersOf (JVM and Reflection &#8212; Functional)
+### membersOf (JVM and Reflection &#8212; Functional) 
 *Description*: Returns the members (constructors, fields and methods) of a JVM Class as a Table
 
 ```sql
@@ -3070,7 +3066,7 @@ from membersOf(new `java.util.Date`()) limit 5
 | public    | java.util.Date(arg0: long)                                                       | java.util.Date | Constructor |
 |-----------------------------------------------------------------------------------------------------------------------------|
 ```
-### new¹ (JVM and Reflection &#8212; Functional)
+### new¹ (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate JVM classes.
 
 ```sql
@@ -3078,9 +3074,9 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-08T18:43:07.632Z
+2023-11-10T07:37:19.584Z
 ```
-### new² (JVM and Reflection &#8212; Functional)
+### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
 
 ```sql
@@ -3093,7 +3089,7 @@ stock.lastSale
 ```sql
 31.23
 ```
-### new³ (JVM and Reflection &#8212; Functional)
+### new³ (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to create anonymous objects from interfaces or traits.
 
 ```sql
@@ -3111,7 +3107,7 @@ new MouseListener() {
 ```sql
 new MouseListener() { mouseClicked: (e: MouseEvent) => stdout <=== "mouseClicked", mousePressed: (e: MouseEvent) => stdout <=== "mousePressed", mouseReleased: (e: MouseEvent) => stdout <=== "mouseReleased", mouseEntered: (e: MouseEvent) => stdout <=== "mouseEntered", mouseExited: (e: MouseEvent) => stdout <=== "mouseExited" }
 ```
-### objectOf (JVM and Reflection &#8212; Object-Oriented)
+### objectOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns a Scala object instance by name
 
 ```sql
@@ -3119,9 +3115,9 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@1c62d2ad
+scala.Function1$@2842c098
 ```
-### superClassesOf (JVM and Reflection &#8212; Object-Oriented)
+### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the super-classes extended by a class or instance
 
 ```sql
@@ -3131,7 +3127,7 @@ superClassesOf(classOf('java.util.ArrayList'))
 ```sql
 [`java.util.AbstractList`, `java.util.AbstractCollection`, `java.lang.Object`]
 ```
-### typeOf (JVM and Reflection &#8212; Functional)
+### typeOf (JVM and Reflection &#8212; Functional) 
 *Description*: Returns the type of an expression.
 
 ```sql
@@ -3142,11 +3138,11 @@ typeOf(counter)
 ```sql
 java.lang.Integer
 ```
-<a name="Scope_Session"></a>
-## Scope/Session Examples
+<a name="Scope_and_Session"></a>
+## Scope and Session Examples
 <hr>
 
-### $ (Scope/Session &#8212; Declarative)
+### $ (Scope and Session &#8212; Declarative) 
 *Description*: used to disambiguate a variable from a field or other identifiers
 
 ```sql
@@ -3157,7 +3153,7 @@ $x
 ```sql
 1
 ```
-### <|> (Scope/Session &#8212; Functional)
+### <|> (Scope and Session &#8212; Functional) 
 *Description*: Horizontally combines two arrays.
 
 ```sql
@@ -3167,7 +3163,7 @@ $x
 ```sql
 [['a', 1], ['b', 2], ['c', 3]]
 ```
-### =>¹ (Scope/Session &#8212; Functional)
+### =>¹ (Scope and Session &#8212; Functional) 
 *Description*: Defines an anonymous function
 
 ```sql
@@ -3178,7 +3174,7 @@ f(5)
 ```sql
 25
 ```
-### =>² (Scope/Session &#8212; Declarative)
+### =>² (Scope and Session &#8212; Declarative) 
 *Description*: Define objects literally using JSON syntax
 
 ```sql
@@ -3207,7 +3203,7 @@ f(5)
 | LAX         | SHARMA   | PANKAJ    | 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 |
 |---------------------------------------------------------------------------|
 ```
-### @ (Scope/Session &#8212; Declarative)
+### @ (Scope and Session &#8212; Declarative) 
 *Description*: used to disambiguate a table variable from a field or other identifiers
 
 ```sql
@@ -3222,7 +3218,7 @@ r = select value: 1
 |     1 |
 |-------|
 ```
-### as (Scope/Session &#8212; Declarative)
+### as (Scope and Session &#8212; Declarative) 
 *Description*: Applies an alias to an expression or query
 
 ```sql
@@ -3252,13 +3248,13 @@ from @stocks
 |     6 | 44.34686666666666 |     155.021 |      0.0401 | 266.08119999999997 |
 |----------------------------------------------------------------------------|
 ```
-### destroy (Scope/Session &#8212; Procedural)
+### destroy (Scope and Session &#8212; Procedural) 
 *Description*: Removes a variable from the active scope
 
 ```sql
 destroy stocks
 ```
-### let (Scope/Session &#8212; Functional)
+### let (Scope and Session &#8212; Functional) <i class='fa fa-flask'></i>
 *Description*: Creates a variable that automatically applies a CODEC function when mutated.
 
 ```sql
@@ -3266,13 +3262,11 @@ base64 = (value: String) => value.getBytes().base64()
 let b64 : base64 = "Hello"
 b64
 ```
-<img src="docs/images/experimental.png" alt="let is marked as experimental">
-
 ##### Results
 ```sql
 SGVsbG8=
 ```
-### namespace (Scope/Session &#8212; Procedural)
+### namespace (Scope and Session &#8212; Procedural) 
 *Description*: Sets the active database
 
 ```sql
@@ -3283,26 +3277,24 @@ __namespace__
 ```sql
 stocks_demo.public
 ```
-### package (Scope/Session &#8212; Declarative)
+### package (Scope and Session &#8212; Declarative) <i class='fa fa-flask'></i>
 *Description*: Declares the default JVM package namespace
 
 ```sql
 package "com.acme.skunkworks"
 __package__
 ```
-<img src="docs/images/experimental.png" alt="package is marked as experimental">
-
 ##### Results
 ```sql
 com.acme.skunkworks
 ```
-### reset (Scope/Session &#8212; Procedural)
+### reset (Scope and Session &#8212; Procedural) 
 *Description*: Resets the scope; wiping out all state
 
 ```sql
 reset
 ```
-### set (Scope/Session &#8212; Declarative)
+### set (Scope and Session &#8212; Declarative) 
 *Description*: Sets the value of a variable
 
 ```sql
@@ -3313,7 +3305,7 @@ x.a.b.c
 ```sql
 98
 ```
-### this (Scope/Session &#8212; Declarative)
+### this (Scope and Session &#8212; Declarative) 
 *Description*: Table representation of the current scope
 
 ```sql
@@ -3325,20 +3317,20 @@ this
 | name   | kind           | value                           |
 |-----------------------------------------------------------|
 | Random | Random$        | lollypop.lang.Random            |
-| stdout | PrintStream    | java.io.PrintStream@3caa4757    |
-| stdin  | BufferedReader | java.io.BufferedReader@1804f60d |
-| stderr | PrintStream    | java.io.PrintStream@3a80515c    |
+| stdout | PrintStream    | java.io.PrintStream@3a80515c    |
+| stdin  | BufferedReader | java.io.BufferedReader@1c807b1d |
+| stderr | PrintStream    | java.io.PrintStream@238b521e    |
 | OS     | OS             | lollypop.lang.OS                |
 | π      | Double         | 3.141592653589793               |
 |-----------------------------------------------------------|
 ```
-### val (Scope/Session &#8212; Procedural)
+### val (Scope and Session &#8212; Procedural) 
 *Description*: Creates a read-only variable
 
 ```sql
 val greeting: String = 'Hello World'
 ```
-### var (Scope/Session &#8212; Procedural)
+### var (Scope and Session &#8212; Procedural) 
 *Description*: Creates a variable
 
 ```sql
@@ -3348,7 +3340,7 @@ var customer_id: Int = 5
 ## System Tools Examples
 <hr>
 
-### DateTime (System Tools &#8212; Procedural)
+### DateTime (System Tools &#8212; Procedural) 
 *Description*: Creates new date instance
 
 ```sql
@@ -3356,9 +3348,9 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-08T18:43:08.058Z
+2023-11-10T07:37:20.019Z
 ```
-### help¹ (System Tools &#8212; Declarative)
+### help¹ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3377,7 +3369,7 @@ transpose(help('select'))
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
-### help² (System Tools &#8212; Declarative)
+### help² (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3389,23 +3381,23 @@ order by category
 ```
 ##### Results
 ```sql
-|-------------------------------------------|
-| category                          | total |
-|-------------------------------------------|
-| Aggregation/Sorting               |    23 |
-| Asynchronous/Distributed/Reactive |    16 |
-| Control Flow                      |    21 |
-| Dataframe I/O                     |    23 |
-| Dataframe Management              |    14 |
-| Filtering/Pattern Matching        |    25 |
-| JVM and Reflection                |    14 |
-| Scope/Session                     |    23 |
-| System Tools                      |    12 |
-| Testing - Unit/Integration        |     5 |
-| Transformation                    |     9 |
-|-------------------------------------------|
+|------------------------------------|
+| category                   | total |
+|------------------------------------|
+| Aggregation and Sorting    |    23 |
+| Concurrency                |    16 |
+| Control Flow               |    21 |
+| Dataframe I/O              |    23 |
+| Dataframe Management       |    14 |
+| Filtering and Matching     |    25 |
+| JVM and Reflection         |    14 |
+| Scope and Session          |    23 |
+| System Tools               |    12 |
+| Testing - Unit/Integration |     5 |
+| Transformation             |     9 |
+|------------------------------------|
 ```
-### help³ (System Tools &#8212; Declarative)
+### help³ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3422,7 +3414,7 @@ graph chart from (
 <img src="./docs/images/Help_By_Category.png">
 </div>
 
-### import (System Tools &#8212; Object-Oriented)
+### import (System Tools &#8212; Object-Oriented) 
 *Description*: Imports a JVM class
 
 ```sql
@@ -3432,13 +3424,13 @@ import 'java.util.Date'
 ```sql
 java.util.Date
 ```
-### include (System Tools &#8212; Declarative)
+### include (System Tools &#8212; Declarative) 
 *Description*: incorporates the contents of an external file into current scope
 
 ```sql
 include('./app/examples/src/main/lollypop/Stocks.sql')
 ```
-### ns (System Tools &#8212; Functional)
+### ns (System Tools &#8212; Functional) 
 *Description*: Returns a persistent object (e.g. table, view, et al) from disk via a namespace
 
 ```sql
@@ -3456,13 +3448,13 @@ from ns('lollypop.public.Stocks') limit 5
 | TRIX   | NYSE     |    77.88 |
 |------------------------------|
 ```
-### require (System Tools &#8212; Object-Oriented)
+### require (System Tools &#8212; Object-Oriented) 
 *Description*: Downloads a JVM dependency (jar) from a repository
 
 ```sql
 require ['org.apache.spark:spark-core_2.13:3.3.0']
 ```
-### synchronized (System Tools &#8212; Procedural)
+### synchronized (System Tools &#8212; Procedural) 
 *Description*: Synchronizes access to an object; providing an exclusive read/write lock over it
 
 ```sql
@@ -3476,7 +3468,7 @@ bag
 ```sql
 {"message": "Hello"}
 ```
-### trace (System Tools &#8212; Functional)
+### trace (System Tools &#8212; Functional) 
 *Description*: Executes an instruction
 
 ```sql
@@ -3486,7 +3478,7 @@ trace set x = 1
 ## Testing - Unit/Integration Examples
 <hr>
 
-### assert¹ (Testing - Unit/Integration &#8212; Procedural)
+### assert¹ (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
 
 ```sql
@@ -3499,10 +3491,10 @@ true
 ```
 ##### Console Error
 ```
-[0.000375ms] AnyLiteral 1 ~> 1 <Integer>
-[0.264250ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000792ms] AnyLiteral 1 ~> 1 <Integer>
+[0.418250ms] SetAnyVariable set x = 1 ~> null <null>
 ```
-### assert² (Testing - Unit/Integration &#8212; Procedural)
+### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
 
 ```sql
@@ -3514,13 +3506,13 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3a80515c
+java.io.PrintStream@238b521e
 ```
 ##### Console Error
 ```
 total must be less than 100 on line 3 at 3
 ```
-### feature (Testing - Unit/Integration &#8212; Declarative)
+### feature (Testing - Unit/Integration &#8212; Declarative) 
 *Description*: Feature-based test declaration
 
 ```sql
@@ -3630,7 +3622,7 @@ Feature: Traveler information service
       [x] (body[0]).destAirportCode is "BUR"
 completed: passed: 4, failed: 1
 ```
-### scenario (Testing - Unit/Integration &#8212; Declarative)
+### scenario (Testing - Unit/Integration &#8212; Declarative) 
 *Description*: scenario-based test declaration
 
 ```sql
@@ -3686,7 +3678,7 @@ contest_id = 40d1857b-474c-4400-8f07-5e04cbacc021, member_id = 4264f8a5-6fa3-4a3
       [x] counter is 3
 completed: passed: 4, failed: 0
 ```
-### verify (Testing - Unit/Integration &#8212; Procedural)
+### verify (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Verifies the current state of the scope
 
 ```sql
@@ -3702,7 +3694,7 @@ true
 ## Transformation Examples
 <hr>
 
-### <=== (Transformation &#8212; Declarative)
+### <=== (Transformation &#8212; Declarative) 
 *Description*: A declarative way to write to OutputStream or Writer resources
 
 ```sql
@@ -3713,13 +3705,13 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@3caa4757
+java.io.PrintStream@3a80515c
 ```
 ##### Console Output
 ```
 Hello World
 ```
-### ===> (Transformation &#8212; Declarative)
+### ===> (Transformation &#8212; Declarative) 
 *Description*: A declarative way to write to OutputStream or Writer resources
 
 ```sql
@@ -3727,7 +3719,7 @@ import "java.io.File"
 f = new File("./test.json")
 f ===> stdout
 ```
-### =>>¹ (Transformation &#8212; Functional)
+### =>>¹ (Transformation &#8212; Functional) <i class='fa fa-flask'></i>
 *Description*: Monadic comprehension
 
 ```sql
@@ -3737,13 +3729,11 @@ b = Success(25)
 c = a =>> i => i * 2
 c
 ```
-<img src="docs/images/experimental.png" alt="=>> is marked as experimental">
-
 ##### Results
 ```sql
 Success(value=150)
 ```
-### =>>² (Transformation &#8212; Functional)
+### =>>² (Transformation &#8212; Functional) <i class='fa fa-flask'></i>
 *Description*: Monadic comprehension
 
 ```sql
@@ -3754,13 +3744,11 @@ c = a =>> i =>
     b =>> j => i + j
 c
 ```
-<img src="docs/images/experimental.png" alt="=>> is marked as experimental">
-
 ##### Results
 ```sql
 Success(value={"value": 100})
 ```
-### scaleTo (Transformation &#8212; Functional)
+### scaleTo (Transformation &#8212; Functional) 
 *Description*: Returns the the numeric expression truncated after `scale` decimal places.
 
 ```sql
@@ -3770,7 +3758,7 @@ scaleTo(0.567, 2)
 ```sql
 0.56
 ```
-### switch¹ (Transformation &#8212; Functional)
+### switch¹ (Transformation &#8212; Functional) 
 *Description*: Scala-inspired switch-case statement
 
 ```sql
@@ -3784,7 +3772,7 @@ switch value
 ```sql
 Maybe - 5.7
 ```
-### switch² (Transformation &#8212; Functional)
+### switch² (Transformation &#8212; Functional) 
 *Description*: Scala-inspired switch-case statement
 
 ```sql
@@ -3797,7 +3785,7 @@ switch new StockQ("ABC", "AMEX", 78.23)
 ```sql
 78.23
 ```
-### switch³ (Transformation &#8212; Functional)
+### switch³ (Transformation &#8212; Functional) 
 *Description*: Scala-inspired switch-case statement
 
 ```sql
