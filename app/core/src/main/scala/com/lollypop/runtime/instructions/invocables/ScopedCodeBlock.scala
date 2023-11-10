@@ -22,8 +22,7 @@ case class ScopedCodeBlock(instructions: List[Instruction]) extends CodeBlock
   with Expression with RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val scope0 = Scope(scope)
-    summarize(scope0, instructions) ~> { case (_, c, r) => (scope, c, r) }
+    summarize(scope, instructions) ~> { case (_, c, r) => (scope, c, r) }
   }
 }
 

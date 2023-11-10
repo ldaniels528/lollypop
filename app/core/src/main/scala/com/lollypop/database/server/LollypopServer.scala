@@ -692,16 +692,13 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
   }
 
   private def getSession(sessionID: String): Scope = {
-    implicit val scope: Scope = scopes.getOrElseUpdate(sessionID, Scope(rootScope))
+    implicit val scope: Scope = scopes.getOrElseUpdate(sessionID, rootScope)
     if (!scope.getValueReferences.contains("sessionID"))
       scope.withVariable(name = "sessionID", `type` = UUIDType, value = Some(sessionID), isReadOnly = false)
     scope
   }
 
-  private def newSession: Scope = {
-    val scope = Scope(rootScope)
-    scope
-  }
+  private def newSession: Scope = rootScope
 
   private def updateSession(sessionID: String, scope: Scope): Scope = {
     scopes.put(sessionID, scope)

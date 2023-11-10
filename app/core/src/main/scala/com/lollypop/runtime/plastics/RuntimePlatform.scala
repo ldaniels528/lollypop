@@ -287,7 +287,7 @@ object RuntimePlatform {
 
       // reset the anonymous function's scope
       fx match {
-        case af: AnonymousFunction => af.updateScope(Scope(scope))
+        case af: AnonymousFunction => af.updateScope(scope)
         case _ =>
       }
       recurse(scope)

@@ -32,7 +32,7 @@ case class NamedFunctionCall(name: String, args: List[Expression]) extends Funct
           LambdaFunctionCall(fx, myArgs).execute(seed(scope, fx)) ~> { case (_, c, r) => (scope, c, r) }
         case fx: InternalFunctionCall => fx.execute(scope)
         case fx: Procedure => fx.code.execute(seed(scope, fx).withParameters(fx.params, myArgs))
-        case fx: TypicalFunction => fx.code.execute(Scope(seed(scope, fx)).withParameters(fx.params, myArgs))
+        case fx: TypicalFunction => fx.code.execute(seed(scope, fx).withParameters(fx.params, myArgs))
         case cs: ConstructorSupport[_] => myArgs.transform(scope) ~> { case (s, c, r) => (s, c, cs.construct(r)) }
         case _ => processInternalOps(name.f, myArgs)(scope)
       }

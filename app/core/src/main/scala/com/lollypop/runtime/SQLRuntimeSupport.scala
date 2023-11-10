@@ -82,7 +82,7 @@ trait SQLRuntimeSupport {
     val out = createQueryResultTable(selectedColumns)
 
     def isHavingSatisfied(state: Map[String, Any]): Boolean = {
-      select.having.isEmpty || Scope(scope0, state) ~> { myScope => select.having.exists(c => isTrue(c)(myScope)) }
+      select.having.isEmpty || scope0.withArguments(state.toList) ~> { myScope => select.having.exists(c => isTrue(c)(myScope)) }
     }
 
     def toRowMapping(aggExpressions: Seq[AggregateProjection], aggregators: Seq[Aggregator]): Map[String, Any] = {

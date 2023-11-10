@@ -19,15 +19,14 @@ case class LambdaFunctionCall(fx: LambdaFunction, args: List[Expression]) extend
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     fx match {
       case af@AnonymousFunction(params, code, origin_?) =>
-        val fxScope = origin_?.getOrElse(Scope(parentScope = scope)).withParameters(params, args)
+        val fxScope = origin_?.getOrElse(scope).withParameters(params, args)
         val (s, c, r) = code.execute(fxScope)
         (af.updateScope(s), c, r)
       case AnonymousNamedFunction(name) =>
         NamedFunctionCall(name, args).execute(scope)
       case dtf: DataTypeConstructor =>
-        val (scopeA, costA, values) = args.transform(scope)
-        val r = dtf.provider.construct(values)
-        (scopeA, costA, r)
+        val (s, c, values) = args.transform(scope)
+        (s, c, dtf.provider.construct(values))
       case xx => xx.dieExpectedFunctionRef()
     }
   }

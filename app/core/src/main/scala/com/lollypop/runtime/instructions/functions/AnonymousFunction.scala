@@ -24,7 +24,7 @@ case class AnonymousFunction(params: Seq[ParameterLike], code: Instruction, var 
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, AnonymousFunction) = {
     // capture the scope at the time of the lambda's creation (first execution)
-    if (origin.isEmpty) updateScope(Scope(parentScope = scope))
+    if (origin.isEmpty) updateScope(scope)
     (scope, IOCost.empty, this)
   }
 
