@@ -42,8 +42,9 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   // create the systems utility
   val system: OS = new OS(this)
 
-  def createRootScope(): Scope = {
-    DefaultScope(universe = this)
+  def createRootScope: () => Scope = {
+    val rootScope = DefaultScope(universe = this)
+      .withVariable(name = "__session__", value = this)
       .withVariable(name = "π", value = Math.PI)
       .withVariable(name = "OS", value = system)
       .withVariable(name = "Random", value = lollypop.lang.Random)
@@ -55,6 +56,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
         classOf[IOCost], classOf[Matrix], classOf[Pointer], classOf[RowIDRange]
       ).map(c => c.getSimpleName -> c.getName): _*))
       .withVariable(name = "Character", value = classOf[Character])
+    () => rootScope
   }
 
   /**
