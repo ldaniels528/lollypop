@@ -1,5 +1,6 @@
 package com.lollypop.database.jdbc
 
+import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
 import lollypop.io.{Node, Nodes}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -16,6 +17,8 @@ trait JDBCTestServer {
     val (databaseName, schemaName, _) = getTestTableDetails
     s"jdbc:lollypop://localhost:$port/$databaseName.$schemaName"
   }
+
+  closeOnShutdown(node)
 
   def getTestTableDetails: (String, String, String) = {
     val pcs = this.getClass.getName.split("[.]")

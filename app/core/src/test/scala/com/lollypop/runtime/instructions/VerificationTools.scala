@@ -2,6 +2,7 @@ package com.lollypop.runtime.instructions
 
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{SQLCompiler, TokenStream}
+import lollypop.io.Node
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
@@ -27,6 +28,16 @@ trait VerificationTools { self: AnyFunSpec =>
     val actual = compiler.nextExpression(TokenStream(expr))
     info(s"$expr => $actual")
     assert(actual.contains(expect), s"$expr : failed")
+  }
+
+}
+
+object VerificationTools {
+
+  def closeOnShutdown(node: Node): Unit = {
+    Runtime.getRuntime.addShutdownHook(new Thread {
+      override def run(): Unit = node.stop()
+    })
   }
 
 }

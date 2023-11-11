@@ -2,6 +2,7 @@ package com.lollypop.database
 package clients
 
 import com.lollypop.runtime.instructions.VerificationTools
+import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
 import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef}
 import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
@@ -22,6 +23,8 @@ class MessageProducerConsumerTest extends AnyFunSpec with VerificationTools {
   private val databaseClient = DatabaseClient(port = port)
   private val messageProducer = MessageProducer(port = port)
   private val messageConsumer = MessageConsumer(port = port, ns = DatabaseObjectNS(databaseName, schemaName, tableName))
+
+  closeOnShutdown(node)
 
   describe(classOf[DatabaseClient].getSimpleName) {
 

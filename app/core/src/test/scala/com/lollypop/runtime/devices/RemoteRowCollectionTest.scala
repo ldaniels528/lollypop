@@ -6,6 +6,7 @@ import com.lollypop.runtime.datatypes.{Float64Type, StringType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RemoteRowCollection.getRemoteCollection
 import com.lollypop.runtime.instructions.VerificationTools
+import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
 import lollypop.io.{IOCost, Nodes, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
@@ -19,22 +20,24 @@ class RemoteRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val port = node.port
   private val ref = DatabaseObjectRef(getTestTableName)
 
+  closeOnShutdown(node)
+
   describe(classOf[RemoteRowCollection].getSimpleName) {
     val (scope, _, _) = LollypopVM.searchSQL(rootScope,
-     s"""|drop if exists $ref
-         |create table $ref (
-         |   symbol: String(7),
-         |   exchange: String(5),
-         |   lastSale: Double,
-         |   code: String(2)
-         |)
-         |
-         |insert into $ref (symbol, exchange, lastSale, code)
-         |values
-         |  ('AAXX', 'NYSE', 56.12, 'A'), ('UPEX', 'NYSE', 116.24, 'A'), ('XYZ', 'AMEX', 31.9500, 'A'),
-         |  ('JUNK', 'AMEX', 97.61, 'B'), ('RTX.OB', 'OTCBB', 1.93011, 'B'), ('ABC', 'NYSE', 1235.7650, 'B'),
-         |  ('UNIB.OB', 'OTCBB', 9.11, 'C'), ('BRT.OB', 'OTCBB', 0.00123, 'C'), ('PLUMB', 'NYSE', 1009.0770, 'C')
-         |""".stripMargin)
+      s"""|drop if exists $ref
+          |create table $ref (
+          |   symbol: String(7),
+          |   exchange: String(5),
+          |   lastSale: Double,
+          |   code: String(2)
+          |)
+          |
+          |insert into $ref (symbol, exchange, lastSale, code)
+          |values
+          |  ('AAXX', 'NYSE', 56.12, 'A'), ('UPEX', 'NYSE', 116.24, 'A'), ('XYZ', 'AMEX', 31.9500, 'A'),
+          |  ('JUNK', 'AMEX', 97.61, 'B'), ('RTX.OB', 'OTCBB', 1.93011, 'B'), ('ABC', 'NYSE', 1235.7650, 'B'),
+          |  ('UNIB.OB', 'OTCBB', 9.11, 'C'), ('BRT.OB', 'OTCBB', 0.00123, 'C'), ('PLUMB', 'NYSE', 1009.0770, 'C')
+          |""".stripMargin)
 
     val device = RemoteRowCollection(host = "0.0.0.0", port = port, ns = ref.toNS(scope))
 

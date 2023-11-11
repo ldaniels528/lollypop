@@ -4,6 +4,7 @@ import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.VerificationTools
+import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
@@ -16,6 +17,8 @@ class NSTest extends AnyFunSpec with VerificationTools {
   implicit val compiler: LollypopCompiler = LollypopCompiler()
   private val node = Nodes().start()
   private val port = node.port
+
+  closeOnShutdown(node)
 
   describe(classOf[NS].getSimpleName) {
 
