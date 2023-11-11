@@ -1,4 +1,4 @@
-nodeAPI(port, '/api/shocktrade/positions', {
+node.api(port, '/api/shocktrade/positions', {
     //////////////////////////////////////////////////////////////////////////////////////
     // creates a new position
     // http post 'http://{{host}}:{{port}}/api/shocktrade/positions'
@@ -36,7 +36,7 @@ nodeAPI(port, '/api/shocktrade/positions', {
     }
 })
 
-nodeAPI(port, '/api/shocktrade/positions/by/contest', {
+node.api(port, '/api/shocktrade/positions/by/contest', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for positions by contest ID
     // http get 'http://{{host}}:{{port}}/api/shocktrade/positions/by/contest?id=aa440939-89cb-4ba1-80b6-20100ba6a286'
@@ -46,7 +46,7 @@ nodeAPI(port, '/api/shocktrade/positions/by/contest', {
     }
 })
 
-nodeAPI(port, '/api/shocktrade/positions/by/order', {
+node.api(port, '/api/shocktrade/positions/by/order', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for positions by order ID
     // http get 'http://{{host}}:{{port}}/api/shocktrade/positions/by/order?id=fad8f33b-18c1-416d-ae8f-3b309d3f9589'
@@ -56,7 +56,7 @@ nodeAPI(port, '/api/shocktrade/positions/by/order', {
     }
 })
 
-nodeAPI(port, '/api/shocktrade/positions/by/participant', {
+node.api(port, '/api/shocktrade/positions/by/participant', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for positions by participant ID
     // http get 'http://{{host}}:{{port}}/api/shocktrade/positions/by/participant?id=fad8f33b-18c1-416d-ae8f-3b309d3f9589'

@@ -1,6 +1,7 @@
 package com.lollypop.repl
 
 import com.lollypop.AppConstants._
+import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopChartGenerator
 import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.LollypopUniverse.overwriteOpCodesConfig
@@ -230,6 +231,7 @@ trait LollypopCLI extends LollypopCodeDebugger {
       case b: Array[Byte] => Console.println(StringRenderHelper.toByteArrayString(b, isPretty = false))
       case d: GraphResult => showChart(d)
       case m: Matrix if isTable => m.toTable(scope).tabulate().foreach(Console.println)
+      case q: QueryResponse => q.toRowCollection.tabulate().foreach(Console.println)
       case r: Row if isTable => r.toRowCollection.tabulate().foreach(Console.println)
       case r: Row => Console.println(StringRenderHelper.toRowString(r))
       case r: RowCollection => r.tabulate(limit = 1000).foreach(Console.println)

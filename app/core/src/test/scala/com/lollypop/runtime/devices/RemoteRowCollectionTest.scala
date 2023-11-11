@@ -1,6 +1,5 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.database.server.LollypopServers
 import com.lollypop.language.LollypopUniverse
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.lollypop.runtime.datatypes.{Float64Type, StringType}
@@ -8,15 +7,16 @@ import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RemoteRowCollection.getRemoteCollection
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
+import lollypop.io.{IOCost, Nodes, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.io.{IOCost, RowIDRange}
 
 class RemoteRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
   private val ctx = LollypopUniverse(isServerMode = true)
   private val rootScope = ctx.createRootScope()
-  private val port = LollypopServers.start(ctx)
+  private val node = new Nodes(ctx).start()
+  private val port = node.port
   private val ref = DatabaseObjectRef(getTestTableName)
 
   describe(classOf[RemoteRowCollection].getSimpleName) {

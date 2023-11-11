@@ -153,7 +153,7 @@ object Feature extends InvokableParser {
           ||-------------------------------------------------------------------------------|
           |
           |// create the webservice that reads from the table
-          |nodeAPI(port, '/api/temp/examples', {
+          |node.api(port, '/api/temp/examples', {
           |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
           |     insert into Travelers (id, firstName, lastName, destAirportCode)
           |     values ($$id, $$firstName, $$lastName, $$destAirportCode)

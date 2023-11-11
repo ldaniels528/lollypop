@@ -1,4 +1,4 @@
-nodeAPI(port, '/api/shocktrade/contests', {
+node.api(port, '/api/shocktrade/contests', {
     //////////////////////////////////////////////////////////////////////////////////////
     // creates a new contest
     // http post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
@@ -33,7 +33,7 @@ nodeAPI(port, '/api/shocktrade/contests', {
     }
 })
 
-nodeAPI(port, '/api/shocktrade/contests/by/name', {
+node.api(port, '/api/shocktrade/contests/by/name', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for contests by name
     // http post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }

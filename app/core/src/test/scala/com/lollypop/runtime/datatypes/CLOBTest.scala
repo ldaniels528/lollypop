@@ -75,7 +75,7 @@ class CLOBTest extends AnyFunSpec with VerificationTools {
       val clob = ICLOB(CLOB.fromFile(testFile))
       val pattern = ICLOB(CLOB.fromString("Class.forName(LollypopDriver.getClass.getName)"))
       val pos = clob.position(pattern, 0L)
-      assert(pos == 240)
+      assert(pos == 296)
       clob.free()
       pattern.free()
     }
@@ -87,13 +87,13 @@ class CLOBTest extends AnyFunSpec with VerificationTools {
 
       // search for the pattern
       val pos = clob.position(pattern, 0L)
-      assert(pos == 240)
+      assert(pos == 296)
 
       // replace a slice of the CLOB
       clob.setString(pos, replacement)
 
       // verify the slice
-      assert(clob.getCharacterStream(240, replacement.length).mkString() == new String(replacement))
+      assert(clob.getCharacterStream(pos, replacement.length).mkString() == new String(replacement))
       clob.free()
     }
 

@@ -96,7 +96,7 @@ class BLOBTest extends AnyFunSpec with VerificationTools {
       val blob = IBLOB(BLOB.fromFile(testFile))
       val pattern = IBLOB(BLOB.fromString("Class.forName(LollypopDriver.getClass.getName)"))
       val pos = blob.position(pattern, 0L)
-      assert(pos == 240)
+      assert(pos == 296)
       blob.free()
       pattern.free()
     }
@@ -108,13 +108,13 @@ class BLOBTest extends AnyFunSpec with VerificationTools {
 
       // search for the pattern
       val pos = blob.position(pattern, 0L)
-      assert(pos == 240)
+      assert(pos == 296)
 
       // replace a slice of the BLOB
       blob.setBytes(pos, replacement)
 
       // verify the slice
-      assert(blob.getBinaryStream(240, replacement.length).mkString() == new String(replacement))
+      assert(blob.getBinaryStream(pos, replacement.length).mkString() == new String(replacement))
       blob.free()
     }
 

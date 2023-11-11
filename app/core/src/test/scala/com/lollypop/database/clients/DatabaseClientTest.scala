@@ -1,11 +1,10 @@
 package com.lollypop.database.clients
 
 import com.lollypop.database.QueryResponse
-import com.lollypop.database.server.LollypopServers
-import com.lollypop.language.LollypopUniverse
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringHelper.StringEnrichment
+import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
@@ -14,7 +13,8 @@ import org.slf4j.LoggerFactory
  */
 class DatabaseClientTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val port = LollypopServers.start(LollypopUniverse())
+  private val node = Nodes().start()
+  private val port = node.port
 
   describe(classOf[DatabaseClient].getSimpleName) {
     // create the client

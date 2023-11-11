@@ -1,18 +1,21 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.database.server.LollypopServers
+import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
+import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
 class NSTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val rootScope = Scope()
+  private val ctx = LollypopUniverse(isServerMode = true)
+  private val rootScope = ctx.createRootScope()
   implicit val compiler: LollypopCompiler = LollypopCompiler()
-  private val port = LollypopServers.start()
+  private val node = Nodes().start()
+  private val port = node.port
 
   describe(classOf[NS].getSimpleName) {
 
