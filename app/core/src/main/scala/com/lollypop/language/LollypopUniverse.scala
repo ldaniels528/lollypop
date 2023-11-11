@@ -1,6 +1,6 @@
 package com.lollypop.language
 
-import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _languageParsers}
+import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _helpers, _languageParsers}
 import com.lollypop.language.instructions.Include
 import com.lollypop.language.models._
 import com.lollypop.runtime._
@@ -32,20 +32,20 @@ import java.io.{File, FileWriter, PrintWriter}
  */
 case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypeParsers,
                             var languageParsers: List[LanguageParser] = _languageParsers,
+                            var helpers: List[HelpIntegration] = _helpers,
                             var classLoader: DynamicClassLoader = _classLoader,
                             var escapeCharacter: Char = '`',
                             var isServerMode: Boolean = false) {
-
-  // define the default compiler
+  // create the compiler and system utilities
   val compiler: LollypopCompiler = LollypopCompiler(this)
-
-  // create the systems utility
+  val nodes = new Nodes(this)
   val system: OS = new OS(this)
 
   def createRootScope: () => Scope = {
     val rootScope = DefaultScope(universe = this)
       .withVariable(name = "__session__", value = this)
       .withVariable(name = "π", value = Math.PI)
+      .withVariable("Nodes", value = nodes)
       .withVariable(name = "OS", value = system)
       .withVariable(name = "Random", value = lollypop.lang.Random)
       .withVariable(name = "stderr", value = system.stdErr.writer)
@@ -152,7 +152,9 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
 
   def getKeywords: List[String] = antiFunctionParsers.flatMap(_.help.collect { case c if c.name.forall(_.isLetter) => c.name })
 
-  def helpDocs: List[HelpDoc] = (MacroLanguageParser :: languageParsers ::: dataTypeParsers).flatMap(_.help).sortBy(_.name)
+  def helpDocs: List[HelpDoc] = {
+    (MacroLanguageParser :: helpers).flatMap(_.help).sortBy(_.name)
+  }
 
   def isFunctionCall(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
     !ts.isBackticks && !ts.isQuoted && functionCallParsers.exists(_.understands(ts))
@@ -225,6 +227,7 @@ object LollypopUniverse {
     WhileDo, WhenEver, Where, WhereIn, With,
     ZipWith
   )
+  val _helpers: List[HelpIntegration] = Nodes :: _languageParsers ::: _dataTypeParsers
 
   def overwriteOpCodesConfig(file: File): Unit = {
     new PrintWriter(new FileWriter(file)) use { out =>
