@@ -1,6 +1,6 @@
 package com.lollypop.runtime
 
-import com.lollypop.runtime.LollypopCodeDebugger.createAutomatedConsoleReader
+import com.lollypop.util.ConsoleReaderHelper.createAutomatedConsoleReader
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File

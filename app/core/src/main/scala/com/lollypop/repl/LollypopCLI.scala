@@ -6,7 +6,6 @@ import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.LollypopUniverse.overwriteOpCodesConfig
 import com.lollypop.repl.LollypopCLI.logger
 import com.lollypop.repl.REPLTools.getResourceFile
-import com.lollypop.runtime.LollypopCodeDebugger.createInteractiveConsoleReader
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
@@ -17,6 +16,7 @@ import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopCodeDebugger, LollypopCompiler, LollypopVM, Scope, getServerRootDirectory}
+import com.lollypop.util.ConsoleReaderHelper.createInteractiveConsoleReader
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper
@@ -89,10 +89,10 @@ trait LollypopCLI extends LollypopCodeDebugger {
   final def interact(scope: Scope, console: () => String = createInteractiveConsoleReader)(implicit compiler: LollypopCompiler): Scope = {
     showPrompt(scope)
     readFromConsole(console) match {
-      // blank line?
-      case sql if sql.isEmpty => interact(scope, console)
+      // ignore blank lines
+      case "" => interact(scope, console)
       // quit the shell?
-      case sql if (sql == "exit") | (sql == "quit") => scope
+      case "exit" => scope
       // start debugger?
       case sql if sql startsWith "debug " =>
         val file = new File(sql.drop(6)).getCanonicalFile
@@ -108,7 +108,7 @@ trait LollypopCLI extends LollypopCodeDebugger {
 
   def runScript(scope: Scope, file: String, args: Seq[String] = Nil): (Scope, IOCost, Any) = {
     // setup the root scope
-    val scope0 = scope.withVariable(name = "__args__", value = Some(args))
+    val scope0 = scope.withVariable(name = "__args__", value = args)
 
     // load and run the script
     val scriptFile = new File(file)
