@@ -140,7 +140,7 @@ object RuntimeExpression {
 
     @inline def asInt32(implicit scope: Scope): Option[Int] = Option(getValue.execute(scope)._3).map(Int32Type.convert)
 
-    @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(getValue.execute(scope)._3).map(IntervalType.convert)
+    @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(getValue.execute(scope)._3).map(DurationType.convert)
 
     @inline
     def asJsArray(implicit scope: Scope): Option[JsArray] = {

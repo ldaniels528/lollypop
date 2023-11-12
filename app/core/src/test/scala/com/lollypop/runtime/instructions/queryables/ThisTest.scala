@@ -38,7 +38,7 @@ class ThisTest extends AnyFunSpec with VerificationTools {
         case ("name", "stdout") => true
         case ("name", "stderr") => true
         case ("name", "stdin") => true
-        case ("name", "Node") => true
+        case ("name", "Nodes") => true
         case ("name", "OS") => true
         case ("name", "Random") => true
         case _ => false

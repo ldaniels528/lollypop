@@ -48,7 +48,7 @@ object RuntimePlatform {
   private val DATETIME_TYPE = Some("DateTime".ct)
   private val JSON_TYPE = Some("JSON".ct)
   private val INT_TYPE = Some("Int".ct)
-  private val INTERVAL_TYPE = Some("Interval".ct)
+  private val INTERVAL_TYPE = Some("Duration".ct)
   private val NUMERIC_TYPE = Some("Numeric".ct)
   private val STRING_TYPE = Some("String".ct)
   private val TABLE_TYPE = Some(classOf[RowCollection].getName.ct)
@@ -474,7 +474,7 @@ object RuntimePlatform {
   private object Dates {
 
     def init(): Unit = {
-      // Returns the difference of a Date and a Duration: DateTime('2021-09-02T11:22:33.000Z') - Interval('5 seconds')
+      // Returns the difference of a Date and a Duration: DateTime('2021-09-02T11:22:33.000Z') - Duration('5 seconds')
       registerVirtualMethod(VirtualMethod(_.isInstanceOf[Date], fx = NamedFunction(
         name = "$minus",
         params = Seq("valueA DateTime".c, "valueB Any".c),
@@ -482,7 +482,7 @@ object RuntimePlatform {
         returnType_? = DATETIME_TYPE
       )))
 
-      // Returns the sum of a Date and a Duration: DateTime('2021-09-02T11:22:33.000Z') + Interval('5 seconds')
+      // Returns the sum of a Date and a Duration: DateTime('2021-09-02T11:22:33.000Z') + Duration('5 seconds')
       dateFunction1[FiniteDuration](name = "$plus", (a, b) => a + b, returnType_? = DATETIME_TYPE)
 
       // Returns the day of the month of the a Date: DateTime('2021-09-02T11:22:33.000Z').dayOfWeek()
@@ -550,17 +550,17 @@ object RuntimePlatform {
   private object Durations {
 
     def init(): Unit = {
-      // Returns the difference of two Durations: Interval('5 seconds') - Interval('5 seconds')
+      // Returns the difference of two Durations: Duration('5 seconds') - Duration('5 seconds')
       durationFunction1[FiniteDuration](name = "$minus", (a, b) => a - b, returnType_? = INTERVAL_TYPE)
 
-      // Returns the sum of two Durations: Interval('5 seconds') + Interval('5 seconds')
+      // Returns the sum of two Durations: Duration('5 seconds') + Duration('5 seconds')
       durationFunction1[FiniteDuration](name = "$plus", (a, b) => a + b, returnType_? = INTERVAL_TYPE)
     }
 
     private def durationFunction1[A](name: String, f: (FiniteDuration, A) => Any, returnType_? : Option[ColumnType]): Unit = {
       registerVirtualMethod(VirtualMethod(`class` = classOf[FiniteDuration], fx = NamedFunction(
         name = name,
-        params = Seq("value Interval".c, "arg1 Any".c),
+        params = Seq("value Duration".c, "arg1 Any".c),
         code = new DurationFunction1(name, "value".f, "arg1".f, f),
         returnType_? = returnType_?
       )))

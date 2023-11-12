@@ -1,5 +1,6 @@
 package com.lollypop.runtime
 
+import com.lollypop.database.QueryResponse
 import com.lollypop.die
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
 import com.lollypop.language.models._
@@ -10,12 +11,12 @@ import com.lollypop.runtime.Scope._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
-import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
+import com.lollypop.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.functions.DataTypeConstructor
 import com.lollypop.runtime.instructions.invocables.EOL
-import com.lollypop.runtime.instructions.queryables.TableVariableRef
+import com.lollypop.runtime.instructions.queryables.{TableRendering, TableVariableRef}
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
@@ -310,8 +311,10 @@ case class DefaultScope(superScope: Option[Scope] = None,
       case Some(variable) =>
         variable.value(this) match {
           case null => die(s"Variable '$name' is not a table")
-          case collection: RowCollection => collection
-          case blob: IBLOB => FileRowCollection(blob.ns)
+          case qr: QueryResponse => qr.toRowCollection
+          case rc: RowCollection => rc
+          case tr: TableRendering => tr.toTable(this)
+          case bl: IBLOB => FileRowCollection(bl.ns)
           case other => die(s"Variable '$name' (${other.getClass.getName}) is not a table")
         }
       case None => specialVariables.getOrElse(name, die(s"Variable '$name' was not found"))() match {

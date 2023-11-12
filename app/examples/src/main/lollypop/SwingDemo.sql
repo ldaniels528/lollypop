@@ -36,24 +36,24 @@ def changeScreenColor(color) := {
 
 // every 3 seconds, change the screen color to RED
 val timerA =
-    every Interval('3 seconds')
+    every Duration('3 seconds')
         changeScreenColor(Color.RED)
 
 // after an initial delay of 1 second,
 // every 3 seconds change the screen color to GREEN
 val timerB =
-    after Interval('1 seconds')
-        every Interval('3 seconds')
+    after Duration('1 seconds')
+        every Duration('3 seconds')
             changeScreenColor(Color.GREEN)
 
 // after an initial delay of 2 seconds,
 // every 3 seconds change the screen color to BLUE
 val timerC =
-    after Interval('2 seconds')
-        every Interval('3 seconds')
+    after Duration('2 seconds')
+        every Duration('3 seconds')
             changeScreenColor(Color.BLUE)
 
-after Interval('5 seconds') {
+after Duration('5 seconds') {
     timerA.cancel()
     timerB.cancel()
     timerC.cancel()

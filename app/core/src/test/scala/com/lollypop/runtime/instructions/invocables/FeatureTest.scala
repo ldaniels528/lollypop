@@ -1,11 +1,11 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.database.server.LollypopServers
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.{AND, Is, Verify}
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
+import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
 
 /**
@@ -16,7 +16,8 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
   private val (databaseName, schemaName) = ("test", "TravelerService") // show `test.TravelerService.Travelers`
 
   // start the server
-  private val port = LollypopServers.start()
+  private val node = Nodes().start()
+  private val port = node.port
 
   describe(classOf[Feature].getSimpleName) {
 
@@ -114,7 +115,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support multiple request methods") {
-      val (_, _, result) = LollypopVM.executeSQL(Scope(),
+      val (_, _, result) = LollypopVM.executeSQL(Scope().withVariable("node", node),
         s"""|namespace '$databaseName.$schemaName'
             |
             |// create a table
@@ -131,7 +132,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
             |       ('22d10aaa-32ac-4cd0-9bed-aa8e78a36d80', 'SHARMA', 'PANKAJ', 'LAX')
             |
             |// create the webservice that reads from the table
-            |nodeAPI($port, '/api/$databaseName/$schemaName', {
+            |node.api('/api/$databaseName/$schemaName', {
             |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
             |     insert into Travelers (id, firstName, lastName, destAirportCode)
             |     values ($$id, $$firstName, $$lastName, $$destAirportCode)

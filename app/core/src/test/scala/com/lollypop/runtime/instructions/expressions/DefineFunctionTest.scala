@@ -58,7 +58,7 @@ class DefineFunctionTest extends AnyFunSpec with VerificationTools {
            |    declare table myQuotes(id RowNumber, symbol: String(4), exchange: String(6), lastSale Float, lastSaleTime: DateTime);
            |    [1 to total].foreach((cnt: Int) => {
            |        insert into @myQuotes (lastSaleTime, lastSale, exchange, symbol)
-           |        select lastSaleTime: DateTime() - Interval(Random.nextInt(25000000) + ' milli'),
+           |        select lastSaleTime: DateTime() - Duration(Random.nextInt(25000000) + ' milli'),
            |               lastSale: scaleTo(150 * Random.nextDouble(0.99), 4),
            |               exchange: ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB'][Random.nextInt(4)],
            |               symbol: Random.nextString(['A' to 'Z'], 4)

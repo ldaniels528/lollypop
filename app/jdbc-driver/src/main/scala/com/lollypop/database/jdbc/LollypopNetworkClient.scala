@@ -4,16 +4,16 @@ import com.lollypop.AppConstants._
 import com.lollypop.database.server.LollypopServer
 import com.lollypop.die
 import com.lollypop.repl.REPLTools.getResourceFile
-import com.lollypop.runtime.LollypopCodeDebugger.createInteractiveConsoleReader
+import com.lollypop.util.ConsoleReaderHelper.{createInteractiveConsoleReader, interactWith}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 
 import java.io.File
-import java.sql.{Connection, Driver, DriverManager, ResultSet}
+import java.sql.{Connection, Driver, DriverManager}
 import scala.annotation.tailrec
 import scala.io.{Source, StdIn}
 import scala.language.implicitConversions
-import scala.util.{Failure, Properties, Success, Try}
+import scala.util.{Properties, Try}
 
 /**
  * Lollypop Network Client
@@ -22,60 +22,27 @@ trait LollypopNetworkClient {
 
   /**
    * Facilitates the client conversation
-   * @param conn the [[Connection ]]
+   * @param conn    the [[Connection connection]]
+   * @param console the console reader
    */
   def interact(implicit conn: Connection, console: () => String = createInteractiveConsoleReader): Unit = {
-    import scala.Console._
-    var isDone: Boolean = false
-    var database: String = Option(conn.getCatalog) || DEFAULT_DATABASE
-    var schema: String = Option(conn.getSchema) || DEFAULT_SCHEMA
-
     // include the ~/.lollypoprc file (if it exists)
     val rcFile = new File(Properties.userHome, ".lollypoprc")
-    loadResourceFile(rcFile)
+    getResourceFile(rcFile).map(conn.createStatement().executeQuery)
 
-    try {
-      do {
-        // hide the prompt if in a multi-line sequence
-        Console.print(s"$RESET$CYAN${Properties.userName}:/$database/$schema$RESET> ")
-        val input = console().trim
-        if (input.nonEmpty) Console.println(s"$RESET${YELLOW}Processing request... (Sent ${input.length} bytes)$RESET")
-        input match {
-          // blank line?
-          case sql if sql.isEmpty => ()
-          // quit the CLI
-          case sql if sql.toLowerCase == "exit" | sql.toLowerCase == "quit" => isDone = true
-          // execute a complete statement?
-          case sql =>
-            (for {outcome <- executeQuery(sql)} yield {
-              outcome match {
-                case (database_?, schema_?) =>
-                  database_?.foreach(database = _)
-                  schema_?.foreach(schema = _)
-              }
-            }) match {
-              case Success(_) =>
-              case Failure(e) =>
-                Console.err.println(e.getMessage)
-                Console.println()
-            }
+    // process client requests
+    try interactWith(
+      database = Option(conn.getCatalog) || DEFAULT_DATABASE,
+      schema = Option(conn.getSchema) || DEFAULT_SCHEMA,
+      console = console,
+      executeCode = { (_, _, sql) =>
+        Try(conn.createStatement().executeQuery(sql)) map { rs =>
+          rs.tabulate() foreach Console.println
+          val metaData = rs.getMetaData
+          (Option(metaData.getCatalogName(1)), Option(metaData.getSchemaName(1)))
         }
-      } while (!isDone)
-    } finally conn.close()
-  }
-
-  private def executeQuery(sql: String)(implicit conn: Connection): Try[(Option[String], Option[String])] = {
-    Try(conn.createStatement().executeQuery(sql)) map { rs =>
-      rs.tabulate() foreach Console.println
-      val metaData = rs.getMetaData
-      (Option(metaData.getCatalogName(1)), Option(metaData.getSchemaName(1)))
-    }
-  }
-
-  private def loadResourceFile(rcFile: File)(implicit conn: Connection): Option[ResultSet] = {
-    getResourceFile(rcFile) map { sql =>
-      conn.createStatement().executeQuery(sql)
-    }
+      })
+    finally conn.close()
   }
 
 }

@@ -1,4 +1,4 @@
-nodeAPI(port, '/api/shocktrade/members', {
+node.api(port, '/api/shocktrade/members', {
     //////////////////////////////////////////////////////////////////////////////////////
     // creates a new member
     // http post 'http://{{host}}:{{port}}/api/shocktrade/members' <~ { name: "fugitive528" }
@@ -33,7 +33,7 @@ nodeAPI(port, '/api/shocktrade/members', {
     }
 })
 
-nodeAPI(port, '/api/shocktrade/members/by/name', {
+node.api(port, '/api/shocktrade/members/by/name', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for contests by name
     // http post 'http://{{host}}:{{port}}/api/shocktrade/members/by/name' <~ { searchText: "fugitive528" }

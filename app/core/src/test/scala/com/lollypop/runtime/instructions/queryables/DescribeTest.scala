@@ -43,7 +43,7 @@ class DescribeTest extends AnyFunSpec with VerificationTools {
            |         exchange: "OTCBB",
            |         lastSale: Random.nextDouble(0.99),
            |         lastSaleTime: DateTime(1631508164812),
-           |         elapsedTime: Interval('9 seconds'),
+           |         elapsedTime: Duration('9 seconds'),
            |         verified: true,
            |         testsAreFailing: false,
            |         alphabet: ['A' to 'Z']
@@ -55,7 +55,7 @@ class DescribeTest extends AnyFunSpec with VerificationTools {
         Map("name" -> "exchange", "type" -> "String(5)"),
         Map("name" -> "lastSale", "type" -> "Double"),
         Map("name" -> "lastSaleTime", "type" -> "DateTime"),
-        Map("name" -> "elapsedTime", "type" -> "Interval"),
+        Map("name" -> "elapsedTime", "type" -> "Duration"),
         Map("name" -> "verified", "type" -> "Boolean"),
         Map("name" -> "testsAreFailing", "type" -> "Boolean"),
         Map("name" -> "alphabet", "type" -> "VarChar(26)")

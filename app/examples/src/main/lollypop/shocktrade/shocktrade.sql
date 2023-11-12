@@ -46,7 +46,7 @@ val port = nodeStart(8080)
 logger.info('Started ShockTrade Demo Service on {{host}}:{{port}}...')
 
 // setup the web socket handler
-nodeAPI(port, '/ws/shocktrade', {
+node.api(port, '/ws/shocktrade', {
   ws: (message: String) => {
     val js = message.fromJson()
     return upsert into StockQuotes (symbol, exchange, lastSale, lastSaleTime)

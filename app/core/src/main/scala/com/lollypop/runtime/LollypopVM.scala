@@ -1,5 +1,6 @@
 package com.lollypop.runtime
 
+import com.lollypop.database.QueryResponse
 import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models._
@@ -26,7 +27,7 @@ import scala.language.postfixOps
  */
 object LollypopVM {
   private val pureScope = LollypopUniverse().createRootScope()
-  private val resultName = "result"
+  val resultName = "result"
 
   ///////////////////////////////////////////////////////////////////////////////////////////
   //      EVALUATION METHODS
@@ -220,6 +221,7 @@ object LollypopVM {
        */
       def search(scope: Scope): (Scope, IOCost, RowCollection) = {
         LollypopVM.execute(scope, instruction) match {
+          case (aScope, aCost, qr: QueryResponse) => (aScope, aCost, qr.toRowCollection)
           case (aScope, aCost, rc: RowCollection) => (aScope, aCost, rc)
           case (aScope, aCost, rendering: TableRendering) => (aScope, aCost, rendering.toTable(scope))
           case (aScope, aCost, other) => (aScope, aCost, convertToTable(resultName, other))

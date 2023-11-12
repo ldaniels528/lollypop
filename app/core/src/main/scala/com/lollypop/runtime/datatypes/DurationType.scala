@@ -14,7 +14,7 @@ import scala.concurrent.duration.{DurationLong, FiniteDuration}
 /**
  * Represents a time-based duration (e.g. "7 days")
  */
-class IntervalType extends FixedLengthDataType(name = "Interval", maxSizeInBytes = LONG_BYTES + INT_BYTES)
+class DurationType extends FixedLengthDataType(name = "Duration", maxSizeInBytes = LONG_BYTES + INT_BYTES)
   with FunctionalType[FiniteDuration] {
 
   override def construct(args: Seq[Any]): FiniteDuration = {
@@ -22,9 +22,9 @@ class IntervalType extends FixedLengthDataType(name = "Interval", maxSizeInBytes
       case Seq(arg0, arg1) =>
         (arg0, arg1) match {
           case (len: Number, unit: String) => FiniteDuration(len.longValue(), unit)
-          case (_: Number, b) => die(s"Usage: Interval(length long, unit string) - '$b' is not a string")
-          case (a, _: String) => die(s"Usage: Interval(length long, unit string) - '$a' is not a number")
-          case (a, b) => die(s"Usage: Interval(length long, unit string) - '${a.renderAsJson}' is not a number and '${b.renderAsJson}' is not a string")
+          case (_: Number, b) => die(s"Usage: Duration(length long, unit string) - '$b' is not a string")
+          case (a, _: String) => die(s"Usage: Duration(length long, unit string) - '$a' is not a number")
+          case (a, b) => die(s"Usage: Duration(length long, unit string) - '${a.renderAsJson}' is not a number and '${b.renderAsJson}' is not a string")
         }
       case Seq(value) => convert(value)
       case args => dieArgumentMismatch(args = args.size, minArgs = 1, maxArgs = 2)
@@ -57,29 +57,29 @@ class IntervalType extends FixedLengthDataType(name = "Interval", maxSizeInBytes
 
 }
 
-object IntervalType extends IntervalType with ConstructorSupportCompanion with DataTypeParser {
+object DurationType extends DurationType with ConstructorSupportCompanion with DataTypeParser {
 
   def apply(expression: Expression): NamedFunctionCall = {
-    NamedFunctionCall(name = "Interval", List(expression))
+    NamedFunctionCall(name = "Duration", List(expression))
   }
 
   override def getCompatibleType(`class`: Class[_]): Option[DataType] = `class` match {
-    case c if c == classOf[FiniteDuration] => Some(IntervalType)
+    case c if c == classOf[FiniteDuration] => Some(DurationType)
     case _ => None
   }
 
   override def getCompatibleValue(value: Any): Option[DataType] = value match {
-    case _: FiniteDuration => Some(IntervalType)
+    case _: FiniteDuration => Some(DurationType)
     case _ => None
   }
 
   override def parseDataType(columnType: ColumnType)(implicit scope: Scope): Option[DataType] = {
     columnType.name match {
-      case s if synonyms.contains(s) => Some(IntervalType)
+      case s if synonyms.contains(s) => Some(DurationType)
       case _ => None
     }
   }
 
-  override def synonyms: Set[String] = Set("Interval")
+  override def synonyms: Set[String] = Set("Duration")
 
 }

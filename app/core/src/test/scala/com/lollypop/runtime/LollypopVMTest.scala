@@ -56,9 +56,9 @@ class LollypopVMTest extends AnyFunSpec {
     //    Basic query tests
     ////////////////////////////////////////////////////////////////////////////
 
-    it("should perform select Interval (idiomatic)") {
+    it("should perform select Duration (idiomatic)") {
       val (_, _, result) = LollypopVM.executeSQL(Scope(),
-        """|DateTime(1632702853166) + Interval('-7 DAYS')
+        """|DateTime(1632702853166) + Duration('-7 DAYS')
            |""".stripMargin
       )
       assert(result.collect { case d: Date => d.getTime } contains 1632098053166L)

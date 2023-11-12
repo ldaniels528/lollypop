@@ -47,7 +47,7 @@ object CreateMacro extends ModifiableParser with SQLLanguageParser {
          |      is_otc = exchange.startsWith("OT")
          |      lastSaleLimit = switch exchange case "OTCBB" then 5.0 case "OTHER_OTC" then 1.0 case _ then 100.0
          |      lastSale = scaleTo(lastSaleLimit * Random.nextDouble(1.0), 4)
-         |      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
+         |      lastSaleTime = DateTime(DateTime() - Duration(1000 * 60 * Random.nextDouble(1.0)))
          |      symbol = Random.nextString(['A' to 'Z'], iff(exchange.startsWith("OT"), Random.nextInt(2) + 4, Random.nextInt(4) + 2))
          |      select lastSaleTime, lastSale, exchange, symbol
          |  }).toTable()

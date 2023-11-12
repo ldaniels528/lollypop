@@ -1,4 +1,4 @@
-nodeAPI(port, '/api/shocktrade/participants', {
+node.api(port, '/api/shocktrade/participants', {
     //////////////////////////////////////////////////////////////////////////////////////
     // member joins a contest as a participant
     // http post 'http://{{host}}:{{port}}/api/shocktrade/participants' <~ { contest_id: $contest_id, member_id: $member_id }

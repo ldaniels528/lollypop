@@ -9,14 +9,14 @@ class DateOperationsTest extends AnyFunSpec {
 
   describe(classOf[DateOperations.type].getSimpleName) {
 
-    it("should add an Interval to a Date") {
+    it("should add an Duration to a Date") {
       val dateA = DateHelper("2022-09-04T22:36:47.846Z")
       val interval = 1.hour
       val dateB = dateA + interval
       assert(dateB == DateHelper("2022-09-04T23:36:47.846Z"))
     }
 
-    it("should subtract an Interval from a Date") {
+    it("should subtract an Duration from a Date") {
       val dateA = DateHelper("2022-09-04T23:36:47.846Z")
       val interval = 1.hour
       val dateB = dateA - interval

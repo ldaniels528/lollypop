@@ -42,7 +42,7 @@ object After extends InvokableParser {
     description = "Schedules a one-time execution of command(s) after a specific delay period",
     example =
       """|var ticker = 5
-         |after Interval('100 millis') { ticker += 3 }
+         |after Duration('100 millis') { ticker += 3 }
          |import "java.lang.Thread"
          |Thread.sleep(Long(250))
          |ticker is 8

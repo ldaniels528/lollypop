@@ -215,7 +215,7 @@ class JDBCDatabaseMetaDataTest extends AnyFunSpec with JDBCTestServer {
           Map("PRECISION" -> 4, "TYPE_NAME" -> "Float", "DATA_TYPE" -> 6, "NULLABLE" -> 1),
           Map("PRECISION" -> 8, "TYPE_NAME" -> "Double", "DATA_TYPE" -> 8, "NULLABLE" -> 1),
           Map("PRECISION" -> 128, "TYPE_NAME" -> "Numeric", "DATA_TYPE" -> 2, "NULLABLE" -> 1),
-          Map("PRECISION" -> 12, "TYPE_NAME" -> "Interval", "DATA_TYPE" -> -5, "NULLABLE" -> 1),
+          Map("PRECISION" -> 12, "TYPE_NAME" -> "Duration", "DATA_TYPE" -> -5, "NULLABLE" -> 1),
           Map("PRECISION" -> 256, "TYPE_NAME" -> "JSON", "DATA_TYPE" -> 12, "NULLABLE" -> 1),
           Map("PRECISION" -> 24, "TYPE_NAME" -> "Pointer", "DATA_TYPE" -> 2000, "NULLABLE" -> 1),
           Map("PRECISION" -> 17, "TYPE_NAME" -> "RowIDRange", "DATA_TYPE" -> 2003, "NULLABLE" -> 1),

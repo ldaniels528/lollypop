@@ -9,7 +9,6 @@ import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
 
 import java.io.File
-import scala.collection.mutable
 import scala.io.Source
 
 /**
@@ -25,7 +24,7 @@ trait LollypopCodeDebugger {
     stepThrough(app = new QApplication(file), console)
   }
 
-  def stepThrough(app: QApplication, console: () => String)(implicit compiler: LollypopCompiler): Scope = {
+  def stepThrough(app: QApplication, console: () => String): Scope = {
     import scala.Console._
     var isDone: Boolean = false
 
@@ -38,7 +37,7 @@ trait LollypopCodeDebugger {
       console().trim match {
         case "" => app.executeCode()
         case "l" | "list" => app.showFullCode()
-        case "q" | "quit" => isDone = true
+        case "q" | "exit" => isDone = true
         case "p" | "page" => app.showPageOfCode()
         case "r" | "result" => app.showResult()
         case "s" | "show" => app.showCode()
@@ -57,33 +56,6 @@ object LollypopCodeDebugger {
 
   def apply(): LollypopCodeDebugger = {
     new LollypopCodeDebugger {}
-  }
-
-  def createAutomatedConsoleReader(commands: String*): () => String = {
-    val inputs = commands.iterator
-    () => {
-      if (inputs.hasNext) {
-        val command = inputs.next()
-        println(command)
-        command
-      } else "q"
-    }
-  }
-
-  def createInteractiveConsoleReader: () => String = {
-    import java.io.{BufferedReader, InputStreamReader}
-    val reader = new BufferedReader(new InputStreamReader(System.in))
-    val sb = new mutable.StringBuilder(65536)
-
-    () =>
-      sb.clear()
-      do {
-        if (sb.isEmpty || reader.ready()) {
-          val line = reader.readLine()
-          if (line.nonEmpty) sb.append(line).append("\n")
-        }
-      } while (reader.ready())
-      sb.toString()
   }
 
   class QApplication(file: File, initialScope: Scope = Scope())(implicit compiler: SQLCompiler) {

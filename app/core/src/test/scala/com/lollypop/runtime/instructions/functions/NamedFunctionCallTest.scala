@@ -94,12 +94,12 @@ class NamedFunctionCallTest extends AnyFunSpec {
       eval("""Numeric("123456.7890")""", expect = BigDecimal(123456.7890))
     }
 
-    it("""should compile: Interval("7 DAYS")""") {
-      verify("""Interval("7 DAYS")""", IntervalType("7 DAYS".v))
+    it("""should compile: Duration("7 DAYS")""") {
+      verify("""Duration("7 DAYS")""", DurationType("7 DAYS".v))
     }
 
-    it("""should decompile: Interval("7 DAYS")""") {
-      eval("""Interval("7 DAYS")""", expect = 7.days)
+    it("""should decompile: Duration("7 DAYS")""") {
+      eval("""Duration("7 DAYS")""", expect = 7.days)
     }
 
     it("""should compile: Pointer(0, 23, 1024)""") {

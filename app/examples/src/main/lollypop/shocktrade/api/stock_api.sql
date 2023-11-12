@@ -1,4 +1,4 @@
-nodeAPI(port, '/api/shocktrade/stocks', {
+node.api(port, '/api/shocktrade/stocks', {
     //////////////////////////////////////////////////////////////////////////////////////
     // creates a stock quote
     // http post 'http://{{host}}:{{port}}/api/shocktrade/stocks' <~ { symbol: "AAPL", exchange: "NASDAQ", lastSale: 98.11 }

@@ -37,7 +37,7 @@ trait DatabaseManagementSystem {
    * @param expirationTime the file [[FiniteDuration expiration time]]
    * @return the number of files deleted
    * @example {{{
-   *  objectOf("com.lollypop.runtime.DatabaseManagementSystem").deleteTempFiles(Interval('5 minutes'))
+   *  objectOf("com.lollypop.runtime.DatabaseManagementSystem").deleteTempFiles(Duration('5 minutes'))
    * }}}
    */
   def deleteTempFiles(expirationTime: FiniteDuration = 1.hours): Int = {
