@@ -126,7 +126,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-12T06:40:17.393Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-11-12T07:29:27.028Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +178,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-12T06:40:17.469Z"
+"2023-11-12T07:29:27.106Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -682,11 +682,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 7    | ♣    |
-| 7    | ♥    |
-| J    | ♥    |
-| K    | ♠    |
-| 5    | ♣    |
+| 2    | ♥    |
+| 6    | ♣    |
+| 9    | ♥    |
+| A    | ♦    |
+| 6    | ♥    |
 |-------------|
 ```
 ### transpose³ (Aggregation and Sorting &#8212; Declarative) 
@@ -881,7 +881,7 @@ HttpResponse(body='<!doctype html>
 </div>
 </body>
 </html>
-', message="OK", statusCode=200, responseID="0a5fa664-990b-446c-9446-8074d090e2ff")
+', message="OK", statusCode=200, responseID="272e1232-c7fa-494d-a332-d0944b84508d")
 ```
 ### http² (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URL based on a relative path.
@@ -891,7 +891,7 @@ http path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="e2b258fd-d111-4945-9401-6d9b82be4692")
+HttpResponse(body=null, message=null, statusCode=200, responseID="d32b6541-2beb-4400-ba64-0a6ddfefe9d9")
 ```
 ### http³ (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URI based on a relative path.
@@ -901,7 +901,7 @@ http uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="4df7411d-5dbe-4bd1-ae40-ea1fac662a7d")
+HttpResponse(body=null, message=null, statusCode=200, responseID="8425ac75-d55e-411e-b2b6-12285180a05e")
 ```
 ### Nodes¹ (Concurrency &#8212; Declarative) 
 *Description*: Executes a statement on a running Lollypop peer node.
@@ -949,7 +949,7 @@ http post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello Worl
 ```
 ##### Results
 ```sql
-HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID="45b60d82-fcc7-44d6-b30b-152b4576ef15")
+HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID="d52f7ee5-5139-4499-b982-bd43f7aad70f")
 ```
 ### Nodes³ (Concurrency &#8212; Declarative) 
 *Description*: Opens a commandline interface to a remote Lollypop peer node.
@@ -1068,10 +1068,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-12T06:40:19.924Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-12T06:40:19.924Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-12T06:40:19.924Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-12T06:40:19.924Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-11-12T07:29:29.548Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-12T07:29:29.548Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-11-12T07:29:29.548Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-12T07:29:29.548Z |
 |--------------------------------------------------------------------|
 ```
 ### ??? (Control Flow &#8212; Declarative) 
@@ -1166,11 +1166,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| NASDAQ    | DLBNW  |  62.5836 | 2023-11-12T06:39:30.208Z |
-| AMEX      | CTCGI  |  73.7505 | 2023-11-12T06:39:36.325Z |
-| OTHER_OTC | PSMW   |   0.5398 | 2023-11-12T06:39:57.010Z |
-| NYSE      | BUVW   |   65.999 | 2023-11-12T06:39:42.666Z |
-| OTHER_OTC | LOHRO  |   0.3395 | 2023-11-12T06:40:00.821Z |
+| OTHER_OTC | WFJJ   |   0.0939 | 2023-11-12T07:29:19.406Z |
+| OTCBB     | FBUL   |   3.1714 | 2023-11-12T07:28:30.220Z |
+| NYSE      | BUGV   |  71.6626 | 2023-11-12T07:28:40.943Z |
+| NYSE      | PL     |  16.3134 | 2023-11-12T07:29:18.851Z |
+| OTHER_OTC | ACYZ   |   0.9363 | 2023-11-12T07:28:53.942Z |
 |----------------------------------------------------------|
 ```
 ### create procedure (Control Flow &#8212; Procedural) 
@@ -1239,7 +1239,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.878167, _2=720.0)
+Tuple2(_1=1.140167, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
@@ -1889,7 +1889,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-12T06:40:20.992Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-11-12T07:29:30.682Z |
 |---------------------------------------------------------|
 ```
 ### subtract (Dataframe I/O &#8212; Declarative) 
@@ -2039,11 +2039,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-12T06:40:21.025Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-12T06:40:21.025Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-11-12T07:29:30.715Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-11-12T07:29:30.715Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-12T06:40:21.025Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-11-12T07:29:30.715Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative) 
@@ -2176,12 +2176,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-12T06:40:21.158Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-12T06:40:21.158Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-12T06:40:21.158Z | VV     | OTCBB     |          |
-| 2023-11-12T06:40:21.158Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-12T06:40:21.158Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-12T06:40:21.158Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-11-12T07:29:30.857Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-11-12T07:29:30.857Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-11-12T07:29:30.857Z | VV     | OTCBB     |          |
+| 2023-11-12T07:29:30.857Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-11-12T07:29:30.857Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-11-12T07:29:30.857Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 ### create external table (Dataframe Management &#8212; Declarative) 
@@ -3053,7 +3053,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-12T06:40:22.150Z
+2023-11-12T07:29:31.920Z
 ```
 ### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3094,7 +3094,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@26679788
+scala.Function1$@56f84c9b
 ```
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the super-classes extended by a class or instance
@@ -3328,7 +3328,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-12T06:40:22.573Z
+2023-11-12T07:29:32.396Z
 ```
 ### help¹ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
@@ -3488,8 +3488,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000208ms] AnyLiteral 1 ~> 1 <Integer>
-[0.262416ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000250ms] AnyLiteral 1 ~> 1 <Integer>
+[0.237500ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3516,7 +3516,8 @@ total must be less than 100 on line 3 at 3
 namespace 'temp.examples'
 
 // startup a listener node
-val port = nodeStart()
+node = Nodes.start()
+port = node.port
 
 // create a table
 drop if exists Travelers
@@ -3536,7 +3537,7 @@ insert into Travelers (id, lastName, firstName, destAirportCode)
 |-------------------------------------------------------------------------------|
 
 // create the webservice that reads from the table
-node.api(port, '/api/temp/examples', {
+node.api('/api/temp/examples', {
   post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
      insert into Travelers (id, firstName, lastName, destAirportCode)
      values ($id, $firstName, $lastName, $destAirportCode)
@@ -3591,6 +3592,33 @@ feature "Traveler information service" {
           and body[0].destAirportCode is "BUR"
     }
 }
+```
+##### Results
+```sql
+{"passed": 4, "failed": 1}
+```
+##### Console Output
+```
+Feature: Traveler information service
+   Passed: Testing that DELETE requests produce the correct result
+      [x] statusCode is 200
+   Passed: Testing that GET response contains specific field
+      [x] statusCode is 200
+      [x] body.size() >= 0
+      [x] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d0"
+   Passed: Testing that POST creates a new record
+      [x] statusCode is 200
+   Passed: Testing that we GET the record we previously created
+      [x] statusCode is 200
+      [x] body matches [{ id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }]
+   Failed: Testing what happens when a response does not match the expected value
+      [x] statusCode is 200
+      [x] body.size() >= 0
+      [ ] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
+      [x] (body[0]).firstName is "SAMANTHA"
+      [x] (body[0]).lastName is "JONES"
+      [x] (body[0]).destAirportCode is "BUR"
+completed: passed: 4, failed: 1
 ```
 ### scenario (Testing - Unit/Integration &#8212; Declarative) 
 *Description*: scenario-based test declaration

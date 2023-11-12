@@ -133,7 +133,8 @@ object Feature extends InvokableParser {
       s"""|namespace 'temp.examples'
           |
           |// startup a listener node
-          |val port = nodeStart()
+          |node = Nodes.start()
+          |port = node.port
           |
           |// create a table
           |drop if exists Travelers
@@ -153,7 +154,7 @@ object Feature extends InvokableParser {
           ||-------------------------------------------------------------------------------|
           |
           |// create the webservice that reads from the table
-          |node.api(port, '/api/temp/examples', {
+          |node.api('/api/temp/examples', {
           |  post: (id: UUID, firstName: String, lastName: String, destAirportCode: String) => {
           |     insert into Travelers (id, firstName, lastName, destAirportCode)
           |     values ($$id, $$firstName, $$lastName, $$destAirportCode)
