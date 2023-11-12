@@ -61,7 +61,26 @@ object Graph extends ExpressionParser {
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
-      description = "Produces graphical charts",
+      description = "Produces graphical charts from dataframes",
+      example =
+        """|graph { shape: "pie3d", title: "Exchange Exposure" } from (
+           |  |------------------|
+           |  | exchange | total |
+           |  |------------------|
+           |  | NASDAQ   |    24 |
+           |  | AMEX     |     5 |
+           |  | NYSE     |    28 |
+           |  | OTCBB    |    32 |
+           |  | OTHEROTC |     7 |
+           |  |------------------|
+           |)
+           |""".stripMargin
+    ), HelpDoc(
+      name = "graph",
+      category = CATEGORY_DATAFRAMES_IO,
+      paradigm = PARADIGM_DECLARATIVE,
+      syntax = template,
+      description = "Produces graphical charts from queries",
       example =
         """|chart = { shape: "pie", title: "Member Types of OS" }
            |graph chart from (
@@ -74,7 +93,7 @@ object Graph extends ExpressionParser {
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = template,
-      description = "Produces graphical charts",
+      description = "Produces graphical charts declaratively or procedurally",
       example =
         """|chart = { shape: "scatter", title: "Scatter Demo" }
            |samples = {
