@@ -53,6 +53,13 @@ object Help extends FunctionCallParserE0Or1(
        |    from (help())
        |    group by category
        |)
+       |""".stripMargin,
+    """|chart = { shape: "pie3d", title: "Help By Paradigm" }
+       |graph chart from (
+       |    select paradigm, total: count(*)
+       |    from (help())
+       |    group by paradigm
+       |)
        |""".stripMargin
   )) {
 
