@@ -87,8 +87,8 @@ trait Inferences {
         case (a, b) if a.name == b.name => if (a.maxSizeInBytes > b.maxSizeInBytes) a else b
         case (_: AnyType, a) => a
         case (b, _: AnyType) => b
-        case (a: DateTimeType, _: IntervalType) => a
-        case (_: IntervalType, b: DateTimeType) => b
+        case (a: DateTimeType, _: DurationType) => a
+        case (_: DurationType, b: DateTimeType) => b
         case (a: StringType, _) => a
         case (_, b: StringType) => b
         case (a, b) if a.isNumeric && b.isNumeric =>

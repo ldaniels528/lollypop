@@ -14,7 +14,7 @@ import scala.util._
  * @example {{{
  *  // Lollypop version
  *  node = Nodes.start()
- *  node.awaitStartup(Interval('1 second'))
+ *  node.awaitStartup(Duration('1 second'))
  *  node.exec(
  *  """|from (
  *     ||-------------------------------------------------------|
@@ -104,7 +104,7 @@ object Nodes extends HelpIntegration {
       description = "Executes a statement on a running Lollypop peer node.",
       example =
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |results = node.exec('''
            |from (
            ||-------------------------------------------------------|
@@ -128,7 +128,7 @@ object Nodes extends HelpIntegration {
       description = "Creates a new REST API endpoint.",
       example =
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |node.api('/api/comments/', {
            |  post: (message: String) => "post '{{message}}'"
            |  get: (id: UUID) => "get {{(id}}"
@@ -146,7 +146,7 @@ object Nodes extends HelpIntegration {
            |""".stripMargin,
       example =
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |try
            |  node.exec(["x = 1", "y = 2", "z = x + y", "z"])
            |catch e => stderr <=== e
@@ -160,7 +160,7 @@ object Nodes extends HelpIntegration {
       description = "Creates a new HTML/CSS/File endpoint",
       example =
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |node.www('/www/notebooks/', {
            |  "" : "public/index.html",
            |  "*" : "public"

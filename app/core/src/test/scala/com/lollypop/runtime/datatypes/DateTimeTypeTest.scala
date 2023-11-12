@@ -38,7 +38,7 @@ class DateTimeTypeTest extends DataTypeFunSpec {
     }
 
     it("should add an interval to a date") {
-      val (_, _, results) = LollypopVM.executeSQL(Scope(), "DateTime('2021-09-02T11:22:33.000Z') + Interval('5 DAYS')")
+      val (_, _, results) = LollypopVM.executeSQL(Scope(), "DateTime('2021-09-02T11:22:33.000Z') + Duration('5 DAYS')")
       assert(results.renderFriendly == "2021-09-07T11:22:33.000Z")
     }
 
@@ -48,7 +48,7 @@ class DateTimeTypeTest extends DataTypeFunSpec {
     }
 
     it("should subtract an interval from a date function") {
-      val (_, _, results) = LollypopVM.executeSQL(Scope(), "DateTime('2021-09-02T11:22:33.000Z') - Interval('5 DAYS')")
+      val (_, _, results) = LollypopVM.executeSQL(Scope(), "DateTime('2021-09-02T11:22:33.000Z') - Duration('5 DAYS')")
       assert(results.renderFriendly == "2021-08-28T11:22:33.000Z")
     }
 

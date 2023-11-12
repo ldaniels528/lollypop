@@ -38,7 +38,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
     it("should execute commands on a local/remote peer") {
       val (_, _, result) = LollypopVM.searchSQL(Scope(),
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |results = node.exec('''
            |from (
            ||-------------------------------------------------------|
@@ -104,8 +104,8 @@ class NodesTest extends AnyFunSpec with VerificationTools {
             |// start the remote peers
             |val nodeA = Nodes.start()
             |val nodeB = Nodes.start()
-            |nodeA.awaitStartup(Interval('1 second'))
-            |nodeB.awaitStartup(Interval('1 second'))
+            |nodeA.awaitStartup(Duration('1 second'))
+            |nodeB.awaitStartup(Duration('1 second'))
             |
             |stocksA = nodeA.exec("STOCKS 3")
             |stocksB = nodeB.exec("STOCKS 3")
@@ -122,7 +122,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
       val (scopeA, responseA, _) = LollypopVM.executeSQL(Scope(),
         """|namespace 'demo.subscriptions'
            |node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |port = node.port
            |drop if exists subscriptions &&
            |create table subscriptions(id: RowNumber, name: String(64), startTime: DateTime, stopTime: DateTime)
@@ -192,7 +192,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
     it("should execute a statement on a local/remote peer") {
       val (_, _, r) = LollypopVM.searchSQL(Scope(),
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |try
            |  node.exec('''
            |    x = 1
@@ -210,7 +210,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
     it("should execute an inline script on a local/remote peer") {
       val (_, _, r) = LollypopVM.searchSQL(Scope(),
         """|node = Nodes.start()
-           |node.awaitStartup(Interval('1 second'))
+           |node.awaitStartup(Duration('1 second'))
            |try
            |  node.exec([
            |    "x = 1",

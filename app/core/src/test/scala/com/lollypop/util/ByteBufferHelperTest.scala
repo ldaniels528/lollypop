@@ -19,7 +19,7 @@ object ByteBufferHelperTest extends AnyFunSpec {
       assert(dateA == dateB)
     }
 
-    it("should encode/decode an Interval (FiniteDuration)") {
+    it("should encode/decode an Duration (FiniteDuration)") {
       val intervalA = 1234.millis
       val buf = ByteBuffer.allocate(LONG_BYTES * 2).putInterval(intervalA).flipMe()
       val intervalB = buf.getInterval

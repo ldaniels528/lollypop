@@ -10,7 +10,7 @@ create table if not exists Orders (
     exchange: String(6),
     price: Double,
     creationTime: DateTime = DateTime(),
-    expirationTime: DateTime = DateTime() + Interval('3 days')
+    expirationTime: DateTime = DateTime() + Duration('3 days')
 )
 
 create index if not exists Orders#contest_id

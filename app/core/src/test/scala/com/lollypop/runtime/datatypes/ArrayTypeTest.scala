@@ -54,7 +54,7 @@ class ArrayTypeTest extends DataTypeFunSpec {
       verifyArray(Int16Type, expected = Array[Short](123, 543, 765, 456))
       verifyArray(Int32Type, expected = Array[Int](123, 543, 765, 456))
       verifyArray(Int64Type, expected = Array[Long](1234567L, 543086L, 7651111L, 456000L))
-      verifyArray(IntervalType, expected = Array[FiniteDuration](100.millis, 2.seconds, 3.minutes, 4.hours, 5.days))
+      verifyArray(DurationType, expected = Array[FiniteDuration](100.millis, 2.seconds, 3.minutes, 4.hours, 5.days))
       verifyArray(AnyType, expected = Array(FakeNews("Apple"), DateHelper.now, Seq(1, 2, 3), UUID.randomUUID()))
       verifyArray(StringType, expected = Array[String]("Apple", "Banana", "Cherry", "Date"))
       verifyArray(UUIDType, expected = Array[UUID](UUID.randomUUID(), UUID.randomUUID()))

@@ -9,30 +9,30 @@ import scala.concurrent.duration.DurationInt
 /**
  * IntervalType Tests
  */
-class IntervalTypeTest extends DataTypeFunSpec {
+class DurationTypeTest extends DataTypeFunSpec {
   implicit val ctx: LollypopUniverse = LollypopUniverse()
   implicit val scope: Scope = Scope()
 
-  describe(IntervalType.getClass.getSimpleName) {
+  describe(DurationType.getClass.getSimpleName) {
 
     it("should encode/decode IntervalType values") {
-      verifyCodec(IntervalType, value = 12.hours)
+      verifyCodec(DurationType, value = 12.hours)
     }
 
     it("should conversions to IntervalType") {
-      assert("5 minutes".convertTo(IntervalType) == 5.minutes)
+      assert("5 minutes".convertTo(DurationType) == 5.minutes)
     }
 
-    it("should resolve 'Interval'") {
-      verifySpec(spec = "Interval", expected = IntervalType)
+    it("should resolve 'Duration'") {
+      verifySpec(spec = "Duration", expected = DurationType)
     }
 
-    it("should resolve 'Interval[1982]'") {
-      verifySpec(spec = "Interval[1982]", expected = ArrayType(IntervalType, capacity = Some(1982)))
+    it("should resolve 'Duration[1982]'") {
+      verifySpec(spec = "Duration[1982]", expected = ArrayType(DurationType, capacity = Some(1982)))
     }
 
     it("should provide a SQL representation") {
-      verifySQL("Interval", IntervalType)
+      verifySQL("Duration", DurationType)
     }
 
   }

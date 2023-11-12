@@ -64,7 +64,7 @@ object CreateTable extends ModifiableParser with IfNotExists {
          |      exchange = ['AMEX', 'NASDAQ', 'NYSE', 'OTCBB', 'OTHER_OTC'][Random.nextInt(5)]
          |      is_otc = exchange.startsWith("OT")
          |      lastSale = scaleTo(iff(is_otc, 1, 201) * Random.nextDouble(1.0), 4)
-         |      lastSaleTime = DateTime(DateTime() - Interval(1000 * 60 * Random.nextDouble(1.0)))
+         |      lastSaleTime = DateTime(DateTime() - Duration(1000 * 60 * Random.nextDouble(1.0)))
          |      symbol = Random.nextString(['A' to 'Z'], iff(is_otc, Random.nextInt(2) + 4, Random.nextInt(4) + 2))
          |      select lastSaleTime, lastSale, exchange, symbol
          |  }).toTable()

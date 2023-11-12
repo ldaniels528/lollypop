@@ -194,7 +194,7 @@ object LollypopUniverse {
   val _dataTypeParsers: List[DataTypeParser] = List(
     // order is significant
     BitArrayType, BlobType, BooleanType, CharType, ClobType, DateTimeType, EnumType, Int8Type, Int16Type, Int32Type,
-    Int64Type, Float32Type, Float64Type, NumericType, IntervalType, JsonType, MatrixType, PointerType, RowIDRangeType,
+    Int64Type, Float32Type, Float64Type, NumericType, DurationType, JsonType, MatrixType, PointerType, RowIDRangeType,
     RowNumberType, SQLXMLType, TableType, UserDefinedDataType, UUIDType, StringType, VarBinaryType, VarCharType, AnyType
   )
   val _languageParsers: List[LanguageParser] = List[LanguageParser](
