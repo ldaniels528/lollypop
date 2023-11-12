@@ -1,14 +1,14 @@
 package com.lollypop.database
 
 import com.lollypop.AppConstants._
-import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime.LollypopVM.convertToTable
+import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{DataObject, DatabaseObjectNS, ROWID, SRC_ROWID_NAME, Scope}
+import com.lollypop.runtime.{DataObject, DatabaseObjectNS, LollypopVM, ROWID, SRC_ROWID_NAME, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.{IOCost, RowIDRange}
 import spray.json.RootJsonFormat
@@ -83,11 +83,12 @@ object QueryResponse {
         case cost: IOCost => toQueryResponse(ns, cost)
         case rc: RowCollection => toQueryResponse(ns, rc, limit)
         case drawing: GraphResult => toQueryResponse(ns, rc = drawing.data, limit = None).copy(resultType = RESULT_DRAWING)
+        case scope: Scope => toQueryResponse(ns, scope.toRowCollection, limit = None)(scope)
         case tr: TableRendering => toQueryResponse(ns, tr.toTable, limit)
         case _ids: Seq[_] if _ids.forall(_.isInstanceOf[ROWID]) =>
           val rowIds = _ids.collect { case n: ROWID => n }
           toQueryResponse(ns, IOCost(inserted = rowIds.size, rowIDs = RowIDRange(rowIds: _*)))
-        case value => toQueryResponse(ns, convertToTable(columnName = "result", value), limit)
+        case value => toQueryResponse(ns, convertToTable(columnName = LollypopVM.resultName, value), limit)
       }
     }
 

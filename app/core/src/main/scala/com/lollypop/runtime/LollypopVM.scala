@@ -26,7 +26,7 @@ import scala.language.postfixOps
  */
 object LollypopVM {
   private val pureScope = LollypopUniverse().createRootScope()
-  private val resultName = "result"
+  val resultName = "result"
 
   ///////////////////////////////////////////////////////////////////////////////////////////
   //      EVALUATION METHODS
