@@ -3,6 +3,7 @@ package com.lollypop.language
 import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _helpers, _languageParsers}
 import com.lollypop.language.instructions.Include
 import com.lollypop.language.models._
+import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.instructions.MacroLanguageParser
@@ -19,6 +20,7 @@ import com.lollypop.runtime.plastics.RuntimePlatform
 import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io._
 import lollypop.lang._
+import org.slf4j.LoggerFactory
 
 import java.io.{File, FileWriter, PrintWriter}
 import scala.concurrent.ExecutionContext
@@ -37,10 +39,12 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
                             var classLoader: DynamicClassLoader = _classLoader,
                             var escapeCharacter: Char = '`',
                             var isServerMode: Boolean = false) {
+  private lazy val logger = LoggerFactory.getLogger(getClass)
+
   // create the compiler and system utilities
-  val compiler: LollypopCompiler = LollypopCompiler(this)
+  val compiler = new LollypopCompiler(this)
   val nodes = new Nodes(this)
-  val system: OS = new OS(this)
+  val system = new OS(this)
 
   def createRootScope: () => Scope = {
     val rootScope = DefaultScope(universe = this)
@@ -84,6 +88,26 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
             case _ => readPhysicalTable(ns)
           }
         })
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  //    OPCODES
+  //////////////////////////////////////////////////////////////////////////////
+
+  def createOpCodesConfig(ifNotExists: Boolean = true): Unit = {
+    val opCodesFile = getServerRootDirectory / "opcodes.txt"
+    if (!ifNotExists || (!opCodesFile.exists() || opCodesFile.length() == 0)) {
+      logger.info(s"creating '${opCodesFile.getPath}'...")
+      overwriteOpCodesConfig(opCodesFile)
+    }
+  }
+
+  private def overwriteOpCodesConfig(file: File): Unit = {
+    new PrintWriter(new FileWriter(file)) use { out =>
+      languageParsers.foreach { lp =>
+        out.println(lp.getClass.getTypeName)
+      }
     }
   }
 
@@ -152,7 +176,9 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
     case parser: InvokableParser => parser.parseInvokable(ts)
   }
 
-  def getKeywords: List[String] = antiFunctionParsers.flatMap(_.help.collect { case c if c.name.forall(_.isLetter) => c.name })
+  def getKeywords: List[String] = {
+    antiFunctionParsers.flatMap(_.help.collect { case c if c.name.forall(_.isLetter) => c.name })
+  }
 
   def helpDocs: List[HelpDoc] = {
     (MacroLanguageParser :: helpers).flatMap(_.help).sortBy(_.name)
@@ -166,7 +192,9 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
     !ts.isBackticks && !ts.isQuoted && (antiFunctionParsers.exists(_.understands(ts)) || MacroLanguageParser.understands(ts))
   }
 
-  private def antiFunctionParsers: List[LanguageParser] = languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
+  private def antiFunctionParsers: List[LanguageParser] = {
+    languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
+  }
 
   private def matchType[A](ts: TokenStream)(f: PartialFunction[LanguageParser, Option[A]])(implicit compiler: SQLCompiler): Option[A] = {
     if (ts.isBackticks || ts.isQuoted) None else {
@@ -213,7 +241,7 @@ object LollypopUniverse {
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
     Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
-    LessLess, LessLessLess, Let, Limit, Literal, LT, LTE,
+    LessLess, LessLessLess, Let, Limit, Literal, LollypopComponents, LT, LTE,
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,
     Namespace, NEG, NEQ, New, Not, NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
@@ -229,14 +257,6 @@ object LollypopUniverse {
     ZipWith
   )
   val _helpers: List[HelpIntegration] = Nodes :: _languageParsers ::: _dataTypeParsers
-
-  def overwriteOpCodesConfig(file: File): Unit = {
-    new PrintWriter(new FileWriter(file)) use { out =>
-      _languageParsers.foreach { lp =>
-        out.println(lp.getClass.getTypeName)
-      }
-    }
-  }
 
   RuntimePlatform.init()
 

@@ -1,5 +1,6 @@
 package com.lollypop.util
 
+import java.net.URL
 import scala.collection.mutable
 import scala.language.reflectiveCalls
 
@@ -68,6 +69,8 @@ object StringHelper {
       }
       if (sb.toString().nonEmpty || leftOver) values ::: sb.toString().trim :: Nil else values
     }
+
+    def toResourceURL: URL = getClass().getResource(string)
 
     @inline
     def isQuoted: Boolean = {
