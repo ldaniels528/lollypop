@@ -7,10 +7,6 @@ import com.lollypop.language.models.Invokable
  */
 trait InvokableParser extends LanguageParser {
 
-  def parse(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Invokable] = {
-    if (understands(ts)) parseInvokable(ts) else None
-  }
-
   def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Invokable]
 
 }
