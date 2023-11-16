@@ -1,9 +1,10 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.{Condition, Expression, FieldRef, OrderColumn}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.SQLSupport.SelectBuilder
+import com.lollypop.runtime.instructions.functions.NS
 import com.lollypop.runtime.instructions.queryables.{RuntimeQueryable, Select}
-import com.lollypop.runtime.{LollypopVM, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -25,10 +26,10 @@ object SQLSupport {
   /**
    * SQL Builder
    * @param collection the [[RowCollection block device]]
-   * @param fields the selection [[Expression fields]]
+   * @param fields     the selection [[Expression fields]]
    */
   class SelectBuilder(val collection: RowCollection, val fields: Seq[Expression]) extends RuntimeQueryable {
-    private var select: Select = Select(fields = fields, from = Some(WrappedQueryableDevice(collection)))
+    private var select: Select = Select(fields = fields, from = Some(WrappedQueryable(collection)))
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = select.execute()
 
@@ -42,25 +43,21 @@ object SQLSupport {
       this
     }
 
-    def limit(maxResults: Expression): this.type = {
-      this.select = select.copy(limit = Some(maxResults))
-      this
-    }
+    def limit(maxResults: Expression): this.type = limit(maxResults = Option(maxResults))
 
     def limit(maxResults: Option[Expression]): this.type = {
       this.select = select.copy(limit = maxResults)
       this
     }
 
-    def orderBy(orderColumns: OrderColumn*): this.type = {
-      this.select = select.copy(orderBy = orderColumns)
+    def toModel: Select = select
+
+    def orderBy(orderBy: OrderColumn*): this.type = {
+      this.select = select.copy(orderBy = orderBy)
       this
     }
 
-    def where(condition: Condition): this.type = {
-      this.select = select.copy(where = Some(condition))
-      this
-    }
+    def where(condition: Condition): this.type = where(condition = Option(condition))
 
     def where(condition: Option[Condition]): this.type = {
       this.select = select.copy(where = condition)
@@ -73,8 +70,10 @@ object SQLSupport {
    * A device wrapped as a [[RuntimeQueryable]]
    * @param device the [[RowCollection device]]
    */
-  case class WrappedQueryableDevice(device: RowCollection) extends RuntimeQueryable {
+  private case class WrappedQueryable(device: RowCollection) extends RuntimeQueryable {
     override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = (scope, IOCost.empty, device)
+
+    override def toSQL: String = NS(device.ns).toSQL
   }
 
 }

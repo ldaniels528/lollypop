@@ -6,5 +6,5 @@ package com.lollypop.language.models
  * @param isAscending indicates whether the column is ascending (or conversely descending)
  */
 case class OrderColumn(name: String, isAscending: Boolean) extends Instruction {
-  override def toSQL: String = s"$name ${if (isAscending) "asc" else "desc"}"
+  override def toSQL: String = Seq(name, if (isAscending) "asc" else "desc").mkString(" ")
 }
