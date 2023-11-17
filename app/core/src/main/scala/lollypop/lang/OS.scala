@@ -66,9 +66,9 @@ class OS(ctx: LollypopUniverse) {
 
   def compile(sourceCode: String): Instruction = ctx.compiler.compile(sourceCode)
 
-  def compile(file: File): Instruction = new FileInputStream(file).use(LollypopCompiler().compile)
+  def compile(file: File): Instruction = ctx.compiler.compile(file)
 
-  def compile(in: InputStream): Instruction = LollypopCompiler().compile(in)
+  def compile(in: InputStream): Instruction = ctx.compiler.compile(in)
 
   def copy(src: File, dest: File): Boolean = {
     // ensure the base destination directory exists
