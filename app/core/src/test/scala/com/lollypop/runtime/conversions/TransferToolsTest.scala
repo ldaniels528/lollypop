@@ -1,4 +1,4 @@
-package com.lollypop.util
+package com.lollypop.runtime.conversions
 
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import org.apache.commons.io.output.ByteArrayOutputStream
@@ -6,14 +6,14 @@ import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File
 
-class IOToolsTest extends AnyFunSpec {
+class TransferToolsTest extends AnyFunSpec {
 
-  describe(classOf[IOTools.type].getSimpleName) {
+  describe(classOf[TransferTools].getSimpleName) {
 
     it("should copy a file to a stream") {
       val srcFile = new File("app") / "core" / "src" / "main" / "resources" / "log4j.properties"
       val out = new ByteArrayOutputStream(srcFile.length().toInt)
-      val count = IOTools.transfer(srcFile, out)
+      val count = TransferTools.transfer(srcFile, out)
       assert(count == 331)
     }
 

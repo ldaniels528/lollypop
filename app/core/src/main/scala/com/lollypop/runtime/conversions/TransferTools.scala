@@ -1,4 +1,4 @@
-package com.lollypop.util
+package com.lollypop.runtime.conversions
 
 import com.lollypop.util.ResourceHelper.AutoClose
 import org.apache.commons.io.IOUtils
@@ -8,9 +8,9 @@ import java.net.HttpURLConnection
 import java.util.Base64
 
 /**
- * I/O Tools
+ * Transfer Tools
  */
-object IOTools {
+trait TransferTools {
 
   def transfer(file: File, conn: HttpURLConnection): Int = {
     conn.getOutputStream.use(transfer(file, _))
@@ -25,6 +25,13 @@ object IOTools {
   }
 
   def transfer(in: InputStream, out: OutputStream): Int = IOUtils.copy(in, out)
+
+}
+
+/**
+ * Transfer Tools Singleton
+ */
+object TransferTools extends TransferTools {
 
   private def makeString(reader: Reader, delim: String): String = {
     val sb = new StringBuilder()
