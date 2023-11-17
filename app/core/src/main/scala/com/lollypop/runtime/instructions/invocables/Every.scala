@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
@@ -18,7 +18,8 @@ import java.util.{Timer, TimerTask}
  * @param invokable the [[Instruction command(s)]] to execute
  * @example {{{ every '2 seconds' { delete from @entries where attachID is null } }}}
  */
-case class Every(interval: Expression, invokable: Instruction) extends RuntimeExpression {
+case class Every(interval: Expression, invokable: Instruction)
+  extends RuntimeExpression with ConcurrentInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Timer) = {
     val timer = new Timer()
