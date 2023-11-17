@@ -1,0 +1,1 @@
+com.lollypop.runtime.instructions.queryables.LollypopComponentsTest$LootBox$
