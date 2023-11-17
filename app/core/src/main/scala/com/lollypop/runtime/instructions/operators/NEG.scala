@@ -16,8 +16,8 @@ case class NEG(a: Expression) extends RuntimeExpression with UnaryOperation {
   override val operator: String = "-"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val (sa, ca, ra) = a.execute(scope)
-    (sa, ca, ra match {
+    val (sa, ca, va) = a.execute(scope)
+    (sa, ca, va match {
       case b: Byte => -b
       case d: Double => -d
       case f: Float => -f

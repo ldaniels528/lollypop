@@ -24,9 +24,9 @@ object ArrayFromRange {
   def unapply(r: ArrayFromRange): Option[(Expression, Expression)] = Some((r.start, r.end))
 
   private def evaluateRange(start: Expression, end: Expression)(implicit scope: Scope): Option[(Any, Any, DataType)] = {
-    val (sa, ca, ra) = start.execute(scope)
-    val (sb, cb, rb) = end.execute(sa)
-    for {a <- Option(ra); b <- Option(rb)} yield {
+    val (sa, ca, va) = start.execute(scope)
+    val (sb, cb, vb) = end.execute(sa)
+    for {a <- Option(va); b <- Option(vb)} yield {
       val (typeA, typeB) = (fromValue(a), fromValue(b))
       assert(typeA == typeB, "type mismatch")
       (a, b, typeA)

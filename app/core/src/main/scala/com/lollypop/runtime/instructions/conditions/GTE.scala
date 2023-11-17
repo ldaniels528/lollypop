@@ -15,9 +15,9 @@ import lollypop.io.IOCost
 case class GTE(a: Expression, b: Expression) extends RuntimeInequality {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (sa, ca, ra) = a.execute(scope)
-    val (sb, cb, rb) = b.execute(sa)
-    (sb, ca ++ cb, Option(ra) >= Option(rb))
+    val (sa, ca, va) = a.execute(scope)
+    val (sb, cb, vb) = b.execute(sa)
+    (sb, ca ++ cb, Option(va) >= Option(vb))
   }
 
   override def operator: String = ">="
