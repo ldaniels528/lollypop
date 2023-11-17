@@ -5,12 +5,11 @@ import com.lollypop.language._
 import com.lollypop.language.models.ExternalTable
 import com.lollypop.runtime.DatabaseManagementSystem.createExternalTable
 import com.lollypop.runtime.DatabaseObjectConfig.ExternalTableConfig
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.infrastructure.CreateExternalTable.ExternalTableDeclaration
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 /**
@@ -23,17 +22,12 @@ import lollypop.io.IOCost
 case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifNotExists: Boolean) extends RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
-    val cost = createExternalTable(ref.toNS, declaration = parseExternalTableDeclaration())
-    (scope, cost, cost)
+    val (sa, ca, declaration) = parseExternalTableDeclaration()
+    val cb = ca ++ createExternalTable(ref.toNS, declaration)
+    (sa, cb, cb)
   }
 
-  override def toSQL: String = {
-    ("create external table" :: (if (ifNotExists) List("if not exists") else Nil) ::: ref.toSQL ::
-      table.columns.map(c => c.toSQL).mkString("(", ", ", ")") ::
-      "containing" :: table.options.toSQL :: Nil).mkString(" ")
-  }
-
-  private def parseExternalTableDeclaration()(implicit scope: Scope): ExternalTableDeclaration = {
+  private def parseExternalTableDeclaration()(implicit scope: Scope): (Scope, IOCost, ExternalTableDeclaration) = {
     val conversions = Seq("\\b" -> "\b", "\\n" -> "\n", "\\r" -> "\r", "\\t" -> "\t")
     val converter: String => String = s => conversions.foldLeft(s) { case (str, (from, to)) => str.replace(from, to) }
 
@@ -58,7 +52,8 @@ case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifN
       case x => table.options.dieIllegalType(x)
     }
 
-    (for {params <- table.options.asDictionary} yield ExternalTableDeclaration(
+    val (sa, ca, params) = table.options.pullDictionary
+    (sa, ca, ExternalTableDeclaration(
       columns = table.columns.map(_.toTableColumn),
       ifNotExists = ifNotExists,
       partitions = params.get("partitions").toList flatMap asList,
@@ -69,7 +64,13 @@ case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifN
         lineTerminator = params.get("line_delimiter") map asString,
         location = params.get("location") map asString,
         nullValues = params.get("null_values").toList flatMap asList
-      ))) || table.options.dieIllegalType()
+      )))
+  }
+
+  override def toSQL: String = {
+    ("create external table" :: (if (ifNotExists) List("if not exists") else Nil) ::: ref.toSQL ::
+      table.columns.map(c => c.toSQL).mkString("(", ", ", ")") ::
+      "containing" :: table.options.toSQL :: Nil).mkString(" ")
   }
 
 }

@@ -2,9 +2,9 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.OptionHelper.OptionEnrichment
@@ -27,14 +27,13 @@ case class Min(expression: Expression) extends AggregateFunctionCall
     var minValue_? : Option[Any] = None
     new Aggregator {
       override def update(implicit scope: Scope): Unit = {
-        expression.asAny
-          .foreach {
-            case value if minValue_?.isEmpty => minValue_? = Option(value)
-            case value: Date => minValue_? = minValue_?.collect { case v: Date => getMin(v, value) }
-            case value: Number => minValue_? = minValue_?.collect { case v: Number => getMin[java.lang.Double](v.doubleValue(), value.doubleValue()) }
-            case value: String => minValue_? = minValue_?.collect { case v: String => getMin(v, value) }
-            case x => expression.dieIllegalType(x)
-          }
+        expression.execute(scope)._3 match {
+          case value if minValue_?.isEmpty => minValue_? = Option(value)
+          case value: Date => minValue_? = minValue_?.collect { case v: Date => getMin(v, value) }
+          case value: Number => minValue_? = minValue_?.collect { case v: Number => getMin[java.lang.Double](v.doubleValue(), value.doubleValue()) }
+          case value: String => minValue_? = minValue_?.collect { case v: String => getMin(v, value) }
+          case x => expression.dieIllegalType(x)
+        }
       }
 
       override def collect(implicit scope: Scope): Option[Any] = minValue_?

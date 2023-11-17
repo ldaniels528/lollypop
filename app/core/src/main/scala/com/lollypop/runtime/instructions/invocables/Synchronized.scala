@@ -5,7 +5,6 @@ import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import lollypop.io.IOCost
 
 /**
@@ -16,13 +15,10 @@ import lollypop.io.IOCost
 case class Synchronized(value: Expression, code: Instruction) extends RuntimeInvokable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    value.asAny match {
-      case Some(lock) =>
-        lock.asInstanceOf[AnyRef].synchronized {
-          code.execute(scope)
-        }
-      case None => (scope, IOCost.empty, null)
-    }
+    val (sa, ca, lock) = value.execute(scope)
+    (sa, ca, lock.asInstanceOf[AnyRef].synchronized {
+      code.execute(scope)
+    })
   }
 
   override def toSQL: String = Seq("synchronized", value.toSQL, code.toSQL).mkString(" ")

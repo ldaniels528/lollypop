@@ -1,14 +1,13 @@
 package com.lollypop.runtime
 
+import com.lollypop.LollypopException
 import com.lollypop.database.QueryResponse
 import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models._
-import com.lollypop.language.{LollypopUniverse, dieIllegalType, dieNoSuchColumn}
+import com.lollypop.language.{LollypopUniverse, dieNoSuchColumn}
 import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, RichScalaAny}
-import com.lollypop.runtime.datatypes.Inferences
-import com.lollypop.runtime.datatypes.Inferences.fromValue
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.runtime.conversions.TableConversion.convertTupleToTable
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.infrastructure.Macro
@@ -16,7 +15,6 @@ import com.lollypop.runtime.instructions.invocables.{SetAnyVariable, WhenEver}
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.instructions.{MacroLanguageParser, RuntimeInstruction}
 import com.lollypop.runtime.plastics.RuntimeClass
-import com.lollypop.{LollypopException, die}
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec
@@ -26,7 +24,7 @@ import scala.language.postfixOps
  * Lollypop Virtual Machine
  */
 object LollypopVM {
-  private val pureScope = LollypopUniverse().createRootScope()
+  val rootScope: Scope = LollypopUniverse().createRootScope()
   val resultName = "result"
 
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -90,42 +88,6 @@ object LollypopVM {
   ///////////////////////////////////////////////////////////////////////////////////////////
   //      UTILITY METHODS
   ///////////////////////////////////////////////////////////////////////////////////////////
-
-  def convertToTable(columnName: String, value: Any): RowCollection = {
-    val device = createTempTable(columns = Seq(TableColumn(columnName, `type` = fromValue(value))), fixedRowCount = 1)
-    device.insert(Map(columnName -> value).toRow(device))
-    device
-  }
-
-  def convertToTable(collection: Seq[_]): RowCollection = {
-    // determine the data types of the dictionary entries
-    val rawColumns = collection map {
-      case rc: RowCollection => rc.columns
-      case row: Row => row.columns
-      case dict: QMap[String, Any] =>
-        dict.toSeq map { case (name, value) => TableColumn(name, `type` = Inferences.fromValue(value)) }
-      case other => die(s"Expected a dictionary object, got ${Option(other).map(_.getClass.getName).orNull}")
-    }
-
-    // determine the best fit for each generated column type
-    val columns = rawColumns.flatten.groupBy(_.name).toSeq.map { case (name, columns) =>
-      TableColumn(name, `type` = Inferences.resolveType(columns.map(_.`type`): _*))
-    }
-
-    // write the data to the table
-    val device = FileRowCollection(columns)
-    val (fmd, rmd) = (FieldMetadata(), RowMetadata())
-    collection foreach {
-      case rc: RowCollection => device.insert(rc)
-      case dict: QMap[String, Any] =>
-        val row = Row(device.getLength, rmd, columns, fields = columns map { column =>
-          Field(column.name, fmd, value = dict.get(column.name))
-        })
-        device.insert(row)
-      case x => dieIllegalType(x)
-    }
-    device
-  }
 
   def sort(collection: RowCollection, orderBy: Seq[OrderColumn]): (IOCost, RowCollection) = {
     if (orderBy.isEmpty) IOCost() -> collection else {
@@ -205,7 +167,7 @@ object LollypopVM {
        * Evaluates a pure expression
        * @return a tuple containing the updated [[Scope scope]], [[IOCost]] and the return value
        */
-      def evaluate(): (Scope, IOCost, Any) = LollypopVM.execute(pureScope, instruction)
+      def evaluate(): (Scope, IOCost, Any) = LollypopVM.execute(rootScope, instruction)
 
       /**
        * Executes an instruction
@@ -224,7 +186,7 @@ object LollypopVM {
           case (aScope, aCost, qr: QueryResponse) => (aScope, aCost, qr.toRowCollection)
           case (aScope, aCost, rc: RowCollection) => (aScope, aCost, rc)
           case (aScope, aCost, rendering: TableRendering) => (aScope, aCost, rendering.toTable(scope))
-          case (aScope, aCost, other) => (aScope, aCost, convertToTable(resultName, other))
+          case (aScope, aCost, other) => (aScope, aCost, convertTupleToTable(resultName, other))
         }
       }
 
