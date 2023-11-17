@@ -21,6 +21,7 @@ import lollypop.io._
 import lollypop.lang._
 
 import java.io.{File, FileWriter, PrintWriter}
+import scala.concurrent.ExecutionContext
 
 /**
  * Lollypop Universe - repository for long-lived state
@@ -43,7 +44,8 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
 
   def createRootScope: () => Scope = {
     val rootScope = DefaultScope(universe = this)
-      .withVariable(name = "__session__", value = this)
+      .withVariable(name = __ec__, value = ExecutionContext.global)
+      .withVariable(name = __session__, value = this)
       .withVariable(name = "π", value = Math.PI)
       .withVariable("Nodes", value = nodes)
       .withVariable(name = "OS", value = system)
