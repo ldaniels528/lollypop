@@ -25,6 +25,7 @@ case class ArrayType(componentType: DataType, capacity: Option[Int] = None) exte
     case Some(v) => convert(v)
     case array if array.getClass.isArray => array.asInstanceOf[Array[_ <: Any]]
     case seq: Seq[Any] => seq.toArray
+    case s: String => s.toCharArray
     case x => dieUnsupportedConversion(x, name)
   }
 
