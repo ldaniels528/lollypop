@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.Streamable.{getInputStream, getOutputStream}
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.TransferFrom._symbol
 import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io.IOCost
@@ -37,12 +36,12 @@ import java.io.OutputStream
 case class TransferFrom(a: Expression, b: Expression) extends RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, OutputStream) = {
-    val result = getInputStream(b).use(in =>
-      getOutputStream(a) ~> { out =>
-        IOUtils.copy(in, out)
-        out
-      })
-    (scope, IOCost.empty, result)
+    val (sa, ca, in) = b.pullInputStream
+    val (sb, cb, out) = a.pullOutputStream(sa)
+    (sb, ca ++ cb, in.use { _ =>
+      IOUtils.copy(in, out)
+      out
+    })
   }
 
   override def toSQL: String = Seq(a.toSQL, _symbol, b.toSQL).mkString(" ")

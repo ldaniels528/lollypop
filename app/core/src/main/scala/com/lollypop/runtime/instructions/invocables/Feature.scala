@@ -5,11 +5,10 @@ import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instructi
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
@@ -24,7 +23,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val fs0 = FeatureState(scope)
-    title.asString.foreach(title => fs0.println(s"Feature: $title"))
+    fs0.println(s"Feature: ${title.pullString._3}")
     val featureState = scenarios.foldLeft[FeatureState](fs0) {
       // is it a scenario?
       case (state, scenario: Scenario) =>
@@ -42,7 +41,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
   }
 
   private def completedScenario(scenario: Scenario, state: FeatureState, scopeA: Scope): FeatureState = {
-    val title = scenario.title.asString(state.scope) || scenario.die("Scenario has no title")
+    val title = scenario.title.pullString(state.scope)._3
     state.println(s"   Passed: $title")
     reportVerifications(scenario, state, scopeA)
     state.copy(
@@ -52,7 +51,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
   }
 
   private def failedScenario(scenario: Scenario, state: FeatureState, scopeA: Scope): FeatureState = {
-    val title = scenario.title.asString(state.scope) || scenario.die("Scenario has no title")
+    val title = scenario.title.pullString(state.scope)._3
     state.println(s"   Failed: $title")
     reportVerifications(scenario, state, scopeA)
     //scopeA.toRowCollection.tabulate().foreach { line => state.println(s"     $line") }
@@ -62,7 +61,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
   private def reportVerifications(scenario: Scenario, state: FeatureState, scopeA: Scope): Unit = {
     scenario.verifications.foreach {
       case v: Verification =>
-        v.title.flatMap(_.asString(scopeA)) foreach { title =>
+        v.title.map(_.pullString(scopeA)._3) foreach { title =>
           state.println(s"      $title")
         }
         val conditions = v.condition match {

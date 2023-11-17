@@ -5,11 +5,11 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIV
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, LollypopUniverse}
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.{StringType, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE0Or1, ScalarFunctionCall}
 import com.lollypop.runtime.instructions.queryables.Help.{commandColumns, gatherHelp}
@@ -26,7 +26,7 @@ import lollypop.io.IOCost
 case class Help(pattern: Option[Expression]) extends ScalarFunctionCall with RuntimeQueryable with TableExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
     implicit val ctx: LollypopUniverse = scope.getUniverse
-    gatherHelp(name_? = pattern.flatMap(_.asString)) ~> { case (c, r) => (scope, c, r) }
+    gatherHelp(name_? = pattern.map(_.pullString._3)) ~> { case (c, r) => (scope, c, r) }
   }
 
   override def returnType: TableType = TableType(commandColumns)

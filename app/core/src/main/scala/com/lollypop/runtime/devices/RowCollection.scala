@@ -6,6 +6,7 @@ import com.lollypop.language.models.{AllFields, Condition, Expression, ScopeModi
 import com.lollypop.language.{dieIllegalType, dieNoSuchColumn}
 import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, RichScalaAny}
 import com.lollypop.runtime._
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.{IBLOB, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollection.getDurableInnerTable
@@ -13,7 +14,6 @@ import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, WhereIn}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.util.DateHelper
@@ -316,7 +316,7 @@ trait RowCollection extends RecordCollection[Row] with DataObject with SQLSuppor
                   (includeRow: RowMetadata => Boolean)(process: (Scope, Row) => Any)(implicit scope: Scope): IOCost = {
     var rowID: ROWID = 0
     var cost = IOCost()
-    val _limit = limit.flatMap(_.asInt32)
+    val _limit = limit.map(_.pullInt._3)
     while (hasNext(rowID) & (_limit.isEmpty || _limit.exists(cost.matched < _))) {
       cost ++= processIteration(rowID, condition)(includeRow)(process)
       rowID += 1

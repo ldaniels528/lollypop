@@ -5,27 +5,30 @@ import com.lollypop.language._
 import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import lollypop.io.IOCost
 
 import java.util.{Timer, TimerTask}
 
 /**
- * after instruction
+ * After statement
  * @param delay       the [[Expression delay interval]] of execution
  * @param instruction the [[Instruction command(s)]] to execute
- * @example {{{ after '2 seconds' { delete from @entries where attachID is null } }}}
+ * @example {{{
+ *  after Duration('2 seconds')
+ *    delete from @entries where attachID is null
+ * }}}
  */
 case class After(delay: Expression, instruction: Instruction)
   extends RuntimeInvokable with ConcurrentInstruction {
   private val timer = new Timer()
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+    val (sa, ca, _delay) = delay.pullDuration
     timer.schedule(new TimerTask {
       override def run(): Unit = instruction.execute(scope)
-    }, (delay.asInterval || dieExpectedInterval()).toMillis)
-    (scope, IOCost.empty, timer)
+    }, _delay.toMillis)
+    (sa, ca, timer)
   }
 
   override def toSQL: String = s"after ${delay.toSQL} ${instruction.toSQL}"

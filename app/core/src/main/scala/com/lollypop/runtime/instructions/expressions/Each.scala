@@ -4,13 +4,13 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIV
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Expression, Instruction, Queryable}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.Each.EnrichedBlockDevice
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
@@ -60,7 +60,7 @@ case class Each(variable: Atom,
 
     def processSource(in: RowCollection): Option[RowCollection] = {
       val factory = TrieMap[Unit, RowCollection]()
-      val _limit = limit.flatMap(_.asInt32)
+      val _limit = limit.map(_.pullInt._3)
       val processor = if (isYield) processYield(factory) else processRow _
       in.foreachWithLimit(_limit, processor)
       factory.get(())
@@ -158,6 +158,7 @@ object Each extends ExpressionParser {
 
   final implicit class EnrichedBlockDevice(val device: RowCollection) extends AnyVal {
 
+    @inline
     def foreachWithLimit[U](limit: Option[Int] = None, callback: Row => U): Unit = {
       for {
         rowID <- 0L until (limit.map(_.toLong) || device.getLength)

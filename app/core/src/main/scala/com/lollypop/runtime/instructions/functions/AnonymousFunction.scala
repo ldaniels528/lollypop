@@ -3,7 +3,7 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.language.models._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.ScalaConversion
+import com.lollypop.runtime.conversions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.{LambdaFunctionCall, RuntimeExpression}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
@@ -13,9 +13,8 @@ import lollypop.io.IOCost
  * @param params the collection of function [[ParameterLike parameters]]
  * @param code   the function [[Instruction code]]
  * @param origin the originating [[Scope scope]]
- * @example {{{
- *   (n: Int) => n + 1
- * }}}
+ * @example (n: Int) => n + 1
+ * @example n => n + 1
  */
 case class AnonymousFunction(params: Seq[ParameterLike], code: Instruction, var origin: Option[Scope] = None)
   extends TypicalFunction with LambdaFunction with RuntimeExpression with ScalaConversion {
