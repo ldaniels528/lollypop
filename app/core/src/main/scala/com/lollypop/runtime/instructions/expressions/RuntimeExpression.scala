@@ -1,23 +1,14 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models._
-import com.lollypop.language.{dieUnsupportedConversion, dieUnsupportedType}
 import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.instructions.RuntimeInstruction
-import com.lollypop.runtime.instructions.functions.ArgumentBlock
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.{Scope, safeCast}
-import com.lollypop.util.JSONSupport.JSONProductConversion
-import com.lollypop.util.JVMSupport._
+import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
-import spray.json.JsArray
-
-import java.util.Date
-import scala.annotation.tailrec
-import scala.collection.mutable
-import scala.concurrent.duration.FiniteDuration
 
 /**
  * Represents a run-time Expression
@@ -87,82 +78,15 @@ object RuntimeExpression {
 
   /**
    * Rich Expression
-   * @param expression the host [[Expression expression]]
+   * @param instruction the host [[Instruction instruction]]
    */
-  final implicit class RichExpression(val expression: Expression) extends AnyVal {
+  final implicit class RichExpression(val instruction: Instruction) extends AnyVal {
 
     @inline
-    def getAlias: Option[String] = expression match {
-      case NamedExpression(name) => Some(name)
-      case expr => expr.alias
+    def getAlias: Option[String] = instruction match {
+      case expr@NamedExpression(name) => expr.alias ?? Some(name)
+      case expr: Expression => expr.alias
       case _ => None
-    }
-
-    @inline
-    def asAny(implicit scope: Scope): Option[Any] = Option(getValue.execute(scope)._3)
-
-    @inline
-    def asArray(implicit scope: Scope): Option[Array[_]] = {
-      @tailrec
-      def recurse(value: Any): Array[_] = value match {
-        case seq: Seq[Any] => recurse(seq.toArray)
-        case array if array.getClass.isArray => array.asInstanceOf[Array[_]]
-        case s: String => s.toCharArray
-        case x => dieUnsupportedConversion(x, typeName = "Array")
-      }
-
-      Option(recurse(getValue.execute(scope)._3))
-    }
-
-    @inline def asBoolean(implicit scope: Scope): Option[Boolean] = Option(getValue.execute(scope)._3).map(BooleanType.convert)
-
-    @inline def asByteArray(implicit scope: Scope): Option[Array[Byte]] = Option(getValue.execute(scope)._3).map(VarBinaryType.convert)
-
-    @inline def asDateTime(implicit scope: Scope): Option[Date] = Option(getValue.execute(scope)._3).map(DateTimeType.convert)
-
-    @inline
-    def asDictionary(implicit scope: Scope): Option[mutable.Map[String, _]] = {
-      Option(getValue.execute(scope)._3.normalize).map {
-        case m: QMap[_, _] => mutable.LinkedHashMap(m.toSeq.map { case (k, v) => String.valueOf(k) -> v }: _*)
-        case x => dieUnsupportedType(x)
-      }
-    }
-
-    @inline
-    def asDictionaryOf[A](implicit scope: Scope): Option[mutable.Map[String, A]] = {
-      Option(getValue.execute(scope)._3.normalize).map {
-        case m: QMap[_, _] => mutable.LinkedHashMap[String, A](m.toSeq.flatMap { case (k, v) => safeCast[A](v).map(vv => String.valueOf(k) -> vv) }: _*)
-        case x => dieUnsupportedType(x)
-      }
-    }
-
-    @inline def asDouble(implicit scope: Scope): Option[Double] = Option(getValue.execute(scope)._3).map(Float64Type.convert)
-
-    @inline def asInt32(implicit scope: Scope): Option[Int] = Option(getValue.execute(scope)._3).map(Int32Type.convert)
-
-    @inline def asInterval(implicit scope: Scope): Option[FiniteDuration] = Option(getValue.execute(scope)._3).map(DurationType.convert)
-
-    @inline
-    def asJsArray(implicit scope: Scope): Option[JsArray] = {
-      def recurse(value: Any): JsArray = value match {
-        case array: Array[_] => JsArray(array.map(_.toJsValue): _*)
-        case seq: Seq[_] => JsArray(seq.map(_.toJsValue): _*)
-        case array: JsArray => array
-        case x => dieUnsupportedConversion(x, typeName = "JsArray")
-      }
-
-      Option(recurse(getValue.execute(scope)._3))
-    }
-
-    @inline def asNumeric(implicit scope: Scope): Option[Number] = Option(getValue.execute(scope)._3).map(NumericType.convert)
-
-    @inline def asString(implicit scope: Scope): Option[String] = Option(getValue.execute(scope)._3).map(StringType.convert)
-
-    @inline def get(implicit scope: Scope): Option[Any] = Option(getValue.execute(scope)._3)
-
-    private def getValue: Expression = expression match {
-      case ArgumentBlock(List(arg)) => arg
-      case expr => expr
     }
 
   }

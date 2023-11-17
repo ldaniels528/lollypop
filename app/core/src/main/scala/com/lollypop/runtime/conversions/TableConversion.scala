@@ -14,11 +14,11 @@ import com.lollypop.runtime.instructions.queryables.TableRendering
 import scala.language.postfixOps
 
 /**
- * Table Conversion Utilities
+ * Table Conversion
  */
-trait TableConversion {
+trait TableConversion extends Conversion {
 
-  def convertAnyToTable(value: Any): RowCollection = value match {
+  override def convert(value: Any): RowCollection = value match {
     case a: Array[_] => convertSeqToTable(a)
     case s: Seq[_] => convertSeqToTable(s)
     case s: Scope => s.toRowCollection
