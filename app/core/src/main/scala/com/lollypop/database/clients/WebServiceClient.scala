@@ -1,7 +1,7 @@
 package com.lollypop.database.clients
 
 import com.lollypop.AppConstants.lollypopSessionID
-import com.lollypop.util.IOTools
+import com.lollypop.runtime.conversions.TransferTools
 import com.lollypop.util.ResourceHelper._
 import org.apache.commons.io.IOUtils
 import spray.json._
@@ -307,7 +307,7 @@ class WebServiceClient(connectionTimeout: Duration = 5.second, readTimeout: Dura
         conn.setRequestProperty("Cookie", getCookieString)
         conn.setDoOutput(true)
         if (doInput) conn.setDoInput(doInput)
-        IOTools.transfer(file, conn)
+        TransferTools.transfer(file, conn)
         conn.getResponseCode match {
           case HttpURLConnection.HTTP_OK =>
             if (doInput) toJSON(Source.fromInputStream(conn.getInputStream).use(_.mkString)) else JsObject()

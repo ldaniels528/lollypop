@@ -5,7 +5,7 @@ import com.lollypop.database.jdbc.types.JDBCValueConversion.toJDBCType
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes.CLOB
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.util.IOTools.{RichInputStream, RichReader}
+import com.lollypop.runtime.conversions.TransferTools.{RichInputStream, RichReader}
 import com.lollypop.util.DateHelper
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._

@@ -16,7 +16,7 @@ import com.lollypop.runtime.instructions.infrastructure.CreateExternalTable.Exte
 import com.lollypop.runtime.instructions.infrastructure.Macro
 import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.getQueryReferences
-import com.lollypop.util.IOTools._
+import com.lollypop.runtime.conversions.TransferTools._
 import com.lollypop.util.LogUtil
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
