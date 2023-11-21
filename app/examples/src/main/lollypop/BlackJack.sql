@@ -42,7 +42,7 @@ def dealerIntelligence(finish: Boolean = false) := {
     var modified = false
     _playerScore = playerScore()
     if((_playerScore <= 21) and (dealerScore() < _playerScore)) {
-        cost =
+        val cost =
             if (finish) while (_playerScore > dealerScore()) hit(dealer)
             else if(_playerScore > dealerScore()) hit(dealer)
         modified = (modified is true) or (cost.inserted > 0)
