@@ -1,8 +1,8 @@
 package com.lollypop.database
 
 import com.lollypop.AppConstants._
-import com.lollypop.runtime.LollypopVM.convertToTable
 import com.lollypop.runtime.ModelsJsonProtocol._
+import com.lollypop.runtime.conversions.TableConversion.convertTupleToTable
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
@@ -88,7 +88,7 @@ object QueryResponse {
         case _ids: Seq[_] if _ids.forall(_.isInstanceOf[ROWID]) =>
           val rowIds = _ids.collect { case n: ROWID => n }
           toQueryResponse(ns, IOCost(inserted = rowIds.size, rowIDs = RowIDRange(rowIds: _*)))
-        case value => toQueryResponse(ns, convertToTable(columnName = LollypopVM.resultName, value), limit)
+        case value => toQueryResponse(ns, convertTupleToTable(columnName = LollypopVM.resultName, value), limit)
       }
     }
 

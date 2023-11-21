@@ -4,11 +4,11 @@ import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Column, Instruction}
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.{SQLToColumnConversion, TableColumnSeq}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.infrastructure.AlterTable.Alteration
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 import com.lollypop.runtime.{DatabaseObjectRef, ROWID_NAME, ResourceManager, Scope}
@@ -77,7 +77,7 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
         // update the table's configuration
         val cfg = newDevice.ns.getConfig
         host.ns.writeConfig(alterations.collectFirst {
-          case SetLabel(description) => cfg.copy(description = description.asString)
+          case SetLabel(description) => cfg.copy(description = Some(description.pullString._3))
         } || cfg)
 
         // delete the temporary file

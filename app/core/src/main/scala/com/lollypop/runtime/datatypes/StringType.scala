@@ -9,7 +9,7 @@ import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import com.lollypop.util.DateHelper
 import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.IOTools.RichInputStream
+import com.lollypop.runtime.conversions.TransferTools.RichInputStream
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import spray.json.JsValue
 

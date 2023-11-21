@@ -4,11 +4,11 @@ import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.{ColumnType, TableModel}
 import com.lollypop.language.{ColumnTypeParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedConversion}
 import com.lollypop.runtime.datatypes.TableType.headerSize
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.TableColumn.implicits.{SQLToColumnConversion, TableColumnToSQLColumnConversion}
 import com.lollypop.runtime.devices._
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.{INT_BYTES, ROWID, Scope}
 import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
 import com.lollypop.util.JSONSupport.JsValueConversion
@@ -215,7 +215,7 @@ object TableType extends ColumnTypeParser with DataTypeParser {
         isPointer = false,
         partitions = for {
           partitions <- tableModel.partitions.toList
-          array <- partitions.asArray.map(_.toList).toList
+          array = partitions.pullArray._3.toList
           list <- array.map {
             case s: String => s
             case x => partitions.dieIllegalType(x)

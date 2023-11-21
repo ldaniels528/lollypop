@@ -3,9 +3,9 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieNoResultSet}
-import com.lollypop.runtime.LollypopVM.convertToTable
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.TableConversion.convertSeqToTable
 import com.lollypop.runtime.devices.RowCollection
 import lollypop.io.IOCost
 
@@ -17,7 +17,7 @@ case class From(source: Instruction) extends RuntimeQueryable {
     def recurse(value: Any): RowCollection = value match {
       case None => dieNoResultSet()
       case Some(v) => recurse(v)
-      case a: Array[_] => convertToTable(a)
+      case a: Array[_] => convertSeqToTable(a)
       case r: RowCollection => r
       case s: Scope => s.toRowCollection
       case t: TableRendering => t.toTable

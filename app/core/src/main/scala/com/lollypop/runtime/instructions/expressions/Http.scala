@@ -3,13 +3,12 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language.models.{Atom, Expression}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream, dieIllegalType}
+import com.lollypop.runtime.conversions.{ExpressiveTypeConversion, TransferTools}
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.instructions.expressions.Http.wget
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.invocables.Scenario.__KUNGFU_BASE_URL__
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.JSONSupport.JSONProductConversion
-import com.lollypop.util.IOTools
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper.StringRenderer
@@ -41,25 +40,39 @@ case class Http(method: Atom, url: Expression, body: Option[Expression] = None, 
   extends RuntimeExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, HttpResponse) = {
-
-    def getAbsoluteURL: String = {
-      (for {
-        path <- url.asString
-        url <- (scope.resolve("url") ?? scope.resolve(__KUNGFU_BASE_URL__)).flatMap(safeCast[String])
-      } yield new URI(url).resolve(path).toString).orNull
-    }
-
-    val result = method.name.toLowerCase() match {
-      case "path" => HttpResponse(body = getAbsoluteURL, message = null, statusCode = 200, responseID = UUID.randomUUID())
-      case "uri" => HttpResponse(body = getAbsoluteURL, message = null, statusCode = 200, responseID = UUID.randomUUID())
+    method.name.toLowerCase() match {
+      case "path" =>
+        val (sa, ca, path) = getAbsoluteURL
+        (sa, ca, HttpResponse(body = path, message = null, statusCode = 200, responseID = UUID.randomUUID()))
+      case "uri" =>
+        val (sa, ca, uri) = getRelativeURL
+        (sa, ca, HttpResponse(body = uri, message = null, statusCode = 200, responseID = UUID.randomUUID()))
       case _method =>
-        wget(
-          url = url.asString || dieUrlIsNull(),
-          body = body.flatMap(_.asDictionary).map(_.toJsValue.toString()),
-          headers = headers.flatMap(_.asDictionary),
-          method = Some(_method))
+        val (sa, ca, _url) = url.pullString
+        val (sb, cb, _body_?) = body.map(_.pullDictionary(sa)) match {
+          case Some((sb, cb, dict)) => (sb, cb, Some(dict.toJsValue.toString()))
+          case None => (sa, IOCost.empty, None)
+        }
+        val (sc, cc, _headers_?) = headers.map(_.pullDictionary(sb)) match {
+          case Some((sc, cc, dict)) => (sc, cc, Some(dict))
+          case None => (sb, IOCost.empty, None)
+        }
+        (sc, ca ++ cb ++ cc, wget(url = _url, body = _body_?, headers = _headers_?, method = Some(_method)))
     }
-    (scope, IOCost.empty, result)
+  }
+
+  private def getAbsoluteURL(implicit scope: Scope): (Scope, IOCost, String) = {
+    val (sa, ca, path) = url.pullString
+    (sa, ca, (for {
+      url <- (scope.resolve("url") ?? scope.resolve(__KUNGFU_BASE_URL__)).flatMap(safeCast[String])
+    } yield new URI(url).resolve(path).toString).orNull)
+  }
+
+  private def getRelativeURL(implicit scope: Scope): (Scope, IOCost, String) = {
+    val (sa, ca, path) = url.pullString
+    (sa, ca, (for {
+      url <- scope.resolveAs[String]("url")
+    } yield new URI(url).resolve(path).toString).orNull)
   }
 
   override def toSQL: String = {
@@ -140,7 +153,7 @@ object Http extends ExpressionParser {
           conn.setDoOutput(body.nonEmpty)
           if (expectResponse) conn.setDoInput(expectResponse)
           body foreach {
-            case f: File => IOTools.transfer(f, conn)
+            case f: File => TransferTools.transfer(f, conn)
             case j: JsValue => conn.getOutputStream.use(_.write(j.toString().getBytes))
             case s: String => conn.getOutputStream.use(_.write(s.getBytes))
             case x => dieIllegalType(x)

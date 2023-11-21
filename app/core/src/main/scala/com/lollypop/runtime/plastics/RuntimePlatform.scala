@@ -4,25 +4,23 @@ import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models._
 import com.lollypop.language.{dieExpectedArray, dieIllegalType}
-import com.lollypop.runtime.LollypopVM.convertToTable
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.datatypes.{DateTimeType, Inferences}
-import com.lollypop.runtime.devices.RowCollectionZoo.{MapToTableType, ProductToRowCollection}
-import com.lollypop.runtime.devices.{QMap, RowCollection}
+import com.lollypop.runtime.conversions.TableConversion.convert
+import com.lollypop.runtime.conversions.{ExpressiveTypeConversion, TableConversion}
+import com.lollypop.runtime.datatypes.Inferences
+import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NamedFunction}
-import com.lollypop.runtime.instructions.queryables.{RuntimeQueryable, TableRendering}
+import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.plastics.RuntimeClass.registerVirtualMethod
 import com.lollypop.runtime.plastics.Tuples.seqToArray
-import com.lollypop.runtime.{LollypopVM, Scope, safeCast}
+import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.CalendarHelper.CalendarUtilities
 import com.lollypop.util.CodecHelper._
 import com.lollypop.util.DateHelper
 import com.lollypop.util.DateOperations.DateMathematics
 import com.lollypop.util.JSONSupport.{JSONProductConversion, JSONStringConversion}
-import com.lollypop.util.JVMSupport.NormalizeAny
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import org.apache.commons.codec.binary.Hex
@@ -70,7 +68,7 @@ object RuntimePlatform {
       anyFunction0(name = "isFunction", _.isInstanceOf[Function], returnType_? = BOOLEAN_TYPE)
 
       // Returns true if argument is a ISO date (8601) string value, false otherwise: x.isISO8601()
-      anyFunction0(name = "isISO8601", s => Try(DateHelper.parse(String.valueOf(s))).isSuccess, returnType_? = BOOLEAN_TYPE)
+      anyFunction0(name = "isISO8601", x => Try(DateHelper.parse(String.valueOf(x))).isSuccess, returnType_? = BOOLEAN_TYPE)
 
       // Returns true if argument is a numeric value, false otherwise: x.isNumber()
       anyFunction0(name = "isNumber", _.isInstanceOf[Number], returnType_? = BOOLEAN_TYPE)
@@ -755,61 +753,53 @@ object RuntimePlatform {
   //  Any Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class AnyFunction0(val name: String, val value: Expression, f: Any => Any) extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, value.asAny.map(f).orNull)
-    }
+  private class AnyFunction0(val name: String, val value: Expression, f: Any => Any)
+    extends RuntimeExpression with ZeroArguments {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pull(f)(scope)
   }
 
   ////////////////////////////////////////////////////////////////////////////////
   //  Array Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class ArrayFunction0(val name: String, val value: Expression, f: Array[_] => Any) extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {array <- value.asArray} yield f(array)).orNull)
-    }
+  private class ArrayFunction0(val name: String, val value: Expression, f: Array[_] => Any)
+    extends RuntimeExpression with ZeroArguments {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pullArray(f)
   }
 
   private class ArrayFunction1[A](val name: String, val value: Expression, val arg1: Expression, f: (Array[_], A) => Any)
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        array <- value.asArray
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-      } yield f(array, arg1)).orNull)
+      val (sa, ca, array) = value.pullArray(scope)
+      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(array, _)).orNull)
     }
   }
 
   private class ArrayFunction1S[A](val name: String, val value: Expression, val arg1: Expression, f: (Array[_], A, Scope) => Any)
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        array <- value.asArray
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-      } yield f(array, arg1, scope)).orNull)
+      val (sa, ca, array) = value.pullArray(scope)
+      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(array, _, scope)).orNull)
     }
   }
 
   private class ArrayFunction2[A, B](val name: String, val value: Expression, val arg1: Expression, val arg2: Expression, f: (Array[_], A, B) => Any)
     extends RuntimeExpression with TwoArguments {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        array <- value.asArray
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-        arg2 <- arg2.asAny.flatMap(safeCast[B])
-      } yield f(array, arg1, arg2)).orNull)
+      val (sa, ca, array) = value.pullArray(scope)
+      val (sb, cb, argA_?) = arg1.pullOpt[A](sa)
+      val (sc, cc, argB_?) = arg2.pullOpt[B](sb)
+      (sc, ca ++ cb ++ cc, (for {argA <- argA_?; argB <- argB_?} yield f(array, argA, argB)).orNull)
     }
   }
 
   private class ArrayFunction2S[A, B](val name: String, val value: Expression, val arg1: Expression, val arg2: Expression, f: (Array[_], A, B, Scope) => Any)
     extends RuntimeExpression with TwoArguments {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        array <- value.asArray
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-        arg2 <- arg2.asAny.flatMap(safeCast[B])
-      } yield f(array, arg1, arg2, scope)).orNull)
+      val (sa, ca, array) = value.pullArray(scope)
+      val (sb, cb, argA_?) = arg1.pullOpt[A](sa)
+      val (sc, cc, argB_?) = arg2.pullOpt[B](sb)
+      (sc, ca ++ cb ++ cc, (for {argA <- argA_?; argB <- argB_?} yield f(array, argA, argB, scope)).orNull)
     }
   }
 
@@ -819,61 +809,49 @@ object RuntimePlatform {
 
   private class BytesFunction0(val name: String, val value: Expression, f: Array[Byte] => Any)
     extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, value.asByteArray.map(f).orNull)
-    }
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pullByteArray(f)
   }
 
   ////////////////////////////////////////////////////////////////////////////////
   //  Date Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class DateFormat(val value: Expression, formatString: Expression) extends RuntimeExpression with ZeroArguments {
+  private class DateFormat(val value: Expression, formatString: Expression) extends RuntimeExpression
+    with ZeroArguments {
     override val name = "format"
 
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        value <- value.asDateTime
-        formatString <- formatString.asString
-      } yield new SimpleDateFormat(formatString).format(value)).orNull)
+    override def execute()(implicit scope: Scope): (Scope, IOCost, String) = {
+      val (sa, ca, _date) = value.pullDate
+      val (sb, cb, _formatString) = formatString.pullString(sa)
+      (sb, ca ++ cb, new SimpleDateFormat(_formatString).format(_date))
     }
   }
 
-  private class DateMinus(val value: Expression, val arg1: Expression) extends RuntimeExpression with OneArgument {
+  private class DateMinus(val value: Expression, val arg1: Expression)
+    extends RuntimeExpression with OneArgument {
     override val name = "$minus"
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      val (s1, c1, v1) = value.execute(scope)
-      val (s2, c2, v2) = arg1.execute(s1)
-      (s2, c1 ++ c2, (for {
-        date <- Option(DateTimeType.convert(v1))
-        result <- Option(v2) map {
-          case f: FiniteDuration => date - f
-          case d: Date => date - d
-          case n: Number => date - n.longValue().millis
-          case x => arg1.dieIllegalType(x)
-        }
-      } yield result).orNull)
+      val (sa, ca, date) = value.pullDate(scope)
+      arg1.execute(sa) ~>> (ca, {
+        case f: FiniteDuration => date - f
+        case d: Date => date - d
+        case n: Number => date - n.longValue().millis
+        case x => arg1.dieIllegalType(x)
+      })
     }
   }
 
-  private class DateFunction0(val name: String, val value: Expression, f: Date => Any) extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      val (s, c, r) = value.execute(scope)
-      (s, c, r match {
-        case d: Date => f(d)
-        case x => value.dieIllegalType(x)
-      })
-    }
+  private class DateFunction0(val name: String, val value: Expression, f: Date => Any)
+    extends RuntimeExpression with ZeroArguments {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pullDate(f)
   }
 
   private class DateFunction1[A](name: String, value: Expression, arg1: Expression, f: (Date, A) => Any)
     extends RuntimeExpression {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        arg0 <- value.asDateTime
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-      } yield f(arg0, arg1)).orNull)
+      val (sa, ca, date) = value.pullDate
+      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(date, _)).orNull)
     }
 
     override def toSQL: String = s"${value.toSQL}.$name(${arg1.toSQL})"
@@ -882,10 +860,8 @@ object RuntimePlatform {
   private class DurationFunction1[A](val name: String, val value: Expression, val arg1: Expression, f: (FiniteDuration, A) => Any)
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        arg0 <- value.asInterval
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-      } yield f(arg0, arg1)).orNull)
+      val (sa, ca, duration) = value.pullDuration(scope)
+      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(duration, _)).orNull)
     }
   }
 
@@ -893,9 +869,17 @@ object RuntimePlatform {
   //  JavaScript Array Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class JsArrayFunction0(val name: String, val value: Expression, f: JsArray => Any) extends RuntimeExpression with ZeroArguments {
+  private class JsArrayFunction0(val name: String, val value: Expression, f: JsArray => Any)
+    extends RuntimeExpression with ZeroArguments {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {array <- value.asJsArray} yield f(array)).orNull)
+      def recurse(value: Any): JsArray = value match {
+        case array: Array[_] => JsArray(array.map(_.toJsValue): _*)
+        case seq: Seq[_] => JsArray(seq.map(_.toJsValue): _*)
+        case array: JsArray => array
+        case x => this.dieIllegalType(x)
+      }
+
+      value.pull(x => recurse(x))(scope) ~>> f
     }
   }
 
@@ -903,20 +887,18 @@ object RuntimePlatform {
   //  Number Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class NumberFunction0(val name: String, val value: Expression, f: Number => Any) extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, value.asNumeric.map(f).orNull)
-    }
+  private class NumberFunction0(val name: String, val value: Expression, f: Number => Any)
+    extends RuntimeExpression with ZeroArguments {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pullNumber(f)
   }
 
   private class NumberFunction1F(val name: String, val value: Expression, val arg1: Expression, f: (Number, Number, Instruction) => Any)
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        aa <- value.asNumeric
-        bb <- arg1.asNumeric
-        _type = Inferences.resolveType(Seq(aa, bb).map(Inferences.fromValue): _*)
-      } yield _type.convert(f(aa, bb, value))).orNull)
+      val (sa, ca, aa) = value.pullNumber(scope)
+      val (sb, cb, bb) = arg1.pullNumber(sa)
+      val _type = Inferences.resolveType(Seq(aa, bb).map(Inferences.fromValue): _*)
+      (sb, ca ++ cb, _type.convert(f(aa, bb, value)))
     }
   }
 
@@ -924,19 +906,16 @@ object RuntimePlatform {
   //  String Function implementations
   ////////////////////////////////////////////////////////////////////////////////
 
-  private class StringFunction0(val name: String, val value: Expression, f: String => Any) extends RuntimeExpression with ZeroArguments {
-    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, value.asString.map(f).orNull)
-    }
+  private class StringFunction0(val name: String, val value: Expression, f: String => Any)
+    extends RuntimeExpression with ZeroArguments {
+    override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = value.pullString(f)
   }
 
   private class StringFunction1[A](val name: String, val value: Expression, val arg1: Expression, f: (String, A) => Any)
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-      (scope, IOCost.empty, (for {
-        arg0 <- value.asString
-        arg1 <- arg1.asAny.flatMap(safeCast[A])
-      } yield f(arg0, arg1)).orNull)
+      val (sa, ca, string) = value.pullString(scope)
+      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(string, _)).orNull)
     }
   }
 
@@ -945,21 +924,10 @@ object RuntimePlatform {
   ////////////////////////////////////////////////////////////////////////////////
 
   private class ToTable(val value: Expression) extends RuntimeQueryable with ZeroArguments {
-    override val name = "toTale"
+    override val name = "toTable"
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-      val (scope1, cost1, result1) = value.execute(scope)
-      val rc1 = result1.normalize match {
-        case t: TableRendering => t.toTable
-        case a: Array[_] => convertToTable(a)
-        case s: Seq[_] => convertToTable(s)
-        case s: Scope => s.toRowCollection
-        case t: TableRendering => t.toTable
-        case p: Product => p.toRowCollection
-        case m: QMap[_, _] => m.toKeyValueCollection
-        case x => dieIllegalType(x)
-      }
-      (scope1, cost1, rc1)
+      value.pull(x => TableConversion.convert(x))(scope)
     }
   }
 

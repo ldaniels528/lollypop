@@ -1,10 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
-import com.lollypop.language.models.{Instruction, Invokable}
+import com.lollypop.language.models.{ConcurrentInstruction, Instruction, Invokable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import lollypop.io.IOCost
 
 import scala.concurrent.Future
@@ -13,11 +13,12 @@ import scala.concurrent.Future
  * Represents an asynchronous operation
  * @param code the [[Instruction operation]] to execute
  */
-case class Async(code: Instruction) extends RuntimeExpression with Invokable {
+case class Async(code: Instruction)
+  extends RuntimeExpression with Invokable with ConcurrentInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Future[Any]) = {
     import scala.concurrent.ExecutionContext.Implicits.global
-    (scope, IOCost.empty, Future(code.execute(scope)._3))
+    code.pull(x => Future(x))(scope)
   }
 
   override def toSQL: String = s"async ${code.toSQL}"

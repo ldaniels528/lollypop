@@ -4,11 +4,10 @@ import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Float64Type
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 /**
@@ -25,7 +24,7 @@ case class Sum(expression: Expression) extends AggregateFunctionCall
   override def aggregate: Aggregator = {
     var sum = 0.0
     new Aggregator {
-      override def update(implicit scope: Scope): Unit = sum += (expression.asDouble || 0.0)
+      override def update(implicit scope: Scope): Unit = sum += expression.pullDouble._3
 
       override def collect(implicit scope: Scope): Option[Double] = Some(sum)
     }

@@ -3,7 +3,7 @@ package com.lollypop.runtime.datatypes
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.util.ResourceHelper._
-import com.lollypop.util.IOTools.{RichInputStream, RichReader}
+import com.lollypop.runtime.conversions.TransferTools.{RichInputStream, RichReader}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{ByteArrayInputStream, File, FileReader, InputStreamReader}

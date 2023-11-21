@@ -2,6 +2,7 @@ package com.lollypop
 
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.util.DateHelper
+import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
 
 import java.io.File
@@ -80,6 +81,23 @@ package object runtime extends AppConstants {
 
   final implicit class Boolean2Int(val bool: Boolean) extends AnyVal {
     def toInt: Int = if (bool) 1 else 0
+  }
+
+  /**
+   * (Scope, IOCost, T) Conversion
+   * @param t the host ([[Scope]], [[IOCost]], `T`) tuple
+   */
+  final implicit class ScopeIOCostAnyConversion[T](val t: (Scope, IOCost, T)) extends AnyVal {
+
+    @inline
+    def ~>>[A](f: T => A): (Scope, IOCost, A) = (t._1, t._2, f(t._3))
+
+    @inline
+    def ~>>[A](c: IOCost, f: T => A): (Scope, IOCost, A) = (t._1, t._2 ++ c, f(t._3))
+
+    @inline
+    def ~>>[A](s: Scope => Scope, c: IOCost, f: T => A): (Scope, IOCost, A) = (s(t._1), t._2 ++ c, f(t._3))
+
   }
 
 }

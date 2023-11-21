@@ -4,9 +4,8 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_OBJECT_ORI
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.plastics.RuntimeClass
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime.plastics.RuntimeClass.getClassByName
 import lollypop.io.IOCost
 
 /**
@@ -15,8 +14,8 @@ import lollypop.io.IOCost
  */
 case class ImportImplicitClass(expression: Expression) extends RuntimeInvokable {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    val s = scope.importImplicitClass(RuntimeClass.getClassByName(expression.asString || expression.dieIllegalType()))
-    (s, IOCost.empty, null)
+    val (sa, ca, _class) = expression.pullString(getClassByName(_))
+    (sa.importImplicitClass(_class), ca, ())
   }
 
   override def toSQL: String = List("import implicit", expression.toSQL).mkString(" ")

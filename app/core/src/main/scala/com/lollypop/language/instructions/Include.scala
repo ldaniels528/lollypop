@@ -10,16 +10,20 @@ import org.slf4j.{Logger, LoggerFactory}
 import java.io.{File, FileInputStream}
 
 /**
- * Include directive
+ * Include directive - incorporates the contents of an external file into current scope.
+ * @example {{{
+ *  include('./app/examples/src/main/lollypop/Stocks.sql')
+ * }}}
  */
 object Include extends DirectiveParser {
   protected lazy val logger: Logger = LoggerFactory.getLogger(getClass)
+  private val templateCard = "include %e:file"
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "include",
     category = CATEGORY_SYSTEM_TOOLS,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = "include `file`" ,
+    syntax = templateCard,
     description = "incorporates the contents of an external file into current scope",
     example =
       """|include('./app/examples/src/main/lollypop/Stocks.sql')
@@ -28,7 +32,7 @@ object Include extends DirectiveParser {
 
   override def parseDirective(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Instruction] = {
     if (understands(ts)) {
-      val params = SQLTemplateParams(ts, "include %e:file")
+      val params = SQLTemplateParams(ts, templateCard)
       val code = params.expressions("file") match {
         case Literal(path: String) =>
           logger.info(s"Including '$path'...")

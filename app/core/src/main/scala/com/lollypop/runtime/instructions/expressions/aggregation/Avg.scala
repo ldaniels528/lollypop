@@ -2,13 +2,11 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{DataType, Float64Type, Inferences}
-import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.util.Date
@@ -29,14 +27,14 @@ case class Avg(expression: Expression) extends AggregateFunctionCall
     var (sum, count) = (0.0, 0L)
     new Aggregator {
       override def update(implicit scope: Scope): Unit = {
-        val value = expression.asAny
+        val value = expression.execute(scope)._3
         if (returnType_?.isEmpty) returnType_? = Option(value).map(Inferences.fromValue)
-        sum += expression.asAny.map {
+        sum += (value match {
           case char: Char => char.toDouble
           case date: Date => date.getTime.toDouble
           case number: Number => number.doubleValue()
           case x => expression.dieIllegalType(x)
-        } || 0.0
+        })
         count += 1
       }
 

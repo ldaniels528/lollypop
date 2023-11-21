@@ -1,14 +1,12 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.die
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
-import com.lollypop.language.{HelpDoc, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieIllegalType}
+import com.lollypop.language.{HelpDoc, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.MacroLanguageParser
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 case class Macro(template: String, code: Instruction) extends RuntimeModifiable {
@@ -58,7 +56,7 @@ object Macro extends ModifiableParser {
 
   private def decodeTemplate(params: SQLTemplateParams): String = {
     implicit val scope: Scope = Scope()
-    val macroTemplate = (params.expressions("template") ~> { e => e.asString || dieIllegalType(e) }).trim
+    val macroTemplate = params.expressions("template").pullString._3.trim
     if (!macroTemplate.headOption.exists(identifierChar)) die(s"Invalid macro template '$macroTemplate' must begin with an identifier")
     macroTemplate
   }

@@ -2,12 +2,12 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
 import com.lollypop.runtime.{Observable, Scope}
 import lollypop.io.IOCost
 
 /**
- * whenever instruction - executes an instruction at the moment the trigger condition evaluates as true
+ * whenever - executes an instruction at the moment the trigger condition evaluates as true
  * @param expression the trigger [[Expression expression]]
  * @param code       the [[Instruction instruction]] to execute
  * @example {{{
@@ -15,7 +15,8 @@ import lollypop.io.IOCost
  *    stdout <=== 'n_bricks is empty\n') 
  * }}}
  */
-case class WhenEver(expression: Expression, code: Instruction) extends RuntimeInvokable {
+case class WhenEver(expression: Expression, code: Instruction)
+  extends RuntimeInvokable with ConcurrentInstruction {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.withObservable(Observable(expression, code)), IOCost.empty, null)
   }

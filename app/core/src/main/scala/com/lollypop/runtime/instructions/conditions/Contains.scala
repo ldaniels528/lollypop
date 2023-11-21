@@ -5,28 +5,30 @@ import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.QMap
+import com.lollypop.runtime.instructions.conditions.Contains.keyword
 import lollypop.io.IOCost
 
 case class Contains(items: Expression, item: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (sa, ca, ra) = items.execute(scope)
-    val (sb, cb, rb) = item.execute(sa)
+    val (sa, ca, va) = items.execute(scope)
+    val (sb, cb, vb) = item.execute(sa)
     val result = (for {
-      container <- Option(ra)
-      elem <- Option(rb)
+      container <- Option(va)
+      elem <- Option(vb)
     } yield {
       container match {
         case a: Array[Any] => a.contains(elem)
-        case m: QMap[String, Any] => m.contains(elem.toString)
-        case s: String => s.contains(elem.toString)
+        case m: QMap[String, Any] => m.contains(StringType.convert(elem))
+        case s: String => s.contains(StringType.convert(elem))
         case _ => false
       }
     }).contains(true)
     (sb, ca ++ cb, result)
   }
 
-  override def toSQL: String = s"${items.toSQL} contains ${item.toSQL}"
+  override def toSQL: String = Seq(items.toSQL, keyword, item.toSQL).mkString(" ")
 
 }
 

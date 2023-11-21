@@ -2,9 +2,9 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
+import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
 import com.lollypop.runtime.{Scope, safeCast}
 import com.lollypop.util.OptionHelper.OptionEnrichment
@@ -27,14 +27,13 @@ case class Max(expression: Expression) extends AggregateFunctionCall
     var maxValue_? : Option[Any] = None
     new Aggregator {
       override def update(implicit scope: Scope): Unit = {
-        expression.asAny
-          .foreach {
-            case value if maxValue_?.isEmpty => maxValue_? = Option(value)
-            case value: Date => maxValue_? = maxValue_?.collect { case v: Date => getMax(v, value) }
-            case value: Number => maxValue_? = maxValue_?.collect { case v: Number => getMax[java.lang.Double](v.doubleValue(), value.doubleValue()) }
-            case value: String => maxValue_? = maxValue_?.collect { case v: String => getMax(v, value) }
-            case x => expression.dieIllegalType(x)
-          }
+        expression.execute(scope)._3 match {
+          case value if maxValue_?.isEmpty => maxValue_? = Option(value)
+          case value: Date => maxValue_? = maxValue_?.collect { case v: Date => getMax(v, value) }
+          case value: Number => maxValue_? = maxValue_?.collect { case v: Number => getMax[java.lang.Double](v.doubleValue(), value.doubleValue()) }
+          case value: String => maxValue_? = maxValue_?.collect { case v: String => getMax(v, value) }
+          case x => expression.dieIllegalType(x)
+        }
       }
 
       override def collect(implicit scope: Scope): Option[Any] = maxValue_?

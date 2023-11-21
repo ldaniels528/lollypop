@@ -35,7 +35,7 @@ object RuntimeFiles {
      * Retrieves all files
      * @return the list of [[File files]]
      */
-    def streamFiles: LazyList[File] = theFile.listFiles().to(LazyList)
+    def streamFiles: LazyList[File] = Option(theFile.listFiles()).toList.flatMap(_.toList).to(LazyList)
 
     /**
      * Recursively retrieves all files

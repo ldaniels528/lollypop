@@ -2,30 +2,34 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.util.{Timer, TimerTask}
 
 /**
- * every instruction
+ * Every statement
  * @param interval  the [[Expression frequency interval]] of execution
  * @param invokable the [[Instruction command(s)]] to execute
- * @example {{{ every '2 seconds' { delete from @entries where attachID is null } }}}
+ * @example {{{
+ *  every Duration('2 seconds')
+ *    delete from @entries where attachID is null
+ * }}}
  */
-case class Every(interval: Expression, invokable: Instruction) extends RuntimeExpression {
+case class Every(interval: Expression, invokable: Instruction)
+  extends RuntimeExpression with ConcurrentInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Timer) = {
+    val (sa, ca, _interval) = interval.pullDuration
     val timer = new Timer()
     timer.scheduleAtFixedRate(new TimerTask {
-      override def run(): Unit = invokable.execute(scope)._3
-    }, 0L, (interval.asInterval || dieExpectedInterval()).toMillis)
-    (scope, IOCost.empty, timer)
+      override def run(): Unit = invokable.execute(scope)
+    }, 0L, _interval.toMillis)
+    (sa, ca, timer)
   }
 
   override def toSQL: String = s"every ${interval.toSQL} ${invokable.toSQL}"
@@ -43,9 +47,7 @@ object Every extends ExpressionParser {
     description = "Schedules the execution of command(s) on a specific interval",
     example =
       """|var n = 0
-         |val timer = every '20 millis' {
-         |  n += 1
-         |}
+         |val timer = every Duration("20 millis") n += 1
          |import "java.lang.Thread"
          |Thread.sleep(Long(1000))
          |timer.cancel()

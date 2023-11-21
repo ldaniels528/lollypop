@@ -37,7 +37,7 @@ class DatabaseManagementSystemTest extends AnyFunSpec {
     it("should retrieve the details for a specific table") {
       val (_, _, device) =
         """|namespace 'temp.runtime'
-           |from (OS.getDatabaseObjects()) where name matches '.*stocksDM.*'
+           |from (OS.getDatabaseObjects()) where name matches '(.*)stocksDM(.*)'
            |""".stripMargin.searchSQL(Scope())
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.map(_.filterNot(t => Seq("lastModifiedTime", SRC_ROWID_NAME).contains(t._1))) == List(

@@ -9,6 +9,7 @@ import com.lollypop.language.models.{AllFields, Condition, Expression, FieldRef,
 import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
 import com.lollypop.runtime.LollypopVM.sort
 import com.lollypop.runtime.SQLRuntimeSupport.ColumnValidation
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.Inferences.{InstructionTyping, resolveType}
 import com.lollypop.runtime.datatypes.{DataType, Inferences, TableType}
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
@@ -17,7 +18,6 @@ import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.isTrue
 import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.expressions.aggregation._
 import com.lollypop.runtime.instructions.functions.InternalFunctionCall
@@ -277,7 +277,7 @@ trait SQLRuntimeSupport {
     // perform search
     val counter = new AtomicLong(0)
     var (matches: ROWID, rowID: ROWID) = (0L, 0L)
-    val _limit = limit.flatMap(_.asInt32)
+    val _limit = limit.map(_.pullInt._3)
     while (primary.hasNext && (_limit.isEmpty || _limit.exists(counter.addAndGet(1) <= _))) {
       // read rows from each of the devices
       var row0: Option[Row] = Some(primary.next())

@@ -10,7 +10,7 @@ trait AppConstants {
   val MAJOR_VERSION: Int = 0
   val MINOR_VERSION: Int = 1
   val MINI_VERSION: Int = 6
-  val MICRO_VERSION: Int = 3
+  val MICRO_VERSION: Int = 4
 
   val version = s"$MAJOR_VERSION.$MINOR_VERSION.$MINI_VERSION.$MICRO_VERSION"
 
@@ -19,27 +19,26 @@ trait AppConstants {
   val DEFAULT_DATABASE = "lollypop"
   val DEFAULT_SCHEMA = "public"
 
+  val __classpath__ = "__classpath__"
+  val __database__ = "__database__"
+  val __ec__ = "__ec__"
+  val __implicit_imports__ = "__implicit_imports__"
+  val __imports__ = "__imports__"
+  val __INSTRUCTION__ = "__INSTRUCTION__"
+  val __keywords__ = "__keywords__"
   val __loaded__ = "__loaded__"
+  val __namespace__ = "__namespace__"
+  val __port__ = "__port__"
   val __resources__ = "__resources__"
+  val __RETURNED__ = "__RETURNED__"
+  val __schema__ = "__schema__"
+  val __scope__ = "__scope__"
   val __secret_variables__ = "__secret_variables__"
   val __self__ = "__self__"
+  val __session__ = "__session__"
   val __userHome__ = "__userHome__"
   val __userName__ = "__userName__"
   val __version__ = "__version__"
-
-  val __scope__ = "__scope__"
-  val __classpath__ = "__classpath__"
-  val __imports__ = "__imports__"
-  val __implicit_imports__ = "__implicit_imports__"
-  val __keywords__ = "__keywords__"
-
-  val __namespace__ = "__namespace__"
-  val __database__ = "__database__"
-  val __schema__ = "__schema__"
-  val __port__ = "__port__"
-
-  val __INSTRUCTION__ = "__INSTRUCTION__"
-  val __RETURNED__ = "__RETURNED__"
 
   // row ID-related
   val ROWID_NAME = "__id"

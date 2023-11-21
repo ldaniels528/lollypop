@@ -5,11 +5,11 @@ import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, LambdaFunction, Literal}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.instructions.conditions.Matches.keyword
 import com.lollypop.runtime.instructions.expressions.{NamedFunctionCall, New}
 import com.lollypop.runtime.instructions.functions.AnonymousNamedFunction
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.JVMSupport.NormalizeAny
 import lollypop.io.IOCost
 
@@ -150,9 +150,9 @@ object Matches extends ExpressionToConditionPostParser {
     example =
       """|response = { id: 5678, symbol: "DOG", exchange: "NYSE", lastSale: 90.67 }
          |response matches {
-         |   id: _ => true,
-         |   symbol: "DOG",
-         |   exchange: "NYSE",
+         |   id: _ => true
+         |   symbol: "DOG"
+         |   exchange: "NYSE"
          |   lastSale: 90.67
          |}
          |""".stripMargin
@@ -164,8 +164,8 @@ object Matches extends ExpressionToConditionPostParser {
     description = "determines whether the `value` matches the `expression`",
     example =
       """|class Stock(symbol: String, exchange: String, lastSale: Double)
-         | stock = new Stock(symbol: "ATX", exchange: "NASDAQ", lastSale: 234.57)
-         | stock matches Stock(
+         |stock = new Stock(symbol: "ATX", exchange: "NASDAQ", lastSale: 234.57)
+         |stock matches Stock(
          |    symbol: x => (x.isString() is true) and
          |                 (x.length() between 1 and 6) and
          |                 (x.forall(c => Character.isAlphabetic(c)) is true),

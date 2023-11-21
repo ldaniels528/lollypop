@@ -3,6 +3,7 @@ package com.lollypop.runtime.devices
 import com.lollypop.language.dieIllegalType
 import com.lollypop.language.models.{Condition, Expression, Instruction}
 import com.lollypop.runtime.LollypopVM.implicits._
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.Field.ColumnToFieldExtension
 import com.lollypop.runtime.devices.IndexedRowCollection.{BIT_ARRAY_COLUMN_INDEX, BUCKETS, getHashIndexTableColumns}
 import com.lollypop.runtime.devices.RowCollection.dieNotSubTable
@@ -70,7 +71,7 @@ class HashIndexRowCollection(override val ns: DatabaseObjectNS,
                   (includeRow: RowMetadata => Boolean)(process: (Scope, Row) => Any)(implicit scope: Scope): IOCost = {
     val hashRowID = computeRowID(searchValue)
     var cost = IOCost()
-    val _limit = limit.flatMap(_.asInt32)
+    val _limit = limit.map(_.pullInt._3)
     hashTable.readField(hashRowID, columnID = BIT_ARRAY_COLUMN_INDEX).value.foreach {
       case bitArray: BitArray =>
         for {

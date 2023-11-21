@@ -3,9 +3,8 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.language.HelpDoc.CATEGORY_TRANSFORMATION
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.Scope
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
+import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 /**
@@ -15,14 +14,13 @@ import lollypop.io.IOCost
  */
 case class ScaleTo(numberExpr: Expression, scaleExpr: Expression) extends ScalarFunctionCall
   with RuntimeExpression with DoubleExpression {
+
   override def execute()(implicit scope: Scope): (Scope, IOCost, Double) = {
-    val result = (for {
-      number <- numberExpr.asDouble
-      scale <- scaleExpr.asInt32
-      factor = Math.pow(10, scale)
-      output = (number * factor).longValue() / factor
-    } yield output) || 0.0
-    (scope, IOCost.empty, result)
+    val (sa, ca, number) = numberExpr.pullDouble
+    val (sb, cb, scale) = scaleExpr.pullInt(sa)
+    val factor = Math.pow(10, scale)
+    val result = (number * factor).longValue() / factor
+    (sb, ca ++ cb, result)
   }
 
 }

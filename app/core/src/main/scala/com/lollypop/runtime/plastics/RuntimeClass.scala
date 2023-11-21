@@ -5,8 +5,8 @@ import com.lollypop.language.models._
 import com.lollypop.language.{LanguageParser, LollypopUniverse}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
+import com.lollypop.runtime.conversions.ScalaConversion
 import com.lollypop.runtime.datatypes.DataTypeParser
-import com.lollypop.runtime.instructions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.util.OptionHelper.OptionEnrichment
@@ -371,7 +371,7 @@ object RuntimeClass {
       def isDescendantOf(ancestor: Class[_]): Boolean = {
         (ancestor != null && `class` != null) && (
           `class` == ancestor ||
-            Option(`class`).flatMap(d => Option(d.getSuperclass)).exists(_.isDescendantOf(ancestor)) |
+            Option(`class`).flatMap(d => Option(d.getSuperclass)).exists(_.isDescendantOf(ancestor)) ||
             `class`.getInterfaces.exists(_.isDescendantOf(ancestor)))
       }
 
