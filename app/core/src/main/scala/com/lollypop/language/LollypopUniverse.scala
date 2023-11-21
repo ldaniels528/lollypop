@@ -29,9 +29,10 @@ import scala.concurrent.ExecutionContext
  * Lollypop Universe - repository for long-lived state
  * @param dataTypeParsers the [[DataTypeParser data type parser]]
  * @param languageParsers the [[LanguageParser language parser]]
+ * @param helpers         the collection of [[HelpIntegration help-docs]]
  * @param classLoader     the [[DynamicClassLoader classloader]]
  * @param escapeCharacter the [[Char escape character]]
- * @param isServerMode    indicates whether STDERR, STDIN and STDOUT is to be buffered
+ * @param isServerMode    indicates whether STDERR, STDIN and STDOUT are to be buffered
  */
 case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypeParsers,
                             var languageParsers: List[LanguageParser] = _languageParsers,
@@ -249,7 +250,7 @@ object LollypopUniverse {
     Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf,
     Synchronized, Switch,
-    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
+    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Tilde, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
