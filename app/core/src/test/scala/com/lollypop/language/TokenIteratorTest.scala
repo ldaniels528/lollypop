@@ -23,6 +23,13 @@ class TokenIteratorTest extends AnyFunSpec {
       ))
     }
 
+    it("supports parsing UNIX-style path expressions") {
+      val tok = TokenIterator("cd ..")
+      assert(tok.toList == List(
+        AlphaNumericToken("cd"), OperatorToken("..")
+      ))
+    }
+
     it("supports parsing arithmetic expressions") {
       val tok = TokenIterator("-(7 + 9)")
       assert(tok.toList == List(
@@ -58,6 +65,15 @@ class TokenIteratorTest extends AnyFunSpec {
     it("supports an unclosed single quote ('Hello)") {
       val tok = TokenIterator("'Hello")
       assert(tok.toList == List(SingleQuotedToken("'Hello", "'Hello")))
+    }
+
+    it("supports capsule strings 'Hello(%iostat 1 5%)World'") {
+      val tok = TokenIterator("Hello(%iostat 1 5%)World")
+      assert(tok.toList == List(
+        AlphaNumericToken(text = "Hello"),
+        ProcessInvocationToken(text = "iostat 1 5"),
+        AlphaNumericToken(text = "World")
+      ))
     }
 
     it("supports parsing triple-backtick-quoted strings") {

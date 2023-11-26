@@ -7,8 +7,9 @@ import com.lollypop.runtime.conversions.TransferTools.RichInputStream
 import com.lollypop.runtime.datatypes.{BLOB, DataTypeFunSpec}
 import com.lollypop.runtime.instructions.expressions.Dictionary
 
+import java.io.File
 import scala.concurrent.duration.DurationInt
-import scala.util.Try
+import scala.util.{Properties, Try}
 
 class ExpressiveTypeConversionTest extends DataTypeFunSpec {
   implicit val scope: Scope = LollypopUniverse(isServerMode = true).createRootScope()
@@ -50,6 +51,18 @@ class ExpressiveTypeConversionTest extends DataTypeFunSpec {
 
     it("should ('7.0').pullDuration") {
       assert("7.0".v.pullDuration._3 == 7.millis)
+    }
+
+    it("should ('.').pullFile") {
+      assert(".".v.pullFile._3.getCanonicalFile == new File(".").getCanonicalFile)
+    }
+
+    it("should ('..').pullFile") {
+      assert("..".v.pullFile._3.getCanonicalFile == new File("..").getCanonicalFile)
+    }
+
+    it("should ('~').pullFile") {
+      assert("~".v.pullFile._3.getCanonicalFile == new File(Properties.userHome).getCanonicalFile)
     }
 
     it("should (7.0).pullFloat") {

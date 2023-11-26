@@ -41,6 +41,10 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
                             var escapeCharacter: Char = '`',
                             var isServerMode: Boolean = false) {
   private lazy val logger = LoggerFactory.getLogger(getClass)
+  private var f_debug: String => Unit = s => logger.debug(s)
+  private var f_error: String => Unit = s => logger.error(s)
+  private var f_info: String => Unit = s => logger.info(s)
+  private var f_warn: String => Unit = s => logger.warn(s)
 
   // create the compiler and system utilities
   val compiler = new LollypopCompiler(this)
@@ -100,7 +104,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   def createOpCodesConfig(ifNotExists: Boolean = true): Unit = {
     val opCodesFile = getServerRootDirectory / "opcodes.txt"
     if (!ifNotExists || (!opCodesFile.exists() || opCodesFile.length() == 0)) {
-      logger.info(s"creating '${opCodesFile.getPath}'...")
+      this.info(s"creating '${opCodesFile.getPath}'...")
       overwriteOpCodesConfig(opCodesFile)
     }
   }
@@ -194,6 +198,59 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
     !ts.isBackticks && !ts.isQuoted && (antiFunctionParsers.exists(_.understands(ts)) || MacroLanguageParser.understands(ts))
   }
 
+  def withLanguageParsers(lps: LanguageParser*): this.type = {
+    this.languageParsers = (lps.toList ::: languageParsers).distinct
+    this
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //    Print I/O Streams
+  //////////////////////////////////////////////////////////////////////////////////
+
+  def debug(s: => String): this.type = {
+    f_debug(s)
+    this
+  }
+
+  def info(s: => String): this.type = {
+    f_info(s)
+    this
+  }
+
+  def warn(s: => String): this.type = {
+    f_warn(s)
+    this
+  }
+
+  def error(s: => String): this.type = {
+    f_error(s)
+    this
+  }
+
+  def withDebug(f: String => Unit): this.type = {
+    f_debug = f
+    this
+  }
+
+  def withError(f: String => Unit): this.type = {
+    f_error = f
+    this
+  }
+
+  def withInfo(f: String => Unit): this.type = {
+    f_info = f
+    this
+  }
+
+  def withWarn(f: String => Unit): this.type = {
+    f_warn = f
+    this
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //    Internal Utilities
+  //////////////////////////////////////////////////////////////////////////////////
+
   private def antiFunctionParsers: List[LanguageParser] = {
     languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
   }
@@ -231,7 +288,7 @@ object LollypopUniverse {
   )
   val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
-    Bar, BarBar, Between, Betwixt, BooleanType,
+    Bang, Bar, BarBar, Between, Betwixt, BooleanType,
     CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
     DeclareClass, DeclarePackage, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy,
@@ -245,13 +302,13 @@ object LollypopUniverse {
     Join,
     LessLess, LessLessLess, Let, Limit, Literal, LollypopComponents, LT, LTE,
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,
-    Namespace, NEG, NEQ, New, Not, NotImplemented, NS, Null,
+    Namespace, NEG, NEQ, New, NodePs, Not, NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
     Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall,
     Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf,
     Synchronized, Switch,
-    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Tilde, Times, TimesTimes, Trace, TransferFrom, TransferTo,
+    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,

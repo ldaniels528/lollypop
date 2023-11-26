@@ -12,7 +12,6 @@ import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.LollypopComponents.{installComponents, keyword, toTable}
 import com.lollypop.runtime.plastics.RuntimeClass
-import com.lollypop.util.LogUtil
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io.IOCost
@@ -23,12 +22,12 @@ import scala.util.{Failure, Success, Try}
 /**
  * Installs a collection of components from a source.
  * @example {{{
- *  lollypopComponents('com.lollypop.repl.ChDir$')
+ *  lollypopComponents('com.lollypop.repl.gnu.ChDir$')
  *  cd './lollypop_db'
  *  cd
  * }}}
  * @example {{{
- *  lollypopComponents("com.lollypop.repl.Ls$")
+ *  lollypopComponents("com.lollypop.repl.gnu.Ls$")
  *  ls './app/examples/'
  * }}}
  * @example {{{
@@ -79,7 +78,7 @@ object LollypopComponents extends QueryableParser {
     syntax = templateCard,
     description = "installs a collection of components from a source.",
     example =
-      """|lollypopComponents("com.lollypop.repl.Ls$")
+      """|lollypopComponents("com.lollypop.repl.gnu.Ls$")
          |ls "./app/examples/"
          |""".stripMargin,
     isExperimental = true
@@ -102,9 +101,7 @@ object LollypopComponents extends QueryableParser {
     val (name, kind, status) = Try(f() match {
       case lp: LanguageParser =>
         val name = lp.help.headOption.map(_.name) || lp.getClass.getSimpleName
-        LogUtil(this).info(s"Installing '$name' [${lp.getClass.getName}]...")
-        val ctx = scope.getUniverse
-        ctx.languageParsers = (lp :: ctx.languageParsers).distinct
+        scope.getUniverse.withLanguageParsers(lp)
         Some(name) -> "LanguageParser"
       case _ => None -> "Unknown"
     }) match {

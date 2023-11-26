@@ -3,7 +3,7 @@ package com.lollypop.database.jdbc
 import com.lollypop.AppConstants._
 import com.lollypop.database.server.LollypopServer
 import com.lollypop.die
-import com.lollypop.repl.REPLTools.getResourceFile
+import com.lollypop.repl.LollypopREPL.getResourceFile
 import com.lollypop.util.ConsoleReaderHelper.{createInteractiveConsoleReader, interactWith}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._

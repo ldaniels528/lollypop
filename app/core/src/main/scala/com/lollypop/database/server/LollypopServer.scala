@@ -19,6 +19,7 @@ import com.lollypop.language.models._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime._
+import com.lollypop.runtime.conversions.TransferTools.EnrichedByteString
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollection.dieColumnIndexOutOfRange
@@ -30,7 +31,6 @@ import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.util.JSONSupport.JsValueConversion
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
-import com.lollypop.runtime.conversions.TransferTools.EnrichedByteString
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{AppConstants, die}
 import lollypop.io.IOCost
@@ -61,13 +61,13 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
   private val systemStartupTime = System.currentTimeMillis()
 
   // pre-load the commands
-  implicit val compiler: LollypopCompiler = LollypopCompiler()
+  implicit val compiler: LollypopCompiler = LollypopCompiler(ctx)
   ctx.isServerMode = true
 
   private val rootScope: Scope = {
     val scope0 = ctx.createRootScope()
     val refs = for {
-      (name, _type, value) <- Seq((__port__, Int32Type, port), ("server_sql", BooleanType, false))
+      (name, _type, value) <- Seq((__port__, Int32Type, port))
     } yield Variable(name, _type, initialValue = value)
     refs.foldLeft(scope0) { (scope, ref) => scope.withVariable(ref) }
   }

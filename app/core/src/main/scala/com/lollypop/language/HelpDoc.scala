@@ -42,6 +42,7 @@ object HelpDoc {
   val CATEGORY_DATAFRAMES_IO = "Dataframe I/O"
   val CATEGORY_TRANSFORMATION = "Transformation"
   val CATEGORY_JVM_REFLECTION = "JVM and Reflection"
+  val CATEGORY_REPL_TOOLS = "REPL Tools"
   val CATEGORY_SCOPE_SESSION = "Scope and Session"
   val CATEGORY_SYSTEM_TOOLS = "System Tools"
   val CATEGORY_TESTING = "Testing - Unit/Integration"

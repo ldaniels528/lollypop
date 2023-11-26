@@ -770,7 +770,7 @@ object RuntimePlatform {
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, array) = value.pullArray(scope)
-      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(array, _)).orNull)
+      arg1.pullOpt[A](sa) ~>> (ca ++ _, _.map(f(array, _)).orNull)
     }
   }
 
@@ -778,7 +778,7 @@ object RuntimePlatform {
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, array) = value.pullArray(scope)
-      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(array, _, scope)).orNull)
+      arg1.pullOpt[A](sa) ~>> (ca ++ _, _.map(f(array, _, scope)).orNull)
     }
   }
 
@@ -832,7 +832,7 @@ object RuntimePlatform {
 
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, date) = value.pullDate(scope)
-      arg1.execute(sa) ~>> (ca, {
+      arg1.execute(sa) ~>> (ca ++ _, {
         case f: FiniteDuration => date - f
         case d: Date => date - d
         case n: Number => date - n.longValue().millis
@@ -850,7 +850,7 @@ object RuntimePlatform {
     extends RuntimeExpression {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, date) = value.pullDate
-      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(date, _)).orNull)
+      arg1.pullOpt[A](sa) ~>> (ca ++ _, _.map(f(date, _)).orNull)
     }
 
     override def toSQL: String = s"${value.toSQL}.$name(${arg1.toSQL})"
@@ -860,7 +860,7 @@ object RuntimePlatform {
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, duration) = value.pullDuration(scope)
-      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(duration, _)).orNull)
+      arg1.pullOpt[A](sa) ~>> (ca ++ _, _.map(f(duration, _)).orNull)
     }
   }
 
@@ -914,7 +914,7 @@ object RuntimePlatform {
     extends RuntimeExpression with OneArgument {
     override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
       val (sa, ca, string) = value.pullString(scope)
-      arg1.pullOpt[A](sa) ~>> (ca, _.map(f(string, _)).orNull)
+      arg1.pullOpt[A](sa) ~>> (ca ++ _, _.map(f(string, _)).orNull)
     }
   }
 

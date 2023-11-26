@@ -1,6 +1,8 @@
 package lollypop.io
 
+import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopServer
+import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_DECLARATIVE, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.{HelpDoc, HelpIntegration, LollypopUniverse}
 
@@ -52,10 +54,17 @@ import scala.util._
 class Nodes(val ctx: LollypopUniverse) {
   private val nodes = TrieMap[Int, Node]()
 
+  def apply(port: Int, statement: String): QueryResponse = exec(port, statement)
+
+  def exec(port: Int, statement: String): QueryResponse = {
+    val node = nodes.getOrElse(port, die(s"No peer registered on port $port"))
+    node.exec(statement)
+  }
+
   def getNode(port: Int): Option[Node] = nodes.get(port)
 
   def getOrCreateNode(port: Int): Node = {
-    nodes.getOrElseUpdate(port, Node(ctx, port, LollypopServer(port, ctx)))
+    nodes.getOrElseUpdate(port, Node(ctx, port = port, server = LollypopServer(port, ctx)))
   }
 
   def peers: Array[Int] = nodes.keys.toArray

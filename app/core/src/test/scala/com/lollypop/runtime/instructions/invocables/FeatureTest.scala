@@ -66,7 +66,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
         s"""|feature "Traveler information service" {
             |	scenario "Testing that GET response contains specific field" {
             |		http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES" ~> { "Content-Type": "application/json; charset=UTF-8" }
-            |		verify (status is 200) and ((response_string is '[{ "id": "7bd0b461-4eb9-400a-9b63-713af85a43d0", "lastName": "JONES", "firstName": "GARRY","destAirportCode": "SNA" }]') and (body(0).id is "7bd0b461-4eb9-400a-9b63-713af85a43d0"))
+            |		verify (status is 200) and ((response_string is '[{ "id": "7bd0b461-4eb9-400a-9b63-713af85a43d0", "lastName": "JONES", "firstName": "GARRY","destAirportCode": "SNA" }]') and ((body(0).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d0"))
             |	}
             |}""".stripMargin)
     }
@@ -109,7 +109,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
         s"""|feature "Traveler information service" {
             |	scenario "Testing that POST response contains specific field" {
             |		http post "http://0.0.0.0:$port/api/$databaseName/$schemaName" <~ { firstName: "GARRY", lastName: "JONES" }
-            |		verify (status is 200) and (body(0).id is "7bd0b461-4eb9-400a-9b63-713af85a43d0")
+            |		verify (status is 200) and ((body(0).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d0")
             |	}
             |}""".stripMargin.trim)
     }

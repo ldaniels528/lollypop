@@ -3,10 +3,11 @@ package com.lollypop.repl
 import com.lollypop.AppConstants._
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopChartGenerator
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.repl.LollypopCLI.logger
-import com.lollypop.repl.REPLTools.getResourceFile
+import com.lollypop.language.{LanguageParser, LollypopUniverse}
+import com.lollypop.repl.gnu._
+import com.lollypop.repl.symbols._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.conversions.getCWD
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo._
 import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
@@ -14,50 +15,40 @@ import com.lollypop.runtime.devices.{Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopCodeDebugger, LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopVM, Scope}
 import com.lollypop.util.ConsoleReaderHelper.createInteractiveConsoleReader
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import com.lollypop.util.StringRenderHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import org.jfree.chart.ChartPanel
-import org.slf4j.LoggerFactory
 
 import java.awt.Dimension
 import java.io.{File, FileInputStream}
 import java.util.Date
 import javax.swing.JFrame
+import scala.Console._
 import scala.annotation.tailrec
+import scala.io.Source
 import scala.util.{Failure, Properties, Success, Try}
 
-object LollypopCLI extends LollypopCLI {
-  private val logger = LoggerFactory.getLogger(getClass)
-
-  /**
-   * For commandline execution
-   * @param args the commandline arguments
-   */
-  def main(args: Array[String]): Unit = {
-    import scala.Console._
-    Console.println(s"$RESET${GREEN}Q${CYAN}W${MAGENTA}E${RED}R${BLUE}Y$YELLOW REPL v$version$RESET")
-    Console.println()
-
-    val ctx = LollypopUniverse()
-    implicit val compiler: LollypopCompiler = LollypopCompiler(ctx)
-    ctx.createOpCodesConfig()
-    cli(args, scope0 = Scope(LollypopUniverse()))
-    ()
-  }
-
-}
-
-trait LollypopCLI extends LollypopCodeDebugger {
+/**
+ * Lollypop REPL
+ */
+trait LollypopREPL extends InlineCompiler {
   private val stmtTextLength = 8192
   private val historyNS = DatabaseObjectRef(databaseName = Properties.userName, schemaName = "system", name = "history")
   private val historyTable = getHistoryTable(historyNS)
 
-  def cli(args: Array[String], scope0: Scope, console: () => String = createInteractiveConsoleReader)(implicit compiler: LollypopCompiler): Scope = {
+  /**
+   * The collection of built-in REPL-specific language parsers
+   */
+  val languageParsers: List[LanguageParser] = List(
+    Caret, Cat, ChDir, ColonSlashSlash, Copy, Dot, DotDot, Echo, Find, Ls, MD5Sum, MkDir, Move,
+    ProcessRun, Pwd, QuestionMark, Remove, RemoveRecursively, RmDir, Tilde, Touch, WordCount
+  )
+
+  def cli(args: Array[String], scope0: Scope, console: () => String = createInteractiveConsoleReader): Scope = {
     // include the ~/.lollypoprc file (if it exists)
     val scope1 = loadResourceFile(scope0, executeQuery).withVariable("history", historyTable)
 
@@ -72,25 +63,36 @@ trait LollypopCLI extends LollypopCodeDebugger {
     }
   }
 
+  def getResourceFile(rcFile: File): Option[String] = {
+    if (rcFile.exists() && rcFile.isFile) {
+      Console.println(s"Including '${rcFile.getAbsolutePath}' (${rcFile.length()} bytes)...'")
+      Some(Source.fromFile(rcFile).use(_.mkString)).map(_.trim).flatMap(s => if (s.isEmpty) None else Some(s))
+    } else None
+  }
+
   /**
    * Facilitates the client conversation
+   * @param scope   the [[Scope scope]]
+   * @param console the console input function
+   * @return the updated [[Scope scope]]
    */
   @tailrec
-  final def interact(scope: Scope, console: () => String = createInteractiveConsoleReader)(implicit compiler: LollypopCompiler): Scope = {
+  final def interact(scope: Scope, console: () => String = createInteractiveConsoleReader): Scope = {
     showPrompt(scope)
     readFromConsole(console) match {
       // ignore blank lines
       case "" => interact(scope, console)
       // quit the shell?
       case "exit" => scope
-      // start debugger?
-      case sql if sql startsWith "debug " =>
-        val file = new File(sql.drop(6)).getCanonicalFile
-        logger.info(s"Loading '${file.getAbsolutePath}' for debugging...")
-        Try(stepThrough(file, console)) match {
-          case Success(newScope) => interact(newScope, console)
-          case Failure(e) => interact(handleError(e)(scope), console)
+      // switch to compile-only mode?
+      case ".:CompileOnly:." =>
+        val newScope = Try(compileOnly(scope = scope, console = console, showPrompt = showCompilerPrompt)) match {
+          case Failure(e) =>
+            Console.println(s"${RED}Error:$RESET ${e.getMessage}")
+            scope.withThrowable(e)
+          case Success(myScope) => myScope
         }
+        interact(newScope, console)
       // execute a complete statement?
       case sql => interact(executeQuery(scope, sql), console)
     }
@@ -102,7 +104,7 @@ trait LollypopCLI extends LollypopCodeDebugger {
 
     // load and run the script
     val scriptFile = new File(file)
-    Console.println(s"Executing SQL file '${scriptFile.getAbsolutePath}'...")
+    scope.getUniverse.info(s"Executing SQL file '${scriptFile.getAbsolutePath}'...")
     val code = new FileInputStream(scriptFile).use(scope0.getCompiler.compile)
     code.execute(scope0)
   }
@@ -203,21 +205,21 @@ trait LollypopCLI extends LollypopCodeDebugger {
     friendlyValue -> friendlyName
   }
 
-  private def handleError(e: Throwable)(implicit scope: Scope): Scope = {
+  private[repl] def handleError(e: Throwable)(implicit scope: Scope): Scope = {
     Console.err.println(e.getMessage)
     Console.println()
     scope.withThrowable(e)
   }
 
-  private def handleSuccess(scope: Scope, cost: IOCost, result: Any): Scope = {
+  private[repl] def handleSuccess(scope: Scope, cost: IOCost, result: Any): Scope = {
     val isTable = scope("__tableConversion__").contains(true)
     val isCost = cost == result
     if (cost.getUpdateCount > 0) {
       if (isTable) cost.toTable(scope).tabulate().foreach(Console.println) else Console.println(cost)
     }
-    val resultA = if (isCost) null else result
+    val resultA = if (isCost) () else result
     resultA match {
-      case b: Array[Byte] => Console.println(StringRenderHelper.toByteArrayString(b, isPretty = false))
+      case b: Array[Byte] => Console.println(StringRenderHelper.toByteArrayString(b))
       case d: GraphResult => showChart(d)
       case m: Matrix if isTable => m.toTable(scope).tabulate().foreach(Console.println)
       case q: QueryResponse => q.toRowCollection.tabulate().foreach(Console.println)
@@ -245,13 +247,49 @@ trait LollypopCLI extends LollypopCodeDebugger {
     frame
   }
 
-  private def readFromConsole(console: () => String): String = console().trim
+  private[repl] def readFromConsole(console: () => String): String = console().trim
 
-  private def showPrompt(scope: Scope): Unit = {
+  private def showPrompt(implicit scope: Scope): Unit = {
     import scala.Console._
-    val database: String = scope.getDatabase || DEFAULT_DATABASE
-    val schema: String = scope.getSchema || DEFAULT_SCHEMA
-    Console.print(s"$CYAN${Properties.userName}:/$database/$schema$RESET> ")
+
+    def withTilde(path: String): String = path match {
+      case s if s.startsWith(Properties.userHome) => "~" + s.drop(Properties.userHome.length)
+      case s => s
+    }
+
+    Console.print(s"$CYAN${Properties.userName}$RESET:$BLUE${withTilde(getCWD)}$RESET> ")
+  }
+
+  private def showCompilerPrompt(): Unit = {
+    Console.print(s"$CYAN${Properties.userName}$BLUE#${MAGENTA}CompileOnly$RESET> ")
+  }
+
+}
+
+/**
+ * Lollypop REPL
+ */
+object LollypopREPL extends LollypopREPL {
+
+  /**
+   * For commandline execution
+   * @param args the commandline arguments
+   */
+  def main(args: Array[String]): Unit = {
+    import scala.Console._
+    Console.println(s"$RESET${GREEN}LOL${CYAN}LY${MAGENTA}POP$YELLOW REPL v$version$RESET")
+    Console.println()
+
+    val ctx = LollypopUniverse()
+      .withLanguageParsers(languageParsers: _*)
+      .withDebug(s => Console.println(s))
+      .withError(s => Console.println(s"$RED$s$RESET"))
+      .withInfo(s => Console.println(s))
+      .withWarn(s => Console.println(s"$YELLOW$s$RESET"))
+
+    ctx.createOpCodesConfig()
+    cli(args, scope0 = ctx.createRootScope())
+    ()
   }
 
 }
