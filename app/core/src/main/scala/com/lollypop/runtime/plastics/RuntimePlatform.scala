@@ -5,7 +5,6 @@ import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, 
 import com.lollypop.language.models._
 import com.lollypop.language.{dieExpectedArray, dieIllegalType}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.conversions.TableConversion.convert
 import com.lollypop.runtime.conversions.{ExpressiveTypeConversion, TableConversion}
 import com.lollypop.runtime.datatypes.Inferences
 import com.lollypop.runtime.devices.RowCollection
@@ -250,8 +249,8 @@ object RuntimePlatform {
       )))
     }
 
-    private def filter(array: Array[_], fx: LambdaFunction)(implicit scope: Scope): Array[_] = {
-      var list: List[_] = Nil
+    private def filter[A](array: Array[A], fx: LambdaFunction)(implicit scope: Scope): Array[A] = {
+      var list: List[A] = Nil
       array.foreach { value =>
         val result = fx.call(List(value.v)).execute(scope)._3
         if (result == true) list = value :: list

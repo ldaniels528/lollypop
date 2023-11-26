@@ -11,11 +11,11 @@ object Tuples {
    * @param values the source values
    * @return the new array
    */
-  def seqToArray(values: Seq[Any]): Array[_] = {
+  def seqToArray[A](values: Seq[Any]): Array[A] = {
     val _class = resolveClass(values.flatMap(Option.apply).map(_.getClass), isNullable = values.contains(null))
     val array = java.lang.reflect.Array.newInstance(_class, values.length)
     values.zipWithIndex foreach { case (value, index) => java.lang.reflect.Array.set(array, index, value) }
-    array.asInstanceOf[Array[_]]
+    array.asInstanceOf[Array[A]]
   }
 
   @tailrec
