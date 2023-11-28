@@ -131,7 +131,7 @@ object DatabaseObjectRef {
   case class InnerTable(base: DatabaseObjectRef, name: String) extends DatabaseObjectRef {
     override def isSubTable: Boolean = true
 
-    override def toSQL: String = s"$base#$name"
+    override def toSQL: String = s"${base.toSQL}#$name"
   }
 
   /**
