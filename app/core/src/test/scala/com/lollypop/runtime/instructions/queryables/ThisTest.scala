@@ -1,9 +1,9 @@
 package com.lollypop.runtime.instructions.queryables
 
+import com.lollypop.language.models.AllFields
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.instructions.expressions.Infix
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
@@ -30,7 +30,7 @@ class ThisTest extends AnyFunSpec with VerificationTools {
     it("should execute (expression)") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(), sql =
         s"""|n = 123
-            |select x: this.toTable()
+            |select x: this
             |""".stripMargin)
       device.tabulate().foreach(logger.info)
       assert(device.toMapGraph.filterNot(_.exists {
@@ -53,18 +53,18 @@ class ThisTest extends AnyFunSpec with VerificationTools {
     ////////////////////////////////////////////////////////////////////////
 
     it("should compile (queryable)") {
-      val results = compiler.compile("from this.toTable() where name == '$x'")
-      assert(results == Select(fields = Seq("*".f), from = Some(From(Infix(This(), "toTable".fx()))), where = Some("name".f === "$x".v)))
+      val results = compiler.compile("this where name == '$x'")
+      assert(results == Select(fields = Seq(AllFields), from = Some(This()), where = Some("name".f === "$x".v)))
     }
 
     it("should decompile (queryable)") {
-      verify("from (this.toTable()) where name == '$x'")
+      verify("from (this) where name == '$x'")
     }
 
     it("should execute (queryable)") {
       val (_, _, device) = LollypopVM.searchSQL(Scope(), sql =
         s"""|n = 123
-            |select value from (this.toTable()) where name is "n"
+            |select value from (this) where name is "n"
             |""".stripMargin)
       assert(device.tabulate() == List(
         "|-------|",

@@ -24,7 +24,7 @@ object GroupBy extends QueryableChainParser {
     description = "Aggregates a result set by a column",
     example =
       s"""|select kind, total: count(*)
-          |from (this.toTable())
+          |from (this)
           |group by kind
           |""".stripMargin
   ), HelpDoc(
@@ -37,7 +37,7 @@ object GroupBy extends QueryableChainParser {
       s"""|chart = { shape: "pie3d", title: "Types in Session" }
           |graph chart from (
           |    select kind, total: count(*)
-          |    from (this.toTable())
+          |    from (this)
           |    group by kind
           |)
           |""".stripMargin

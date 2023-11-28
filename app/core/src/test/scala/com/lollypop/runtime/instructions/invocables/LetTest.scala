@@ -28,7 +28,7 @@ class LetTest extends AnyFunSpec with VerificationTools {
       val (_, _, result) = LollypopVM.searchSQL(Scope(),
         """|val base64 = (value: String) => String(value.getBytes().base64())
            |let b64 : base64 = "Hello"
-           |from this.toTable() where name is "b64"
+           |from this where name is "b64"
            |""".stripMargin)
       assert(result.toMapGraph == List(Map("name" -> "b64", "kind" -> "String", "value" -> "\"SGVsbG8=\"")))
     }

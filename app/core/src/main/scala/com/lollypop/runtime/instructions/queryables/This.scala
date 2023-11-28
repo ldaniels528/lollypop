@@ -6,16 +6,16 @@ import com.lollypop.language._
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{StringType, TableType}
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
-import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, TableExpression}
+import com.lollypop.runtime.instructions.expressions.TableExpression
 import lollypop.io.IOCost
 
 /**
  * This (scope variable)
  */
-case class This() extends RuntimeExpression with TableRendering with TableExpression {
+case class This() extends RuntimeQueryable with TableRendering with TableExpression {
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Scope) = {
-    (scope, IOCost.empty, scope)
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+    (scope, IOCost.empty, scope.toRowCollection)
   }
 
   override def toSQL: String = "this"
@@ -32,11 +32,12 @@ case class This() extends RuntimeExpression with TableRendering with TableExpres
 
 }
 
-object This extends ExpressionParser {
-  private val templateCard: String = "this"
+object This extends QueryableParser {
+  private val keyword: String = "this"
+  private val templateCard: String = keyword
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = "this",
+    name = keyword,
     category = CATEGORY_SCOPE_SESSION,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
@@ -44,10 +45,10 @@ object This extends ExpressionParser {
     example = "this"
   ))
 
-  override def parseExpression(ts: TokenStream)(implicit compiler: SQLCompiler): Option[This] = {
+  override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[This] = {
     ts.nextIf(templateCard) ==> This()
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is templateCard
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }
