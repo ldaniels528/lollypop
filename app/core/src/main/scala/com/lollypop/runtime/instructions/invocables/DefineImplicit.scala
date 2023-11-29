@@ -36,7 +36,7 @@ case class DefineImplicit(className: Atom, methods: Instruction) extends Runtime
 
     def expand(instruction: Instruction): List[NamedFunction] = instruction match {
       case CodeBlock(instructions) => instructions.flatMap(expand)
-      case DefineFunction(nf: NamedFunction) => List(nf)
+      case Def(nf: NamedFunction) => List(nf)
       case x => LogUtil(this).info(s"methods: $x"); Nil
     }
 

@@ -13,7 +13,7 @@ import lollypop.io.IOCost
  * @param function the [[TypicalFunction function]] to create
  * @example def factorial(n: Double) := iff(n <= 1.0, 1.0, n * factorial(n - 1.0))
  */
-case class DefineFunction(function: TypicalFunction) extends RuntimeInvokable with Expression {
+case class Def(function: TypicalFunction) extends RuntimeInvokable with Expression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = function.execute(scope)
 
@@ -29,7 +29,7 @@ case class DefineFunction(function: TypicalFunction) extends RuntimeInvokable wi
 /**
  * Parses named functions
  */
-object DefineFunction extends ExpressionParser with InvokableParser {
+object Def extends ExpressionParser with InvokableParser {
   private val template1 = "%C(key|def|function) %a:name %FP:params ?: +?%T:returnType %C(_|as|:=) %i:code"
 
   override def help: List[HelpDoc] = List(HelpDoc(
@@ -91,7 +91,7 @@ object DefineFunction extends ExpressionParser with InvokableParser {
     parseInvokable(ts)
   }
 
-  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[DefineFunction] = {
+  override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Def] = {
     if (understands(ts)) {
       val params = SQLTemplateParams(ts, template1)
       val function = NamedFunction(
@@ -99,7 +99,7 @@ object DefineFunction extends ExpressionParser with InvokableParser {
         params = params.parameters("params"),
         returnType_? = params.types.get("returnType"),
         code = params.instructions("code"))
-      Some(DefineFunction(function))
+      Some(Def(function))
     } else None
   }
 

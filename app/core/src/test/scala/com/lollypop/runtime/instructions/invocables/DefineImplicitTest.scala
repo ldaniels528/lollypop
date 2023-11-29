@@ -21,7 +21,7 @@ class DefineImplicitTest extends AnyFunSpec with VerificationTools {
            |}""".stripMargin)
       println(model.render)
       assert(model == DefineImplicit(className = "java.lang.String", methods = CodeBlock(
-        DefineFunction(function = NamedFunction(
+        Def(function = NamedFunction(
           name = "reverseString",
           params = Seq(Column(name = "value", `type` = "String".ct)),
           code = CodeBlock(Import("java.lang.StringBuilder".v)),
@@ -31,7 +31,7 @@ class DefineImplicitTest extends AnyFunSpec with VerificationTools {
 
     it("should decompile virtual methods") {
       val model = DefineImplicit(className = "java.lang.String", methods = CodeBlock(
-        DefineFunction(function = NamedFunction(
+        Def(function = NamedFunction(
           name = "reverseString",
           params = Seq(Column(name = "value", `type` = "String".ct)),
           code = CodeBlock(Import("java.lang.StringBuilder".v)),

@@ -291,7 +291,7 @@ object LollypopUniverse {
     Bang, Bar, BarBar, Between, Betwixt, BooleanType,
     CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
-    DeclareClass, DeclarePackage, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy,
+    DeclareClass, DeclarePackage, DeclareTable, DeclareView, Def, Delete, Describe, DefineImplicit, Destroy,
     Div, DoWhile, Drop,
     Each, ElementAt, EOL, EQ, Every, Exists, Expose,
     Feature, From,
