@@ -154,7 +154,7 @@ object DatabaseObjectRef {
    * @param name         the name of the database object
    */
   case class Unrealized(databaseName: Option[String] = None, schemaName: Option[String] = None, name: String) extends DatabaseObjectRef {
-    override def toSQL: String = (databaseName.toList ::: schemaName.toList ::: name :: Nil).mkString(".")
+    override def toSQL: String = (databaseName.toList ::: schemaName.toList ::: List(name)).mkString(".")
   }
 
   /**

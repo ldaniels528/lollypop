@@ -26,7 +26,7 @@ import scala.collection.concurrent.TrieMap
  * @example
  * {{{
  * each item in reverse (select symbol, lastSale from Securities where naics = '12345') limit 20 {
- *   out.println '{{item.symbol}} is {{item.lastSale}}/share'
+ *   stdout <=== '{{item.symbol}} is {{item.lastSale}}/share'
  * }
  * }}}
  * @example

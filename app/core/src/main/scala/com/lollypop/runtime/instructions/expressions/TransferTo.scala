@@ -19,7 +19,7 @@ import java.io.OutputStream
  * @example {{{
  * import "java.io.File"
  * f = new File("/Users/ldaniels/.lollypoprc")
- * f ===> out
+ * f ===> stdout
  * }}}
  * @example {{{
  * import "java.lang.Thread"
@@ -28,7 +28,7 @@ import java.io.OutputStream
  * [0 to total].foreach(i => {
  *    val progress = Int((Double(i) / total) * progressBarWidth)
  *    val progressBar = "[" + ("*" * progress) + (" " * (progressBarWidth - progress)) + "] {{i}}%"
- *    "\r{{progressBar}}" ===> out
+ *    "\r{{progressBar}}" ===> stdout
  *    Thread.sleep(Long(100)) // Simulate some work being done
  * })
  * }}}
@@ -58,7 +58,7 @@ object TransferTo extends ExpressionChainParser {
     description = "A declarative way to write to OutputStream or Writer resources",
     example =
       """|import "java.io.File"
-         |f = new File("./test.json")
+         |f = new File("app/core/src/test/resources/log4j.properties")
          |f ===> stdout
          |""".stripMargin
   ))
