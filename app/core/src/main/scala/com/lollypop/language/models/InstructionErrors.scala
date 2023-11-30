@@ -1,6 +1,7 @@
 package com.lollypop.language.models
 
 import com.lollypop.LollypopException
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.datatypes.DataType
 import com.lollypop.runtime.errors._
 import com.lollypop.util.StringHelper.StringEnrichment
@@ -30,7 +31,7 @@ trait InstructionErrors { self: Instruction =>
 
   def dieExpectedBoolean(): Nothing = die("Boolean expression expected")
 
-  def dieExpectedBoolean(value: Any): Nothing = die(s"Boolean expression expected, but got |${value.render}|")
+  def dieExpectedBoolean(value: Any): Nothing = die(s"Boolean expression expected, but got |${value.asModelString}|")
 
   def dieExpectedExpression(): Nothing = die("Expression expected")
 
@@ -47,10 +48,10 @@ trait InstructionErrors { self: Instruction =>
   }
 
   def dieIllegalType(value: Any): Nothing = {
-    die(s"Unexpected type returned '${value.render.limit(10)}' (${Option(value).map(_.getClass.getSimpleName).orNull}) near '${self.toSQL}'")
+    die(s"Unexpected type returned '${value.asModelString.limit(40)}' near '${self.toSQL}'")
   }
 
-  def dieInterfaceParametersNotSupported(): Nothing  = throw new InterfaceArgumentsNotSupportedError(self)
+  def dieInterfaceParametersNotSupported(): Nothing = throw new InterfaceArgumentsNotSupportedError(self)
 
   def dieMissingClassName(): Nothing = die("No class name was specified")
 

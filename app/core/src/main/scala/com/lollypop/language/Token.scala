@@ -2,7 +2,7 @@ package com.lollypop.language
 
 import com.lollypop.die
 import com.lollypop.implicits._
-import com.lollypop.util.StringRenderHelper.StringRenderer
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 
 /**
  * Represents a token
@@ -46,7 +46,7 @@ sealed trait Token {
    */
   def text: String
 
-  override def toString: String = this.render
+  override def toString: String = this.asModelString
 
   /**
    * @return the typed value contained by this token

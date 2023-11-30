@@ -2,10 +2,10 @@ package com.lollypop.database.jdbc.types
 
 import com.lollypop.database.jdbc.JDBCTestServer
 import com.lollypop.database.jdbc.types.JDBCStructTest.JDBCArrayConversion
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.util.DateHelper
 import com.lollypop.util.ResourceHelper._
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import org.scalatest.funspec.AnyFunSpec
 
 import java.sql.DriverManager
@@ -56,7 +56,7 @@ class JDBCStructTest extends AnyFunSpec with JDBCTestServer with VerificationToo
         val transactions = rs1.getArray("transactions")
         assert(transactions.getArray().isInstanceOf[Array[java.sql.Struct]])
         val results = transactions.getArray().asInstanceOf[Array[java.sql.Struct]]
-        logger.info(s"results: ${results.render}")
+        logger.info(s"results: ${results.asModelString}")
       }
     }
 
@@ -106,7 +106,7 @@ class JDBCStructTest extends AnyFunSpec with JDBCTestServer with VerificationToo
         val transactions = rs1.getArray("transactions")
         assert(transactions.getArray().isInstanceOf[Array[java.sql.Struct]])
         val results = transactions.getArray().asInstanceOf[Array[java.sql.Struct]]
-        logger.info(s"results: ${results.render}")
+        logger.info(s"results: ${results.asModelString}")
       }
     }
 

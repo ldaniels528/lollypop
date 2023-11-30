@@ -5,13 +5,14 @@ import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopChartGenerator
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, LollypopUniverse}
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringHelper.StringEnrichment
-import com.lollypop.util.StringRenderHelper.{StringRenderer, toProductString}
+import com.lollypop.util.StringRenderHelper.toProductString
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{File, FileWriter, PrintWriter}
@@ -267,7 +268,7 @@ class ReadMeTest extends AnyFunSpec {
       case pr: Product => Some(toProductString(pr))
       case s: String if s.trim.isEmpty => None
       case s: String if s.isQuoted => Some(s)
-      case xx => Some(xx.render)
+      case xx => Some(xx.asModelString)
     }
   }
 

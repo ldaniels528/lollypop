@@ -26,6 +26,8 @@ case class ColumnType(name: String,
 
   def isClusteredTable: Boolean = isTable & !isBlobTable & !isMultiTenantTable
 
+  def isSimple: Boolean = !isArray && !isPointer && Seq(arrayArgs, nestedColumns, typeArgs).forall(_.isEmpty)
+
   def isMultiTenantTable: Boolean = isTable & !isArray & !isPointer
 
   def isTable: Boolean = name equalsIgnoreCase "Table"

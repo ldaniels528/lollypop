@@ -6,12 +6,12 @@ import com.lollypop.database.QueryRequest
 import com.lollypop.language.models._
 import com.lollypop.language.{ColumnTypeParser, Template, TokenStream, dieIllegalType}
 import com.lollypop.runtime.DatabaseObjectConfig._
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.datatypes.DataType
 import com.lollypop.runtime.devices._
 import com.lollypop.util.DateHelper
 import com.lollypop.util.JSONSupport.{AnyToSprayJsConversion, JsValueConversion}
 import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import lollypop.lang.Pointer
 import spray.json._
@@ -53,7 +53,7 @@ object ModelsJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
         case v: Short => v.toJson
         case v: String => JsString(v)
         case v: Template => v.toString.toJson
-        case v => JsString(v.render)
+        case v => JsString(v.asModelString)
       }
 
       JsObject(value.map { case (name, value) => name -> wrap(value) })
@@ -69,7 +69,7 @@ object ModelsJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
   final implicit object OptionAnyJsonFormat extends JsonFormat[Option[Any]] {
     override def read(json: JsValue): Option[Any] = Option(json.unwrapJSON)
 
-    override def write(value: Option[Any]): JsValue = value map(_.toSprayJs) getOrElse JsNull
+    override def write(value: Option[Any]): JsValue = value map (_.toSprayJs) getOrElse JsNull
   }
 
   final implicit object SeqSeqOptionAnyJsonFormat extends JsonFormat[Seq[Seq[Any]]] {
