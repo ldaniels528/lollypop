@@ -1,6 +1,6 @@
 package com.lollypop.language
 
-import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _helpers, _languageParsers}
+import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _languageParsers}
 import com.lollypop.language.instructions.Include
 import com.lollypop.language.models._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
@@ -29,14 +29,12 @@ import scala.concurrent.ExecutionContext
  * Lollypop Universe - repository for long-lived state
  * @param dataTypeParsers the [[DataTypeParser data type parser]]
  * @param languageParsers the [[LanguageParser language parser]]
- * @param helpers         the collection of [[HelpIntegration help-docs]]
  * @param classLoader     the [[DynamicClassLoader classloader]]
  * @param escapeCharacter the [[Char escape character]]
  * @param isServerMode    indicates whether STDERR, STDIN and STDOUT are to be buffered
  */
 case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypeParsers,
                             var languageParsers: List[LanguageParser] = _languageParsers,
-                            var helpers: List[HelpIntegration] = _helpers,
                             var classLoader: DynamicClassLoader = _classLoader,
                             var escapeCharacter: Char = '`',
                             var isServerMode: Boolean = false) {
@@ -47,6 +45,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   private var f_warn: String => Unit = s => logger.warn(s)
 
   // create the compiler and system utilities
+  private var _helpers: List[HelpDoc] = Nil
   val compiler = new LollypopCompiler(this)
   val nodes = new Nodes(this)
   val system = new OS(this)
@@ -187,7 +186,11 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def helpDocs: List[HelpDoc] = {
-    (MacroLanguageParser :: helpers).flatMap(_.help).sortBy(_.name)
+    if (_helpers.isEmpty) {
+      _helpers = (MacroLanguageParser.help ::: Nodes.help ::: dataTypeParsers.flatMap(_.help) :::
+        languageParsers.flatMap(_.help)).distinct.sortBy(_.name)
+    }
+    _helpers
   }
 
   def isFunctionCall(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
@@ -200,6 +203,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
 
   def withLanguageParsers(lps: LanguageParser*): this.type = {
     this.languageParsers = (lps.toList ::: languageParsers).distinct
+    this._helpers = Nil
     this
   }
 
@@ -315,7 +319,6 @@ object LollypopUniverse {
     WhileDo, WhenEver, Where, WhereIn, With,
     ZipWith
   )
-  val _helpers: List[HelpIntegration] = Nodes :: _languageParsers ::: _dataTypeParsers
 
   RuntimePlatform.init()
 
