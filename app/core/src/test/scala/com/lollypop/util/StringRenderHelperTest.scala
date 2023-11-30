@@ -107,7 +107,7 @@ class StringRenderHelperTest extends AnyFunSpec {
 
     it("should renderPretty a Product") {
       val cost = IOCost(created = 1, inserted = 5, scanned = 3, matched = 1, rowIDs = new RowIDRange(from = 0, to = 4))
-      assert(cost.renderPretty == """IOCost(altered=0, created=1, destroyed=0, deleted=0, inserted=5, matched=1, scanned=3, shuffled=0, updated=0, rowIDs={"start": Some(0), "end": Some(4)})""")
+      assert(cost.renderPretty == """IOCost(altered=0, created=1, destroyed=0, deleted=0, inserted=5, matched=1, scanned=3, shuffled=0, updated=0, rowIDs=RowIDRange(start=Some(0), end=Some(4)))""")
     }
 
   }

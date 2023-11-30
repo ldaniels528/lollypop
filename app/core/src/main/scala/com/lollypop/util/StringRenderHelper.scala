@@ -2,6 +2,7 @@ package com.lollypop.util
 
 import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.Instruction
+import com.lollypop.runtime.ModelStringRenderer.ProductStringRendering
 import com.lollypop.runtime.datatypes.{DataType, StringType}
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.plastics.Tuples.tupleToSeq
@@ -52,10 +53,7 @@ object StringRenderHelper {
       case r: RowIDRange => r.toList.mkString("[", ", ", "]")
       case d: DataType => d.toSQL
       case i: Instruction => i.toSQL
-      case p =>
-        p.getClass.getSimpleName + p.productElementNames.toSeq.zip(p.productIterator)
-          .map { case (a, b) => s"$a=${b.renderAsJson}" }
-          .mkString("(", ", ", ")")
+      case p => p.asProductString
     }
 
   }

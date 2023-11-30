@@ -53,7 +53,7 @@ import scala.util.{Failure, Success, Try}
  * @param port the port to bind
  * @param ctx  the root [[LollypopUniverse compiler context]]
  */
-class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
+class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
   private val logger = LoggerFactory.getLogger(getClass)
   private val scopes = TrieMap[String, Scope]()
   private val apiRoutes = TrieMap[String, Map[String, Any]]()
