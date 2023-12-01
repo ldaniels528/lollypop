@@ -29,6 +29,7 @@ class TokenIterator(input: String) extends Iterator[Token] {
     "&&&", "|||", "...", "///", ">>>", "<<<", "---", "@@@", "%%%", "???", "+++", "***", "^^^",
     "&&", "||", "//", ">>", "<<", "--", "@@", "%%", "??", "++", "**", "^^",
     // file/http protocol symbols
+    "://",
     "..", "./", ":/",
   )
   private val parsers = List(
