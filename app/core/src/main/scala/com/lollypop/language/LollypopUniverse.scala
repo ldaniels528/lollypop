@@ -58,6 +58,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
       .withVariable(name = "stderr", value = system.stdErr.writer)
       .withVariable(name = "stdout", value = system.stdOut.writer)
       .withVariable(name = "stdin", value = system.stdIn.reader)
+      .withVariable("WebSockets", value = WebSockets)
       .withImports(Map(Seq(
         classOf[BitArray], classOf[Character], classOf[ComplexNumber], classOf[java.util.Date],
         classOf[IOCost], classOf[Matrix], classOf[Pointer], classOf[RowIDRange]

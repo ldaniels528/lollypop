@@ -125,6 +125,7 @@ class ScopeTest extends AnyFunSpec {
         case ("name", "Nodes") => true
         case ("name", "OS") => true
         case ("name", "Random") => true
+        case ("name", "WebSockets") => true
         case _ => false
       }).toSet == Set(
         Map("name" -> "position", "value" -> "1", "kind" -> "Long"),

@@ -66,7 +66,8 @@ class ReturnTest extends AnyFunSpec with VerificationTools {
         Map("name" -> "IngestDemo.sql"),
         Map("name" -> "MacroDemo.sql"),
         Map("name" -> "Stocks.sql"),
-        Map("name" -> "SwingDemo.sql")
+        Map("name" -> "SwingDemo.sql"),
+        Map("name" -> "WebSocketsDemo.sql")
       ))
     }
 

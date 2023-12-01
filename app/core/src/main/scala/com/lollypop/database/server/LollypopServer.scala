@@ -166,28 +166,39 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
       cookie(lollypopSessionID)(routesBySession)
   }
 
+  /**
+   * WebSocket Message Handler
+   */
   private val webSocketHandler: Flow[Message, Message, NotUsed] = {
     var scope = Scope()
-    Flow[Message].collect {
-      case tm: TextMessage =>
-        val response = apiRoutes.collectFirst { case (url, mappings) if mappings.exists { case (method, _) => method == "ws" } =>
-          mappings("ws") match {
-            case af: AnonymousFunction =>
-              val (scopeA, _, resultA) = af.call(List(tm.getStrictText.v)).execute(scope)
-              scope = scopeA
-              resultA
-            case code: Instruction =>
-              val (scopeA, _, resultA) = code.execute(scope)
-              scope = scopeA
-              resultA
-            case other =>
-              other
-          }
+
+    def process[A <: Message](message: A, f: A => Expression): Option[Any] = {
+      apiRoutes.collectFirst { case (_, mappings) if mappings.exists { case (method, _) => method == "ws" } =>
+        mappings("ws") match {
+          case af: AnonymousFunction =>
+            val (scopeA, _, resultA) = af.call(List(f(message))).execute(scope)
+            scope = scopeA
+            resultA
+          case code: Instruction =>
+            val (scopeA, _, resultA) = code.execute(scope)
+            scope = scopeA
+            resultA
+          case other =>
+            other
         }
-        TextMessage(response.map(_.renderAsJson).getOrElse("null"))
-      case bm: BinaryMessage =>
-        logger.info(s"BinaryMessage: ${bm.getStrictData.toVector}")
-        bm
+      }
+    }
+
+    // handle the messages we're interested in
+    Flow[Message].collect {
+      case _: BinaryMessage.Streamed => TextMessage("{}")
+      case bm: BinaryMessage.Strict =>
+        val response = process[BinaryMessage.Strict](bm, _.getStrictData.toArray.v)
+        TextMessage(response.map(_.renderAsJson).getOrElse("{}"))
+      case _: TextMessage.Streamed => TextMessage("{}")
+      case tm: TextMessage.Strict =>
+        val response = process[TextMessage.Strict](tm, _.getStrictText.v)
+        TextMessage(response.map(_.renderAsJson).getOrElse("{}"))
     }
   }
 

@@ -41,6 +41,7 @@ class ThisTest extends AnyFunSpec with VerificationTools {
         case ("name", "Nodes") => true
         case ("name", "OS") => true
         case ("name", "Random") => true
+        case ("name", "WebSockets") => true
         case _ => false
       }) == List(
         Map("name" -> "n", "value" -> "123", "kind" -> "Integer")
