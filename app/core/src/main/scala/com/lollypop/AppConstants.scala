@@ -20,6 +20,7 @@ trait AppConstants {
   val DEFAULT_SCHEMA = "public"
 
   val __classpath__ = "__classpath__"
+  val __cost__ = "__cost__"
   val __database__ = "__database__"
   val __ec__ = "__ec__"
   val __implicit_imports__ = "__implicit_imports__"
@@ -36,6 +37,7 @@ trait AppConstants {
   val __secret_variables__ = "__secret_variables__"
   val __self__ = "__self__"
   val __session__ = "__session__"
+  val __tableConversion__ = "__tableConversion__"
   val __userHome__ = "__userHome__"
   val __userName__ = "__userName__"
   val __version__ = "__version__"

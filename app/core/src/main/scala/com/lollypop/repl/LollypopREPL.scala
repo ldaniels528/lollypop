@@ -212,11 +212,9 @@ trait LollypopREPL extends InlineCompiler {
   }
 
   private[repl] def handleSuccess(scope: Scope, cost: IOCost, result: Any): Scope = {
-    val isTable = scope("__tableConversion__").contains(true)
+    val isTable = scope(__tableConversion__).contains(true)
     val isCost = cost == result
-    if (cost.getUpdateCount > 0) {
-      if (isTable) cost.toTable(scope).tabulate().foreach(Console.println) else Console.println(cost)
-    }
+    val scopeA = scope.withVariable(__cost__, cost)
     val resultA = if (isCost) () else result
     resultA match {
       case b: Array[Byte] => Console.println(StringRenderHelper.toByteArrayString(b))
@@ -233,7 +231,7 @@ trait LollypopREPL extends InlineCompiler {
       case () => Console.println("Ok")
       case x => Console.println(x.render)
     }
-    scope
+    scopeA
   }
 
   private def showChart(d: GraphResult): JFrame = {
