@@ -3,7 +3,7 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{LollypopCompiler, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class VerifyTest extends AnyFunSpec with VerificationTools {
@@ -38,7 +38,7 @@ class VerifyTest extends AnyFunSpec with VerificationTools {
     it("should compile a complete scenario") {
       compiler.compile(
         """|scenario 'Create a new notebook' {
-           |  val responseA = http post 'http://{{host}}:{{port}}/api/notebooks/notebooks' <~ { name: "ShockTrade" }
+           |  val responseA = www post 'http://{{host}}:{{port}}/api/notebooks/notebooks' <~ { name: "ShockTrade" }
            |  val notebook_id = responseA.body.id
            |  verify responseA.statusCode is 200
            |    ^^^ "Notebook created"

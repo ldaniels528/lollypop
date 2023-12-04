@@ -5,7 +5,7 @@ import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.Verify
-import com.lollypop.runtime.instructions.expressions.{Dictionary, Http, Infix}
+import com.lollypop.runtime.instructions.expressions.{Dictionary, WWW, Infix}
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
@@ -20,7 +20,7 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
     it("should compile a simple scenario") {
       val model = compiler.compile(
         """|scenario 'Create a new contest' {
-           |    val response = http post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
+           |    val response = www post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
            |    verify response.statusCode is 200
            |}
            |""".stripMargin)
@@ -28,7 +28,7 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
         title = "Create a new contest".v,
         verifications = Seq(
           ValVar(ref = "response", `type` = None, initialValue = Some(
-            Http(method = "post", url = "http://{{host}}:{{port}}/api/shocktrade/contests".v, body = Some(
+            WWW(method = "post", url = "http://{{host}}:{{port}}/api/shocktrade/contests".v, body = Some(
               Dictionary(Map("name" -> "Winter is coming".v))
             ))
           ), isReadOnly = true),
@@ -40,7 +40,7 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
     it("should compile a scenario that \"extends\" a parent scenario") {
       val model = compiler.compile(
         """|scenario 'Retrieve the previously created contest' extends 'Create a new contest' {
-           |    val response = http get 'http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}'
+           |    val response = www get 'http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}'
            |    verify response.statusCode is 200
            |}
            |""".stripMargin)
@@ -49,7 +49,7 @@ class ScenarioTest extends AnyFunSpec with VerificationTools {
         inherits = Some("Create a new contest".v),
         verifications = Seq(
           ValVar(ref = "response", `type` = None, initialValue = Some(
-            Http(method = "get", url = "http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}".v)
+            WWW(method = "get", url = "http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}".v)
           ), isReadOnly = true),
           Verify(Infix("response".f, "statusCode".f) is 200.v)
         )

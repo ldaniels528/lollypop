@@ -12,7 +12,7 @@ import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo._
 import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.lollypop.runtime.devices.{Row, RowCollection, TableColumn}
-import com.lollypop.runtime.instructions.expressions.GraphResult
+import com.lollypop.runtime.instructions.expressions.{GraphResult, WWW}
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectNS, DatabaseObjectRef, LollypopVM, Scope}
@@ -45,7 +45,7 @@ trait LollypopREPL extends InlineCompiler {
    */
   val languageParsers: List[LanguageParser] = List(
     Caret, Cat, ChDir, ColonSlashSlash, Copy, Dot, DotDot, Echo, Find, Ls, MD5Sum, MkDir, Move,
-    ProcessRun, Pwd, QuestionMark, Remove, RemoveRecursively, RmDir, Tilde, Touch, WordCount
+    ProcessRun, Pwd, QuestionMark, Remove, RemoveRecursively, RmDir, Tilde, Touch, WordCount, WWW
   )
 
   def cli(args: Array[String], scope0: Scope, console: () => String = createInteractiveConsoleReader): Scope = {

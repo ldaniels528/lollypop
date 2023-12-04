@@ -51,6 +51,13 @@ case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, serv
     this
   }
 
+  /**
+   * Creates a new HTML/CSS/File endpoint
+   * @param urlMappings the HTTP URL to file mapping
+   * @return true, if a new endpoint was created
+   */
+  def files(url: String, urlMappings: QMap[String, String]): Boolean = server.createFileEndPoint(url, urlMappings)
+
   def getServerBinding: Future[Http.ServerBinding] = server.server
 
   def interact(console: () => String = createInteractiveConsoleReader): Option[QueryResponse] = {
@@ -81,13 +88,6 @@ case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, serv
   def stop(): Unit = server.shutdown()
 
   def uptime: Long = System.currentTimeMillis() - startTime
-
-  /**
-   * Creates a new HTML/CSS/File endpoint
-   * @param files the HTTP URL to file mapping
-   * @return true, if a new endpoint was created
-   */
-  def www(url: String, files: Map[String, String]): Boolean = server.createFileEndPoint(url, files)
 
   override def toString: String = s"Node(\"$host\", $port)"
 

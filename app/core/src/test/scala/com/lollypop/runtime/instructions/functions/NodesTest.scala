@@ -149,10 +149,10 @@ class NodesTest extends AnyFunSpec with VerificationTools {
       assert(responseB == true)
 
       val (scopeC, _, responseC) = LollypopVM.searchSQL(scopeB,
-        """|http post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'ABC News', startTime: DateTime('2022-09-04T23:36:46.862Z') }
-           |http post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'HBO Max', startTime: DateTime('2022-09-04T23:36:47.321Z') }
-           |http post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'Showtime', startTime: DateTime('2022-09-04T23:36:48.503Z') }
-           |http post 'http://0.0.0.0:{{port}}/api/demo/subscriptions?name=IMDB' <~ { startTime: DateTime('2022-09-04T23:36:48.504Z') }
+        """|www post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'ABC News', startTime: DateTime('2022-09-04T23:36:46.862Z') }
+           |www post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'HBO Max', startTime: DateTime('2022-09-04T23:36:47.321Z') }
+           |www post 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { name: 'Showtime', startTime: DateTime('2022-09-04T23:36:48.503Z') }
+           |www post 'http://0.0.0.0:{{port}}/api/demo/subscriptions?name=IMDB' <~ { startTime: DateTime('2022-09-04T23:36:48.504Z') }
            |select * from subscriptions
            |""".stripMargin)
       responseC.tabulate().foreach(logger.info)
@@ -164,14 +164,14 @@ class NodesTest extends AnyFunSpec with VerificationTools {
       ))
 
       val (scopeD, _, responseD) = LollypopVM.executeSQL(scopeC,
-        """|val response = http get 'http://0.0.0.0:{{port}}/api/demo/subscriptions?id=1'
+        """|val response = www get 'http://0.0.0.0:{{port}}/api/demo/subscriptions?id=1'
            |response.body.toJsonString()
            |""".stripMargin)
       logger.info(s"response: $responseD")
       assert(responseD == """[{"id":1,"name":"HBO Max","startTime":"2022-09-04T23:36:47.321Z"}]""")
 
       val (scopeE, _, responseE) = LollypopVM.searchSQL(scopeD,
-        """|http delete 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { id: 2, expiry: DateTime('2022-09-16T13:17:59.128Z') }
+        """|www delete 'http://0.0.0.0:{{port}}/api/demo/subscriptions' <~ { id: 2, expiry: DateTime('2022-09-16T13:17:59.128Z') }
            |select * from subscriptions where id is 2
            |""".stripMargin)
       responseE.tabulate().foreach(logger.info)
@@ -180,7 +180,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
       ))
 
       val (_, _, responseF) = LollypopVM.searchSQL(scopeE,
-        """|http put 'http://0.0.0.0:{{port}}/api/demo/subscriptions?id=3&newName=AmazonPrimeVideo'
+        """|www put 'http://0.0.0.0:{{port}}/api/demo/subscriptions?id=3&newName=AmazonPrimeVideo'
            |select * from subscriptions where id is 3
            |""".stripMargin)
       responseF.tabulate().foreach(logger.info)

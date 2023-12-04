@@ -42,11 +42,12 @@ include('./app/examples/src/main/lollypop/shocktrade/tables/Positions.sql')
 //////////////////////////////////////////////////////////////////////////////////////
 
 val host = '0.0.0.0'
-val port = nodeStart(8080)
+val node = Nodes.start()
+val port = node.port
 logger.info('Started ShockTrade Demo Service on {{host}}:{{port}}...')
 
 // setup the web socket handler
-node.api(port, '/ws/shocktrade', {
+node.api('/ws/shocktrade', {
   ws: (message: String) => {
     val js = message.fromJson()
     return upsert into StockQuotes (symbol, exchange, lastSale, lastSaleTime)

@@ -1,7 +1,7 @@
-node.api(port, '/api/shocktrade/contests', {
+node.api('/api/shocktrade/contests', {
     //////////////////////////////////////////////////////////////////////////////////////
     // creates a new contest
-    // http post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
+    // www post 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { name: "Winter is coming" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (name: String) => {
         val result = insert into Contests (name) values ($name)
@@ -10,7 +10,7 @@ node.api(port, '/api/shocktrade/contests', {
 
     //////////////////////////////////////////////////////////////////////////////////////
     // retrieves a contest
-    // http get 'http://{{host}}:{{port}}/api/shocktrade/contests?id=aa440939-89cb-4ba1-80b6-20100ba6a286'
+    // www get 'http://{{host}}:{{port}}/api/shocktrade/contests?id=aa440939-89cb-4ba1-80b6-20100ba6a286'
     //////////////////////////////////////////////////////////////////////////////////////
     get: (id: UUID) => {
         from ns('Contests') where contest_id is $id limit 1
@@ -18,7 +18,7 @@ node.api(port, '/api/shocktrade/contests', {
 
     //////////////////////////////////////////////////////////////////////////////////////
     // updates a contest
-    // http put 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929", name: "Winter is coming" }
+    // www put 'http://{{host}}:{{port}}/api/shocktrade/contests' <~ { id: "0a3dd064-b3c7-4c44-aad0-c7bd94e1f929", name: "Winter is coming" }
     //////////////////////////////////////////////////////////////////////////////////////
     put: (id: UUID, newName: String) => {
         val result = update Contests set name = $newName where contest_id is $id
@@ -33,10 +33,10 @@ node.api(port, '/api/shocktrade/contests', {
     }
 })
 
-node.api(port, '/api/shocktrade/contests/by/name', {
+node.api('/api/shocktrade/contests/by/name', {
     //////////////////////////////////////////////////////////////////////////////////////
     // searches for contests by name
-    // http post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }
+    // www post 'http://{{host}}:{{port}}/api/shocktrade/contests/by/name' <~ { searchText: "Winter" }
     //////////////////////////////////////////////////////////////////////////////////////
     post: (searchText: String) => {
         from ns('Contests') where name contains searchText

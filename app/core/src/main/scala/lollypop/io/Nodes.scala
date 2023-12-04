@@ -5,6 +5,7 @@ import com.lollypop.database.server.LollypopServer
 import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_DECLARATIVE, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.{HelpDoc, HelpIntegration, LollypopUniverse}
+import com.lollypop.repl.LollypopREPL
 
 import scala.annotation.tailrec
 import scala.collection.concurrent.TrieMap
@@ -103,7 +104,9 @@ class Nodes(val ctx: LollypopUniverse) {
 
 object Nodes extends HelpIntegration {
 
-  def apply(ctx: LollypopUniverse = LollypopUniverse()) = new Nodes(ctx)
+  def apply(ctx: LollypopUniverse = LollypopUniverse().withLanguageParsers(LollypopREPL.languageParsers: _*)): Nodes = {
+    new Nodes(ctx)
+  }
 
   override def help: List[HelpDoc] = List(
     HelpDoc(
@@ -144,7 +147,7 @@ object Nodes extends HelpIntegration {
            |  put: (id: UUID, message: String) => "put '{{message}}' ~> {{(id}}"
            |  delete: (id: UUID) => "delete {{(id}}"
            |})
-           |http post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello World" }
+           |www post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello World" }
            |""".stripMargin
     ), HelpDoc(
       name = "Nodes",
@@ -170,7 +173,7 @@ object Nodes extends HelpIntegration {
       example =
         """|node = Nodes.start()
            |node.awaitStartup(Duration('1 second'))
-           |node.www('/www/notebooks/', {
+           |node.files('/www/notebooks/', {
            |  "" : "public/index.html",
            |  "*" : "public"
            |})

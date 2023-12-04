@@ -25,7 +25,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       val model = compiler.compile(
         s"""|feature "Traveler information service" {
             |    scenario "Testing that GET response contains specific field" {
-            |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES" ~> {
+            |       www get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES" ~> {
             |          `Content-Type`: "application/json; charset=UTF-8"
             |       }
             |       verify status is 200
@@ -37,7 +37,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       assert(model ==
         Feature(title = "Traveler information service".v, scenarios = List(
           Scenario(title = "Testing that GET response contains specific field".v, verifications = List(
-            Http(method = "get", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES".v,
+            WWW(method = "get", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES".v,
               headers = Some(Dictionary("Content-Type" -> "application/json; charset=UTF-8".v))
             ),
             Verify(condition = AND(Is("status".f, 200.v),
@@ -52,7 +52,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
     it("should decompile feature statements") {
       val model = Feature(title = "Traveler information service".v, scenarios = List(
         Scenario(title = "Testing that GET response contains specific field".v, verifications = List(
-          Http(method = "get", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES".v,
+          WWW(method = "get", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES".v,
             headers = Some(Dictionary("Content-Type" -> "application/json; charset=UTF-8".v)
             )),
           Verify(condition = AND(Is("status".f, 200.v),
@@ -65,7 +65,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       assert(model.toSQL ==
         s"""|feature "Traveler information service" {
             |	scenario "Testing that GET response contains specific field" {
-            |		http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES" ~> { "Content-Type": "application/json; charset=UTF-8" }
+            |		www get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES" ~> { "Content-Type": "application/json; charset=UTF-8" }
             |		verify (status is 200) and ((response_string is '[{ "id": "7bd0b461-4eb9-400a-9b63-713af85a43d0", "lastName": "JONES", "firstName": "GARRY","destAirportCode": "SNA" }]') and ((body(0).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d0"))
             |	}
             |}""".stripMargin)
@@ -75,7 +75,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       val model = compiler.compile(
         s"""|feature "Traveler information service" {
             |    scenario "Testing that POST response contains specific field" {
-            |       http post "http://0.0.0.0:$port/api/$databaseName/$schemaName"
+            |       www post "http://0.0.0.0:$port/api/$databaseName/$schemaName"
             |          <~ { firstName: "GARRY", lastName: "JONES" }
             |       verify status is 200
             |       and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d0"
@@ -85,7 +85,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       assert(model ==
         Feature(title = "Traveler information service".v, scenarios = List(
           Scenario(title = "Testing that POST response contains specific field".v, verifications = List(
-            Http(method = "post", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName".v,
+            WWW(method = "post", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName".v,
               body = Some(Dictionary("firstName" -> "GARRY".v, "lastName" -> "JONES".v))
             ),
             Verify(condition = AND(Is("status".f, 200.v),
@@ -98,7 +98,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
     it("should decompile feature statements with a body") {
       val feature = Feature(title = "Traveler information service".v, scenarios = List(
         Scenario(title = "Testing that POST response contains specific field".v, verifications = List(
-          Http(method = "post", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName".v,
+          WWW(method = "post", url = s"http://0.0.0.0:$port/api/$databaseName/$schemaName".v,
             body = Some(Dictionary("firstName" -> "GARRY".v, "lastName" -> "JONES".v))
           ),
           Verify(condition = AND(Is("status".f, 200.v),
@@ -108,7 +108,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
       assert(feature.toSQL ===
         s"""|feature "Traveler information service" {
             |	scenario "Testing that POST response contains specific field" {
-            |		http post "http://0.0.0.0:$port/api/$databaseName/$schemaName" <~ { firstName: "GARRY", lastName: "JONES" }
+            |		www post "http://0.0.0.0:$port/api/$databaseName/$schemaName" <~ { firstName: "GARRY", lastName: "JONES" }
             |		verify (status is 200) and ((body(0).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d0")
             |	}
             |}""".stripMargin.trim)
@@ -152,23 +152,23 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
             |feature "Traveler information service" {
             |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
             |    scenario "Testing that DELETE requests produce the correct result" {
-            |       http delete "http://0.0.0.0:$port/api/$databaseName/$schemaName"
+            |       www delete "http://0.0.0.0:$port/api/$databaseName/$schemaName"
             |           <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }
             |       verify statusCode is 200
             |    }
             |    scenario "Testing that GET response contains specific field" {
-            |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES"
+            |       www get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=GARRY&lastName=JONES"
             |       verify statusCode is 200
             |           and body.size() >= 0
             |           and body[0].id is '7bd0b461-4eb9-400a-9b63-713af85a43d0'
             |    }
             |    scenario "Testing that POST creates a new record" {
-            |        http post "http://0.0.0.0:$port/api/$databaseName/$schemaName"
+            |        www post "http://0.0.0.0:$port/api/$databaseName/$schemaName"
             |           <~ { id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }
             |        verify statusCode is 200
             |    }
             |    scenario "Testing that we GET the record we previously created" {
-            |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=CHRIS&lastName=DANIELS"
+            |       www get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=CHRIS&lastName=DANIELS"
             |       verify statusCode is 200
             |          and body matches [{
             |             id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
@@ -178,7 +178,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
             |          }]
             |    }
             |    scenario "Testing what happens when a response does not match the expected value" {
-            |       http get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=SAMANTHA&lastName=JONES"
+            |       www get "http://0.0.0.0:$port/api/$databaseName/$schemaName?firstName=SAMANTHA&lastName=JONES"
             |       verify statusCode is 200
             |          and body.size() >= 0
             |          and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"

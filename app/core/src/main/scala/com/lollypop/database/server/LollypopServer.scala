@@ -102,9 +102,9 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
    * @param files the HTTP URL to file mapping
    * @return true, if a new endpoint was created
    */
-  def createFileEndPoint(url: String, files: Map[String, String]): Boolean = {
+  def createFileEndPoint(url: String, files: QMap[String, String]): Boolean = {
     logger.info(s"Registered '$url'...")
-    wwwRoutes.put(url, files).nonEmpty
+    wwwRoutes.put(url, files.toMap).nonEmpty
   }
 
   /**

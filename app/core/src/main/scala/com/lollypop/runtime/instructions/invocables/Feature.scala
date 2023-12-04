@@ -173,23 +173,23 @@ object Feature extends InvokableParser {
           |feature "Traveler information service" {
           |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
           |    scenario "Testing that DELETE requests produce the correct result" {
-          |       http delete "http://0.0.0.0:{{port}}/api/temp/examples"
+          |       www delete "http://0.0.0.0:{{port}}/api/temp/examples"
           |           <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }
           |       verify statusCode is 200
           |    }
           |    scenario "Testing that GET response contains specific field" {
-          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
+          |       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
           |       verify statusCode is 200
           |           and body.size() >= 0
           |           and body[0].id is '7bd0b461-4eb9-400a-9b63-713af85a43d0'
           |    }
           |    scenario "Testing that POST creates a new record" {
-          |        http post "http://0.0.0.0:{{port}}/api/temp/examples"
+          |        www post "http://0.0.0.0:{{port}}/api/temp/examples"
           |           <~ { id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }
           |        verify statusCode is 200
           |    }
           |    scenario "Testing that we GET the record we previously created" {
-          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
+          |       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
           |       verify statusCode is 200
           |          and body matches [{
           |              id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
@@ -199,7 +199,7 @@ object Feature extends InvokableParser {
           |          }]
           |    }
           |    scenario "Testing what happens when a response does not match the expected value" {
-          |       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
+          |       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
           |       verify statusCode is 200
           |          and body.size() >= 0
           |          and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"

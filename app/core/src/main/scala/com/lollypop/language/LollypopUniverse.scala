@@ -300,7 +300,7 @@ object LollypopUniverse {
     Each, ElementAt, EOL, EQ, Every, Exists, Expose,
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
-    HashTag, Having, Help, Http,
+    HashTag, Having, Help,
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
     Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
@@ -316,7 +316,7 @@ object LollypopUniverse {
     Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
-    WhileDo, WhenEver, Where, WhereIn, With,
+    WhileDo, WhenEver, Where, WhereIn, With, WWW,
     ZipWith
   )
 

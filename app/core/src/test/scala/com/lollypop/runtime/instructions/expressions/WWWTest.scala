@@ -6,40 +6,40 @@ import com.lollypop.runtime.instructions.invocables.Scenario.__KUNGFU_BASE_URL__
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
-class HttpTest extends AnyFunSpec with VerificationTools {
+class WWWTest extends AnyFunSpec with VerificationTools {
   implicit val compiler: LollypopCompiler = LollypopCompiler()
 
-  describe(classOf[Http].getSimpleName) {
+  describe(classOf[WWW].getSimpleName) {
 
-    it("should compile: http get 'http://0.0.0.0:8080/api/shocktrade/contests'") {
+    it("should compile: www get 'http://0.0.0.0:8080/api/shocktrade/contests'") {
       val model = compiler.compile(
-        """|http get 'http://0.0.0.0:8080/api/shocktrade/contests'
+        """|www get 'http://0.0.0.0:8080/api/shocktrade/contests'
            |""".stripMargin)
-      assert(model == Http(method = "get", url = "http://0.0.0.0:8080/api/shocktrade/contests".v))
+      assert(model == WWW(method = "get", url = "http://0.0.0.0:8080/api/shocktrade/contests".v))
     }
 
-    it("should compile: http post 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }") {
+    it("should compile: www post 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }") {
       val model = compiler.compile(
-        """|http post 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }
+        """|www post 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }
            |""".stripMargin)
-      assert(model == Http(method = "post", url = "http://0.0.0.0:8080/api/shocktrade/contests".v,
+      assert(model == WWW(method = "post", url = "http://0.0.0.0:8080/api/shocktrade/contests".v,
         body = Some(Dictionary("name" -> "Winter is coming".v))))
     }
 
-    it("should decompile: http delete 'http://0.0.0.0:8080/api/shocktrade/contests'") {
-      val model = Http(method = "delete", url = "http://0.0.0.0:8080/api/shocktrade/contests".v)
-      assert(model.toSQL == """http delete "http://0.0.0.0:8080/api/shocktrade/contests"""")
+    it("should decompile: www delete 'http://0.0.0.0:8080/api/shocktrade/contests'") {
+      val model = WWW(method = "delete", url = "http://0.0.0.0:8080/api/shocktrade/contests".v)
+      assert(model.toSQL == """www delete "http://0.0.0.0:8080/api/shocktrade/contests"""")
     }
 
-    it("should decompile: http put 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }") {
-      val model = Http(method = "put", url = "http://0.0.0.0:8080/api/shocktrade/contests".v,
+    it("should decompile: www put 'http://0.0.0.0:8080/api/shocktrade/contests' <~ { name: 'Winter is coming' }") {
+      val model = WWW(method = "put", url = "http://0.0.0.0:8080/api/shocktrade/contests".v,
         body = Some(Dictionary("name" -> "Winter is coming".v)))
-      assert(model.toSQL == """http put "http://0.0.0.0:8080/api/shocktrade/contests" <~ { name: "Winter is coming" }""")
+      assert(model.toSQL == """www put "http://0.0.0.0:8080/api/shocktrade/contests" <~ { name: "Winter is coming" }""")
     }
 
-    it("should compile: http post 'http://0.0.0.0:8080/api/u/news' <~ { name: 'ABC News' } ~> ...") {
+    it("should compile: www post 'http://0.0.0.0:8080/api/u/news' <~ { name: 'ABC News' } ~> ...") {
       val model = compiler.compile(
-        """|http post 'http://0.0.0.0:8080/api/u/news'
+        """|www post 'http://0.0.0.0:8080/api/u/news'
            |  <~ { name: 'ABC News' }
            |  ~> {
            |      "Connection": "Keep-Alive",
@@ -51,7 +51,7 @@ class HttpTest extends AnyFunSpec with VerificationTools {
            |      "Cookies": ["dandy_cookie=lightbend; tasty_cookie=chocolate"]
            |    }
            |""".stripMargin)
-      assert(model == Http(method = "post", url = "http://0.0.0.0:8080/api/u/news".v,
+      assert(model == WWW(method = "post", url = "http://0.0.0.0:8080/api/u/news".v,
         body = Some(Dictionary("name" -> "ABC News".v)),
         headers = Some(Dictionary(
           "Connection" -> "Keep-Alive".v,
@@ -70,7 +70,7 @@ class HttpTest extends AnyFunSpec with VerificationTools {
         .withVariable(name = "port", value = 8233)
         .withVariable(name = "contest_id", value = "40d1857b-474c-4400-8f07-5e04cbacc021")
         .withVariable(name = __KUNGFU_BASE_URL__, code = "http://{{host}}:{{port}}/api/shocktrade/contests?id={{contest_id}}".v, isReadOnly = true),
-        """|http path "users"
+        """|www path "users"
            |""".stripMargin)
       assert(result.body == "http://0.0.0.0:8233/api/shocktrade/users")
     }
