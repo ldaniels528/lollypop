@@ -18,8 +18,7 @@ trait AppConstants {
   val DEFAULT_PORT = "8233"
   val DEFAULT_DATABASE = "lollypop"
   val DEFAULT_SCHEMA = "public"
-
-  val __classpath__ = "__classpath__"
+  
   val __cost__ = "__cost__"
   val __database__ = "__database__"
   val __ec__ = "__ec__"

@@ -50,8 +50,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
   private val specialVariables: Map[String, () => Any] = {
     val m = Map(
       __scope__ -> { () => this },
-      __classpath__ -> { () => ClassPathHelper },
-      __imports__ -> { () => getImports },
+        __imports__ -> { () => getImports },
       __implicit_imports__ -> { () =>
         getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)
           .map { case (k, values) => k -> values.map(_._2).toSet }

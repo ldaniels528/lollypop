@@ -3,9 +3,11 @@ package com.lollypop.language
 import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _languageParsers}
 import com.lollypop.language.instructions.Include
 import com.lollypop.language.models._
+import com.lollypop.runtime.DatabaseManagementSystem._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.MacroLanguageParser
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.expressions._
@@ -293,7 +295,7 @@ object LollypopUniverse {
   val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
     Bang, Bar, BarBar, Between, Betwixt, BooleanType,
-    CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
+    ClassPath, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
     DeclareClass, DeclarePackage, DeclareTable, DeclareView, Def, Delete, Describe, DefineImplicit, Destroy,
     Div, DoWhile, Drop,
