@@ -93,10 +93,10 @@ package object runtime extends AppConstants {
     def ~>>[A](f: T => A): (Scope, IOCost, A) = (t._1, t._2, f(t._3))
 
     @inline
-    def ~>>[A](c: IOCost, f: T => A): (Scope, IOCost, A) = (t._1, t._2 ++ c, f(t._3))
+    def ~>>[A](c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (t._1, t._2 ++ c(t._2), f(t._3))
 
     @inline
-    def ~>>[A](s: Scope => Scope, c: IOCost, f: T => A): (Scope, IOCost, A) = (s(t._1), t._2 ++ c, f(t._3))
+    def ~>>[A](s: Scope => Scope, c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (s(t._1), c(t._2), f(t._3))
 
   }
 

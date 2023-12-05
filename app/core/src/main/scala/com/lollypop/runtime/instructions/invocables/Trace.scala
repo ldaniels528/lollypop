@@ -4,8 +4,8 @@ import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_FUNCTIONAL
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.Scope
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 
 case class Trace(instruction: Instruction) extends RuntimeInvokable {
@@ -15,17 +15,11 @@ case class Trace(instruction: Instruction) extends RuntimeInvokable {
 
       def friendlyType(result: Any): String = Option(result).map(_.getClass.getSimpleName).orNull
 
-      def friendlyValue(result: Any): String = result match {
-        case null => "null"
-        case aScope: Scope => aScope.getValueReferences.keys.toList.render
-        case v => v.renderAsJson
-      }
-
       def opCode(instruction: Instruction): String = {
         s"${instruction.getClass.getSimpleName} ${instruction.toSQL}"
       }
 
-      scope.stdErr.println(f"[$elapsedTime%.6fms] ${opCode(op)} ~> ${friendlyValue(result)} <${friendlyType(result)}>")
+      scope.stdErr.println(f"[$elapsedTime%.6fms] ${opCode(op)} ~> ${result.asModelString} <${friendlyType(result)}>")
     })
     val (s, c, r) = instruction.execute(scope1)
     (scope, c, r)

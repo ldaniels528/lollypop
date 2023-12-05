@@ -20,10 +20,12 @@ import scala.util.Try
 /**
  * Represents a Lollypop server node
  */
-case class Node(ctx: LollypopUniverse, port: Int, server: LollypopServer) {
+case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, server: LollypopServer) {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val client = DatabaseClient(port = port)
+  private val client = DatabaseClient(host, port)
   private val scope: Scope = ctx.createRootScope()
+  private val startTime = System.currentTimeMillis()
+  var lastCommand: Option[String] = None
 
   /**
    * Creates a new REST API endpoint
@@ -49,6 +51,13 @@ case class Node(ctx: LollypopUniverse, port: Int, server: LollypopServer) {
     this
   }
 
+  /**
+   * Creates a new HTML/CSS/File endpoint
+   * @param urlMappings the HTTP URL to file mapping
+   * @return true, if a new endpoint was created
+   */
+  def files(url: String, urlMappings: QMap[String, String]): Boolean = server.createFileEndPoint(url, urlMappings)
+
   def getServerBinding: Future[Http.ServerBinding] = server.server
 
   def interact(console: () => String = createInteractiveConsoleReader): Option[QueryResponse] = {
@@ -56,6 +65,7 @@ case class Node(ctx: LollypopUniverse, port: Int, server: LollypopServer) {
     interactWith(
       console = console,
       executeCode = { (d, s, q) =>
+        lastCommand = Some(q)
         Try(client.executeQuery(d, s, q)) map { response =>
           response_? = Option(response)
           (Some(response.ns.databaseName), Some(response.ns.schemaName))
@@ -67,6 +77,7 @@ case class Node(ctx: LollypopUniverse, port: Int, server: LollypopServer) {
   def exec(statement: String): QueryResponse = {
     val databaseName = scope.getDatabase || DEFAULT_DATABASE
     val schemaName = scope.getSchema || DEFAULT_SCHEMA
+    lastCommand = Some(statement)
     client.executeQuery(databaseName, schemaName, statement)
   }
 
@@ -76,13 +87,8 @@ case class Node(ctx: LollypopUniverse, port: Int, server: LollypopServer) {
 
   def stop(): Unit = server.shutdown()
 
-  /**
-   * Creates a new HTML/CSS/File endpoint
-   * @param files the HTTP URL to file mapping
-   * @return true, if a new endpoint was created
-   */
-  def www(url: String, files: Map[String, String]): Boolean = server.createFileEndPoint(url, files)
+  def uptime: Long = System.currentTimeMillis() - startTime
 
-  override def toString: String = s"Node($port)"
+  override def toString: String = s"Node(\"$host\", $port)"
 
 }

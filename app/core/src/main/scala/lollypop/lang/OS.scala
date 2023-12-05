@@ -5,10 +5,12 @@ import com.lollypop.database.QueryResponse.QueryResultConversion
 import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.{Expression, FunctionCall, Instruction}
 import com.lollypop.language.{LollypopUniverse, dieFileNotDirectory}
+import com.lollypop.repl.ProcessRun
 import com.lollypop.runtime.DatabaseManagementSystem.PatternSearchWithOptions
 import com.lollypop.runtime.DatabaseObjectConfig.implicits.RichDatabaseEntityConfig
 import com.lollypop.runtime.DatabaseObjectNS.{configExt, readConfig}
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime.LollypopVM.rootScope
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
@@ -147,17 +149,7 @@ class OS(ctx: LollypopUniverse) {
    * @example {{{ OS.exec('ls -al') }}}
    */
   def exec(commandString: String): RowCollection = {
-    val columns = Seq(
-      TableColumn(name = "lineNumber", `type` = Int32Type),
-      TableColumn(name = "output", `type` = StringType)
-    )
-    val lines = Process(commandString).lazyLines.flatMap(_.split("[\n]")).zipWithIndex
-    val columnNames = columns.map(_.name)
-    implicit val rc: RowCollection = createQueryResultTable(columns)
-    lines.foreach { case (line, n) =>
-      rc.insert(Map(columnNames.head -> (n + 1), columnNames(1) -> line).toRow)
-    }
-    rc
+    ProcessRun.invoke(commandString)(rootScope)._3
   }
 
   /**

@@ -12,6 +12,7 @@ import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper._
 import lollypop.io.DataFileConversion
+import org.slf4j.LoggerFactory
 
 import java.io.File
 import scala.io.Source
@@ -31,6 +32,7 @@ import scala.io.Source
  */
 class ExternalFilesTableRowCollection(val config: ExternalTableConfig, val host: RowCollection)
   extends HostedRowCollection with ReadOnlyRecordCollection[Row] {
+  private lazy val logger = LoggerFactory.getLogger(getClass)
   // get the config details
   private val rootFile: File = config.location.map(new File(_)) || dieFileNotFound(ns)
   private val parseText: String => Map[String, Any] = DataFileConversion.lookupConverter(columns, config, rootFile) match {
@@ -94,11 +96,18 @@ class ExternalFilesTableRowCollection(val config: ExternalTableConfig, val host:
     (rowID: ROWID) => {
       if (!isClosed) {
         // process rows from the file until we reach the desired rowID
+        var line:  String = null
         while (watermark <= rowID & lines.hasNext) {
-          val line = lines.next()
-          val mapping = parseText(line)
-          host.update(watermark, mapping.toRow(watermark)(host))
-          watermark += 1
+          try {
+            line = lines.next()
+            val mapping = parseText(line)
+            host.update(watermark, mapping.toRow(watermark)(host))
+          } catch {
+            case e: Exception =>
+              logger.error(f"FAILED[$watermark%04d]: $line", e)
+          } finally {
+            watermark += 1
+          }
         }
 
         // if no more lines, close the stream

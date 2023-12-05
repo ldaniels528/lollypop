@@ -14,25 +14,28 @@ class TokenIterator(input: String) extends Iterator[Token] {
   private val ca = input.toCharArray
   private val operators = "~!@#$%^&*()-_=+[]{}|\\;:,.<>?/".toCharArray
   private val compoundOperators = Seq(
-    // bi-directional operators
+    // bi-directional symbols
     "<>", "<|>",
-    // uni-directional operators
+    // uni-directional symbols
     "===>", "<===", "--->", "<---",
-    "==>", "<==", "-->", "<--", "=>>",
-    "~>", "<~", "->", "<-", "=>",
-    // assignment & conditional operators
+    "~>>", "<<~", "==>", "<==", "-->", "<--", "=>>",
+    "~>", "<~", "->", "<-", "=>", "(%", "%)",
+    // assignment & conditional operators and symbols
     "&&&=", "|||=", "///=", ":::=", ":::", ">>>=", "<<<=", "---=", "@@@=", "%%%=", "???=", "+++=", "***=", "^^^=",
     "&&=", "||=", "//=", "::=", "::", ">>=", "<<=", "--=", "@@=", "%%=", "??=", "++=", "**=", "^^=",
     "&=", "!=", "|=", "/=", ":=", ">=", "<=", "-=", "@=", "%=", "?=", "+=", "*=", "^=",
     "===", "==", ".?", ".!",
-    // standard operators
+    // standard symbols
     "&&&", "|||", "...", "///", ">>>", "<<<", "---", "@@@", "%%%", "???", "+++", "***", "^^^",
-    "&&", "||", "//", ">>", "<<", "--", "@@", "%%", "??", "++", "**", "^^"
+    "&&", "||", "//", ">>", "<<", "--", "@@", "%%", "??", "++", "**", "^^",
+    // file/http protocol symbols
+    "://",
+    "..", "./", ":/",
   )
   private val parsers = List(
     parseNumeric _, parseAlphaNumeric _,
     parseQuotesMultilineBQ _, parseQuotesMultilineDQ _, parseQuotesMultilineSQ _,
-    parseQuotesBackticks _, parseQuotesDouble _, parseQuotesSingle _,
+    parseQuotesBackticks _, parseQuotesDouble _, parseQuotesSingle _, parseProcessInvocation _,
     parseTable _, parseCompoundOperators _, parseOperators _, parseSymbols _)
 
   /**
@@ -76,7 +79,7 @@ class TokenIterator(input: String) extends Iterator[Token] {
   }
 
   def span(length: Int): Option[String] = {
-    if (pos + length < ca.length) Some(copyValueOf(ca, pos, length)) else None
+    if (pos + length <= ca.length) Some(copyValueOf(ca, pos, length)) else None
   }
 
   private def getLineNumber(position: Int): Int = 1 + input.take(position).count(_ == '\n')
@@ -122,6 +125,10 @@ class TokenIterator(input: String) extends Iterator[Token] {
       Option(OperatorToken(text = ca(start).toString, lineNo = getLineNumber(start), columnNo = getColumnNumber(start)))
     }
     else None
+  }
+
+  private def parseProcessInvocation(): Option[ProcessInvocationToken] = {
+    parseSequence(enter = "(%", exit = "%)", f = ProcessInvocationToken.apply)
   }
 
   private def parseQuotes(ch: Char): Option[QuotedToken] = {
@@ -228,6 +235,25 @@ class TokenIterator(input: String) extends Iterator[Token] {
       while (hasMore && !matches(endCh)) pos += 1
       pos += endCh.length
     }
+  }
+
+  private def parseSequence[A <: Token](enter: String, exit: String, f: (String, Int, Int) => A): Option[A] = {
+
+    def isMatch(symbol: Array[Char], offset: Int): Boolean = {
+      (offset + symbol.length < ca.length) &&
+        (symbol zip ca.slice(offset, offset + symbol.length))
+          .foldLeft(true) { case (agg, (a, b)) => agg && a == b }
+    }
+
+    val (_enter, _exit) = (enter.toCharArray, exit.toCharArray)
+    if (isMatch(_enter, pos)) {
+      val start: Int = pos
+      while ((pos + _exit.length < ca.length) && !isMatch(_exit, pos)) pos += 1
+      pos += _exit.length
+      val limit = start + _enter.length
+      val text = String.copyValueOf(ca, limit, pos - (limit + _exit.length))
+      Some(f(text, getLineNumber(start), getColumnNumber(start)))
+    } else None
   }
 
   private def skipWhitespace(): Unit = while (hasMore && ca(pos).isWhitespace) pos += 1

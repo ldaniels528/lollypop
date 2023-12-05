@@ -279,7 +279,7 @@ trait Scope {
   def warn(s: => String): Unit
 
   def error(s: => String): Unit
-  
+
 }
 
 /**

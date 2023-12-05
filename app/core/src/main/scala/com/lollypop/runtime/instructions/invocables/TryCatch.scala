@@ -22,7 +22,7 @@ case class TryCatch(code: Instruction, onError: Instruction, `finally`: Option[I
     try code.execute(scope) catch {
       case t: Throwable =>
         onError.execute(scope) match {
-          case (s, c, lf: LambdaFunction) => lf.call(List(t.v)).execute(s)
+          case (sa, _, lf: LambdaFunction) => lf.call(List(t.v)).execute(sa)
           case x => x
         }
     } finally {

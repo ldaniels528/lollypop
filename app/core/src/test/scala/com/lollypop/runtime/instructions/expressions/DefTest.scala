@@ -7,13 +7,13 @@ import com.lollypop.language.{TokenIterator, TokenStream}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.LTE
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NamedFunction}
-import com.lollypop.runtime.instructions.invocables.{DefineFunction, IF, Import}
+import com.lollypop.runtime.instructions.invocables.{Def, IF, Import}
 import com.lollypop.runtime.instructions.operators.{Minus, Plus, Times}
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
-class DefineFunctionTest extends AnyFunSpec with VerificationTools {
+class DefTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
   implicit val compiler: LollypopCompiler = LollypopCompiler()
 
@@ -103,7 +103,7 @@ class DefineFunctionTest extends AnyFunSpec with VerificationTools {
       val model = compiler.compile(
         """|def factorial(n: Int): Int := if(n <= 1) 1 else n * factorial(n - 1)
            |""".stripMargin)
-      assert(model == DefineFunction(NamedFunction(
+      assert(model == Def(NamedFunction(
         name = "factorial",
         params = List(Column(name = "n", `type` = "Int".ct)),
         code = IF(LTE("n".f, 1.v), 1.v, Some(Times("n".f, NamedFunctionCall("factorial", List(Minus("n".f, 1.v)))))),
@@ -115,7 +115,7 @@ class DefineFunctionTest extends AnyFunSpec with VerificationTools {
       val model = compiler.compile(
         """|def factorial(n: Int) := if(n <= 1) 1 else n * factorial(n - 1)
            |""".stripMargin)
-      assert(model == DefineFunction(NamedFunction(
+      assert(model == Def(NamedFunction(
         name = "factorial",
         params = List(Column(name = "n", `type` = "Int".ct)),
         code = IF(LTE("n".f, 1.v), 1.v, Some(Times("n".f, NamedFunctionCall("factorial", List(Minus("n".f, 1.v)))))),
@@ -130,7 +130,7 @@ class DefineFunctionTest extends AnyFunSpec with VerificationTools {
            |    Math.sqrt((a * a) + (b * b))
            |}
            |""".stripMargin)
-      assert(model == DefineFunction(NamedFunction(
+      assert(model == Def(NamedFunction(
         name = "pythagoras",
         params = List(Column(name = "a", `type` = "Any".ct), Column(name = "b", `type` = "Any".ct)),
         code = CodeBlock(

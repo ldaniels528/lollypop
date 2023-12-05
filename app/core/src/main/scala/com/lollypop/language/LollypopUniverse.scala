@@ -1,6 +1,6 @@
 package com.lollypop.language
 
-import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _helpers, _languageParsers}
+import com.lollypop.language.LollypopUniverse.{_classLoader, _dataTypeParsers, _languageParsers}
 import com.lollypop.language.instructions.Include
 import com.lollypop.language.models._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
@@ -29,20 +29,23 @@ import scala.concurrent.ExecutionContext
  * Lollypop Universe - repository for long-lived state
  * @param dataTypeParsers the [[DataTypeParser data type parser]]
  * @param languageParsers the [[LanguageParser language parser]]
- * @param helpers         the collection of [[HelpIntegration help-docs]]
  * @param classLoader     the [[DynamicClassLoader classloader]]
  * @param escapeCharacter the [[Char escape character]]
  * @param isServerMode    indicates whether STDERR, STDIN and STDOUT are to be buffered
  */
 case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTypeParsers,
                             var languageParsers: List[LanguageParser] = _languageParsers,
-                            var helpers: List[HelpIntegration] = _helpers,
                             var classLoader: DynamicClassLoader = _classLoader,
                             var escapeCharacter: Char = '`',
                             var isServerMode: Boolean = false) {
   private lazy val logger = LoggerFactory.getLogger(getClass)
+  private var f_debug: String => Unit = s => logger.debug(s)
+  private var f_error: String => Unit = s => logger.error(s)
+  private var f_info: String => Unit = s => logger.info(s)
+  private var f_warn: String => Unit = s => logger.warn(s)
 
   // create the compiler and system utilities
+  private var _helpers: List[HelpDoc] = Nil
   val compiler = new LollypopCompiler(this)
   val nodes = new Nodes(this)
   val system = new OS(this)
@@ -58,6 +61,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
       .withVariable(name = "stderr", value = system.stdErr.writer)
       .withVariable(name = "stdout", value = system.stdOut.writer)
       .withVariable(name = "stdin", value = system.stdIn.reader)
+      .withVariable("WebSockets", value = WebSockets)
       .withImports(Map(Seq(
         classOf[BitArray], classOf[Character], classOf[ComplexNumber], classOf[java.util.Date],
         classOf[IOCost], classOf[Matrix], classOf[Pointer], classOf[RowIDRange]
@@ -99,7 +103,7 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   def createOpCodesConfig(ifNotExists: Boolean = true): Unit = {
     val opCodesFile = getServerRootDirectory / "opcodes.txt"
     if (!ifNotExists || (!opCodesFile.exists() || opCodesFile.length() == 0)) {
-      logger.info(s"creating '${opCodesFile.getPath}'...")
+      this.info(s"creating '${opCodesFile.getPath}'...")
       overwriteOpCodesConfig(opCodesFile)
     }
   }
@@ -182,7 +186,11 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   }
 
   def helpDocs: List[HelpDoc] = {
-    (MacroLanguageParser :: helpers).flatMap(_.help).sortBy(_.name)
+    if (_helpers.isEmpty) {
+      _helpers = (MacroLanguageParser.help ::: Nodes.help ::: dataTypeParsers.flatMap(_.help) :::
+        languageParsers.flatMap(_.help)).distinct.sortBy(_.name)
+    }
+    _helpers
   }
 
   def isFunctionCall(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
@@ -192,6 +200,60 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
   def isInstruction(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
     !ts.isBackticks && !ts.isQuoted && (antiFunctionParsers.exists(_.understands(ts)) || MacroLanguageParser.understands(ts))
   }
+
+  def withLanguageParsers(lps: LanguageParser*): this.type = {
+    this.languageParsers = (lps.toList ::: languageParsers).distinct
+    this._helpers = Nil
+    this
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //    Print I/O Streams
+  //////////////////////////////////////////////////////////////////////////////////
+
+  def debug(s: => String): this.type = {
+    f_debug(s)
+    this
+  }
+
+  def info(s: => String): this.type = {
+    f_info(s)
+    this
+  }
+
+  def warn(s: => String): this.type = {
+    f_warn(s)
+    this
+  }
+
+  def error(s: => String): this.type = {
+    f_error(s)
+    this
+  }
+
+  def withDebug(f: String => Unit): this.type = {
+    f_debug = f
+    this
+  }
+
+  def withError(f: String => Unit): this.type = {
+    f_error = f
+    this
+  }
+
+  def withInfo(f: String => Unit): this.type = {
+    f_info = f
+    this
+  }
+
+  def withWarn(f: String => Unit): this.type = {
+    f_warn = f
+    this
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //    Internal Utilities
+  //////////////////////////////////////////////////////////////////////////////////
 
   private def antiFunctionParsers: List[LanguageParser] = {
     languageParsers.filterNot(_.isInstanceOf[FunctionCallParser])
@@ -230,34 +292,33 @@ object LollypopUniverse {
   )
   val _languageParsers: List[LanguageParser] = List[LanguageParser](
     After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
-    Bar, BarBar, Between, Betwixt, BooleanType,
+    Bang, Bar, BarBar, Between, Betwixt, BooleanType,
     CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
-    DeclareClass, DeclarePackage, DeclareTable, DeclareView, DefineFunction, Delete, Describe, DefineImplicit, Destroy,
+    DeclareClass, DeclarePackage, DeclareTable, DeclareView, Def, Delete, Describe, DefineImplicit, Destroy,
     Div, DoWhile, Drop,
     Each, ElementAt, EOL, EQ, Every, Exists, Expose,
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
-    HashTag, Having, Help, Http,
+    HashTag, Having, Help,
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
     Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
     Join,
     LessLess, LessLessLess, Let, Limit, Literal, LollypopComponents, LT, LTE,
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,
-    Namespace, NEG, NEQ, New, Not, NotImplemented, NS, Null,
+    Namespace, NEG, NEQ, New, NodePs, Not, NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
     Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall,
     Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf,
     Synchronized, Switch,
-    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Tilde, Times, TimesTimes, Trace, TransferFrom, TransferTo,
+    Table, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace, TransferFrom, TransferTo,
     Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,
     UnDelete, Union, Unique, UnNest, Up, Update, UpsertInto,
     ValVar, VariableRef, Verify,
-    WhileDo, WhenEver, Where, WhereIn, With,
+    WhileDo, WhenEver, Where, WhereIn, With, WWW,
     ZipWith
   )
-  val _helpers: List[HelpIntegration] = Nodes :: _languageParsers ::: _dataTypeParsers
 
   RuntimePlatform.init()
 

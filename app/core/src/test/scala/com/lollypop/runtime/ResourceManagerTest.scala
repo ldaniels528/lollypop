@@ -1,7 +1,7 @@
 package com.lollypop.runtime
 
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.datatypes.BLOB
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
@@ -30,7 +30,7 @@ class ResourceManagerTest extends AnyFunSpec {
     it("should return a mapping containing all tracked resources") {
       val mapping = ResourceManager.getResourceMappings
       mapping.foreach { case (name, value) =>
-        logger.info(s"$name: ${value.render}")
+        logger.info(s"$name: ${value.asModelString}")
       }
     }
 

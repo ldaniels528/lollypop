@@ -2,7 +2,7 @@ package com.lollypop.language
 
 import com.lollypop.die
 import com.lollypop.implicits._
-import com.lollypop.util.StringRenderHelper.StringRenderer
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 
 /**
  * Represents a token
@@ -46,7 +46,7 @@ sealed trait Token {
    */
   def text: String
 
-  override def toString: String = this.render
+  override def toString: String = this.asModelString
 
   /**
    * @return the typed value contained by this token
@@ -148,6 +148,24 @@ object Token {
     }
 
     def unapply(t: DoubleQuotedToken): Option[(String, String, Int, Int)] = Some((t.text, t.value, t.lineNo, t.columnNo))
+  }
+
+  /**
+   * Represents a process invocation token
+   * @example {{{
+   *  (% iostat 1 5 %)
+   * }}}
+   */
+  case class ProcessInvocationToken(text: String) extends Token {
+    override def value: String = text
+  }
+
+  object ProcessInvocationToken {
+    def apply(text: String, lineNo: Int, columnNo: Int): ProcessInvocationToken = {
+      ProcessInvocationToken(text).withLineAndColumn(lineNo, columnNo)
+    }
+
+    def unapply(t: ProcessInvocationToken): Option[(String, Int, Int)] = Some((t.text, t.lineNo, t.columnNo))
   }
 
   case class SingleQuotedToken(text: String, value: String) extends QuotedToken {

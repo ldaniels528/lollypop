@@ -487,20 +487,12 @@ case class DefaultScope(superScope: Option[Scope] = None,
   //    Print I/O Streams
   //////////////////////////////////////////////////////////////////////////////////
 
-  override def debug(s: => String): Unit = {
-    if (resolveAs("__debug__").contains(true)) getUniverse.system.stdOut.writer.println(s)
-  }
+  override def debug(s: => String): Unit = getUniverse.debug(s)
 
-  override def info(s: => String): Unit = {
-    if (resolveAs("__info__").contains(true)) getUniverse.system.stdOut.writer.println(s)
-  }
+  override def info(s: => String): Unit = getUniverse.info(s)
 
-  override def warn(s: => String): Unit = {
-    if (resolveAs("__warn__").contains(true)) getUniverse.system.stdErr.writer.println(s)
-  }
+  override def warn(s: => String): Unit = getUniverse.warn(s)
 
-  override def error(s: => String): Unit = {
-    if (resolveAs("__error__").contains(true)) getUniverse.system.stdErr.writer.println(s)
-  }
+  override def error(s: => String): Unit = getUniverse.error(s)
 
 }

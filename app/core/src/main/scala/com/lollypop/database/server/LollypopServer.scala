@@ -19,6 +19,7 @@ import com.lollypop.language.models._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime._
+import com.lollypop.runtime.conversions.TransferTools.EnrichedByteString
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollection.dieColumnIndexOutOfRange
@@ -30,7 +31,6 @@ import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.util.JSONSupport.JsValueConversion
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.ResourceHelper.AutoClose
-import com.lollypop.runtime.conversions.TransferTools.EnrichedByteString
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{AppConstants, die}
 import lollypop.io.IOCost
@@ -53,7 +53,7 @@ import scala.util.{Failure, Success, Try}
  * @param port the port to bind
  * @param ctx  the root [[LollypopUniverse compiler context]]
  */
-class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
+class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
   private val logger = LoggerFactory.getLogger(getClass)
   private val scopes = TrieMap[String, Scope]()
   private val apiRoutes = TrieMap[String, Map[String, Any]]()
@@ -61,13 +61,13 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
   private val systemStartupTime = System.currentTimeMillis()
 
   // pre-load the commands
-  implicit val compiler: LollypopCompiler = LollypopCompiler()
+  implicit val compiler: LollypopCompiler = LollypopCompiler(ctx)
   ctx.isServerMode = true
 
   private val rootScope: Scope = {
     val scope0 = ctx.createRootScope()
     val refs = for {
-      (name, _type, value) <- Seq((__port__, Int32Type, port), ("server_sql", BooleanType, false))
+      (name, _type, value) <- Seq((__port__, Int32Type, port))
     } yield Variable(name, _type, initialValue = value)
     refs.foldLeft(scope0) { (scope, ref) => scope.withVariable(ref) }
   }
@@ -102,9 +102,9 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
    * @param files the HTTP URL to file mapping
    * @return true, if a new endpoint was created
    */
-  def createFileEndPoint(url: String, files: Map[String, String]): Boolean = {
+  def createFileEndPoint(url: String, files: QMap[String, String]): Boolean = {
     logger.info(s"Registered '$url'...")
-    wwwRoutes.put(url, files).nonEmpty
+    wwwRoutes.put(url, files.toMap).nonEmpty
   }
 
   /**
@@ -166,28 +166,39 @@ class LollypopServer(port: Int, ctx: LollypopUniverse = LollypopUniverse())(impl
       cookie(lollypopSessionID)(routesBySession)
   }
 
+  /**
+   * WebSocket Message Handler
+   */
   private val webSocketHandler: Flow[Message, Message, NotUsed] = {
     var scope = Scope()
-    Flow[Message].collect {
-      case tm: TextMessage =>
-        val response = apiRoutes.collectFirst { case (url, mappings) if mappings.exists { case (method, _) => method == "ws" } =>
-          mappings("ws") match {
-            case af: AnonymousFunction =>
-              val (scopeA, _, resultA) = af.call(List(tm.getStrictText.v)).execute(scope)
-              scope = scopeA
-              resultA
-            case code: Instruction =>
-              val (scopeA, _, resultA) = code.execute(scope)
-              scope = scopeA
-              resultA
-            case other =>
-              other
-          }
+
+    def process[A <: Message](message: A, f: A => Expression): Option[Any] = {
+      apiRoutes.collectFirst { case (_, mappings) if mappings.exists { case (method, _) => method == "ws" } =>
+        mappings("ws") match {
+          case af: AnonymousFunction =>
+            val (scopeA, _, resultA) = af.call(List(f(message))).execute(scope)
+            scope = scopeA
+            resultA
+          case code: Instruction =>
+            val (scopeA, _, resultA) = code.execute(scope)
+            scope = scopeA
+            resultA
+          case other =>
+            other
         }
-        TextMessage(response.map(_.renderAsJson).getOrElse("null"))
-      case bm: BinaryMessage =>
-        logger.info(s"BinaryMessage: ${bm.getStrictData.toVector}")
-        bm
+      }
+    }
+
+    // handle the messages we're interested in
+    Flow[Message].collect {
+      case _: BinaryMessage.Streamed => TextMessage("{}")
+      case bm: BinaryMessage.Strict =>
+        val response = process[BinaryMessage.Strict](bm, _.getStrictData.toArray.v)
+        TextMessage(response.map(_.renderAsJson).getOrElse("{}"))
+      case _: TextMessage.Streamed => TextMessage("{}")
+      case tm: TextMessage.Strict =>
+        val response = process[TextMessage.Strict](tm, _.getStrictText.v)
+        TextMessage(response.map(_.renderAsJson).getOrElse("{}"))
     }
   }
 

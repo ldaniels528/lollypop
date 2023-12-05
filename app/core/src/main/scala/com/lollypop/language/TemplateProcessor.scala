@@ -484,6 +484,9 @@ object TemplateProcessor {
     // function parameters? (e.g. "%FP:params" => "(name String, age INTEGER, dob DATE)")
     case tag if tag.startsWith("%FP:") => ListOfFunctionParametersTemplateTag(tag drop 4)
 
+    // expression on same line as last token? (e.g. "%g:expression" => "2 * (x + 1)")
+    case tag if tag.startsWith("%g:") => ExpressionTemplateTag(tag drop 3, isPreviousTokenOnSameLine = true)
+
     // header key? (e.g. "%h:name" => "Accept-Encoding" | "Cookie")
     case tag if tag.startsWith("%h:") => HeaderKeyTemplateTag(tag drop 3)
 
@@ -565,6 +568,7 @@ object TemplateProcessor {
 
     @inline def isIdentifier: Boolean = !keywords.exists(token is) && {
       def isValidChar(c: Char): Boolean = c == '_' || c.isLetterOrDigit || (c >= 128)
+
       val value = token.valueAsString
       val legal_0 = (c: Char) => c == '$' || isValidChar(c)
       val legal_1 = (c: Char) => c == '.' || (c >= '0' && c <= '9') || isValidChar(c)
@@ -761,12 +765,14 @@ object TemplateProcessor {
       override def toCode: String = s"%x:$name"
     }
 
-    case class ExpressionTemplateTag(name: String) extends TemplateTag {
+    case class ExpressionTemplateTag(name: String, isPreviousTokenOnSameLine: Boolean = false)
+      extends TemplateTag {
       override def extract(ts: TokenStream)(implicit compiler: SQLCompiler): SQLTemplateParams = {
-        SQLTemplateParams(instructions = Map(name -> (compiler.nextExpression(ts) || ts.dieExpectedExpression())))
+        val nextExpr = if (!isPreviousTokenOnSameLine || ts.isPreviousTokenOnSameLine) compiler.nextExpression(ts) else None
+        SQLTemplateParams(instructions = Map(name -> (nextExpr || ts.dieExpectedExpression())))
       }
 
-      override def toCode: String = s"%e:$name"
+      override def toCode: String = if (isPreviousTokenOnSameLine) s"%g:$name" else s"%e:$name"
     }
 
     case class FieldTemplateTag(name: String) extends TemplateTag {

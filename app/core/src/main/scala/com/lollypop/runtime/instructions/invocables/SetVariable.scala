@@ -79,7 +79,7 @@ case class ScopeModificationBlock(instructions: List[ScopeModification]) extends
       case (aggScope, instruction) =>
         instruction.execute(aggScope)._1
     }
-    (s, IOCost.empty, null)
+    (s, IOCost.empty, ())
   }
 
   override def toSQL: String = instructions.map(_.toSQL).mkString(", ")
@@ -92,8 +92,8 @@ object ScopeModificationBlock {
 case class SetVariableExpression(ref: Expression, expression: Expression) extends SetVariable with ModificationExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     ref match {
-      case FieldRef(name) => (scope.setVariable(name, expression), IOCost.empty, null)
-      case VariableRef(name) => (scope.setVariable(name, expression), IOCost.empty, null)
+      case FieldRef(name) => (scope.setVariable(name, expression), IOCost.empty, ())
+      case VariableRef(name) => (scope.setVariable(name, expression), IOCost.empty, ())
       case setter =>
         // get the variable/field names of each segment
         val names = unpack(setter).map {
@@ -124,7 +124,7 @@ case class SetVariableExpression(ref: Expression, expression: Expression) extend
               m.put(fieldName, expression.execute(scope)._3)
             case _ => setter.dieIllegalType()
           }
-          (scope, IOCost.empty, null)
+          (scope, IOCost.empty, ())
         }
     }
   }

@@ -1,7 +1,7 @@
 package com.lollypop.language.models
 
 import com.lollypop.die
-import com.lollypop.util.StringRenderHelper
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 
 /**
  * Represents a logical column having a yet-to-be realized content type
@@ -15,7 +15,7 @@ case class Column(name: String, `type`: ColumnType, defaultValue: Option[Express
 
   override def isOutput: Boolean = false
 
-  override def toString: String = StringRenderHelper.toProductString(this)
+  override def toString: String = this.asModelString
 
 }
 

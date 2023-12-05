@@ -18,6 +18,7 @@ trait InputStreamConversion extends Conversion {
     case a: Array[Byte] => new ByteArrayInputStream(a)
     case a: Array[Char] => convert(String.valueOf(a))
     case b: java.sql.Blob => b.getBinaryStream
+    case c: Char => convert(String.valueOf(c))
     case c: java.sql.Clob => c.getAsciiStream
     case f: File => new FileInputStream(f)
     case i: InputStream => i

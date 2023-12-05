@@ -6,7 +6,7 @@ import scala.language.postfixOps
 val scalaVersion_2_13 = "2.13.12"
 val scalaVersion_3_00 = "3.0.1"
 
-val appVersion = "0.1.6.4"
+val appVersion = "0.1.6.5"
 val pluginVersion = "1.0.0"
 val scalaAppVersion = scalaVersion_2_13
 
@@ -74,7 +74,7 @@ lazy val core = (project in file("./app/core")).
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
     Compile / doc / scalacOptions += "-no-link-warnings",
     autoCompilerPlugins := true,
-    assembly / mainClass := Some("com.lollypop.repl.LollypopCLI"),
+    assembly / mainClass := Some("com.lollypop.repl.LollypopREPL"),
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", _*) => MergeStrategy.discard
       case PathList("org", "apache", _*) => MergeStrategy.first

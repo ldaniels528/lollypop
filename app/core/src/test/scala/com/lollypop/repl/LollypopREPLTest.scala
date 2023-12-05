@@ -1,20 +1,19 @@
 package com.lollypop.repl
 
-import com.lollypop.runtime.{LollypopCompiler, Scope}
-import org.scalatest.funspec.AnyFunSpec
+import com.lollypop.runtime.Scope
 
 import java.io.File
 
-class LollypopCLITest extends AnyFunSpec {
-  implicit val compiler: LollypopCompiler = LollypopCompiler()
+class LollypopREPLTest extends REPLFunSpec {
 
-  describe(classOf[LollypopCLI].getSimpleName) {
+  describe(classOf[LollypopREPL].getSimpleName) {
 
     it("should execute inline scripts") {
-      val scope = LollypopCLI.interact(Scope(), console = {
+      val scope = LollypopREPL.interact(Scope(), console = {
         val it = Seq(
           "set x = 3",
           "set y = 6",
+          "",
           "set z = x + y"
         ).iterator
         () => if (it.hasNext) it.next() else "exit"
@@ -27,14 +26,14 @@ class LollypopCLITest extends AnyFunSpec {
       val scope: Scope = Scope()
       val outputFile = new File("./vin-mapping.json")
       assert(!outputFile.exists() || outputFile.delete())
-      LollypopCLI.runScript(scope, "./app/examples/src/main/lollypop/GenerateVinMapping.sql")
+      LollypopREPL.runScript(scope, "./app/examples/src/main/lollypop/GenerateVinMapping.sql")
       assert(outputFile.exists())
     }
 
     it("should execute a .sql file via main(...)") {
       val outputFile = new File("./vin-mapping.json")
       assert(!outputFile.exists() || outputFile.delete())
-      LollypopCLI.main(Array("./app/examples/src/main/lollypop/GenerateVinMapping.sql"))
+      LollypopREPL.main(Array("./app/examples/src/main/lollypop/GenerateVinMapping.sql"))
       assert(outputFile.exists())
     }
 

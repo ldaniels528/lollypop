@@ -3,12 +3,12 @@ package com.lollypop.runtime.devices
 import com.lollypop.language.models.Expression.implicits._
 import com.lollypop.language.models.Inequality._
 import com.lollypop.language.models.{Column, ColumnType}
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.ResourceHelper.AutoClose
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File
@@ -118,7 +118,7 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
       // verify the partitions
       val partitionRC = collB match {
         case rc: PartitionedRowCollection[_] => rc
-        case x => fail(s"${x.render} is a not PartitionedRowCollection")
+        case x => fail(s"${x.asModelString} is a not PartitionedRowCollection")
       }
       assert(partitionRC.getPartitionMap.map { case (key, rc) => key -> rc.toMapGraph } == Map(
         "NYSE" -> List(
@@ -232,7 +232,7 @@ class RowCollectionTest extends AnyFunSpec with VerificationTools {
       // verify the partitions
       val partitionRC = device match {
         case rc: PartitionedRowCollection[_] => rc
-        case x => fail(s"${x.render} is a not PartitionedRowCollection")
+        case x => fail(s"${x.asModelString} is a not PartitionedRowCollection")
       }
       assert(partitionRC.getPartitionMap.map { case (key, rc) => key -> rc.toMapGraph } == Map(
         "NYSE" -> List(

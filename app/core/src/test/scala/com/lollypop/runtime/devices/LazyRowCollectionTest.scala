@@ -31,7 +31,7 @@ class LazyRowCollectionTest extends AnyFunSpec {
       implicit val out: RowCollection = createFileTable()
       val rows = files.filter(filterFiles).map(toFileRow).iterator
       val lazyRC = LazyRowCollection(out, rows)
-      assert(lazyRC.getLength == 7)
+      assert(lazyRC.getLength == 8)
       assert(!rows.hasNext)
     }
 

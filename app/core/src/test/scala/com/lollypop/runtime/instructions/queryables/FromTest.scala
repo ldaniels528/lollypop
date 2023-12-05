@@ -76,7 +76,7 @@ class FromTest extends AnyFunSpec with VerificationTools {
             |       ('JONES', 'SAMANTHA', 'BUR'), ('SHARMA', 'PANKAJ', 'LAX')
             |
             |declare table travelersJones(lastName String(12), firstName String(12), destAirportCode String(3))
-            |this.toTable().show()
+            |this.show()
             |
             |from @travelers
             |where lastName is 'JONES'

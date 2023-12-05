@@ -7,7 +7,7 @@ import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplate
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.Verification
-import com.lollypop.runtime.instructions.expressions.Http
+import com.lollypop.runtime.instructions.expressions.WWW
 import com.lollypop.runtime.instructions.invocables.Scenario.{__AUTO_EXPAND__, __KUNGFU_BASE_URL__}
 import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
@@ -69,7 +69,7 @@ case class Scenario(title: Expression,
     }
 
     instruction match {
-      case Http(_, Literal(url: String), _, _) =>
+      case WWW(_, Literal(url: String), _, _) =>
         scope.withVariable(__KUNGFU_BASE_URL__, code = getBaseURL(url).v, isReadOnly = false)
       case _ => scope
     }

@@ -22,25 +22,25 @@ class InfixTest extends AnyFunSpec with VerificationTools {
 
     it("should compile Java instance fields") {
       val results = compiler.compile("select myValue.value")
-      assert(results == Select(fields = Seq(Infix(instance = "myValue".f, member = "value".f))))
+      assert(results == Select(fields = Seq(Infix(a = "myValue".f, b = "value".f))))
     }
 
     it("should compile Java static fields") {
       val results = compiler.compile("select classOf('java.awt.Color').BLACK")
-      assert(results == Select(fields = Seq(Infix(instance = ClassOf("java.awt.Color".v), member = "BLACK".f))))
+      assert(results == Select(fields = Seq(Infix(a = ClassOf("java.awt.Color".v), b = "BLACK".f))))
     }
 
     it("should compile Java instance method calls") {
       val results = compiler.compile("select offScreen.setColor(color)")
       assert(results == Select(fields = Seq(
-        Infix(instance = "offScreen".f, member = NamedFunctionCall(name = "setColor", args = List("color".f)))
+        Infix(a = "offScreen".f, b = NamedFunctionCall(name = "setColor", args = List("color".f)))
       )))
     }
 
     it("should compile Java static method calls") {
       val results = compiler.compile("select classOf('org.jsoup.Jsoup').parse(file, 'UTF-8')")
       assert(results == Select(fields = Seq(
-        Infix(instance = ClassOf("org.jsoup.Jsoup".v), member = NamedFunctionCall(name = "parse", args = List("file".f, "UTF-8".v)))
+        Infix(a = ClassOf("org.jsoup.Jsoup".v), b = NamedFunctionCall(name = "parse", args = List("file".f, "UTF-8".v)))
       )))
     }
 

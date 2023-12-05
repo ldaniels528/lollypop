@@ -65,7 +65,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
       device.tabulate() foreach logger.info
       assert(device.toMapGraph.collect { case m: Map[String, Any] => m("name") }.toSet == Set(
         "BlackJack.sql", "GenerateVinMapping.sql", "SwingDemo.sql", "MacroDemo.sql", "IngestDemo.sql",
-        "BreakOutDemo.sql", "Stocks.sql"
+        "BreakOutDemo.sql", "Stocks.sql", "WebSocketsDemo.sql"
       ))
     }
 
@@ -78,7 +78,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
         "Contests.sql", "position_api.sql", "stock_api.sql", "StockQuotes.sql", "order_api.sql", "Participants.sql",
         "commons.sql", "Orders.sql", "Members.sql", "MacroDemo.sql", "member_api.sql", "BlackJack.sql",
         "GenerateVinMapping.sql", "Positions.sql", "SwingDemo.sql", "participant_api.sql", "shocktrade.sql",
-        "shocktrade_test.sql", "contest_api.sql", "IngestDemo.sql", "BreakOutDemo.sql", "Stocks.sql"
+        "shocktrade_test.sql", "contest_api.sql", "IngestDemo.sql", "BreakOutDemo.sql", "Stocks.sql", "WebSocketsDemo.sql"
       ))
     }
 

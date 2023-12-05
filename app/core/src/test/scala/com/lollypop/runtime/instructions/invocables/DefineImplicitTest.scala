@@ -2,10 +2,10 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.{CodeBlock, Column}
+import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.functions.NamedFunction
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
-import com.lollypop.util.StringRenderHelper.StringRenderer
 import org.scalatest.funspec.AnyFunSpec
 
 class DefineImplicitTest extends AnyFunSpec with VerificationTools {
@@ -19,9 +19,9 @@ class DefineImplicitTest extends AnyFunSpec with VerificationTools {
            |        import "java.lang.StringBuilder"
            |    }
            |}""".stripMargin)
-      println(model.render)
+      println(model.asModelString)
       assert(model == DefineImplicit(className = "java.lang.String", methods = CodeBlock(
-        DefineFunction(function = NamedFunction(
+        Def(function = NamedFunction(
           name = "reverseString",
           params = Seq(Column(name = "value", `type` = "String".ct)),
           code = CodeBlock(Import("java.lang.StringBuilder".v)),
@@ -31,7 +31,7 @@ class DefineImplicitTest extends AnyFunSpec with VerificationTools {
 
     it("should decompile virtual methods") {
       val model = DefineImplicit(className = "java.lang.String", methods = CodeBlock(
-        DefineFunction(function = NamedFunction(
+        Def(function = NamedFunction(
           name = "reverseString",
           params = Seq(Column(name = "value", `type` = "String".ct)),
           code = CodeBlock(Import("java.lang.StringBuilder".v)),

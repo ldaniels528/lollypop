@@ -1,15 +1,28 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.language.models._
+import com.lollypop.repl.symbols.REPLSymbol
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.QMap
+import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
-import java.io.{InputStream, OutputStream}
+import java.io.{File, InputStream, OutputStream}
 import scala.concurrent.duration.FiniteDuration
+import scala.util.Properties
 
 package object conversions {
+  private[lollypop] val _CWD_ = "__current_working_directory__"
+  private[lollypop] val _OLD_CWD_ = "__previous_working_directory__"
+
+  def getCWD(implicit scope: Scope): String = getOSPath(_CWD_)
+
+  private def getOldCWD(implicit scope: Scope): String = getOSPath(_OLD_CWD_)
+
+  private def getOSPath(name: String)(implicit scope: Scope): String = {
+    scope.resolveAs[String](name) || new File(".").getCanonicalPath
+  }
 
   /**
    * Expressive Type Conversion
@@ -140,6 +153,48 @@ package object conversions {
     @inline
     def pullDuration(implicit scope: Scope): (Scope, IOCost, FiniteDuration) = {
       instruction.execute(scope) ~>> DurationType.convert
+    }
+
+    /**
+     * Evaluates an expression converting the result to a [[File]] value.
+     * @param scope the [[Scope scope]]
+     * @return a tuple containing the updated [[Scope]], [[IOCost]] and a [[File]].
+     */
+    def pullFile(implicit scope: Scope): (Scope, IOCost, File) = {
+      def decode(sc: Scope, opCode: Instruction): (Scope, IOCost, List[String]) = opCode match {
+        // e.g. cd games/emulators/atari/jaguar
+        case op@BinaryOperation(a, b) =>
+          val (sa, ca, va) = decode(sc, a)
+          decode(sa, b) ~>> (ca ++ _, va ::: op.operator :: _)
+        // e.g. cd Downloads
+        case IdentifierRef(name) if !scope.isDefined(name) => (scope, IOCost.empty, List(name))
+        // e.g. ls ^/Documents; cd _; cd ..; www https://0.0.0.0/api?symbol=ABC
+        case r: REPLSymbol => (scope, IOCost.empty, List(r.symbol))
+        // anything else ...
+        case z => z.pullString ~>> (x => List(x))
+      }
+
+      // expand special characters ('^', '~', '_', '.', '..')
+      decode(scope, instruction) ~>> (_.mkString) ~>> {
+        case "_" => getOldCWD
+        case "." => getCWD
+        case ".." => new File(getCWD).getParent
+        case s if s.startsWith("^") => s.drop(1)
+        case s if s.startsWith("~") => Properties.userHome + s.drop(1)
+        case s => s
+      } ~>> (new File(_))
+    }
+
+    /**
+     * Evaluates an expression converting the result to a [[File]] value then
+     * applies the transformation function `f` resulting in an `A` value.
+     * @param f     the [[File file]] to `A` transformation function
+     * @param scope the [[Scope scope]]
+     * @return a tuple containing the updated [[Scope]], [[IOCost]] and a [[File]].
+     */
+    @inline
+    def pullFile[A](f: File => A)(implicit scope: Scope): (Scope, IOCost, A) = {
+      pullFile(scope) ~>> f
     }
 
     /**

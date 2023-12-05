@@ -122,7 +122,7 @@ class HashTagTest extends AnyFunSpec {
         """|val array = ['A' to 'Z']
            |array#symbol
            |""".stripMargin)) match {
-        case Failure(e) => assert(e.getMessage == "Unexpected type returned '['A', 'B', ... ' (char[]) near 'array' on line 2 at 1")
+        case Failure(e) => assert(e.getMessage == "Unexpected type returned 'Array('A', 'B', 'C', 'D', 'E', 'F', 'G', ... ' near 'array' on line 2 at 1")
         case Success(value) => fail(s"$value returned, but Exception expected")
       }
     }

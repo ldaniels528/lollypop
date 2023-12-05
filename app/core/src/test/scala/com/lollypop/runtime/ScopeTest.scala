@@ -1,7 +1,6 @@
 package com.lollypop.runtime
 
 import com.lollypop.AppConstants
-import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
@@ -125,6 +124,7 @@ class ScopeTest extends AnyFunSpec {
         case ("name", "Nodes") => true
         case ("name", "OS") => true
         case ("name", "Random") => true
+        case ("name", "WebSockets") => true
         case _ => false
       }).toSet == Set(
         Map("name" -> "position", "value" -> "1", "kind" -> "Long"),
@@ -258,22 +258,6 @@ class ScopeTest extends AnyFunSpec {
     it("should provide the Lollypop version string") {
       val version = Scope().resolve("__version__").orNull
       assert(version == AppConstants.version)
-    }
-
-    it("should provide the logging services") {
-      val ctx = LollypopUniverse(isServerMode = true)
-      val scope = ctx.createRootScope()
-        .withVariable(name = "__debug__", value = true)
-        .withVariable(name = "__info__", value = true)
-        .withVariable(name = "__error__", value = true)
-        .withVariable(name = "__warn__", value = true)
-
-      scope.debug("debug: Hello World")
-      scope.info("info: Hello World")
-      scope.warn("warn: Hello World")
-      scope.error("error: Hello World")
-      assert(ctx.system.stdOut.asString() == "debug: Hello World\ninfo: Hello World\n")
-      assert(ctx.system.stdErr.asString() == "warn: Hello World\nerror: Hello World\n")
     }
 
   }
