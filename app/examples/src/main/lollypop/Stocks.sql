@@ -21,7 +21,7 @@ create macro `tickers` := 'tickers %e:total' {
 }
 
 // create a table variables with a capacity of 15000 rows
-stocks = tickers 10
+val stocks = tickers 10
 
 // display a limit of 5 rows
 stdout <=== 'Sampling 5 quotes:\n'

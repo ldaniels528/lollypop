@@ -92,7 +92,7 @@ object Help extends QueryableParser {
 
   def gatherHelp(name_? : Option[String])(implicit ctx: LollypopUniverse): (IOCost, RowCollection) = {
     val helpList = ctx.helpDocs.filter(h => matches(name_?, h.name))
-    implicit val out: RowCollection = createQueryResultTable(commandColumns, fixedRowCount = helpList.size)
+    implicit val out: RowCollection = createQueryResultTable(commandColumns)
     val cost = out.insert(helpList.map(toMap).map(_.toRow))
     (cost, out)
   }

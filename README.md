@@ -1,10 +1,11 @@
-Lollypop v0.1.6.4
+Lollypop v0.1.6.5
 ============
 
 ## Table of Contents
 * <a href="#Introduction">Introduction</a>
 * <a href="#Project_Status">Project Status</a>
 * <a href="#Getting_Started">Getting Started</a>
+* <a href="#Shell_Scripting">As a Shell-Scripting Language Alternative</a>
 * <a href="#Basic_Examples">Basic Features</a>
   * <a href="#Array_Comprehensions">Array Comprehensions</a>
   * <a href="#Array_Literals">Array Literals</a>
@@ -20,14 +21,15 @@ Lollypop v0.1.6.4
   * <a href="#String_Literals_Triple_Single_quoted_">String Literals (Triple-Single-quoted)</a>
 * <a href="#Examples">Featured Examples By Category</a>
   * <a href="#Aggregation_and_Sorting">Aggregation and Sorting</a> (23)
-  * <a href="#Concurrency">Concurrency</a> (13)
+  * <a href="#Concurrency">Concurrency</a> (10)
   * <a href="#Control_Flow">Control Flow</a> (21)
   * <a href="#Dataframe_I_O">Dataframe I/O</a> (23)
   * <a href="#Dataframe_Management">Dataframe Management</a> (14)
   * <a href="#Filtering_and_Matching">Filtering and Matching</a> (25)
   * <a href="#JVM_and_Reflection">JVM and Reflection</a> (14)
+  * <a href="#REPL_Tools">REPL Tools</a> (29)
   * <a href="#Scope_and_Session">Scope and Session</a> (15)
-  * <a href="#System_Tools">System Tools</a> (12)
+  * <a href="#System_Tools">System Tools</a> (14)
   * <a href="#Testing__Unit_Integration">Testing - Unit/Integration</a> (5)
   * <a href="#Transformation">Transformation</a> (8)
 <a name="Introduction"></a>
@@ -51,21 +53,97 @@ Preview &#8212; there are still a number of experimental features to sort out.
 ```bash
 sbt "project core" clean assembly
 ```
-The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.4.jar`
+The Jar binary should be `./app/core/target/scala-2.13/core-assembly-0.1.6.5.jar`
 
 ### To build the Lollypop JDBC driver
 ```bash
 sbt "project jdbc_driver" clean assembly
 ```
-The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.4.jar`
+The Jar binary should be `./app/jdbc-driver/target/scala-2.13/jdbc-driver-assembly-0.1.6.5.jar`
 
-### Run Lollypop CLI
+### Run Lollypop REPL
 ```bash
 sbt "project core" run
 ```
 OR
 ```bash
-java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.4.jar
+java -jar ./app/core/target/scala-2.13/core-assembly-0.1.6.5.jar
+```
+
+<a name="Shell_Scripting"></a>
+## As a Shell-Scripting Language Alternative
+
+Lollypop offers developers the opportunity to use a Scala/SQL-hybrid scripting language for writing
+shell-scripts. And because your scripts will be running within the JVM you can leverage Maven Central
+and the myriads of libraries available to it.
+
+#### A new approach to shell-scripting
+
+Lollypop provides native variants of the following UNIX-like commands:
+* <a href="#cat">cat</a> - Retrieves the contents of a file.
+* <a href="#cd">cd</a> - Changes the current directory.
+* <a href="#cp">cp</a> - Copies a source file or directory to a target.
+* <a href="#echo">echo</a> - Prints text to the standard output.
+* <a href="#find">find</a> - Returns a dataframe containing a recursive list of files matching any specified criterion.
+* <a href="#ls">ls</a> - Returns a dataframe containing a list of files matching any specified criterion.
+* <a href="#md5">md5</a> - Returns an MD5 digest of a file or byte-encode-able value.
+* <a href="#mkdir">mkdir</a> - Creates a new directory.
+* <a href="#mv">mv</a> - Renames a file or moves the file to a directory.
+* <a href="#pwd">pwd</a> - Retrieves the contents of a file.
+* <a href="#rm">rm</a> - Removes a file or a collection of files via pattern-matching.
+* <a href="#rmdir">rmdir</a> - Removes a specific directory.
+* <a href="#rmr">rmr</a> - Recursively removes files or collections of files via pattern-matching.
+* <a href="#touch">touch</a> - Creates or updates the last modified time of a file. Return true if successful.
+* <a href="#wc">wc</a> - Returns the count of lines of a text file.
+* <a href="#www">www</a> - A non-interactive HTTP client
+
+#### Let's try something simple
+
+* What if I ask you to write some Bash code to retrieve the top 5 largest files by size in descending order?
+
+Could you write it without consulting a search engine or manual pages? Off the cuff, here's what I came up with to do it. It's crude, and it only works on the Mac...
+
+```bash
+ls -lS ./app/examples/ | grep -v ^total | head -n 5
+```
+produced:
+```text
+-rw-r--r--@ 1 ldaniels  staff  4990190 Nov 11 23:50 stocks-100k.csv
+-rw-r--r--@ 1 ldaniels  staff   336324 Nov 11 23:50 stocks.csv
+-rw-r--r--@ 1 ldaniels  staff   249566 Nov 11 23:50 stocks-5k.csv
+drwxr-xr-x@ 6 ldaniels  staff      192 Jul  5 14:57 target
+drwxr-xr-x@ 5 ldaniels  staff      160 Jul  5 14:52 src
+```
+
+And here's the equivalent in Lollypop:
+
+```sql
+ls app/examples where not isHidden order by length desc limit 5
+```
+produced:
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name            | canonicalPath                                                | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| stocks-5k.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv   | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| .DS_Store       | /Users/ldaniels/GitHub/lollypop/app/examples/.DS_Store       | 2023-11-12T05:53:49.722Z |    6148 | false       | true   | true     |
+| target          | /Users/ldaniels/GitHub/lollypop/app/examples/target          | 2023-07-05T21:57:46.435Z |     192 | true        | false  | false    |
+| companylist     | /Users/ldaniels/GitHub/lollypop/app/examples/companylist     | 2023-11-12T07:50:27.476Z |     128 | true        | false  | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+
+* What if I ask for the same as above except find files recursively?
+
+```sql
+find './app/examples/' where not isHidden order by length desc limit 5
+```
+```sql
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name            | canonicalPath                                                                                             | lastModified             | length  | isDirectory | isFile | isHidden |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv                                              | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 
 <a name="Basic_Examples"></a>
@@ -126,7 +204,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2023-11-21T21:16:41.864Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2023-12-05T02:10:29.193Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -178,7 +256,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2023-11-21T21:16:41.898Z"
+"2023-12-05T02:10:29.232Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -267,6 +345,7 @@ Fine, I hope!
 ## Aggregation and Sorting Examples
 <hr>
 
+<a name="avg"></a>
 ### avg¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Computes the average of a numeric expression.
 
@@ -307,6 +386,7 @@ select avgLastSale: avg(lastSale) from @stocks
 | 61.89333333333334 |
 |-------------------|
 ```
+<a name="count"></a>
 ### count¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the number of rows matching the query criteria.
 
@@ -399,6 +479,7 @@ select total: count(lastSale) from @stocks
 |     4 |
 |-------|
 ```
+<a name="countUnique"></a>
 ### countUnique¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the distinct number of rows matching the query criteria.
 
@@ -447,12 +528,13 @@ select total: countUnique(exchange) from @stocks
 |     2 |
 |-------|
 ```
+<a name="group_by"></a>
 ### group by¹ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Aggregates a result set by a column
 
 ```sql
 select kind, total: count(*)
-from (this.toTable())
+from (this)
 group by kind
 ```
 ##### Results
@@ -463,6 +545,7 @@ group by kind
 | PrintStream    |     2 |
 | Random$        |     1 |
 | OS             |     1 |
+| WebSockets$    |     1 |
 | BufferedReader |     1 |
 | Double         |     1 |
 | Nodes          |     1 |
@@ -475,7 +558,7 @@ group by kind
 chart = { shape: "pie3d", title: "Types in Session" }
 graph chart from (
     select kind, total: count(*)
-    from (this.toTable())
+    from (this)
     group by kind
 )
 ```
@@ -484,6 +567,7 @@ graph chart from (
 <img src="./docs/images/Types_in_Session.png">
 </div>
 
+<a name="max"></a>
 ### max¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the maximum value of a numeric expression.
 
@@ -524,6 +608,7 @@ select maxLastSale: max(lastSale) from @stocks
 |       97.61 |
 |-------------|
 ```
+<a name="min"></a>
 ### min¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the minimum value of a numeric expression.
 
@@ -564,6 +649,7 @@ select minLastSale: min(lastSale) from @stocks
 |       31.95 |
 |-------------|
 ```
+<a name="order_by"></a>
 ### order by (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Sorts a result set by a column
 
@@ -594,6 +680,7 @@ from (
 | PTFY   | NYSE     |  19.9265 | 2023-08-06T18:33:08.676Z |
 |---------------------------------------------------------|
 ```
+<a name="sum"></a>
 ### sum¹ (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns the sum of a numeric expression.
 
@@ -649,6 +736,7 @@ select total: sum(lastSale) from (
 | 1497.2719 |
 |-----------|
 ```
+<a name="transpose"></a>
 ### transpose¹ (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Makes columns into rows and rows into columns. The function returns a table with the rows and columns transposed.
 
@@ -682,11 +770,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 5    | ♣    |
-| 2    | ♦    |
-| 6    | ♦    |
-| K    | ♥    |
-| 9    | ♠    |
+| K    | ♠    |
+| 10   | ♦    |
+| Q    | ♠    |
+| 5    | ♥    |
+| 10   | ♣    |
 |-------------|
 ```
 ### transpose³ (Aggregation and Sorting &#8212; Declarative) 
@@ -727,6 +815,7 @@ transpose(new Matrix([
 | 3.0 | 6.0 | 9.0 |
 |-----------------|
 ```
+<a name="unique"></a>
 ### unique (Aggregation and Sorting &#8212; Functional) 
 *Description*: Returns a unique collection of elements based on the query criteria.
 
@@ -750,6 +839,7 @@ select exchange: unique(exchange) from @stocks
 | ["AMEX", "NYSE"] |
 |------------------|
 ```
+<a name="unnest"></a>
 ### unnest (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.
 
@@ -778,6 +868,7 @@ select symbol, exchange, unnest(transactions) from @stocks where symbol is 'SHMN
 ## Concurrency Examples
 <hr>
 
+<a name="after"></a>
 ### after (Concurrency &#8212; Reactive) 
 *Description*: Schedules a one-time execution of command(s) after a specific delay period
 
@@ -792,6 +883,7 @@ ticker is 8
 ```sql
 true
 ```
+<a name="async"></a>
 ### async (Concurrency &#8212; Reactive) 
 *Description*: Asynchronously executes an instruction
 
@@ -810,6 +902,7 @@ async { OS.listFiles("./app") }
 | jdbc-driver | /Users/ldaniels/GitHub/lollypop/app/jdbc-driver | 2023-06-29T22:26:20.960Z |    160 | true        | false  | false    |
 |-------------------------------------------------------------------------------------------------------------------------------------|
 ```
+<a name="every"></a>
 ### every (Concurrency &#8212; Reactive) 
 *Description*: Schedules the execution of command(s) on a specific interval
 
@@ -825,82 +918,7 @@ n
 ```sql
 51
 ```
-### http¹ (Concurrency &#8212; Reactive) 
-*Description*: Lollypop-native HTTP client
-
-```sql
-http get('https://example.com/')
-```
-##### Results
-```sql
-HttpResponse(body='<!doctype html>
-<html>
-<head>
-    <title>Example Domain</title>
-
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type="text/css">
-    body {
-        background-color: #f0f0f2;
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        
-    }
-    div {
-        width: 600px;
-        margin: 5em auto;
-        padding: 2em;
-        background-color: #fdfdff;
-        border-radius: 0.5em;
-        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
-    }
-    a:link, a:visited {
-        color: #38488f;
-        text-decoration: none;
-    }
-    @media (max-width: 700px) {
-        div {
-            margin: 0 auto;
-            width: auto;
-        }
-    }
-    </style>    
-</head>
-
-<body>
-<div>
-    <h1>Example Domain</h1>
-    <p>This domain is for use in illustrative examples in documents. You may use this
-    domain in literature without prior coordination or asking for permission.</p>
-    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
-</div>
-</body>
-</html>
-', message="OK", statusCode=200, responseID="c0a934c1-9c10-4cd6-9f58-a3ecf7b10aaf")
-```
-### http² (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
-*Description*: Returns a URL based on a relative path.
-
-```sql
-http path('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="8584b414-0fd4-4923-b97d-8e17d3e8f683")
-```
-### http³ (Concurrency &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
-*Description*: Returns a URI based on a relative path.
-
-```sql
-http uri('users')
-```
-##### Results
-```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID="d04653c0-e5c2-4b8d-85e8-1c8410629c62")
-```
+<a name="Nodes"></a>
 ### Nodes¹ (Concurrency &#8212; Declarative) 
 *Description*: Executes a statement on a running Lollypop peer node.
 
@@ -943,11 +961,11 @@ node.api('/api/comments/', {
   put: (id: UUID, message: String) => "put '{{message}}' ~> {{(id}}"
   delete: (id: UUID) => "delete {{(id}}"
 })
-http post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello World" }
+www post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello World" }
 ```
 ##### Results
 ```sql
-HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID="0f5bba77-f3fc-48a3-b4ab-3841446e1517")
+HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID=682f6eb5-a7a3-498c-935d-50fc81ff6307)
 ```
 ### Nodes³ (Concurrency &#8212; Declarative) 
 *Description*: Opens a commandline interface to a remote Lollypop peer node.
@@ -975,11 +993,16 @@ finally
 ```sql
 node = Nodes.start()
 node.awaitStartup(Duration('1 second'))
-node.www('/www/notebooks/', {
+node.files('/www/notebooks/', {
   "" : "public/index.html",
   "*" : "public"
 })
 ```
+##### Results
+```sql
+false
+```
+<a name="once"></a>
 ### once (Concurrency &#8212; Reactive) 
 *Description*: Invokes an instruction or set of instructions one-time only
 
@@ -1002,6 +1025,7 @@ This happens every cycle 3
 This happens every cycle 4
 This happens every cycle 5
 ```
+<a name="whenever"></a>
 ### whenever¹ (Concurrency &#8212; Reactive) 
 *Description*: Executes an instruction at the moment the expression evaluates as true
 
@@ -1013,7 +1037,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e7cd0df
+java.io.PrintStream@12166229
 ```
 ##### Console Output
 ```
@@ -1033,7 +1057,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e7cd0df
+java.io.PrintStream@12166229
 ```
 ##### Console Output
 ```
@@ -1044,6 +1068,7 @@ Did it work?
 ## Control Flow Examples
 <hr>
 
+<a name="_"></a>
 ### && (Control Flow &#8212; Declarative) 
 *Description*: Binds multiple statements together
 
@@ -1066,12 +1091,13 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2023-11-21T21:16:43.757Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2023-11-21T21:16:43.757Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2023-11-21T21:16:43.757Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2023-11-21T21:16:43.757Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2023-12-05T02:10:30.986Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2023-12-05T02:10:30.986Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2023-12-05T02:10:30.986Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2023-12-05T02:10:30.986Z |
 |--------------------------------------------------------------------|
 ```
+<a name="__"></a>
 ### ??? (Control Flow &#8212; Declarative) 
 *Description*: `???` can be used for marking methods that remain to be implemented.
 
@@ -1084,12 +1110,13 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e7cd0df
+java.io.PrintStream@12166229
 ```
 ##### Console Output
 ```
 an implementation is missing on line 3 at 3
 ```
+<a name="call"></a>
 ### call (Control Flow &#8212; Procedural) 
 *Description*: Executes a stored procedure; returns a row set
 
@@ -1126,6 +1153,7 @@ call getStockQuote("NASDAQ")
 | NASDAQ   |   4.0 | 126.3182 |  44.3673 |
 |----------------------------------------|
 ```
+<a name="create_function"></a>
 ### create function (Control Flow &#8212; Procedural) 
 *Description*: Creates a function
 
@@ -1140,6 +1168,7 @@ create function if not exists calc_add(a: Int, b: Int) := a + b
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="create_macro"></a>
 ### create macro (Control Flow &#8212; Declarative) 
 *Description*: Creates a persistent macro
 
@@ -1164,13 +1193,14 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| AMEX      | CUUIJ  |  62.5465 | 2023-11-21T21:16:41.037Z |
-| OTHER_OTC | TVVP   |   0.7119 | 2023-11-21T21:16:27.531Z |
-| OTHER_OTC | SMIJ   |    0.641 | 2023-11-21T21:16:02.496Z |
-| AMEX      | NB     |  58.2719 | 2023-11-21T21:15:50.979Z |
-| NYSE      | DZL    |   9.7488 | 2023-11-21T21:16:11.249Z |
+| NASDAQ    | RW     |  27.1891 | 2023-12-05T02:10:03.040Z |
+| NASDAQ    | SGS    |  70.4688 | 2023-12-05T02:10:05.414Z |
+| OTCBB     | VSXGF  |   1.1043 | 2023-12-05T02:09:54.099Z |
+| AMEX      | NJXHI  |  29.3576 | 2023-12-05T02:09:45.134Z |
+| OTHER_OTC | PNPSK  |   0.8224 | 2023-12-05T02:10:23.122Z |
 |----------------------------------------------------------|
 ```
+<a name="create_procedure"></a>
 ### create procedure (Control Flow &#8212; Procedural) 
 *Description*: Creates a database procedure
 
@@ -1207,6 +1237,7 @@ call getStockQuote("NASDAQ")
 | NASDAQ   |   4.0 | 126.3182 |  44.3673 |
 |----------------------------------------|
 ```
+<a name="def"></a>
 ### def¹ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
 
@@ -1237,7 +1268,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.564, _2=720.0)
+Tuple2(_1=0.38975, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
@@ -1263,6 +1294,7 @@ roman(1023)
 ```sql
 MXXIII
 ```
+<a name="do"></a>
 ### do (Control Flow &#8212; Procedural) 
 *Description*: Creates a loop that executes enclosed statement(s) until the test condition evaluates to false
 
@@ -1276,6 +1308,7 @@ y
 ```sql
 120
 ```
+<a name="each"></a>
 ### each¹ (Control Flow &#8212; Declarative) 
 *Description*: Iterates over a dataframe applying a function to each entry
 
@@ -1337,6 +1370,7 @@ each item in (stocks.reverse()) yield item
 | OTHER_OTC | WAEQK  |   0.6713 | 2023-10-14T18:40:32.998Z |
 |----------------------------------------------------------|
 ```
+<a name="if"></a>
 ### if (Control Flow &#8212; Procedural) 
 *Description*: If the `expression` is true, then `outcomeA` otherwise `outcomeB`
 
@@ -1348,6 +1382,7 @@ if(value > 99) "Yes!" else "No."
 ```sql
 Yes!
 ```
+<a name="iff"></a>
 ### iff (Control Flow &#8212; Functional) 
 *Description*: If the `condition` is true, then `trueValue` otherwise `falseValue`
 
@@ -1359,6 +1394,7 @@ iff(value > 99, 'Yes!', 'No.')
 ```sql
 Yes!
 ```
+<a name="macro"></a>
 ### macro (Control Flow &#8212; Declarative) 
 *Description*: Creates a user-defined instruction
 
@@ -1373,6 +1409,7 @@ stdout <=== drawCircle(100)@(80, 650)
 ```sql
 Circle(100) <- (160, 325)
 ```
+<a name="return"></a>
 ### return (Control Flow &#8212; Procedural) 
 *Description*: Returns a result set (from a daughter scope)
 
@@ -1383,6 +1420,7 @@ return 'Hello World'
 ```sql
 Hello World
 ```
+<a name="throw"></a>
 ### throw (Control Flow &#8212; Procedural) 
 *Description*: Throws a JVM exception
 
@@ -1393,12 +1431,13 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e7cd0df
+java.io.PrintStream@12166229
 ```
 ##### Console Output
 ```
 A processing error occurred on line 2 at 3
 ```
+<a name="try"></a>
 ### try¹ (Control Flow &#8212; Functional) 
 *Description*: Attempts an operation and catches any exceptions that occur preventing them from stopping program execution
 
@@ -1408,7 +1447,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@8b89b3a
+java.io.PrintStream@aee05f4
 ```
 ##### Console Error
 ```
@@ -1424,24 +1463,26 @@ this
 ```
 ##### Results
 ```sql
-|---------------------------------------------------------------------------------------------------------|
-| name   | kind                | value                                                                    |
-|---------------------------------------------------------------------------------------------------------|
-| n      | Integer             | -1                                                                       |
-| stdout | PrintStream         | java.io.PrintStream@5e7cd0df                                             |
-| stdin  | BufferedReader      | java.io.BufferedReader@900649e                                           |
-| stderr | PrintStream         | java.io.PrintStream@8b89b3a                                              |
-| OS     | OS                  | lollypop.lang.OS                                                         |
-| π      | Double              | 3.141592653589793                                                        |
-| Nodes  | Nodes               | lollypop.io.Nodes@526893f                                                |
-| e      | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
-| Random | Random$             | lollypop.lang.Random                                                     |
-|---------------------------------------------------------------------------------------------------------|
+|-------------------------------------------------------------------------------------------------------------|
+| name       | kind                | value                                                                    |
+|-------------------------------------------------------------------------------------------------------------|
+| WebSockets | WebSockets$         | lollypop.io.WebSockets$@23c05889                                         |
+| n          | Integer             | -1                                                                       |
+| stdout     | PrintStream         | java.io.PrintStream@12166229                                             |
+| stdin      | BufferedReader      | java.io.BufferedReader@2bcb1414                                          |
+| stderr     | PrintStream         | java.io.PrintStream@aee05f4                                              |
+| OS         | OS                  | lollypop.lang.OS                                                         |
+| π          | Double              | 3.141592653589793                                                        |
+| Nodes      | Nodes               | lollypop.io.Nodes@2b4829aa                                               |
+| e          | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
+| Random     | Random$             | lollypop.lang.Random                                                     |
+|-------------------------------------------------------------------------------------------------------------|
 ```
 ##### Console Error
 ```
 Division by zero: n / 0
 ```
+<a name="while"></a>
 ### while (Control Flow &#8212; Procedural) 
 *Description*: Repeats the `command` while the `expression` is true
 
@@ -1455,6 +1496,7 @@ y
 ```sql
 120
 ```
+<a name="with"></a>
 ### with (Control Flow &#8212; Functional) 
 *Description*: Provides a closure over a resource; closing it upon completion.
 
@@ -1492,6 +1534,7 @@ with ns("Stocks") { stocks => @stocks where lastSale < 50 }
 ## Dataframe I/O Examples
 <hr>
 
+<a name="_"></a>
 ### # (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns a column slice of a data frame
 
@@ -1522,6 +1565,7 @@ stocks#[symbol, lastSale]
 | QFHM   | 148.6447 |
 |-------------------|
 ```
+<a name="delete"></a>
 ### delete (Dataframe I/O &#8212; Declarative) 
 *Description*: Deletes rows matching an expression from a table
 
@@ -1550,6 +1594,7 @@ stocks
 | LQRQ   | AMEX     |    88.42 |
 |------------------------------|
 ```
+<a name="describe"></a>
 ### describe (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns a table representing the layout of the query expression
 
@@ -1565,6 +1610,7 @@ describe (select v1: 123, v2: 'abc')
 | v2   | String(3) |             |              |            |
 |------------------------------------------------------------|
 ```
+<a name="from"></a>
 ### from (Dataframe I/O &#8212; Declarative) 
 *Description*: Retrieves rows from a datasource
 
@@ -1581,6 +1627,7 @@ from [{ item: "Apple" }, { item: "Orange" }, { item: "Cherry" }]
 | Cherry |
 |--------|
 ```
+<a name="graph"></a>
 ### graph¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Produces graphical charts from dataframes
 
@@ -1636,6 +1683,7 @@ graph chart from samples
 <img src="./docs/images/Scatter_Demo.png">
 </div>
 
+<a name="insert"></a>
 ### insert¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Appends new row(s) to a table
 
@@ -1688,6 +1736,7 @@ where symbol is 'AMD'
 |       0 |       0 |         0 |       0 |        3 |       1 |       5 |        0 |       0 | [6, 7, 8] |
 |---------------------------------------------------------------------------------------------------------|
 ```
+<a name="intersect"></a>
 ### intersect (Dataframe I/O &#8212; Declarative) 
 *Description*: Computes the intersection of two queries
 
@@ -1720,6 +1769,7 @@ from (
 | ABC    | OTCBB    |    5.887 |
 |------------------------------|
 ```
+<a name="into"></a>
 ### into (Dataframe I/O &#8212; Declarative) 
 *Description*: Inserts a result set into a table
 
@@ -1758,6 +1808,7 @@ from (
 | CAVY   | OTCBB     |   0.0047 | 2023-09-21T04:57:43.503Z |
 |----------------------------------------------------------|
 ```
+<a name="pagination"></a>
 ### pagination¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Setups a pagination query
 
@@ -1876,6 +1927,7 @@ stocksP.next(5)
 | NASDAQ   | GSCF   |  75.8721 | 2023-10-02T01:57:21.640Z |
 |---------------------------------------------------------|
 ```
+<a name="select"></a>
 ### select (Dataframe I/O &#8212; Declarative) 
 *Description*: Returns row(s) of data based on the expression and options
 
@@ -1887,9 +1939,10 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2023-11-21T21:16:45.035Z |
+| GMTQ   | OTCBB    |   0.1111 | 2023-12-05T02:10:32.345Z |
 |---------------------------------------------------------|
 ```
+<a name="subtract"></a>
 ### subtract (Dataframe I/O &#8212; Declarative) 
 *Description*: Computes the subtraction of two queries
 
@@ -1922,6 +1975,7 @@ from (
 | UPEX   | NYSE     |   116.24 |
 |------------------------------|
 ```
+<a name="undelete"></a>
 ### undelete (Dataframe I/O &#8212; Declarative) 
 *Description*: Restores rows matching an expression from a table
 
@@ -1947,6 +2001,7 @@ undelete from @stocks where symbol is "CMHA"
 |       0 |       0 |         0 |       0 |        0 |       1 |       1 |        0 |       1 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="union"></a>
 ### union (Dataframe I/O &#8212; Declarative) 
 *Description*: Combines two (or more) result sets (vertically)
 
@@ -1980,6 +2035,7 @@ from (
 | ABC    | OTC BB   |    5.887 |
 |------------------------------|
 ```
+<a name="union_distinct"></a>
 ### union distinct (Dataframe I/O &#8212; Declarative) 
 *Description*: Combines two (or more) result sets (vertically) retaining only distinct rows
 
@@ -2015,6 +2071,7 @@ from (
 | JUNK   | AMEX     |    97.61 |
 |------------------------------|
 ```
+<a name="update"></a>
 ### update¹ (Dataframe I/O &#8212; Declarative) 
 *Description*: Modifies rows matching a conditional expression from a table
 
@@ -2037,11 +2094,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2023-11-21T21:16:45.071Z |
-| OBEA   | NASDAQ   |  99.1026 | 2023-11-21T21:16:45.071Z |
+| ISIT   | NASDAQ   | 189.3509 | 2023-12-05T02:10:32.385Z |
+| OBEA   | NASDAQ   |  99.1026 | 2023-12-05T02:10:32.385Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2023-11-21T21:16:45.071Z |
+| UKHT   | NASDAQ   |  71.1514 | 2023-12-05T02:10:32.385Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative) 
@@ -2076,6 +2133,7 @@ stocks
 | SHMN   | OTCBB    | EmbeddedInnerTableRowCollection(price, transactionTime) |
 |-----------------------------------------------------------------------------|
 ```
+<a name="upsert"></a>
 ### upsert¹ (Dataframe I/O &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Inserts (or updates) new row(s) into a table
 
@@ -2145,6 +2203,7 @@ ns('Stocks')
 ## Dataframe Management Examples
 <hr>
 
+<a name="alter"></a>
 ### alter (Dataframe Management &#8212; Declarative) 
 *Description*: Modifies the structure of a table
 
@@ -2174,14 +2233,15 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2023-11-21T21:16:45.194Z | YSZUY  | OTCBB     |   0.2355 |
-| 2023-11-21T21:16:45.194Z | DMZH   | NASDAQ    | 183.1636 |
-| 2023-11-21T21:16:45.194Z | VV     | OTCBB     |          |
-| 2023-11-21T21:16:45.194Z | TGPNF  | NYSE      |  51.6171 |
-| 2023-11-21T21:16:45.195Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2023-11-21T21:16:45.195Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2023-12-05T02:10:32.520Z | YSZUY  | OTCBB     |   0.2355 |
+| 2023-12-05T02:10:32.520Z | DMZH   | NASDAQ    | 183.1636 |
+| 2023-12-05T02:10:32.520Z | VV     | OTCBB     |          |
+| 2023-12-05T02:10:32.520Z | TGPNF  | NYSE      |  51.6171 |
+| 2023-12-05T02:10:32.520Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2023-12-05T02:10:32.520Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
+<a name="create_external_table"></a>
 ### create external table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates an external table
 
@@ -2201,6 +2261,7 @@ create external table if not exists customers (
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="create_index"></a>
 ### create index (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a table index
 
@@ -2212,9 +2273,10 @@ create index if not exists stocks#symbol
 |------------------------------------------------------------------------------------------------------|
 | altered | created | destroyed | deleted | inserted | matched | scanned | shuffled | updated | rowIDs |
 |------------------------------------------------------------------------------------------------------|
-|       0 |       1 |         0 |       0 |        0 |       0 |       0 |        8 |       0 | []     |
+|       0 |       1 |         0 |   31343 |        0 |       0 |       0 |        8 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="create_table"></a>
 ### create table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a persistent database table
 
@@ -2245,6 +2307,7 @@ group by exchange
 <img src="./docs/images/Small_Caps.png">
 </div>
 
+<a name="create_type"></a>
 ### create type (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a database type
 
@@ -2259,6 +2322,7 @@ create type mood := Enum (sad, okay, happy)
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="create_unique_index"></a>
 ### create unique index (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a unique index
 
@@ -2281,6 +2345,7 @@ create unique index Stocks#symbol
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="create_view"></a>
 ### create view (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a view
 
@@ -2311,6 +2376,7 @@ ns('A_Students')
 | Audrey Hepburn | A     | 0.9161 |
 |---------------------------------|
 ```
+<a name="declare_table"></a>
 ### declare table (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a durable database table
 
@@ -2329,6 +2395,7 @@ lastSaleTime: DateTime)
 |       0 |       1 |         0 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="declare_view"></a>
 ### declare view (Dataframe Management &#8212; Declarative) 
 *Description*: Creates a view
 
@@ -2356,6 +2423,7 @@ A_Students
 | Audrey Hepburn | A     | 0.9161 |
 |---------------------------------|
 ```
+<a name="drop"></a>
 ### drop (Dataframe Management &#8212; Declarative) 
 *Description*: Deletes a database object
 
@@ -2379,6 +2447,7 @@ drop Stocks
 |       0 |       0 |         1 |       0 |        0 |       0 |       0 |        0 |       0 | []     |
 |------------------------------------------------------------------------------------------------------|
 ```
+<a name="Table"></a>
 ### Table (Dataframe Management &#8212; Functional) 
 *Description*: Returns a new transient table
 
@@ -2405,6 +2474,7 @@ values ('AAPL', 'NASDAQ', {price:156.39, transactionTime:"2021-08-05T19:23:11.00
 | SHMN   | OTCBB    | ByteArrayRowCollection(price, transactionTime) |
 |--------------------------------------------------------------------|
 ```
+<a name="tableLike"></a>
 ### tableLike (Dataframe Management &#8212; Functional) 
 *Description*: Creates a new table file, which will be identical to the source table.
 
@@ -2433,6 +2503,7 @@ stocksB
 | LFUG   | NYSE     | 128.5487 | 2023-08-06T03:56:12.944Z |
 |---------------------------------------------------------|
 ```
+<a name="TableZoo"></a>
 ### TableZoo (Dataframe Management &#8212; Functional) 
 *Description*: Returns a Table builder
 
@@ -2469,6 +2540,7 @@ stocks
 | ZIYBG  | OTCBB     |   0.0167 | 2023-09-21T04:58:03.392Z |
 |----------------------------------------------------------|
 ```
+<a name="truncate"></a>
 ### truncate (Dataframe Management &#8212; Declarative) 
 *Description*: Removes all of the data from a table
 
@@ -2497,6 +2569,7 @@ truncate @stocks
 ## Filtering and Matching Examples
 <hr>
 
+<a name="between"></a>
 ### between (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` is between the `to` and `from` (inclusive)
 
@@ -2523,6 +2596,7 @@ from (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 ```
+<a name="betwixt"></a>
 ### betwixt (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` is between the `to` and `from` (non-inclusive)
 
@@ -2548,6 +2622,7 @@ from (
 | NFRK   | AMEX   |  28.2808 |            28.2 | 2022-09-04T23:36:47.864Z |
 |-------------------------------------------------------------------------|
 ```
+<a name="contains"></a>
 ### contains¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
@@ -2581,6 +2656,7 @@ array contains {"name":"Tom"}
 ```sql
 true
 ```
+<a name="exists"></a>
 ### exists (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether at least one row is found within the query
 
@@ -2608,6 +2684,7 @@ val stocks = (
 | NASDAQ   | CFF    | 107.4943 | 2023-09-26T21:30:06.283Z |
 |---------------------------------------------------------|
 ```
+<a name="expose"></a>
 ### expose (Filtering and Matching &#8212; Declarative) 
 *Description*: Exposes the components of a `matches` expression
 
@@ -2629,6 +2706,7 @@ expose(response matches { id: isUUID, symbol: isString, exchange: isString, last
 | (v: Any) => v.isNumber() | "35.76"                                | false  |
 |----------------------------------------------------------------------------|
 ```
+<a name="having"></a>
 ### having (Filtering and Matching &#8212; Declarative) 
 *Description*: Applies a filter condition to an aggregate query
 
@@ -2660,6 +2738,7 @@ group by lastName having members > 1
 <img src="./docs/images/Travelers.png">
 </div>
 
+<a name="in"></a>
 ### in (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` matches the `expression`
 
@@ -2686,6 +2765,7 @@ val stocks = (
 | NKWI   | OTCBB  |  98.9501 |            98.9 | 2022-09-04T23:36:47.846Z |
 |-------------------------------------------------------------------------|
 ```
+<a name="inner_join"></a>
 ### inner join (Filtering and Matching &#8212; Declarative) 
 *Description*: Computes the inner join of two queries
 
@@ -2720,6 +2800,7 @@ inner join companies_A as B on A.symbol is B.symbol
 | GreedIsGood.com | GREED  | NASDAQ   |  2345.78 |
 |------------------------------------------------|
 ```
+<a name="is"></a>
 ### is¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is exactly the `expression`; otherwise false
 
@@ -2742,6 +2823,7 @@ x is 200
 ```sql
 false
 ```
+<a name="isCodecOf"></a>
 ### isCodecOf (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `expression` is compatible with the `CODEC`
 
@@ -2752,6 +2834,7 @@ false
 ```sql
 true
 ```
+<a name="isDefined"></a>
 ### isDefined (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the field or variable exists within the scope.
 
@@ -2762,6 +2845,7 @@ isDefined(counter)
 ```sql
 false
 ```
+<a name="isNotNull"></a>
 ### isNotNull (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the expression is not null, otherwise false.
 
@@ -2772,6 +2856,7 @@ isNotNull('yes')
 ```sql
 true
 ```
+<a name="isnt"></a>
 ### isnt¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: returns true if the `value` is not exactly the `expression`; otherwise false
 
@@ -2794,6 +2879,7 @@ x isnt 200
 ```sql
 false
 ```
+<a name="isNull"></a>
 ### isNull (Filtering and Matching &#8212; Declarative) 
 *Description*: Returns true if the expression is null, otherwise false.
 
@@ -2804,6 +2890,7 @@ isNull(null)
 ```sql
 true
 ```
+<a name="limit"></a>
 ### limit (Filtering and Matching &#8212; Declarative) 
 *Description*: Limits the maximum number of rows returned by a query
 
@@ -2830,6 +2917,7 @@ from (
 | WRGB   | AMEX   |  46.8355 |            46.8 | 2022-09-04T23:36:47.862Z |
 |-------------------------------------------------------------------------|
 ```
+<a name="matches"></a>
 ### matches¹ (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` matches the `expression`
 
@@ -2885,6 +2973,7 @@ stock matches Stock(
 ```sql
 true
 ```
+<a name="where"></a>
 ### where (Filtering and Matching &#8212; Declarative) 
 *Description*: Filters a result set
 
@@ -2911,6 +3000,7 @@ from (
 | PTFY   | NYSE     |  19.9265 | 2023-08-06T18:33:08.676Z |
 |---------------------------------------------------------|
 ```
+<a name="wherein"></a>
 ### wherein (Filtering and Matching &#8212; Declarative) 
 *Description*: determines whether the `value` contains the `expression`
 
@@ -2941,6 +3031,7 @@ where transactions wherein (price is 0.0011)
 ## JVM and Reflection Examples
 <hr>
 
+<a name="_"></a>
 ### .! (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Invokes a virtual method
 
@@ -2959,6 +3050,7 @@ items.!toTable()
 | OTCBB  | 1190 |
 |---------------|
 ```
+<a name="__"></a>
 ### ...¹ (JVM and Reflection &#8212; Declarative) 
 *Description*: The argument spread operator: can convert an array into individual arguments
 
@@ -2983,6 +3075,7 @@ p3d({ x: 123, y:13, z: 67 }...)
 ```sql
 Tuple3(_1=123, _2=13, _3=67)
 ```
+<a name="_"></a>
 ### .? (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: determines whether the method exists within the instance
 
@@ -2994,6 +3087,7 @@ num.?MAX_VALUE
 ```sql
 true
 ```
+<a name="classOf"></a>
 ### classOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns a class instance by name (e.g. "Class.forName")
 
@@ -3004,6 +3098,7 @@ classOf('java.io.File')
 ```sql
 `java.io.File`
 ```
+<a name="codecOf"></a>
 ### codecOf (JVM and Reflection &#8212; Functional) 
 *Description*: Returns the CODEC (encoder/decoder) of an expression.
 
@@ -3015,6 +3110,7 @@ codecOf(counter)
 ```sql
 Int
 ```
+<a name="interfacesOf"></a>
 ### interfacesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the interfaces implemented by a class or instance
 
@@ -3025,6 +3121,7 @@ interfacesOf(classOf('java.util.ArrayList'))
 ```sql
 [`java.util.List`, `java.util.RandomAccess`, `java.lang.Cloneable`, `java.io.Serializable`, `java.util.Collection`, `java.lang.Iterable`]
 ```
+<a name="membersOf"></a>
 ### membersOf (JVM and Reflection &#8212; Functional) 
 *Description*: Returns the members (constructors, fields and methods) of a JVM Class as a Table
 
@@ -3043,6 +3140,7 @@ from membersOf(new `java.util.Date`()) limit 5
 | public    | java.util.Date(arg0: long)                                                       | java.util.Date | Constructor |
 |-----------------------------------------------------------------------------------------------------------------------------|
 ```
+<a name="new"></a>
 ### new¹ (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate JVM classes.
 
@@ -3051,7 +3149,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2023-11-21T21:16:46.267Z
+2023-12-05T02:10:33.818Z
 ```
 ### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3084,6 +3182,7 @@ new MouseListener() {
 ```sql
 new MouseListener() { mouseClicked: (e: MouseEvent) => stdout <=== "mouseClicked", mousePressed: (e: MouseEvent) => stdout <=== "mousePressed", mouseReleased: (e: MouseEvent) => stdout <=== "mouseReleased", mouseEntered: (e: MouseEvent) => stdout <=== "mouseEntered", mouseExited: (e: MouseEvent) => stdout <=== "mouseExited" }
 ```
+<a name="objectOf"></a>
 ### objectOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns a Scala object instance by name
 
@@ -3092,8 +3191,9 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@4fd92289
+scala.Function1$@433ae0b0
 ```
+<a name="superClassesOf"></a>
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
 *Description*: Returns the super-classes extended by a class or instance
 
@@ -3104,7 +3204,8 @@ superClassesOf(classOf('java.util.ArrayList'))
 ```sql
 [`java.util.AbstractList`, `java.util.AbstractCollection`, `java.lang.Object`]
 ```
-### typeOf (JVM and Reflection &#8212; Functional) 
+<a name="typeOf"></a>
+### typeOf (JVM and Reflection &#8212; Procedural) 
 *Description*: Returns the type of an expression.
 
 ```sql
@@ -3115,10 +3216,527 @@ typeOf(counter)
 ```sql
 java.lang.Integer
 ```
+<a name="REPL_Tools"></a>
+## REPL Tools Examples
+<hr>
+
+<a name="_"></a>
+### (% (REPL Tools &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
+*Description*: Executes an application from the host operating system
+
+```sql
+(% iostat 1 3 %)
+```
+##### Results
+```sql
+|------------------------------------------------------------|
+| lineNumber | output                                        |
+|------------------------------------------------------------|
+|          1 |               disk0       cpu    load average |
+|          2 |     KB/t  tps  MB/s  us sy id   1m   5m   15m |
+|          3 |    11.80  104  1.19   7  3 91  2.05 2.03 2.22 |
+|          4 |    44.26  965 41.70   6  3 91  2.05 2.03 2.22 |
+|          5 |    11.65   69  0.78   6  3 92  2.05 2.03 2.22 |
+|------------------------------------------------------------|
+```
+<a name="cat"></a>
+### cat (REPL Tools &#8212; Declarative) 
+*Description*: Retrieves the contents of a file.
+
+```sql
+cat 'app/examples/src/main/resources/log4j.properties'
+```
+##### Results
+```sql
+|---------------------------------------------------------------------------------------------|
+| cat                                                                                         |
+|---------------------------------------------------------------------------------------------|
+| # Root logger option                                                                        |
+| log4j.rootLogger=INFO, stdout                                                               |
+|                                                                                             |
+| # Direct log messages to stdout                                                             |
+| log4j.appender.stdout=org.apache.log4j.ConsoleAppender                                      |
+| log4j.appender.stdout.Target=System.out                                                     |
+| log4j.appender.stdout.layout=org.apache.log4j.PatternLayout                                 |
+| log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n |
+|---------------------------------------------------------------------------------------------|
+```
+<a name="cd"></a>
+### cd¹ (REPL Tools &#8212; Declarative) 
+*Description*: Changes the current directory.
+
+```sql
+cd ^/Users/karl/Documents
+pwd
+```
+##### Results
+```sql
+/Users/karl/Documents
+```
+### cd² (REPL Tools &#8212; Declarative) 
+*Description*: Changes the current directory.
+
+```sql
+cd ~/Documents
+pwd
+```
+##### Results
+```sql
+/Users/ldaniels/Documents
+```
+### cd³ (REPL Tools &#8212; Declarative) 
+*Description*: Changes the current directory.
+
+```sql
+cd "~/Documents"
+pwd
+```
+##### Results
+```sql
+/Users/ldaniels/Documents
+```
+<a name="cp"></a>
+### cp (REPL Tools &#8212; Declarative) 
+*Description*: Copies a source file or directory to a target.
+
+```sql
+val `count` =
+  try
+    cp 'build.sbt' 'temp.txt'
+  catch e => -1
+  finally
+    rm 'temp.txt'
+
+"{{`count`}} bytes copied.\n" ===> stdout
+```
+##### Results
+```sql
+java.io.PrintStream@12166229
+```
+##### Console Output
+```
+6471 bytes copied.
+```
+<a name="echo"></a>
+### echo¹ (REPL Tools &#8212; Declarative) 
+*Description*: Prints text to the standard output.
+
+```sql
+echo "Hello Lollypop!"
+```
+##### Results
+```sql
+()
+```
+##### Console Output
+```
+Hello Lollypop!
+```
+### echo² (REPL Tools &#8212; Declarative) 
+*Description*: Prints text to the standard output.
+
+```sql
+item = { symbol: "ABC", lastSale: 97.55 }
+echo '{{item.symbol}} is {{item.lastSale}}/share'
+```
+##### Results
+```sql
+()
+```
+##### Console Output
+```
+ABC is 97.55/share
+```
+<a name="find"></a>
+### find¹ (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a recursive list of files matching any specified criterion.
+
+```sql
+find "./app/examples/" where name matches "(.*)[.]csv"
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                   | canonicalPath                                                                       | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks-100k.csv        | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv                        | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| companylist-amex.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-amex.csv   | 2023-11-12T07:50:27.477Z |   44754 | false       | true   | false    |
+| companylist-nyse.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-nyse.csv   | 2023-11-12T07:50:27.479Z |  405461 | false       | true   | false    |
+| companylist-nasdaq.csv | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-nasdaq.csv | 2023-11-12T07:50:27.478Z |  456099 | false       | true   | false    |
+| stocks-5k.csv          | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv                          | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| stocks.csv             | /Users/ldaniels/GitHub/lollypop/app/examples/stocks.csv                             | 2023-11-12T07:50:27.492Z |  336324 | false       | true   | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### find² (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+
+```sql
+find app/examples where name matches "(.*)[.]csv" order by lastModified desc
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                   | canonicalPath                                                                       | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks.csv             | /Users/ldaniels/GitHub/lollypop/app/examples/stocks.csv                             | 2023-11-12T07:50:27.492Z |  336324 | false       | true   | false    |
+| stocks-5k.csv          | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv                          | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| stocks-100k.csv        | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv                        | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| companylist-nyse.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-nyse.csv   | 2023-11-12T07:50:27.479Z |  405461 | false       | true   | false    |
+| companylist-nasdaq.csv | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-nasdaq.csv | 2023-11-12T07:50:27.478Z |  456099 | false       | true   | false    |
+| companylist-amex.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/companylist/csv/companylist-amex.csv   | 2023-11-12T07:50:27.477Z |   44754 | false       | true   | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### find³ (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+NOTE: ~ indicates the user's home directory.
+
+```sql
+find docs limit 5
+```
+##### Results
+```sql
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                    | canonicalPath                                                       | lastModified             | length | isDirectory | isFile | isHidden |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| .DS_Store               | /Users/ldaniels/GitHub/lollypop/docs/.DS_Store                      | 2023-11-12T05:53:49.724Z |   6148 | false       | true   | true     |
+| Travelers.png           | /Users/ldaniels/GitHub/lollypop/docs/images/Travelers.png           | 2023-12-05T02:10:33.548Z |  18784 | false       | true   | false    |
+| Small_Caps.png          | /Users/ldaniels/GitHub/lollypop/docs/images/Small_Caps.png          | 2023-12-05T02:10:33.295Z |  26483 | false       | true   | false    |
+| Exchange_Exposure.png   | /Users/ldaniels/GitHub/lollypop/docs/images/Exchange_Exposure.png   | 2023-12-05T02:10:31.343Z |  26520 | false       | true   | false    |
+| Powered_By_Lollypop.png | /Users/ldaniels/GitHub/lollypop/docs/images/Powered_By_Lollypop.png | 2023-12-05T02:10:29.185Z |  26480 | false       | true   | false    |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+<a name="ls"></a>
+### ls¹ (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+
+```sql
+ls
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------|
+| name             | canonicalPath                                    | lastModified             | length | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------|
+| .DS_Store        | /Users/ldaniels/GitHub/lollypop/.DS_Store        | 2023-11-13T21:29:03.045Z |  10244 | false       | true   | true     |
+| app              | /Users/ldaniels/GitHub/lollypop/app              | 2023-11-03T20:22:06.270Z |    224 | true        | false  | false    |
+| LICENSE          | /Users/ldaniels/GitHub/lollypop/LICENSE          | 2023-10-18T21:42:27.686Z |   1073 | false       | true   | false    |
+| test1.json       | /Users/ldaniels/GitHub/lollypop/test1.json       | 2023-12-05T02:07:50.358Z |     12 | false       | true   | false    |
+| target           | /Users/ldaniels/GitHub/lollypop/target           | 2023-11-24T20:42:51.377Z |    288 | true        | false  | false    |
+| .bsp             | /Users/ldaniels/GitHub/lollypop/.bsp             | 2023-10-19T16:00:17.226Z |     96 | true        | false  | true     |
+| vin-mapping.json | /Users/ldaniels/GitHub/lollypop/vin-mapping.json | 2023-12-05T02:10:28.321Z |   1345 | false       | true   | false    |
+| docs             | /Users/ldaniels/GitHub/lollypop/docs             | 2023-12-05T02:09:05.837Z |    160 | true        | false  | false    |
+| rebuild.sh       | /Users/ldaniels/GitHub/lollypop/rebuild.sh       | 2023-11-06T19:36:01.005Z |    227 | false       | true   | false    |
+| README.md        | /Users/ldaniels/GitHub/lollypop/README.md        | 2023-12-05T02:10:35.952Z | 124043 | false       | true   | false    |
+| project          | /Users/ldaniels/GitHub/lollypop/project          | 2023-11-12T19:15:18.532Z |    256 | true        | false  | false    |
+| .gitignore       | /Users/ldaniels/GitHub/lollypop/.gitignore       | 2023-12-05T01:20:35.369Z |    646 | false       | true   | true     |
+| lollypop_db      | /Users/ldaniels/GitHub/lollypop/lollypop_db      | 2023-11-13T13:08:16.236Z |    160 | true        | false  | false    |
+| .git             | /Users/ldaniels/GitHub/lollypop/.git             | 2023-12-05T02:09:05.845Z |    576 | true        | false  | true     |
+| build.sbt        | /Users/ldaniels/GitHub/lollypop/build.sbt        | 2023-12-05T01:20:35.375Z |   6471 | false       | true   | false    |
+| .idea            | /Users/ldaniels/GitHub/lollypop/.idea            | 2023-12-05T02:09:48.570Z |    480 | true        | false  | true     |
+|-------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### ls² (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+
+```sql
+ls app/examples where not isHidden order by length desc
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name            | canonicalPath                                                | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| stocks.csv      | /Users/ldaniels/GitHub/lollypop/app/examples/stocks.csv      | 2023-11-12T07:50:27.492Z |  336324 | false       | true   | false    |
+| stocks-5k.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv   | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| target          | /Users/ldaniels/GitHub/lollypop/app/examples/target          | 2023-07-05T21:57:46.435Z |     192 | true        | false  | false    |
+| src             | /Users/ldaniels/GitHub/lollypop/app/examples/src             | 2023-07-05T21:52:11.441Z |     160 | true        | false  | false    |
+| companylist     | /Users/ldaniels/GitHub/lollypop/app/examples/companylist     | 2023-11-12T07:50:27.476Z |     128 | true        | false  | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### ls³ (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+
+```sql
+ls "./app/examples/" where name matches ".*[.]csv"
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name            | canonicalPath                                                | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| stocks-5k.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv   | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| stocks.csv      | /Users/ldaniels/GitHub/lollypop/app/examples/stocks.csv      | 2023-11-12T07:50:27.492Z |  336324 | false       | true   | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### ls⁴ (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of files matching any specified criterion.
+NOTE: ~ indicates the user's home directory.
+
+```sql
+ls ~ order by length desc limit 5
+```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------|
+| name      | canonicalPath             | lastModified             | length | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------|
+| .DS_Store | /Users/ldaniels/.DS_Store | 2023-11-27T18:38:56.890Z |  28676 | false       | true   | true     |
+| Music     | /Users/ldaniels/Music     | 2023-07-26T17:40:28.631Z |    224 | true        | false  | false    |
+| .ivy2     | /Users/ldaniels/.ivy2     | 2023-06-13T03:34:16.716Z |    192 | true        | false  | true     |
+| .config   | /Users/ldaniels/.config   | 2023-11-10T08:40:32.247Z |    128 | true        | false  | true     |
+| .condarc  | /Users/ldaniels/.condarc  | 2023-11-21T14:27:22.019Z |     41 | false       | true   | true     |
+|-------------------------------------------------------------------------------------------------------------|
+```
+<a name="md5"></a>
+### md5¹ (REPL Tools &#8212; Declarative) 
+*Description*: Returns an MD5 digest of a file or byte-encode-able value.
+
+```sql
+md5 "BadPassword123"
+```
+##### Results
+```sql
+��4p�`DVڙ���)
+```
+### md5² (REPL Tools &#8212; Declarative) 
+*Description*: Returns an MD5 digest of a file or byte-encode-able value.
+
+```sql
+md5 new `java.io.File`("app/core/src/main/scala/com/lollypop/repl/gnu/MD5Sum.scala")
+```
+##### Results
+```sql
+AY"7G���/'�͸1
+```
+<a name="mkdir"></a>
+### mkdir (REPL Tools &#8212; Declarative) 
+*Description*: Creates a new directory.
+
+```sql
+created = mkdir temp
+response = iff(not created, "Couldn't do it", "Done")
+rmdir temp
+response
+```
+##### Results
+```sql
+Done
+```
+<a name="mv"></a>
+### mv (REPL Tools &#8212; Declarative) 
+*Description*: Renames a file or moves the file to a directory.
+
+```sql
+try {
+  cp 'build.sbt' 'temp.txt'
+  mv 'temp.txt' 'temp1.txt'
+} catch e => {
+  e ===> stderr
+  false
+} finally rm 'temp.txt' or rm 'temp1.txt'
+```
+##### Results
+```sql
+true
+```
+<a name="nps"></a>
+### nps (REPL Tools &#8212; Declarative) 
+*Description*: Returns a dataframe containing a list of active Lollypop peers
+
+```sql
+node = Nodes.start()
+node.awaitStartup(Duration('1 second'))
+node.exec("this where kind is 'Table'")
+nps
+```
+##### Results
+```sql
+|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| host    | port  | uptimeInSeconds | lastCommand                                                                                               |
+|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| 0.0.0.0 |  8709 |               5 |                                                                                                           |
+| 0.0.0.0 |  8339 |               5 |                                                                                                           |
+| 0.0.0.0 | 14394 |               0 | this where kind is 'Table'                                                                                |
+| 0.0.0.0 | 12965 |               5 | x = 1;y = 2;z = x + y;z                                                                                   |
+| 0.0.0.0 | 12559 |               5 | \nfrom (\n|-------------------------------------------------------|\n| ticker | market | lastSale |  ...  |
+|-----------------------------------------------------------------------------------------------------------------------------------------------|
+```
+<a name="pwd"></a>
+### pwd (REPL Tools &#8212; Declarative) 
+*Description*: Retrieves the contents of a file.
+
+```sql
+cd ~
+pwd
+```
+##### Results
+```sql
+/Users/ldaniels
+```
+<a name="rm"></a>
+### rm (REPL Tools &#8212; Declarative) 
+*Description*: Removes a file or a collection of files via pattern-matching.
+
+```sql
+val `count` =
+  try
+    cp 'build.sbt' 'temp.txt'
+  catch e => -1
+  finally
+    rm 'temp.txt'
+
+"{{`count`}} bytes copied.\n" ===> stdout
+```
+##### Results
+```sql
+java.io.PrintStream@12166229
+```
+##### Console Output
+```
+6471 bytes copied.
+```
+<a name="rmdir"></a>
+### rmdir (REPL Tools &#8212; Declarative) 
+*Description*: Removes a specific directory.
+
+```sql
+created = mkdir temp_zzz
+response = iff(not created, "Couldn't do it", "Done")
+rmdir temp_zzz
+response
+```
+##### Results
+```sql
+Done
+```
+<a name="rmr"></a>
+### rmr (REPL Tools &#8212; Declarative) 
+*Description*: Recursively removes files or collections of files via pattern-matching.
+
+```sql
+val `count` =
+  try
+    cp 'build.sbt' 'temp.txt'
+  catch e => -1
+  finally
+    rmr 'temp.txt'
+
+"{{`count`}} bytes copied.\n" ===> stdout
+```
+##### Results
+```sql
+java.io.PrintStream@12166229
+```
+##### Console Output
+```
+6471 bytes copied.
+```
+<a name="touch"></a>
+### touch (REPL Tools &#8212; Declarative) 
+*Description*: Creates or updates the last modified time of a file. Return true if successful.
+
+```sql
+touch 'app/examples/src/main/resources/log4j.properties'
+```
+##### Results
+```sql
+true
+```
+<a name="wc"></a>
+### wc (REPL Tools &#8212; Declarative) 
+*Description*: Returns the count of lines of a text file.
+
+```sql
+wc LICENSE
+```
+##### Results
+```sql
+1073
+```
+<a name="www"></a>
+### www¹ (REPL Tools &#8212; Reactive) 
+*Description*: A non-interactive HTTP client
+
+```sql
+www get('https://example.com/')
+```
+##### Results
+```sql
+HttpResponse(body="<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+", message="OK", statusCode=200, responseID=4e33bb44-4441-48db-9569-eaa0f91494e9)
+```
+### www² (REPL Tools &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
+*Description*: Returns a URL based on a relative path.
+
+```sql
+www path('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID=38fb7cb8-cb3c-44c2-982f-6af73003a574)
+```
+### www³ (REPL Tools &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
+*Description*: Returns a URI based on a relative path.
+
+```sql
+www uri('users')
+```
+##### Results
+```sql
+HttpResponse(body=null, message=null, statusCode=200, responseID=e1228cef-022c-490f-b59e-b6c52ed4b62b)
+```
 <a name="Scope_and_Session"></a>
 ## Scope and Session Examples
 <hr>
 
+<a name="_"></a>
 ### $ (Scope and Session &#8212; Declarative) 
 *Description*: used to disambiguate a variable from a field or other identifiers
 
@@ -3130,6 +3748,7 @@ $x
 ```sql
 1
 ```
+<a name="__"></a>
 ### <|> (Scope and Session &#8212; Functional) 
 *Description*: Horizontally combines two arrays.
 
@@ -3140,6 +3759,7 @@ $x
 ```sql
 [['a', 1], ['b', 2], ['c', 3]]
 ```
+<a name="_"></a>
 ### =>¹ (Scope and Session &#8212; Functional) 
 *Description*: Defines an anonymous function
 
@@ -3180,6 +3800,7 @@ f(5)
 | LAX         | SHARMA   | PANKAJ    | 22d10aaa-32ac-4cd0-9bed-aa8e78a36d80 |
 |---------------------------------------------------------------------------|
 ```
+<a name="_"></a>
 ### @ (Scope and Session &#8212; Declarative) 
 *Description*: used to disambiguate a table variable from a field or other identifiers
 
@@ -3195,6 +3816,7 @@ r = select value: 1
 |     1 |
 |-------|
 ```
+<a name="as"></a>
 ### as (Scope and Session &#8212; Declarative) 
 *Description*: Applies an alias to an expression or query
 
@@ -3225,12 +3847,15 @@ from @stocks
 |     6 | 44.34686666666666 |     155.021 |      0.0401 | 266.08119999999997 |
 |----------------------------------------------------------------------------|
 ```
+<a name="destroy"></a>
 ### destroy (Scope and Session &#8212; Procedural) 
 *Description*: Removes a variable from the active scope
 
 ```sql
 destroy stocks
 ```
+##### Results
+<a name="let"></a>
 ### let (Scope and Session &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Creates a variable that automatically applies a CODEC function when mutated.
 
@@ -3243,6 +3868,7 @@ b64
 ```sql
 SGVsbG8=
 ```
+<a name="namespace"></a>
 ### namespace (Scope and Session &#8212; Procedural) 
 *Description*: Sets the active database
 
@@ -3254,6 +3880,7 @@ __namespace__
 ```sql
 stocks_demo.public
 ```
+<a name="package"></a>
 ### package (Scope and Session &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Declares the default JVM package namespace
 
@@ -3265,12 +3892,15 @@ __package__
 ```sql
 com.acme.skunkworks
 ```
+<a name="reset"></a>
 ### reset (Scope and Session &#8212; Procedural) 
 *Description*: Resets the scope; wiping out all state
 
 ```sql
 reset
 ```
+##### Results
+<a name="set"></a>
 ### set (Scope and Session &#8212; Declarative) 
 *Description*: Sets the value of a variable
 
@@ -3282,6 +3912,7 @@ x.a.b.c
 ```sql
 98
 ```
+<a name="this"></a>
 ### this (Scope and Session &#8212; Declarative) 
 *Description*: Table representation of the current scope
 
@@ -3290,34 +3921,40 @@ this
 ```
 ##### Results
 ```sql
-|----------------------------------------------------------|
-| name   | kind           | value                          |
-|----------------------------------------------------------|
-| Random | Random$        | lollypop.lang.Random           |
-| stdout | PrintStream    | java.io.PrintStream@5e7cd0df   |
-| stdin  | BufferedReader | java.io.BufferedReader@900649e |
-| stderr | PrintStream    | java.io.PrintStream@8b89b3a    |
-| OS     | OS             | lollypop.lang.OS               |
-| π      | Double         | 3.141592653589793              |
-| Nodes  | Nodes          | lollypop.io.Nodes@526893f      |
-|----------------------------------------------------------|
+|----------------------------------------------------------------|
+| name       | kind           | value                            |
+|----------------------------------------------------------------|
+| Random     | Random$        | lollypop.lang.Random             |
+| WebSockets | WebSockets$    | lollypop.io.WebSockets$@23c05889 |
+| stdout     | PrintStream    | java.io.PrintStream@12166229     |
+| stdin      | BufferedReader | java.io.BufferedReader@2bcb1414  |
+| stderr     | PrintStream    | java.io.PrintStream@aee05f4      |
+| OS         | OS             | lollypop.lang.OS                 |
+| π          | Double         | 3.141592653589793                |
+| Nodes      | Nodes          | lollypop.io.Nodes@2b4829aa       |
+|----------------------------------------------------------------|
 ```
+<a name="val"></a>
 ### val (Scope and Session &#8212; Procedural) 
 *Description*: Creates a read-only variable
 
 ```sql
 val greeting: String = 'Hello World'
 ```
+##### Results
+<a name="var"></a>
 ### var (Scope and Session &#8212; Procedural) 
 *Description*: Creates a variable
 
 ```sql
 var customer_id: Int = 5
 ```
+##### Results
 <a name="System_Tools"></a>
 ## System Tools Examples
 <hr>
 
+<a name="DateTime"></a>
 ### DateTime (System Tools &#8212; Procedural) 
 *Description*: Creates new date instance
 
@@ -3326,9 +3963,51 @@ DateTime()
 ```
 ##### Results
 ```sql
-2023-11-21T21:16:46.411Z
+2023-12-05T02:10:36.275Z
 ```
+<a name="help"></a>
 ### help¹ (System Tools &#8212; Declarative) 
+*Description*: Provides offline manual pages for instructions.
+Additionally, it's an internal database containing information about every loaded instruction.
+
+```sql
+help 's(.*)'
+```
+##### Results
+```sql
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name           | category                   | paradigm        | description                                                                      | example                                                                                                   |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| scaleTo        | Transformation             | Functional      | Returns the the numeric expression truncated after `scale` decimal places.       | scaleTo(0.567, 2)                                                                                         |
+| scenario       | Testing - Unit/Integration | Declarative     | scenario-based test declaration                                                  | feature "State Inheritance" { scenario 'Create a contest' { val contest_id = "40d1857b-474c-4400-8f0 ...  |
+| select         | Dataframe I/O              | Declarative     | Returns row(s) of data based on the expression and options                       | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime()                      |
+| set            | Scope and Session          | Declarative     | Sets the value of a variable                                                     | set x = { a: { b: { c : 98 } } } x.a.b.c                                                                  |
+| subtract       | Dataframe I/O              | Declarative     | Computes the subtraction of two queries                                          | from ( |------------------------------| | symbol | exchange | lastSale | |-------------------------- ...  |
+| sum            | Aggregation and Sorting    | Functional      | Returns the sum of a numeric expression.                                         | stocks = ( |-------------------| | symbol | lastSale | |-------------------| | VHLH   | 153.2553 | | ...  |
+| sum            | Aggregation and Sorting    | Functional      | Returns the sum of a numeric expression.                                         | select total: sum(lastSale) from ( |-------------------| | symbol | lastSale | |-------------------| ...  |
+| superClassesOf | JVM and Reflection         | Object-Oriented | Returns the super-classes extended by a class or instance                        | superClassesOf(classOf('java.util.ArrayList'))                                                            |
+| switch         | Transformation             | Functional      | Scala-inspired switch-case statement                                             | value = 5.7 switch value case n => n < 5.0 then 'Yes - {{n}}' case n => n >= 5.0 and n <= 6.0 then ' ...  |
+| switch         | Transformation             | Functional      | Scala-inspired switch-case statement                                             | class StockQ(symbol: String, exchange: String, lastSale: Double) switch new StockQ("ABC", "AMEX", 78 ...  |
+| switch         | Transformation             | Functional      | Scala-inspired switch-case statement                                             | class StockQ(symbol: String, exchange: String, lastSale: Double) switch new StockQ('YORKIE', 'NYSE', ...  |
+| synchronized   | System Tools               | Procedural      | Synchronizes access to an object; providing an exclusive read/write lock over it | bag = { message: null } synchronized(bag) { bag.message = 'Hello' } bag                                   |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### help² (System Tools &#8212; Declarative) 
+*Description*: Provides offline manual pages for instructions.
+Additionally, it's an internal database containing information about every loaded instruction.
+
+```sql
+help 'select'
+```
+##### Results
+```sql
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name   | category      | paradigm    | description                                                | example                                                                              |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| select | Dataframe I/O | Declarative | Returns row(s) of data based on the expression and options | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+### help³ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3347,13 +4026,13 @@ transpose(help('select'))
 | example     | select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTime() |
 |----------------------------------------------------------------------------------------------------|
 ```
-### help² (System Tools &#8212; Declarative) 
+### help⁴ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
 ```sql
 select category, total: count(*)
-from (help())
+from (help)
 group by category
 order by category
 ```
@@ -3363,19 +4042,20 @@ order by category
 | category                   | total |
 |------------------------------------|
 | Aggregation and Sorting    |    23 |
-| Concurrency                |    13 |
+| Concurrency                |    10 |
 | Control Flow               |    21 |
 | Dataframe I/O              |    24 |
 | Dataframe Management       |    14 |
 | Filtering and Matching     |    25 |
 | JVM and Reflection         |    14 |
+| REPL Tools                 |    29 |
 | Scope and Session          |    23 |
-| System Tools               |    14 |
+| System Tools               |    16 |
 | Testing - Unit/Integration |     5 |
 | Transformation             |     9 |
 |------------------------------------|
 ```
-### help³ (System Tools &#8212; Declarative) 
+### help⁵ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3383,7 +4063,7 @@ Additionally, it's an internal database containing information about every loade
 chart = { shape: "ring", title: "Help By Category" }
 graph chart from (
     select category, total: count(*)
-    from (help())
+    from (help)
     group by category
 )
 ```
@@ -3392,7 +4072,7 @@ graph chart from (
 <img src="./docs/images/Help_By_Category.png">
 </div>
 
-### help⁴ (System Tools &#8212; Declarative) 
+### help⁶ (System Tools &#8212; Declarative) 
 *Description*: Provides offline manual pages for instructions.
 Additionally, it's an internal database containing information about every loaded instruction.
 
@@ -3400,7 +4080,7 @@ Additionally, it's an internal database containing information about every loade
 chart = { shape: "pie3d", title: "Help By Paradigm" }
 graph chart from (
     select paradigm, total: count(*)
-    from (help())
+    from (help)
     group by paradigm
 )
 ```
@@ -3409,6 +4089,7 @@ graph chart from (
 <img src="./docs/images/Help_By_Paradigm.png">
 </div>
 
+<a name="import"></a>
 ### import (System Tools &#8212; Object-Oriented) 
 *Description*: Imports a JVM class
 
@@ -3419,19 +4100,53 @@ import 'java.util.Date'
 ```sql
 java.util.Date
 ```
+<a name="include"></a>
 ### include (System Tools &#8212; Declarative) 
 *Description*: incorporates the contents of an external file into current scope
 
 ```sql
 include('./app/examples/src/main/lollypop/Stocks.sql')
 ```
+##### Results
+```sql
+java.io.PrintStream@12166229
+```
+##### Console Output
+```
+Sampling 5 quotes:
+----------------------------------------------------------|
+ exchange  | symbol | lastSale | lastSaleTime             |
+----------------------------------------------------------|
+ OTHER_OTC | LKOB   |   0.6087 | 2023-12-05T02:09:53.777Z |
+ OTCBB     | RSHA   |   2.5553 | 2023-12-05T02:09:46.411Z |
+ AMEX      | OWEFW  |  47.9203 | 2023-12-05T02:09:57.044Z |
+ OTHER_OTC | ULIKG  |   0.4413 | 2023-12-05T02:09:58.927Z |
+ AMEX      | JV     |  12.0016 | 2023-12-05T02:09:53.178Z |
+----------------------------------------------------------|
+```
+<a name="lollypopComponents"></a>
 ### lollypopComponents (System Tools &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: installs a collection of components from a source.
 
 ```sql
-lollypopComponents("com.lollypop.repl.Ls$")
+lollypopComponents("com.lollypop.repl.gnu.Ls$")
 ls "./app/examples/"
 ```
+##### Results
+```sql
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name            | canonicalPath                                                | lastModified             | length  | isDirectory | isFile | isHidden |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| .DS_Store       | /Users/ldaniels/GitHub/lollypop/app/examples/.DS_Store       | 2023-11-12T05:53:49.722Z |    6148 | false       | true   | true     |
+| stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
+| target          | /Users/ldaniels/GitHub/lollypop/app/examples/target          | 2023-07-05T21:57:46.435Z |     192 | true        | false  | false    |
+| companylist     | /Users/ldaniels/GitHub/lollypop/app/examples/companylist     | 2023-11-12T07:50:27.476Z |     128 | true        | false  | false    |
+| stocks-5k.csv   | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-5k.csv   | 2023-11-12T07:50:27.491Z |  249566 | false       | true   | false    |
+| src             | /Users/ldaniels/GitHub/lollypop/app/examples/src             | 2023-07-05T21:52:11.441Z |     160 | true        | false  | false    |
+| stocks.csv      | /Users/ldaniels/GitHub/lollypop/app/examples/stocks.csv      | 2023-11-12T07:50:27.492Z |  336324 | false       | true   | false    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+```
+<a name="ns"></a>
 ### ns (System Tools &#8212; Functional) 
 *Description*: Returns a persistent object (e.g. table, view, et al) from disk via a namespace
 
@@ -3450,12 +4165,15 @@ from ns('lollypop.public.Stocks') limit 5
 | TRIX   | NYSE     |    77.88 |
 |------------------------------|
 ```
+<a name="require"></a>
 ### require (System Tools &#8212; Object-Oriented) 
 *Description*: Downloads a JVM dependency (jar) from a repository
 
 ```sql
 require ['org.apache.spark:spark-core_2.13:3.3.0']
 ```
+##### Results
+<a name="synchronized"></a>
 ### synchronized (System Tools &#8212; Procedural) 
 *Description*: Synchronizes access to an object; providing an exclusive read/write lock over it
 
@@ -3470,16 +4188,19 @@ bag
 ```sql
 {"message": "Hello"}
 ```
+<a name="trace"></a>
 ### trace (System Tools &#8212; Functional) 
 *Description*: Executes an instruction
 
 ```sql
 trace set x = 1
 ```
+##### Results
 <a name="Testing__Unit_Integration"></a>
 ## Testing - Unit/Integration Examples
 <hr>
 
+<a name="assert"></a>
 ### assert¹ (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
 
@@ -3493,8 +4214,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000167ms] AnyLiteral 1 ~> 1 <Integer>
-[0.331709ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000291ms] AnyLiteral 1 ~> 1 <Integer>
+[0.264750ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -3508,12 +4229,13 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@8b89b3a
+java.io.PrintStream@aee05f4
 ```
 ##### Console Error
 ```
 total must be less than 100 on line 3 at 23
 ```
+<a name="feature"></a>
 ### feature (Testing - Unit/Integration &#8212; Declarative) 
 *Description*: Feature-based test declaration
 
@@ -3562,23 +4284,23 @@ node.api('/api/temp/examples', {
 feature "Traveler information service" {
     set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
     scenario "Testing that DELETE requests produce the correct result" {
-       http delete "http://0.0.0.0:{{port}}/api/temp/examples"
+       www delete "http://0.0.0.0:{{port}}/api/temp/examples"
            <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }
        verify statusCode is 200
     }
     scenario "Testing that GET response contains specific field" {
-       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
+       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=GARRY&lastName=JONES"
        verify statusCode is 200
            and body.size() >= 0
            and body[0].id is '7bd0b461-4eb9-400a-9b63-713af85a43d0'
     }
     scenario "Testing that POST creates a new record" {
-        http post "http://0.0.0.0:{{port}}/api/temp/examples"
+        www post "http://0.0.0.0:{{port}}/api/temp/examples"
            <~ { id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }
         verify statusCode is 200
     }
     scenario "Testing that we GET the record we previously created" {
-       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
+       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=CHRIS&lastName=DANIELS"
        verify statusCode is 200
           and body matches [{
               id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d",
@@ -3588,7 +4310,7 @@ feature "Traveler information service" {
           }]
     }
     scenario "Testing what happens when a response does not match the expected value" {
-       http get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
+       www get "http://0.0.0.0:{{port}}/api/temp/examples?firstName=SAMANTHA&lastName=JONES"
        verify statusCode is 200
           and body.size() >= 0
           and body[0].id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
@@ -3609,8 +4331,8 @@ Feature: Traveler information service
       [x] statusCode is 200
    Passed: Testing that GET response contains specific field
       [x] statusCode is 200
-      [x] body.size() >= 0
-      [x] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d0"
+      [x] (body.size()) >= 0
+      [x] ((body[0]).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d0"
    Passed: Testing that POST creates a new record
       [x] statusCode is 200
    Passed: Testing that we GET the record we previously created
@@ -3618,13 +4340,14 @@ Feature: Traveler information service
       [x] body matches [{ id: "119ff8a6-b569-4d54-80c6-03eb1c7f795d", firstName: "CHRIS", lastName: "DANIELS", destAirportCode: "DTW" }]
    Failed: Testing what happens when a response does not match the expected value
       [x] statusCode is 200
-      [x] body.size() >= 0
-      [ ] (body[0]).id is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
-      [x] (body[0]).firstName is "SAMANTHA"
-      [x] (body[0]).lastName is "JONES"
-      [x] (body[0]).destAirportCode is "BUR"
+      [x] (body.size()) >= 0
+      [ ] ((body[0]).id) is "7bd0b461-4eb9-400a-9b63-713af85a43d1"
+      [x] ((body[0]).firstName) is "SAMANTHA"
+      [x] ((body[0]).lastName) is "JONES"
+      [x] ((body[0]).destAirportCode) is "BUR"
 completed: passed: 4, failed: 1
 ```
+<a name="scenario"></a>
 ### scenario (Testing - Unit/Integration &#8212; Declarative) 
 *Description*: scenario-based test declaration
 
@@ -3681,6 +4404,7 @@ contest_id = 40d1857b-474c-4400-8f07-5e04cbacc021, member_id = 4264f8a5-6fa3-4a3
       [x] counter is 3
 completed: passed: 4, failed: 0
 ```
+<a name="verify"></a>
 ### verify (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Verifies the current state of the scope
 
@@ -3697,6 +4421,7 @@ true
 ## Transformation Examples
 <hr>
 
+<a name="__"></a>
 ### <=== (Transformation &#8212; Declarative) 
 *Description*: A declarative way to write to OutputStream or Writer resources
 
@@ -3708,20 +4433,37 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@5e7cd0df
+java.io.PrintStream@12166229
 ```
 ##### Console Output
 ```
 Hello World
 ```
+<a name="__"></a>
 ### ===> (Transformation &#8212; Declarative) 
 *Description*: A declarative way to write to OutputStream or Writer resources
 
 ```sql
 import "java.io.File"
-f = new File("./test.json")
+f = new File("app/core/src/test/resources/log4j.properties")
 f ===> stdout
 ```
+##### Results
+```sql
+java.io.PrintStream@12166229
+```
+##### Console Output
+```
+# Root logger option
+log4j.rootLogger=INFO, stdout
+
+# Direct log messages to stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+```
+<a name="__"></a>
 ### =>>¹ (Transformation &#8212; Functional) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Monadic comprehension
 
@@ -3749,8 +4491,9 @@ c
 ```
 ##### Results
 ```sql
-Success(value={"value": 100})
+Success(value=Success(value=100))
 ```
+<a name="scaleTo"></a>
 ### scaleTo (Transformation &#8212; Functional) 
 *Description*: Returns the the numeric expression truncated after `scale` decimal places.
 
@@ -3761,6 +4504,7 @@ scaleTo(0.567, 2)
 ```sql
 0.56
 ```
+<a name="switch"></a>
 ### switch¹ (Transformation &#8212; Functional) 
 *Description*: Scala-inspired switch-case statement
 
