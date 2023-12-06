@@ -63,8 +63,8 @@ class LiteralTest extends AnyFunSpec {
       assert(compiler.compile("true") == true.v)
     }
 
-    it("should evaluate: [1l, 2l, 3l]") {
-      assert(compiler.compile("[1l, 2l, 3l]") == ArrayLiteral(1L.v, 2L.v, 3L.v))
+    it("should evaluate: [1L, 2L, 3L]") {
+      assert(compiler.compile("[1L, 2L, 3L]") == ArrayLiteral(1L.v, 2L.v, 3L.v))
     }
 
     it("should evaluate: {a: 1, b: 2, c: 3}") {
