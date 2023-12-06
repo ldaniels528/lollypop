@@ -1,13 +1,13 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
-import com.lollypop.language.SQLTemplateParams.MappedParameters
+import com.lollypop.language._
 import com.lollypop.language.models.Queryable
-import com.lollypop.language.{HelpDoc, QueryableChainParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.language._
 import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
+import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 /**
@@ -38,34 +38,33 @@ object Union extends QueryableChainParser {
   }
 
   override def help: List[HelpDoc] = {
-    List(/*HelpDoc(
+    List(HelpDoc(
       name = "union",
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
       syntax = "%q:query0 union ?%C(mode|all|distinct) %q:query1",
-      featureTitle = "Matter of taste",
+      featureTitle = Some("Matter of taste"),
       description = "The solution to a problem can be achieved many different ways...",
       example =
         """|import 'java.lang.Runtime'
            |rt = Runtime.getRuntime()
            |
-           |chart = { shape: "bar", title: "Memory Usage" }
+           |chart = { shape: "pie3d", title: "Memory Usage" }
            |graph chart from {
-           |    // (1) the following functional expression ...
-           |    [{ k: 'maxMemory', v: rt.maxMemory() },
-           |     { k: 'totalMemory', v: rt.totalMemory() },
-           |     { k: 'freeMemory', v: rt.freeMemory() }].toTable()
+           |    // (1) the following declarative expression ...
+           |    [{ name: 'totalMemory', value: rt.totalMemory() },
+           |     { name: 'freeMemory', value: rt.freeMemory() }].toTable()
            |
-           |    // (2) and the following declarative statement ...
-           |    select k: 'maxMemory', v: rt.maxMemory()
-           |    union select k: 'totalMemory', v: rt.totalMemory()
-           |    union select k: 'freeMemory', v: rt.freeMemory()
+           |    // (2) and the following SQL statement ...
+           |    select name: 'totalMemory', value: rt.totalMemory()
+           |      union
+           |    select name: 'freeMemory', value: rt.freeMemory()
            |
            |    // (3) and the following multi-paradigm statement are all equivalent.
-           |    transpose(select maxMemory: rt.maxMemory(), totalMemory: rt.totalMemory(), freeMemory: rt.freeMemory())
+           |    transpose(select totalMemory: rt.totalMemory(), freeMemory: rt.freeMemory())
            |}
            |""".stripMargin
-    ),*/ HelpDoc(
+    ), HelpDoc(
       name = "union",
       category = CATEGORY_DATAFRAMES_IO,
       paradigm = PARADIGM_DECLARATIVE,
