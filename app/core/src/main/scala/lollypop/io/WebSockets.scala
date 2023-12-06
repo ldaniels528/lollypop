@@ -19,8 +19,6 @@ import scala.concurrent.{Await, Future}
  */
 trait WebSockets {
 
-  def connect(port: Int, callback: Any => Unit)(implicit system: ActorSystem, materializer: Materializer): WebSocket
-
   def connect(host: String, port: Int, callback: Any => Unit)(implicit system: ActorSystem, materializer: Materializer): WebSocket
 
 }
@@ -57,10 +55,6 @@ object WebSockets extends WebSockets {
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: Materializer = Materializer.matFromSystem
     connect(host, port, callback)
-  }
-
-  override def connect(port: Int, callback: Any => Unit)(implicit system: ActorSystem, materializer: Materializer): WebSocket = {
-    connect(host = "127.0.0.1", port = port, callback)
   }
 
   override def connect(host: String, port: Int, callback: Any => Unit)(implicit system: ActorSystem, materializer: Materializer): WebSocket = {
