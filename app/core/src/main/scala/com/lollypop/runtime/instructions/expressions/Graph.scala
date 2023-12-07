@@ -3,9 +3,7 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{Expression, Queryable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**
@@ -30,7 +28,7 @@ case class Graph(chart: Expression, from: Queryable) extends RuntimeExpression {
 }
 
 object Graph extends ExpressionParser {
-  import com.lollypop.util.OptionHelper.implicits.risky._
+  import com.lollypop.runtime.implicits.risky._
 
   private val template = "graph %e:chart %i:source"
 

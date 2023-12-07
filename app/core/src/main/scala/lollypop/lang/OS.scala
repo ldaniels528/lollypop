@@ -2,28 +2,20 @@ package lollypop.lang
 
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.QueryResponse.QueryResultConversion
-import com.lollypop.implicits.MagicImplicits
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Instruction}
-import com.lollypop.language.{LollypopUniverse, dieFileNotDirectory}
 import com.lollypop.repl.ProcessRun
-import com.lollypop.runtime.DatabaseManagementSystem.PatternSearchWithOptions
+import com.lollypop.runtime.DatabaseManagementSystem.{PatternSearchWithOptions, getServerRootDirectory}
 import com.lollypop.runtime.DatabaseObjectConfig.implicits.RichDatabaseEntityConfig
 import com.lollypop.runtime.DatabaseObjectNS.{configExt, readConfig}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.LollypopVM.rootScope
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
-import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.lollypop.util.DateHelper
-import com.lollypop.util.JVMSupport.NormalizeAny
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper.AutoClose
-import com.lollypop.util.StringHelper.StringEnrichment
 import lollypop.io.Encodable
 import lollypop.lang.OS._
 import org.apache.commons.io.IOUtils
@@ -438,7 +430,8 @@ object OS {
   }
 
   private def getNameWithoutExtension(file: File): String = {
-    import com.lollypop.util.StringHelper._
+    import com.lollypop.language._
+    import com.lollypop.runtime._
     file.getName ~> { name => name.indexOfOpt(".") map (index => name.substring(0, index)) getOrElse name }
   }
 

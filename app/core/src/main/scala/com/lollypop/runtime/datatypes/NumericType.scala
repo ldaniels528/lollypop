@@ -4,7 +4,7 @@ import com.lollypop.language.dieUnsupportedConversion
 import com.lollypop.language.models.{ColumnType, Expression}
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{Boolean2Int, Scope}
+import com.lollypop.runtime.{Scope, _}
 
 /**
  * Represents a generic numeric data type

@@ -1,7 +1,6 @@
 package com.lollypop.runtime
 
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 
 import scala.language.implicitConversions

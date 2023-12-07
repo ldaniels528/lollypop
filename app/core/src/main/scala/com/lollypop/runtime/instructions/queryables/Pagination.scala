@@ -1,12 +1,10 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.Queryable
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.{PaginationSupport, RowCollection}
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

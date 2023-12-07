@@ -3,8 +3,7 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
 import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

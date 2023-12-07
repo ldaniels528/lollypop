@@ -2,9 +2,9 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.@@
 import com.lollypop.runtime.{LollypopVM, Scope}
+import lollypop.lang.BitArray
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.lang.BitArray
 
 class MultiTenantRowCollectionTest extends AnyFunSpec {
   private val logger = LoggerFactory.getLogger(getClass)

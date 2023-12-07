@@ -1,6 +1,5 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.TemplateProcessor.{TagInstructionWithLineNumbers, TokenStreamExtensions}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 

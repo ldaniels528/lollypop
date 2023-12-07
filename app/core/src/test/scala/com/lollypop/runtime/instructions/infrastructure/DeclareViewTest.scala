@@ -1,13 +1,13 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models.View
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.OptionHelper.implicits.risky._
 import org.scalatest.funspec.AnyFunSpec
 
 class DeclareViewTest extends AnyFunSpec with VerificationTools {

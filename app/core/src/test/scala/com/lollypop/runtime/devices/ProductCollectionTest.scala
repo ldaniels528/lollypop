@@ -2,15 +2,13 @@ package com.lollypop.runtime.devices
 
 import com.github.ldaniels528.lollypop.StockQuote.{randomQuote, randomURID}
 import com.github.ldaniels528.lollypop.{GenericData, StockQuote}
-import com.lollypop.implicits.{MagicBoolImplicits, MagicImplicits}
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.BasicIterator.RichBasicIterator
 import com.lollypop.runtime.devices.ProductCollectionTest.StockTicker
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
-import com.lollypop.runtime.{ColumnInfo, DatabaseManagementSystem, DatabaseObjectRef, LollypopVM, Scope, time}
 import com.lollypop.util.DateHelper
+import lollypop.io.{IOCost, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.io.{IOCost, RowIDRange}
 
 import java.util.Date
 import scala.annotation.meta.field
@@ -51,7 +49,7 @@ class ProductCollectionTest extends AnyFunSpec {
     }
 
     it("should populate a product class with values") {
-      import com.lollypop.util.OptionHelper.implicits.risky._
+      import com.lollypop.runtime.implicits.risky._
       val ps = ProductCollection[GenericData]()
       val data = ps.convertRow(Row(id = 1087, metadata = RowMetadata(), columns = ps.host.columns, fields = List(
         Field(name = "_id", metadata = FieldMetadata(), value = None),

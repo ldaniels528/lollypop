@@ -1,12 +1,11 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.implicits.MagicBoolImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{StringType, TableType}
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

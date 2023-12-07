@@ -1,15 +1,12 @@
 package com.lollypop.runtime.instructions.queryables
 
+import com.lollypop.language._
 import com.lollypop.language.models.{@@, Expression, Queryable}
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Inferences, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
+import com.lollypop.runtime.{Scope, _}
 
 /**
  * Represents rows of values (e.g. "values (2, 5, 7, 11), (13, 17, 19, 23)")

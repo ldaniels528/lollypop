@@ -1,9 +1,9 @@
 package lollypop.io
 
+import com.lollypop.language._
 import com.lollypop.runtime.DatabaseObjectConfig.ExternalTableConfig
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.devices.TableColumn
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import java.io.File
 

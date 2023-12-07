@@ -1,14 +1,13 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
 import com.lollypop.language.models.{@@, AllFields, Parameter}
 import com.lollypop.runtime.errors.ResourceNotAutoCloseableException
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NS}
 import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
-import com.lollypop.util.OptionHelper.implicits.risky._
 import org.scalatest.funspec.AnyFunSpec
 
 class WithTest extends AnyFunSpec with VerificationTools {

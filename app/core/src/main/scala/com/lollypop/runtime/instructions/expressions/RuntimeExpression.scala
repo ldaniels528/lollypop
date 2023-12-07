@@ -1,13 +1,11 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**
@@ -67,28 +65,6 @@ trait RuntimeExpression extends Expression with RuntimeInstruction {
       case inst => inst.invokeMethod(name = "apply", params = args)(sb)
     }
     (sb, ca ++ cb, result)
-  }
-
-}
-
-/**
- * Run-time Expression Companion
- */
-object RuntimeExpression {
-
-  /**
-   * Rich Expression
-   * @param instruction the host [[Instruction instruction]]
-   */
-  final implicit class RichExpression(val instruction: Instruction) extends AnyVal {
-
-    @inline
-    def getAlias: Option[String] = instruction match {
-      case expr@NamedExpression(name) => expr.alias ?? Some(name)
-      case expr: Expression => expr.alias
-      case _ => None
-    }
-
   }
 
 }

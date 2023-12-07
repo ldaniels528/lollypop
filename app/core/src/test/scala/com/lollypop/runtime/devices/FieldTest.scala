@@ -1,6 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.Field.ColumnToFieldExtension

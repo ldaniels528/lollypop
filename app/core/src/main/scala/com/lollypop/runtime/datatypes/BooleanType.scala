@@ -2,8 +2,7 @@ package com.lollypop.runtime.datatypes
 
 import com.lollypop.language.models.{ColumnType, Expression, Literal}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedConversion}
-import com.lollypop.runtime.{ONE_BYTE, Scope}
-import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
+import com.lollypop.runtime._
 
 import java.nio.ByteBuffer
 import java.nio.ByteBuffer.allocate

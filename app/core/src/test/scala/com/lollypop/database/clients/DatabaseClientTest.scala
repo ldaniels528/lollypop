@@ -1,10 +1,10 @@
 package com.lollypop.database.clients
 
 import com.lollypop.database.QueryResponse
+import com.lollypop.language._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
-import com.lollypop.util.ResourceHelper._
-import com.lollypop.util.StringHelper.StringEnrichment
+import com.lollypop.runtime.time
 import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

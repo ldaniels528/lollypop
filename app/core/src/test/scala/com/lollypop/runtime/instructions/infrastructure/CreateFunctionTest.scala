@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Operation.RichOperation
-import com.lollypop.language.models.{$, TypicalFunction}
+import com.lollypop.language._
+import com.lollypop.language.models.TypicalFunction
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec

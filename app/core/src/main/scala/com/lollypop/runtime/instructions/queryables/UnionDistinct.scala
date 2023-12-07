@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.models.Queryable
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

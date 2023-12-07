@@ -1,12 +1,10 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.CATEGORY_TESTING
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language._
 import com.lollypop.language.models.Inequality.toInequalities
 import com.lollypop.language.models.{Condition, Expression}
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.util.Try

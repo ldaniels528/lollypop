@@ -1,16 +1,14 @@
-package com.lollypop.util
+package com.lollypop.runtime
 
-import com.lollypop.runtime.LONG_BYTES
-import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.nio.ByteBuffer
 import java.util.{Date, UUID}
 import scala.concurrent.duration.DurationInt
 
-object ByteBufferHelperTest extends AnyFunSpec {
+class DataTypeByteBufferTest extends AnyFunSpec {
 
-  describe(classOf[ByteBufferHelper.type].getSimpleName) {
+  describe(classOf[DataTypeByteBuffer].getSimpleName) {
 
     it("should encode/decode a Date") {
       val dateA = new Date()

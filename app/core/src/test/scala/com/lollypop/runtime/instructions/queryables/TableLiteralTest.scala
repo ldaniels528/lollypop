@@ -1,14 +1,13 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.TokenIterator
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.{TokenIterator, _}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.lang.Null
+import org.scalatest.funspec.AnyFunSpec
 
 class TableLiteralTest extends AnyFunSpec {
   implicit val compiler: LollypopCompiler = LollypopCompiler()

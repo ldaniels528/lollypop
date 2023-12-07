@@ -1,11 +1,10 @@
-package com.lollypop.util
+package com.lollypop.language
 
-import com.lollypop.util.OptionHelper._
 import org.scalatest.funspec.AnyFunSpec
 
-class OptionHelperTest  extends AnyFunSpec {
+class OptionEnrichmentTest  extends AnyFunSpec {
 
-  describe(ResourceHelper.getClass.getSimpleName) {
+  describe(classOf[OptionEnrichment[_]].getSimpleName) {
 
     it("should attempt to find a nonEmpty option: optionA ?? optionB") {
       assert(Some("Hello") ?? None contains "Hello")
@@ -18,7 +17,7 @@ class OptionHelperTest  extends AnyFunSpec {
     }
 
     it("should auto-convert T to Option[T]") {
-      import com.lollypop.util.OptionHelper.implicits.risky.value2Option
+      import com.lollypop.runtime.implicits.risky._
       assert(5.nonEmpty)
     }
 

@@ -10,29 +10,19 @@ import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.stream.scaladsl.Flow
-import com.lollypop.AppConstants.{__port__, lollypopSessionID}
 import com.lollypop.database.QueryResponse.{QueryResultConversion, RESULT_ROWS}
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.die
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime._
-import com.lollypop.runtime.conversions.TransferTools.EnrichedByteString
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollection.dieColumnIndexOutOfRange
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.conditions.{AND, EQ}
 import com.lollypop.runtime.instructions.functions.AnonymousFunction
-import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.util.JSONSupport.JsValueConversion
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringRenderHelper.StringRenderer
-import com.lollypop.{AppConstants, die}
 import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -809,7 +799,6 @@ object LollypopServer {
     val defaultPort = 8233
 
     // display the application version
-    val version = AppConstants.version
     Console.println(s"$RESET${GREEN}QW${MAGENTA}E${RED}R${BLUE}Y Server ${CYAN}v$version$RESET")
     Console.println()
 

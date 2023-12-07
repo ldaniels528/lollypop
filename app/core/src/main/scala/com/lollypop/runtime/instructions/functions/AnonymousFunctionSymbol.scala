@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_FUNCTIONAL}
-import com.lollypop.language.models.Expression.implicits.RichAliasable
+import com.lollypop.language._
 import com.lollypop.language.models.{ColumnType, Expression, Parameter}
-import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 
 /**
  * Anonymous Function Symbol

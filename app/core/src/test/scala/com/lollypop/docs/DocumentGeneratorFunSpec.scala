@@ -2,15 +2,14 @@ package com.lollypop.docs
 
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopChartGenerator
+import com.lollypop.language._
 import com.lollypop.language.models.Instruction
-import com.lollypop.language.{HelpDoc, LollypopUniverse}
 import com.lollypop.repl.LollypopREPL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.StringHelper.StringEnrichment
 import com.lollypop.util.StringRenderHelper.{StringRenderer, toProductString}
 import org.scalatest.funspec.AnyFunSpec
 

@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.models.CodeBlock
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.operators.Plus
+import com.lollypop.runtime.{Scope, _}
 import org.scalatest.funspec.AnyFunSpec
 
 class CodeBlockTest extends AnyFunSpec with VerificationTools {

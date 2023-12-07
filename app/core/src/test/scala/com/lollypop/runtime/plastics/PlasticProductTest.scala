@@ -1,7 +1,6 @@
 package com.lollypop.runtime.plastics
 
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language.{LollypopUniverse, _}
 import com.lollypop.runtime.instructions.jvm.DeclareClass
 import com.lollypop.runtime.plastics.Plastic.implicits.ProductToMap
 import com.lollypop.runtime.{DynamicClassLoader, LollypopVM, Scope}

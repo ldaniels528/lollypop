@@ -7,7 +7,6 @@ import com.lollypop.runtime.DatabaseManagementSystem._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.MacroLanguageParser
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.expressions._
@@ -19,7 +18,6 @@ import com.lollypop.runtime.instructions.jvm._
 import com.lollypop.runtime.instructions.operators._
 import com.lollypop.runtime.instructions.queryables._
 import com.lollypop.runtime.plastics.RuntimePlatform
-import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io._
 import lollypop.lang._
 import org.slf4j.LoggerFactory

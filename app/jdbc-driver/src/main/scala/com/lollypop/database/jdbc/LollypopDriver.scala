@@ -1,9 +1,9 @@
 package com.lollypop.database
 package jdbc
 
-import com.lollypop.AppConstants._
 import com.lollypop.database.clients.DatabaseClient
 import com.lollypop.die
+import com.lollypop.runtime._
 
 import java.sql.{Connection, Driver, DriverManager, DriverPropertyInfo}
 import java.util.Properties

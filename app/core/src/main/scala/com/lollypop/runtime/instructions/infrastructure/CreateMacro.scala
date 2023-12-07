@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.runtime.DatabaseManagementSystem.createMACRO
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.MacroLanguageParser
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 /**

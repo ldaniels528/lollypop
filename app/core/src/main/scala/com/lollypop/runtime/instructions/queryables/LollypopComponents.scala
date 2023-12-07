@@ -1,19 +1,15 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, Literal}
-import com.lollypop.language.{HelpDoc, LanguageParser, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.LollypopVM.rootScope
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.StringType
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.LollypopComponents.{installComponents, keyword, toTable}
 import com.lollypop.runtime.plastics.RuntimeClass
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.io.Source

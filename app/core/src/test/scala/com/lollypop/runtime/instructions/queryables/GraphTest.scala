@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.queryables
 
+import com.lollypop.language._
 import com.lollypop.language.models.@@
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.datatypes.{Int32Type, StringType}
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.TableColumn

@@ -1,7 +1,8 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.language.models.{Column, TableModel}
+import com.lollypop.runtime.DatabaseManagementSystem.getDatabaseRootDirectory
 import com.lollypop.runtime.DatabaseObjectNS._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions

@@ -2,8 +2,8 @@ package com.lollypop.util
 
 import com.lollypop.util.CodecHelper.serialize
 import com.lollypop.util.StringRenderHelper.StringRenderer
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.io.{IOCost, RowIDRange}
+import org.scalatest.funspec.AnyFunSpec
 
 import java.util.UUID
 

@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language.implicits._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.functions.NS
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}

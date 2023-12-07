@@ -1,13 +1,11 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.{Column, ColumnType}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempTable
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import com.lollypop.util.ResourceHelper.AutoClose
-import org.scalatest.funspec.AnyFunSpec
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
+import org.scalatest.funspec.AnyFunSpec
 
 /**
  * Record Metadata I/O Test Suite

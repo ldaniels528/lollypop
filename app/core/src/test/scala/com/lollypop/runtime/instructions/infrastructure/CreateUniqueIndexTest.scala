@@ -4,8 +4,8 @@ import com.lollypop.runtime.devices.errors.{UniqueKeyAlreadyExistsError, UniqueK
 import com.lollypop.runtime.devices.{FieldMetadata, HashIndexRowCollection, RowMetadata}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.io.{IOCost, RowIDRange}
+import org.scalatest.funspec.AnyFunSpec
 
 class CreateUniqueIndexTest extends AnyFunSpec with VerificationTools {
   private implicit val compiler: LollypopCompiler = LollypopCompiler()

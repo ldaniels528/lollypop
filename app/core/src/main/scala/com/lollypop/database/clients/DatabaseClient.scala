@@ -2,13 +2,10 @@ package com.lollypop.database
 package clients
 
 import com.lollypop.database.clients.WebServiceClient._
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.dieExpectedJSONObject
+import com.lollypop.language._
 import com.lollypop.runtime.ModelsJsonProtocol._
-import com.lollypop.runtime.ROWID
 import com.lollypop.runtime.devices.Row
-import com.lollypop.util.JSONSupport.JsValueConversion
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{ROWID, _}
 import lollypop.io.{IOCost, RowIDRange}
 import spray.json._
 

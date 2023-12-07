@@ -3,9 +3,8 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{Int32Type, Int64Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo._
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.NodePs.{keyword, listProcesses}

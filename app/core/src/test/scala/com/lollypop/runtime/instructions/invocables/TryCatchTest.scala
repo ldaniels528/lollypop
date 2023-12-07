@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language._
 import com.lollypop.language.models.Parameter
-import com.lollypop.language.{SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.instructions.expressions.{Infix, NamedFunctionCall, TransferFrom}
 import com.lollypop.runtime.instructions.functions.AnonymousFunction
 import com.lollypop.runtime.instructions.invocables.TryCatch.templateCard
@@ -40,7 +39,7 @@ class TryCatchTest extends AnyFunSpec {
     }
 
     it("should compile: try connect() catch e => println(e.getMessage()) finally cleanup()") {
-      import com.lollypop.util.OptionHelper.implicits.risky.value2Option
+      import com.lollypop.runtime.implicits.risky._
       val model = compiler.compile(
         """|try connect() catch e => out <=== e.getMessage() finally cleanup()
            |""".stripMargin)
@@ -64,7 +63,7 @@ class TryCatchTest extends AnyFunSpec {
     }
 
     it("should decompile: try connect() catch e => println(e.getMessage()) finally cleanup()") {
-      import com.lollypop.util.OptionHelper.implicits.risky.value2Option
+      import com.lollypop.runtime.implicits.risky._
       val model = TryCatch(
         code = NamedFunctionCall(name = "connect", args = Nil),
         onError = AnonymousFunction(

@@ -1,13 +1,10 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.Token.TableToken
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, FieldRef, Literal}
-import com.lollypop.language.{ExpressionParser, HelpDoc, QueryableParser, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language.{ExpressionParser, HelpDoc, LifestyleExpressionsAny, QueryableParser, SQLCompiler, TokenStream}
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RecordStructure, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions._

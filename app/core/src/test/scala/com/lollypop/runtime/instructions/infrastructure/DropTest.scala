@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, LollypopCompiler, Scope}
+import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class DropTest extends AnyFunSpec with VerificationTools {

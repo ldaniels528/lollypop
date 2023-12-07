@@ -2,20 +2,17 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.language.models.{Expression, Instruction}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language.LifestyleExpressionsAny
+import com.lollypop.language.implicits._
+import com.lollypop.language.models.Expression
 import com.lollypop.runtime.datatypes.{BooleanType, StringType, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{QMap, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.conditions.Matches
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.instructions.queryables.Expose.exposeMatch
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.JVMSupport.NormalizeAny
-import com.lollypop.util.StringRenderHelper.StringRenderer
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**
@@ -102,17 +99,6 @@ object Expose extends FunctionCallParserE1(
 
   private def reduce(rows: List[List[QMap[String, Any]]]): List[QMap[String, Any]] = {
     rows.reduceLeft[List[QMap[String, Any]]] { case (a, b) => a ::: b }
-  }
-
-  /**
-   * SQL Decompiler Helper
-   * @param opCode the [[AnyRef opCode]] to decompile
-   */
-  final implicit class SQLDecompilerHelper(val opCode: Any) extends AnyVal {
-    def toSQL: String = opCode match {
-      case d: Instruction => d.toSQL
-      case x => x.renderAsJson
-    }
   }
 
 }

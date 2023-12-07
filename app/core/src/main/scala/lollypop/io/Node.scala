@@ -1,16 +1,13 @@
 package lollypop.io
 
 import akka.http.scaladsl.Http
-import com.lollypop.AppConstants.{DEFAULT_DATABASE, DEFAULT_SCHEMA}
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.clients.DatabaseClient
 import com.lollypop.database.server.LollypopServer
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.runtime.Scope
+import com.lollypop.language.{LollypopUniverse, _}
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.util.ConsoleReaderHelper.{createInteractiveConsoleReader, interactWith}
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper.time
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration.Duration

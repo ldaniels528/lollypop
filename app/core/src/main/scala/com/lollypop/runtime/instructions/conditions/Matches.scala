@@ -1,16 +1,13 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE, PARADIGM_FUNCTIONAL}
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, LambdaFunction, Literal}
-import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, LifestyleExpressionsAny, SQLCompiler, TokenStream}
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.runtime.instructions.conditions.Matches.keyword
 import com.lollypop.runtime.instructions.expressions.{NamedFunctionCall, New}
 import com.lollypop.runtime.instructions.functions.AnonymousNamedFunction
-import com.lollypop.util.JVMSupport.NormalizeAny
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

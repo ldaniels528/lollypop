@@ -5,7 +5,6 @@ import com.lollypop.language._
 import com.lollypop.language.models.View
 import com.lollypop.runtime.DatabaseManagementSystem.createVirtualTable
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import scala.collection.mutable

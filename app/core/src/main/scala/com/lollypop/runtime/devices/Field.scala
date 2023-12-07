@@ -1,7 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.{Scope, _}
 
 /**
  * Represents a field

@@ -1,10 +1,9 @@
 package com.lollypop.runtime.devices
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{CLOB, StringType}
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
-import com.lollypop.util.ResourceHelper._
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.lang.Pointer
+import org.scalatest.funspec.AnyFunSpec
 
 class BlobStorageTest extends AnyFunSpec {
 

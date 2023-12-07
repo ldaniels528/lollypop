@@ -1,14 +1,13 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
 import com.lollypop.language.models.{$, AllFields, Procedure}
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.aggregation.{Count, Max, Min}
 import com.lollypop.runtime.instructions.invocables.{Return, ScopedCodeBlock}
 import com.lollypop.runtime.instructions.queryables.Select
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler}
-import com.lollypop.util.OptionHelper.implicits.risky._
 import org.scalatest.funspec.AnyFunSpec
 
 class CreateProcedureTest extends AnyFunSpec with VerificationTools {

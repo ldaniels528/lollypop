@@ -1,13 +1,11 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_IMPERATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Inequality._
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
-import com.lollypop.runtime.instructions.conditions.AssumeCondition.EnrichedAssumeCondition
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE2, ScalarFunctionCall}
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

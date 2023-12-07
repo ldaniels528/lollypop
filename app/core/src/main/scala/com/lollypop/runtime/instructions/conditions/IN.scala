@@ -1,12 +1,10 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.{ArrayExpression, Expression, Instruction, Queryable}
-import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream, dieUnsupportedEntity}
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

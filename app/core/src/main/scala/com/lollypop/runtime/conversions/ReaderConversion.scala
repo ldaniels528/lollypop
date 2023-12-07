@@ -2,7 +2,7 @@ package com.lollypop.runtime.conversions
 
 import com.lollypop.language.dieIllegalType
 
-import java.io.{File, FileReader, InputStream, InputStreamReader, Reader, StringReader}
+import java.io._
 
 /**
  * Reader Conversion

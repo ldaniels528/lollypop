@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.operators
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.language.models.Operation.RichOperation
+import com.lollypop.language._
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 

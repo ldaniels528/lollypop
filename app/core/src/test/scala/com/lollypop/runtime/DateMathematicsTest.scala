@@ -1,13 +1,13 @@
-package com.lollypop.util
+package com.lollypop.runtime
 
-import com.lollypop.util.DateOperations.DateMathematics
+import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 
 import scala.concurrent.duration.DurationInt
 
-class DateOperationsTest extends AnyFunSpec {
+class DateMathematicsTest extends AnyFunSpec {
 
-  describe(classOf[DateOperations.type].getSimpleName) {
+  describe(classOf[DateMathematics].getSimpleName) {
 
     it("should add an Duration to a Date") {
       val dateA = DateHelper("2022-09-04T22:36:47.846Z")

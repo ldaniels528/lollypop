@@ -1,8 +1,8 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.lang.OS.{createFileTable, toFileRow}
+import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File
 

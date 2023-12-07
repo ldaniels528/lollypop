@@ -1,11 +1,9 @@
 package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, ParameterLike}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType, StringType, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
@@ -16,7 +14,7 @@ import com.lollypop.runtime.plastics.Plastic.implicits.MethodNameConverter
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.decodeModifiers
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import java.lang.reflect.Modifier

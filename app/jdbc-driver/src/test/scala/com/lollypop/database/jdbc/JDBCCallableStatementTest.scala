@@ -2,13 +2,12 @@ package com.lollypop.database.jdbc
 
 import com.lollypop.database.jdbc.types.JDBCRowId
 import com.lollypop.database.jdbc.types.JDBCValueConversion.toJDBCType
+import com.lollypop.language._
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.CLOB
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.conversions.TransferTools.{RichInputStream, RichReader}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File

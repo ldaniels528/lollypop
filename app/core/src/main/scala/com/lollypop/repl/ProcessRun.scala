@@ -2,14 +2,13 @@ package com.lollypop.repl
 
 import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.Token.ProcessInvocationToken
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, TokenStream}
+import com.lollypop.language._
 import com.lollypop.repl.ProcessRun.invoke
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Int32Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.sys.process.Process

@@ -58,7 +58,7 @@ object DefineImplicit extends InvokableParser {
   private val template = "implicit class %a:class %i:methods"
 
   override def help: List[HelpDoc] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     List(HelpDoc(
       name = "implicit",
       category = CATEGORY_SYSTEM_TOOLS,

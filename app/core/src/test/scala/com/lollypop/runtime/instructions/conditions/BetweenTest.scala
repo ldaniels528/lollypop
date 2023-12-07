@@ -1,10 +1,10 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.language._
+import com.lollypop.language.implicits._
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, Scope}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 
@@ -39,7 +39,7 @@ class BetweenTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support select .. where between") {
-      import com.lollypop.util.OptionHelper.implicits.risky._
+      import com.lollypop.runtime.implicits.risky._
       val results = compiler.compile(
         """|select Symbol, Name, Sector, Industry, SummaryQuote
            |from Customers

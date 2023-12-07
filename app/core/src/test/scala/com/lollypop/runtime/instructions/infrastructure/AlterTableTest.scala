@@ -1,17 +1,15 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.Template
 import com.lollypop.language.TemplateProcessor.tags._
 import com.lollypop.language.models.Column
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language.{Template, _}
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.instructions.infrastructure.AlterTable.{AddColumn, AppendColumn, DropColumn, PrependColumn, RenameColumn, SetLabel}
+import com.lollypop.runtime.instructions.infrastructure.AlterTable._
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.StringHelper.StringEnrichment
+import lollypop.io.{IOCost, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.io.{IOCost, RowIDRange}
 
 class AlterTableTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)

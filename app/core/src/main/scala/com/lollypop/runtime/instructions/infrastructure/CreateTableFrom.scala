@@ -1,12 +1,11 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.{Queryable, TableModel}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.{Field, FieldMetadata}
 import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 import scala.collection.mutable

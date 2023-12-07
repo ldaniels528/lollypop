@@ -1,8 +1,8 @@
 package com.lollypop.language
 
 import com.lollypop.die
-import com.lollypop.implicits._
 import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
+import com.lollypop.runtime._
 
 /**
  * Represents a token
@@ -310,15 +310,6 @@ object Token {
     }
 
     def unapply(t: TableToken): Option[(String, List[String], Int, Int)] = Some((t.text, t.value, t.lineNo, t.columnNo))
-  }
-
-  final implicit class RichToken[A <: Token](val token: A) extends AnyVal {
-    @inline
-    def withLineAndColumn(lineNo: Int, columnNo: Int): A = {
-      token.lineNo = lineNo
-      token.columnNo = columnNo
-      token
-    }
   }
 
 }

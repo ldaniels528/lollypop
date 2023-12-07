@@ -1,9 +1,8 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.language._
 import com.lollypop.runtime.instructions.invocables.ScopedCodeBlock
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

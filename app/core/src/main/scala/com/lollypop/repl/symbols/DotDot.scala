@@ -1,7 +1,7 @@
 package com.lollypop.repl.symbols
 
 import com.lollypop.repl.symbols.DotDot.symbol
-import com.lollypop.runtime.conversions.getCWD
+import com.lollypop.runtime._
 
 import java.io.File
 

@@ -1,8 +1,7 @@
 package com.lollypop.runtime.datatypes
 
+import com.lollypop.language._
 import com.lollypop.language.models.ColumnType
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
-import com.lollypop.language.{ColumnTypeParser, TokenStream}
 import com.lollypop.runtime.datatypes.DataTypeFunSpec.FakeNews
 import com.lollypop.runtime.{LollypopCompiler, Scope}
 import com.lollypop.util.DateHelper

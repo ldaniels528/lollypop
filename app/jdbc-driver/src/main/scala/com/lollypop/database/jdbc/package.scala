@@ -1,10 +1,10 @@
 package com.lollypop.database
 
 import com.lollypop.database.jdbc.types.JDBCValueConversion.toDataType
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
-import com.lollypop.util.StringHelper.StringEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.util.Tabulator
 

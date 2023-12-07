@@ -1,10 +1,10 @@
 package com.lollypop.runtime.devices
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo.{createTempFile, createTempNS}
-import com.lollypop.util.ResourceHelper._
+import lollypop.lang.Pointer
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.lang.Pointer
 
 import java.io.File
 import scala.io.Source

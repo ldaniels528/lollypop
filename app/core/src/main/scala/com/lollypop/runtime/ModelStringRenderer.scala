@@ -1,7 +1,6 @@
 package com.lollypop.runtime
 
 import com.lollypop.database.server.LollypopServer
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.{Atom, ColumnType, FieldRef, Literal}
 import com.lollypop.runtime.datatypes.DataType

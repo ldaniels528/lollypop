@@ -1,15 +1,12 @@
 package com.lollypop.runtime.plastics
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{LanguageParser, LollypopUniverse}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.conversions.ScalaConversion
 import com.lollypop.runtime.datatypes.DataTypeParser
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.{LollypopException, die}
 import dev.jeka.core.api.depmanagement.resolution.JkDependencyResolver
 import dev.jeka.core.api.depmanagement.{JkDependencySet, JkRepo, JkRepoSet}

@@ -4,11 +4,9 @@ import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.repl.gnu.MD5Sum.keyword
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.VarBinaryType
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import java.io.{File, FileInputStream}

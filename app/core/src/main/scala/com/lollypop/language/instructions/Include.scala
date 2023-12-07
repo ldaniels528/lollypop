@@ -1,10 +1,10 @@
 package com.lollypop.language.instructions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.SourceCodeInstruction.RichSourceCodeInstruction
 import com.lollypop.language.models.{Instruction, Literal}
-import com.lollypop.language.{DirectiveParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime._
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.{File, FileInputStream}

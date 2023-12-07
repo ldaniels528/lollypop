@@ -1,8 +1,8 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Literal, Queryable, TableModel}
-import com.lollypop.language.{HelpDoc, IfNotExists, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieUnsupportedType}
 import com.lollypop.runtime.DatabaseManagementSystem.readPhysicalTable
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS

@@ -1,16 +1,15 @@
 package com.lollypop.runtime.plastics
 
 import com.github.ldaniels528.lollypop.FakeModel
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.{LollypopUniverse, _}
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.plastics.RuntimeClass._
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.{RuntimeClassConstructorSugar, RuntimeClassInstanceSugar}
 import com.lollypop.runtime.{DataObject, DynamicClassLoader, LollypopNative, Scope}
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.io.Encodable
+import org.scalatest.funspec.AnyFunSpec
 
 import java.util.UUID
 import scala.collection.concurrent.TrieMap

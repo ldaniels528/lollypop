@@ -1,6 +1,5 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.TemplateProcessor.TokenStreamExtensions
 import com.lollypop.language.models.{Expression, FunctionCall}
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.datatypes.Inferences.InstructionTyping

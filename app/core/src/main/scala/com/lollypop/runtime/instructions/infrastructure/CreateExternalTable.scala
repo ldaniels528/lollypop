@@ -5,11 +5,10 @@ import com.lollypop.language._
 import com.lollypop.language.models.ExternalTable
 import com.lollypop.runtime.DatabaseManagementSystem.createExternalTable
 import com.lollypop.runtime.DatabaseObjectConfig.ExternalTableConfig
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.instructions.infrastructure.CreateExternalTable.ExternalTableDeclaration
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 /**

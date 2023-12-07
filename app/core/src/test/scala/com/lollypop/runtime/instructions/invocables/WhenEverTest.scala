@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.Template
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language.implicits._
+import com.lollypop.language.{Template, _}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.ProcedureCall
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}

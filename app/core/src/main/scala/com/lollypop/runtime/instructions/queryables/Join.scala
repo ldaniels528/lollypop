@@ -2,24 +2,21 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.Expression.implicits.RichAliasable
 import com.lollypop.language.models.{Condition, Queryable}
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.expressions._
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import scala.language.{existentials, postfixOps}
 
 /**
-  * Base class for all Join expressions
-  * @author lawrence.daniels@gmail.com
-  */
+ * Base class for all Join expressions
+ * @author lawrence.daniels@gmail.com
+ */
 sealed trait Join extends Queryable {
 
   /**
-    * @return the join [[Queryable source]]
-    */
+   * @return the join [[Queryable source]]
+   */
   def source: Queryable
 
   /**

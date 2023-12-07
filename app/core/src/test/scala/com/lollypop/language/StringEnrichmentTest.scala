@@ -1,11 +1,10 @@
-package com.lollypop.util
+package com.lollypop.language
 
-import com.lollypop.util.StringHelper._
 import org.scalatest.funspec.AnyFunSpec
 
-class StringHelperTest extends AnyFunSpec {
+class StringEnrichmentTest extends AnyFunSpec {
 
-  describe(StringHelper.getClass.getSimpleName) {
+  describe(classOf[StringEnrichment].getSimpleName) {
 
     it("""should evaluate: "Hello World".indexOfOpt("World")""") {
       assert("Hello World".indexOfOpt("World") contains 6)

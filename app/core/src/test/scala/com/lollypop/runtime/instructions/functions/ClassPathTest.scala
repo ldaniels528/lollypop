@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
-import com.lollypop.runtime.{LollypopCompiler, Scope}
+import com.lollypop.language.LifestyleExpressionsAny
+import com.lollypop.runtime._
 import org.scalatest.funspec.AnyFunSpec
 
 class ClassPathTest extends AnyFunSpec {

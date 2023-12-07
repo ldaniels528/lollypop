@@ -3,9 +3,8 @@ package com.lollypop.repl.gnu
 import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models._
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.{ExpressiveTypeConversion, _CWD_, _OLD_CWD_, getCWD}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import java.io.File
@@ -92,15 +91,6 @@ object ChDir extends ExpressionParser {
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
-
-  /**
-   * ChDir-Scope Enrichment
-   * @param scope the host [[Scope]]
-   */
-  final implicit class ChDirScope(val scope: Scope) extends AnyVal {
-    @inline
-    def chdir(cwd: String, owd: String): Scope = scope.withVariable(_CWD_, cwd).withVariable(_OLD_CWD_, owd)
-  }
 
 }
 

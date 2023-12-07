@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec

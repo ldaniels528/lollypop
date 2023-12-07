@@ -1,10 +1,8 @@
 package com.lollypop.language.models
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
-import com.lollypop.language.TemplateProcessor.TokenStreamExtensions
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language._
 import com.lollypop.language.models.Literal.implicits.NumericLiteralTokenStreamExtensions
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.LollypopNative
 import com.lollypop.runtime.instructions.conditions.BooleanLiteral
 import com.lollypop.runtime.instructions.expressions.{AnyLiteral, ArrayLiteral}
@@ -79,7 +77,7 @@ object Literal extends ExpressionParser {
   }
 
   override def help: List[HelpDoc] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     List(HelpDoc(
       name = "[_ to _]",
       category = CATEGORY_SCOPE_SESSION,

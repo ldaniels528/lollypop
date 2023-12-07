@@ -2,11 +2,10 @@ package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Inferences
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, StringExpression}
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

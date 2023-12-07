@@ -1,9 +1,9 @@
 package com.lollypop.database
 package jdbc
 
-import com.lollypop.AppConstants._
 import com.lollypop.database.jdbc.types.JDBCWrapper
 import com.lollypop.language.LollypopUniverse
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.TableColumn
 

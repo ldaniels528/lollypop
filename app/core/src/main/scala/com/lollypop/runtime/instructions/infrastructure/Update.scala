@@ -3,8 +3,7 @@ package com.lollypop.runtime.instructions.infrastructure
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
+import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 /**

@@ -1,12 +1,12 @@
-package com.lollypop.util
+package com.lollypop.runtime
 
-import com.lollypop.util.CalendarHelper.CalendarUtilities
+import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 
-class CalendarHelperTest extends AnyFunSpec {
+class CalendarUtilitiesTest extends AnyFunSpec {
   private val testDate = DateHelper("2023-08-12T19:11:01.899Z")
 
-  describe(classOf[CalendarHelper.type].getSimpleName) {
+  describe(classOf[CalendarUtilities.type].getSimpleName) {
 
     it("should extract the day of month") {
       assert(testDate.dayOfMonth == 12)

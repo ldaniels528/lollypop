@@ -1,17 +1,14 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.language.models.Expression.implicits.RichAliasable
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.plastics.Tuples.tupleToSeq
-import com.lollypop.util.JVMSupport.NormalizeAny
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec

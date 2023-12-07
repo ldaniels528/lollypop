@@ -1,11 +1,9 @@
 package com.lollypop.runtime.instructions.operators
 
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, UnaryOperation}
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

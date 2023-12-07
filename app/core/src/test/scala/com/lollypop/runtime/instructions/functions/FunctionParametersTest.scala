@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.language.models.{ColumnType, Parameter}
 import com.lollypop.runtime.LollypopCompiler
 import org.scalatest.funspec.AnyFunSpec

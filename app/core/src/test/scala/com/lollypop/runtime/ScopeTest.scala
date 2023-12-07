@@ -1,12 +1,8 @@
 package com.lollypop.runtime
 
-import com.lollypop.AppConstants
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.language.models.Operation.RichOperation
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{Float64Type, Int32Type, Int64Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.queryables.{From, This}
 import org.scalatest.funspec.AnyFunSpec
@@ -83,10 +79,9 @@ class ScopeTest extends AnyFunSpec {
     }
 
     it("should provide the state for expressions") {
-      import com.lollypop.language.models.Expression.implicits._
       val parentScope = Scope().withVariable(name = "x", `type` = Int32Type, value = Some(5), isReadOnly = false)
       val scope = parentScope.withVariable(name = "y", `type` = Int32Type, value = Some(2), isReadOnly = false)
-      val expr: Expression = "x".f + "y".f + 7
+      val expr: Expression = "x".f + "y".f + 7.v
       val (_, _, result) = expr.execute(scope)
       assert(result == 14)
     }
@@ -256,8 +251,8 @@ class ScopeTest extends AnyFunSpec {
     }
 
     it("should provide the Lollypop version string") {
-      val version = Scope().resolve("__version__").orNull
-      assert(version == AppConstants.version)
+      val myVersion = Scope().resolve("__version__").orNull
+      assert(myVersion == version)
     }
 
   }

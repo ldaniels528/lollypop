@@ -3,8 +3,7 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language.models.{ConcurrentInstruction, Instruction, Invokable}
 import com.lollypop.language.{ExpressionParser, HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.concurrent.Future

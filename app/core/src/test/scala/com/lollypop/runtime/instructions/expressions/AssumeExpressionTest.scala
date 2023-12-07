@@ -1,11 +1,9 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.LollypopException
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.instructions.expressions.AssumeExpression.EnrichedAssumeExpression
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.infrastructure.Drop
 import com.lollypop.runtime.instructions.queryables.This
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class AssumeExpressionTest extends AnyFunSpec {

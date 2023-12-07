@@ -1,6 +1,6 @@
 package com.lollypop.util
 
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime._
 import org.apache.commons.io.IOUtils
 import org.xerial.snappy.{SnappyInputStream, SnappyOutputStream}
 

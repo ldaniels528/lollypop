@@ -1,9 +1,9 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.implicits.MagicBoolImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Expression, FunctionCall}
 import com.lollypop.language.{SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.functions.ScalarFunctionCall.ArgumentExtraction
 
 /**

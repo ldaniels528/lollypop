@@ -1,14 +1,11 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.instructions.functions.ArgumentBlock
 import com.lollypop.runtime.plastics.Tuples.seqToTuple
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

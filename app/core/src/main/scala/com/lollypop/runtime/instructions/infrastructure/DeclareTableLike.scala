@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.{Atom, TableModel}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempTable
 import com.lollypop.runtime.devices.TableColumn.implicits.TableColumnToSQLColumnConversion
-import com.lollypop.runtime.{DatabaseObjectRef, Scope, Variable}
-import com.lollypop.util.ResourceHelper.AutoClose
 import lollypop.io.IOCost
 
 import scala.collection.mutable

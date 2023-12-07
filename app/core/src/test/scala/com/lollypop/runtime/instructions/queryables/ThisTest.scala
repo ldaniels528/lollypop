@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.queryables
 
+import com.lollypop.language._
 import com.lollypop.language.models.AllFields
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec

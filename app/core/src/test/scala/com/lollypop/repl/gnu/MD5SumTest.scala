@@ -1,8 +1,8 @@
 package com.lollypop.repl.gnu
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.repl.REPLFunSpec
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.runtime._
 
 class MD5SumTest extends REPLFunSpec {
 
@@ -34,7 +34,7 @@ class MD5SumTest extends REPLFunSpec {
         """|md5(new `java.io.File`("app/core/src/main/scala/com/lollypop/repl/gnu/MD5Sum.scala"))
            |""".stripMargin.executeSQL(createRootScope())
       info(va.mkString(", "))
-      assert(va sameElements Array[Byte](65, 89, 34, 29, 55, 71, -127, -37, 26, -64, 47, 39, -22, -51, -72, 49))
+      assert(va sameElements Array[Byte](122, 99, 76, 38, -89, 24, -81, -125, 126, 87, -11, 59, 124, 28, 79, 76))
     }
 
   }

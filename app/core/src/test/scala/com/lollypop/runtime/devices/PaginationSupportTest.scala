@@ -2,7 +2,6 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
-import com.lollypop.util.OptionHelper.implicits.risky.value2Option
 import org.scalatest.funspec.AnyFunSpec
 
 class PaginationSupportTest extends AnyFunSpec with VerificationTools {

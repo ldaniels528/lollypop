@@ -45,6 +45,9 @@ trait AppConstants {
   val ROWID_NAME = "__id"
   val SRC_ROWID_NAME = "__src_id"
 
+  // default name for single-column queryables
+  val singleColumnResultName = "result"
+
   // byte quantities
   val ONE_BYTE = 1
   val INT_BYTES = 4
@@ -78,5 +81,3 @@ trait AppConstants {
   )
 
 }
-
-object AppConstants extends AppConstants

@@ -1,7 +1,6 @@
 package lollypop.lang
 
-import com.lollypop.runtime.LONG_BYTES
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
+import com.lollypop.runtime.{LONG_BYTES, _}
 import lollypop.io.Encodable
 
 import java.nio.ByteBuffer

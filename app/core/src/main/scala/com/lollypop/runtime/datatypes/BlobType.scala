@@ -2,10 +2,9 @@ package com.lollypop.runtime.datatypes
 
 import com.lollypop.language.dieUnsupportedConversion
 import com.lollypop.language.models.ColumnType
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.{FieldMetadata, RowCollection}
-import com.lollypop.runtime.{INT_BYTES, Scope}
-import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
+import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import lollypop.io.Encodable
 
 import java.io.File

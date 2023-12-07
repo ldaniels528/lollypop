@@ -1,9 +1,9 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Inequality
-import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
+import com.lollypop.runtime._
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.util.DateHelper
-import com.lollypop.util.OptionHelper.implicits.risky.value2Option
 import org.scalatest.funspec.AnyFunSpec
 
 import java.util.UUID

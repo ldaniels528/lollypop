@@ -1,8 +1,8 @@
 package com.lollypop.repl.gnu
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.repl.REPLFunSpec
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.runtime._
 
 class CopyTest extends REPLFunSpec {
 

@@ -1,16 +1,13 @@
 package com.lollypop.runtime.devices
 
 import com.github.ldaniels528.lollypop.StockQuote.randomURID
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality._
+import com.lollypop.language._
 import com.lollypop.language.models.{Column, ColumnType}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType
 import com.lollypop.runtime.devices.BasicIterator.RichBasicIterator
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import com.lollypop.runtime.{LollypopCompiler, ROWID, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

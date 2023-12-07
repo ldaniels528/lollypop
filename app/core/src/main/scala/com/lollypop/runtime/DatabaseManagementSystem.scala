@@ -1,10 +1,9 @@
 package com.lollypop.runtime
 
 import com.lollypop.die
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{TokenStream, dieFunctionNotCompilable, dieNoSuchColumn, dieObjectAlreadyExists, dieObjectIsNotAUserFunction}
 import com.lollypop.runtime.DatabaseObjectConfig._
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.ResourceManager.RowCollectionTracker
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
@@ -14,16 +13,11 @@ import com.lollypop.runtime.devices.TableColumn.implicits.{SQLToColumnConversion
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.infrastructure.CreateExternalTable.ExternalTableDeclaration
 import com.lollypop.runtime.instructions.infrastructure.Macro
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
-import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.getQueryReferences
-import com.lollypop.runtime.conversions.TransferTools._
 import com.lollypop.util.LogUtil
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper._
 import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
 
-import java.io.{FileNotFoundException, RandomAccessFile}
+import java.io.{File, FileNotFoundException, RandomAccessFile}
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 import scala.reflect.ClassTag
 
@@ -31,6 +25,20 @@ import scala.reflect.ClassTag
  * Database Management System - This class is responsible for managing the life-cycle of durable database objects.
  */
 trait DatabaseManagementSystem {
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //  SERVER CONFIG
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  def getServerRootDirectory: File = {
+    val directory = new File(sys.env.getOrElse("LOLLYPOP_DB", "lollypop_db"))
+    assert(directory.mkdirs() || directory.exists(), die(s"Could not create or find the data directory: ${directory.getAbsolutePath}"))
+    directory
+  }
+
+  def getDatabaseRootDirectory(databaseName: String): File = {
+    getServerRootDirectory / "ns" / databaseName
+  }
 
   /**
    * Deletes temporary files
@@ -48,6 +56,10 @@ trait DatabaseManagementSystem {
       case _ => false
     }
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //  DROP OBJECT
+  //////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Drops an object by reference
@@ -470,7 +482,7 @@ trait DatabaseManagementSystem {
     val queryable = scope.getCompiler.compile(query).asQueryable
 
     // get all of the dependencies for this view
-    val dependencies = getQueryReferences(queryable).map {
+    val dependencies = queryable.extractReferences.map {
       case n: DatabaseObjectNS => n
       case d => d.toNS
     }

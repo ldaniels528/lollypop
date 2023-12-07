@@ -1,9 +1,9 @@
 package com.lollypop.database
 package jdbc
 
-import com.lollypop.AppConstants._
 import com.lollypop.database.jdbc.types.JDBCWrapper
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.language._
+import com.lollypop.runtime._
 
 import scala.beans.{BeanProperty, BooleanBeanProperty}
 import scala.collection.mutable.ListBuffer

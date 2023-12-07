@@ -1,6 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.runtime.{Boolean2Int, ROWID}
+import com.lollypop.runtime.{ROWID, _}
 import lollypop.io.{Encodable, IOCost}
 
 import scala.annotation.tailrec

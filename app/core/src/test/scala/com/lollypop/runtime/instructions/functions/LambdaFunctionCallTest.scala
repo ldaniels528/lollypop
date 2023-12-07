@@ -1,13 +1,12 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.{$, CodeBlock, Column, Literal}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.LambdaFunctionCall
 import com.lollypop.runtime.instructions.operators.Plus
 import com.lollypop.runtime.instructions.queryables.Select
-import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class LambdaFunctionCallTest extends AnyFunSpec with VerificationTools {

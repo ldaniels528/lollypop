@@ -1,8 +1,7 @@
 package com.lollypop.database.clients
 
-import com.lollypop.AppConstants.lollypopSessionID
+import com.lollypop.runtime._
 import com.lollypop.runtime.conversions.TransferTools
-import com.lollypop.util.ResourceHelper._
 import org.apache.commons.io.IOUtils
 import spray.json._
 

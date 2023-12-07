@@ -1,11 +1,10 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.ColumnType
+import com.lollypop.language.{LollypopUniverse, _}
 import com.lollypop.runtime.devices.FieldMetadata
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.{INT_BYTES, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import scala.util.Try
 

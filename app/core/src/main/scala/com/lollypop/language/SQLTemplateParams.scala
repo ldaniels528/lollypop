@@ -106,8 +106,4 @@ object SQLTemplateParams {
    */
   def apply(ts: TokenStream, template: String)(implicit compiler: SQLCompiler): SQLTemplateParams = Template(template).process(ts)
 
-  final implicit class MappedParameters[T](val mapped: Map[String, T]) extends AnyVal {
-    def is(name: String, f: T => Boolean): Boolean = mapped.get(name).exists(f)
-  }
-
 }

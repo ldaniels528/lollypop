@@ -1,30 +1,22 @@
 package com.lollypop.runtime
 
 import com.lollypop.die
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.dieUnsupportedEntity
-import com.lollypop.language.models.Expression.implicits.RichAliasable
+import com.lollypop.language._
 import com.lollypop.language.models.Inequality.toInequalities
 import com.lollypop.language.models.{AllFields, Condition, Expression, FieldRef, Function, Inequality, Literal, OrderColumn, Queryable}
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
 import com.lollypop.runtime.LollypopVM.sort
 import com.lollypop.runtime.SQLRuntimeSupport.ColumnValidation
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.Inferences.{InstructionTyping, resolveType}
 import com.lollypop.runtime.datatypes.{DataType, Inferences, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.{createMemoryTable, createQueryResultTable}
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.isTrue
-import com.lollypop.runtime.instructions.conditions.RuntimeInequality.OptionComparator
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.expressions.aggregation._
 import com.lollypop.runtime.instructions.functions.InternalFunctionCall
 import com.lollypop.runtime.instructions.functions.ScalarFunctionCall.ArgumentExtraction
 import com.lollypop.runtime.instructions.queryables._
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper._
 import lollypop.io.IOCost
 
 import java.util.concurrent.atomic.AtomicLong

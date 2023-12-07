@@ -14,19 +14,4 @@ package object lollypop {
    */
   def die[A](message: => String, cause: Throwable = null): A = throw LollypopException(message, cause)
 
-  object implicits {
-
-    final implicit class MagicImplicits[A](val value: A) extends AnyVal {
-      @inline def ~>[B](f: A => B): B = f(value)
-
-    }
-
-    final implicit class MagicBoolImplicits(val value: Boolean) extends AnyVal {
-
-      @inline def ==>[A](result: A): Option[A] = if(value) Option(result) else None
-
-    }
-
-  }
-
 }

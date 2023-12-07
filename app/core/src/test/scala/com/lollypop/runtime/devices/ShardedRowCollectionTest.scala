@@ -2,11 +2,9 @@ package com.lollypop.runtime.devices
 
 import com.github.ldaniels528.lollypop.StockQuote._
 import com.lollypop.language.models.{Column, ColumnType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import com.lollypop.runtime.{LollypopCompiler, Scope}
-import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

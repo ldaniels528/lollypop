@@ -2,8 +2,7 @@ package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

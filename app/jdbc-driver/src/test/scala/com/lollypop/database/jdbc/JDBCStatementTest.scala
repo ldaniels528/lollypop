@@ -1,8 +1,8 @@
 package com.lollypop.database
 package jdbc
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.sql.DriverManager

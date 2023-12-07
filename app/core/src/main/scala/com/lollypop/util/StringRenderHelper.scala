@@ -1,12 +1,11 @@
 package com.lollypop.util
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.Instruction
 import com.lollypop.runtime.ModelStringRenderer.ProductStringRendering
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{DataType, StringType}
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection}
 import com.lollypop.runtime.plastics.Tuples.tupleToSeq
-import com.lollypop.util.JVMSupport.NormalizeAny
 import lollypop.io.RowIDRange
 import lollypop.lang.BitArray
 import spray.json.JsValue

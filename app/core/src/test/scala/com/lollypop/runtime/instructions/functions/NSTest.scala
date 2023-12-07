@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.{LifestyleExpressionsAny, LollypopUniverse}
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown

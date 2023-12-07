@@ -1,9 +1,9 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.implicits.MagicBoolImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Expression, FunctionCall}
 import com.lollypop.language.{SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime._
 
 /**
  * Abstract class for zero-or-one-argument ([[Expression]]) [[FunctionCallParser function call parsers]]

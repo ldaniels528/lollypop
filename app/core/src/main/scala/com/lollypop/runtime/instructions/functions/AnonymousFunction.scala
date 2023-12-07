@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.functions
 
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.conversions.ScalaConversion
 import com.lollypop.runtime.instructions.expressions.{LambdaFunctionCall, RuntimeExpression}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

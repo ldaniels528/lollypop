@@ -1,7 +1,6 @@
 package com.lollypop.runtime
 
 import com.lollypop.language.models.{Expression, Instruction, LambdaFunction}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 
 import scala.collection.concurrent.TrieMap

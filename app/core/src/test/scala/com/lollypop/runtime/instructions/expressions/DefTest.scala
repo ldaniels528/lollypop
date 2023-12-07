@@ -1,9 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Operation.RichOperation
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{TokenIterator, TokenStream}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.LTE
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, NamedFunction}

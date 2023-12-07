@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.language.models.{Expression, Instruction}
 import com.lollypop.runtime.instructions.expressions.TupleLiteral
 

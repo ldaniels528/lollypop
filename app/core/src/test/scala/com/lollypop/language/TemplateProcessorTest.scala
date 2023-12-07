@@ -1,8 +1,5 @@
 package com.lollypop.language
 
-import com.lollypop.language.TemplateProcessor.TokenStreamExtensions
-import com.lollypop.language.models.Inequality.InequalityExtensions
-import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.language.models._
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler}
@@ -33,7 +30,7 @@ class TemplateProcessorTest extends AnyFunSpec {
   }
 
   describe(classOf[TemplateProcessor].getSimpleName) {
-    import com.lollypop.language.models.Expression.implicits._
+    import com.lollypop.language.implicits._
 
     it("should parse argument tags (%A)") {
       verify(text = "(1,2,3)", template = "%A:args")(SQLTemplateParams(expressionLists = Map("args" -> List(1, 2, 3))))

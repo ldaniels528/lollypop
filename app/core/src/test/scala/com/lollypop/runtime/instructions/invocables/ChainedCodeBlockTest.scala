@@ -1,10 +1,9 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.operators.Plus
-import com.lollypop.runtime.{LollypopCompiler, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class ChainedCodeBlockTest extends AnyFunSpec with VerificationTools {

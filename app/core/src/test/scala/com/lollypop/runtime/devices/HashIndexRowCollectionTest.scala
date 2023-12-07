@@ -3,10 +3,10 @@ package com.lollypop.runtime.devices
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
-import org.scalatest.funspec.AnyFunSpec
-import org.slf4j.LoggerFactory
 import lollypop.io.IOCost
 import lollypop.lang.BitArray
+import org.scalatest.funspec.AnyFunSpec
+import org.slf4j.LoggerFactory
 
 class HashIndexRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)

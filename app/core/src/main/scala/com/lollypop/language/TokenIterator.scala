@@ -1,7 +1,6 @@
 package com.lollypop.language
 
 import com.lollypop.language.Token._
-import com.lollypop.util.StringHelper.StringEnrichment
 
 import java.lang.String.copyValueOf
 

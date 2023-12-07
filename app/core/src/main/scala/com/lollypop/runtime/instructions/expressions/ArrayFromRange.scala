@@ -2,10 +2,9 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.dieUnsupportedType
 import com.lollypop.language.models.{ArrayExpression, Expression}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

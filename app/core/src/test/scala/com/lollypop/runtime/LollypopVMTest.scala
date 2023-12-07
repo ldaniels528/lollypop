@@ -1,15 +1,13 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.dieNoResultSet
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes.Int32Type
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.lollypop.runtime.errors.DurableObjectNotFound
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.OptionHelper.implicits.risky.value2Option
+import com.lollypop.runtime.implicits.risky._
+import lollypop.io.IOCost
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.io.IOCost
 
 import java.util.Date
 

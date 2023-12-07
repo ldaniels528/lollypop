@@ -3,15 +3,12 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Expression, Instruction, Queryable}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.Each.EnrichedBlockDevice
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.collection.concurrent.TrieMap

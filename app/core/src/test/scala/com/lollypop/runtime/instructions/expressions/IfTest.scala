@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.invocables.IF
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}

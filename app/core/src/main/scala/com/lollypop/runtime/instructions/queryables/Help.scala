@@ -1,18 +1,14 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.language.{HelpDoc, LollypopUniverse, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.{StringType, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.queryables.Help.{commandColumns, gatherHelp, keyword}
-import com.lollypop.util.StringHelper.StringEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

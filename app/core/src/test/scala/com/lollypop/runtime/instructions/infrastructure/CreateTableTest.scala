@@ -1,17 +1,15 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.Template
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models._
+import com.lollypop.language.{Template, _}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
-import com.lollypop.runtime.devices.RowCollectionZoo.ColumnTableType
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.devices.{ByteArrayRowCollection, RowCollection}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

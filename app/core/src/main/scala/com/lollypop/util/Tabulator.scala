@@ -1,6 +1,6 @@
 package com.lollypop.util
 
-import com.lollypop.util.StringHelper.StringEnrichment
+import com.lollypop.language._
 import com.lollypop.util.StringRenderHelper._
 
 /**

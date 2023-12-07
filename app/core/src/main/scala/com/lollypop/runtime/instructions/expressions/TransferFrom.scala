@@ -3,10 +3,8 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.TransferFrom._symbol
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
 

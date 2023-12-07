@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.FieldRef
-import com.lollypop.runtime.LollypopVM.implicits.RichScalaAny
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

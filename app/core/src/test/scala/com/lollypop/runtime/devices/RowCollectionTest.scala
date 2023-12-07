@@ -1,14 +1,11 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality._
+import com.lollypop.language._
 import com.lollypop.language.models.{Column, ColumnType}
 import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.ResourceHelper.AutoClose
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File

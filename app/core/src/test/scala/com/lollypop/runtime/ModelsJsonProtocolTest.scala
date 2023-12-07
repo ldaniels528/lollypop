@@ -5,7 +5,6 @@ import com.lollypop.runtime.ModelsJsonProtocol._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import com.lollypop.util.JSONSupport._
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import spray.json._

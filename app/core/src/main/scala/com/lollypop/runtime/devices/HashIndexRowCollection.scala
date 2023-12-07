@@ -1,18 +1,13 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.dieIllegalType
+import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression, Instruction}
-import com.lollypop.runtime.LollypopVM.implicits._
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.Field.ColumnToFieldExtension
 import com.lollypop.runtime.devices.IndexedRowCollection.{BIT_ARRAY_COLUMN_INDEX, BUCKETS, getHashIndexTableColumns}
 import com.lollypop.runtime.devices.RowCollection.dieNotSubTable
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{EQ, Is, Isnt, NEQ}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{DatabaseObjectNS, ROWID, ResourceManager, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 import lollypop.lang.BitArray
 

@@ -1,6 +1,7 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models.ExternalTable
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Dictionary}

@@ -1,11 +1,9 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.LollypopException
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import AssumeCondition.EnrichedAssumeCondition
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
-import com.lollypop.runtime.{LollypopVM, Scope}
+import com.lollypop.runtime.{Scope, _}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.util.Date

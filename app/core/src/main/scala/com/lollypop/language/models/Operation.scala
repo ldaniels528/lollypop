@@ -1,15 +1,13 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.LifestyleExpressionsAny
 import com.lollypop.language.models.Operation.{evaluateAny, evaluateNumber}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
 import com.lollypop.runtime.datatypes.Inferences.fastTypeResolve
 import com.lollypop.runtime.datatypes.Matrix
 import com.lollypop.runtime.instructions.RuntimeInstruction
-import com.lollypop.runtime.instructions.operators.ComputeAndSet.ComputeAndSetSugar
 import com.lollypop.runtime.instructions.operators._
-import com.lollypop.runtime.{Boolean2Int, LollypopVM, Scope}
+import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import java.util.Date
@@ -135,88 +133,6 @@ object Operation {
       case _ => evaluateAny(op, aa, bb)
     }
     fastTypeResolve(aa, bb).convert(result)
-  }
-
-  /**
-   * Operation Extensions
-   * @param expr0 the given [[Expression value]]
-   */
-  final implicit class RichOperation(val expr0: Expression) extends AnyVal {
-
-    @inline def +(expr1: Expression): Plus = Plus(expr0, expr1)
-
-    @inline def +=(expr1: Expression): ComputeAndSet = Plus(expr0, expr1).doAndSet
-
-    @inline def ++(expr1: Expression): PlusPlus = PlusPlus(expr0, expr1)
-
-    @inline def &(expr1: Expression): Amp = Amp(expr0, expr1)
-
-    @inline def &=(expr1: Expression): ComputeAndSet = Amp(expr0, expr1).doAndSet
-
-    @inline def &&(expr1: Expression): AmpAmp = AmpAmp(expr0, expr1)
-
-    @inline def &&=(expr1: Expression): ComputeAndSet = AmpAmp(expr0, expr1).doAndSet
-
-    @inline def |(expr1: Expression): Bar = Bar(expr0, expr1)
-
-    @inline def |=(expr1: Expression): ComputeAndSet = Bar(expr0, expr1).doAndSet
-
-    @inline def ||(expr1: Expression): BarBar = BarBar(expr0, expr1)
-
-    @inline def ||=(expr1: Expression): ComputeAndSet = BarBar(expr0, expr1).doAndSet
-
-    @inline def ::(expr1: Expression): ColonColon = ColonColon(expr1, expr0)
-
-    @inline def ::=(expr1: Expression): ComputeAndSet = ColonColon(expr0, expr1).doAndSet
-
-    @inline def :::(expr1: Expression): ColonColonColon = ColonColonColon(expr1, expr0)
-
-    @inline def :::=(expr1: Expression): ComputeAndSet = ColonColonColon(expr0, expr1).doAndSet
-
-    @inline def ^(expr1: Expression): Up = Up(expr0, expr1)
-
-    @inline def ^=(expr1: Expression): ComputeAndSet = Up(expr0, expr1).doAndSet
-
-    @inline def /(expr1: Expression): Div = Div(expr0, expr1)
-
-    @inline def /=(expr1: Expression): ComputeAndSet = Div(expr0, expr1).doAndSet
-
-    @inline def >>(expr1: Expression): GreaterGreater = GreaterGreater(expr0, expr1)
-
-    @inline def >>=(expr1: Expression): ComputeAndSet = GreaterGreater(expr0, expr1).doAndSet
-
-    @inline def >>>(expr1: Expression): GreaterGreaterGreater = GreaterGreaterGreater(expr0, expr1)
-
-    @inline def >>>=(expr1: Expression): ComputeAndSet = GreaterGreaterGreater(expr0, expr1).doAndSet
-
-    @inline def <<(expr1: Expression): LessLess = LessLess(expr0, expr1)
-
-    @inline def <<=(expr1: Expression): ComputeAndSet = LessLess(expr0, expr1).doAndSet
-
-    @inline def <<<(expr1: Expression): LessLessLess = LessLessLess(expr0, expr1)
-
-    @inline def <<<=(expr1: Expression): ComputeAndSet = LessLessLess(expr0, expr1).doAndSet
-
-    @inline def %(expr1: Expression): Percent = Percent(expr0, expr1)
-
-    @inline def %%(expr1: Expression): PercentPercent = PercentPercent(expr0, expr1)
-
-    @inline def %=(expr1: Expression): ComputeAndSet = Percent(expr0, expr1).doAndSet
-
-    @inline def *(expr1: Expression): Times = Times(expr0, expr1)
-
-    @inline def *=(expr1: Expression): ComputeAndSet = Times(expr0, expr1).doAndSet
-
-    @inline def **(expr1: Expression): TimesTimes = TimesTimes(expr0, expr1)
-
-    @inline def **=(expr1: Expression): ComputeAndSet = TimesTimes(expr0, expr1).doAndSet
-
-    @inline def -(expr1: Expression): Minus = Minus(expr0, expr1)
-
-    @inline def --(expr1: Expression): MinusMinus = MinusMinus(expr0, expr1)
-
-    @inline def -=(expr1: Expression): ComputeAndSet = Minus(expr0, expr1).doAndSet
-
   }
 
 }

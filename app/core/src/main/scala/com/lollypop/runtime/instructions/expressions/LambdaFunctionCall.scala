@@ -1,10 +1,9 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, FunctionCall, LambdaFunction, Queryable}
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, AnonymousNamedFunction, DataTypeConstructor}
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

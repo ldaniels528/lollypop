@@ -3,11 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.runtime.errors.ScenarioNotFoundError
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost

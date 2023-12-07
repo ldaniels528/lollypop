@@ -2,12 +2,11 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Float64Type
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

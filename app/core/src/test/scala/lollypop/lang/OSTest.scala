@@ -1,14 +1,10 @@
 package lollypop.lang
 
-import com.lollypop.AppConstants
 import com.lollypop.database.QueryResponse
 import com.lollypop.language.LollypopUniverse
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.JSONSupport.JSONStringConversion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 import spray.json.enrichAny
@@ -89,7 +85,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
         s"""||--------------------------------------------|
             || line                                       |
             ||--------------------------------------------|
-            || Lollypop v${AppConstants.version}                          |
+            || Lollypop v${version}                          |
             || ============                               |
             ||                                            |
             || ## Table of Contents                       |

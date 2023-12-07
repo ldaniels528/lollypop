@@ -1,9 +1,6 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.TemplateProcessor.TagInstructionWithLineNumbers
-import com.lollypop.language.{SQLCompiler, TokenStream}
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.language._
 
 /**
   * Represents a queryable instruction

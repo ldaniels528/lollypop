@@ -1,12 +1,11 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.Instruction.DecompilerAliasHelper
 import com.lollypop.language.models._
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollection
-import com.lollypop.runtime.{DatabaseObjectRef, SQLRuntimeSupport, Scope}
 import lollypop.io.IOCost
 
 import scala.collection.mutable

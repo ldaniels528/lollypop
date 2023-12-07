@@ -1,16 +1,13 @@
 package com.lollypop.repl.gnu
 
 import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.repl.gnu.Ls.keyword
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.{ExpressiveTypeConversion, getCWD}
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import lollypop.lang.OS.generateFileList
 

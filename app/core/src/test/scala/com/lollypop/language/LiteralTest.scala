@@ -1,6 +1,5 @@
 package com.lollypop.language
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models.Literal
 import com.lollypop.runtime.LollypopCompiler
 import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Dictionary}

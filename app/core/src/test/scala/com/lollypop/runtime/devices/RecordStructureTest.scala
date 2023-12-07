@@ -1,7 +1,7 @@
 package com.lollypop.runtime.devices
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{DateTimeType, Float32Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 

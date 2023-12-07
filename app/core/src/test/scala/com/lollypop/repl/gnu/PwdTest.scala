@@ -1,7 +1,7 @@
 package com.lollypop.repl.gnu
 
 import com.lollypop.repl.REPLFunSpec
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.runtime._
 
 class PwdTest extends REPLFunSpec {
 

@@ -1,11 +1,10 @@
 package com.lollypop.database
 package jdbc
 
-import com.lollypop.AppConstants._
 import com.lollypop.database.clients.DatabaseClient
 import com.lollypop.database.jdbc.types._
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.datatypes.{BLOB, CLOB, DataType, ISQLXML, SQLXML}
+import com.lollypop.runtime.datatypes.{SQLXML, _}
+import com.lollypop.runtime.{Scope, _}
 
 import java.sql.{Array => SQLArray, _}
 import java.util.UUID

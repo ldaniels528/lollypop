@@ -1,16 +1,13 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.dieFileNotFound
+import com.lollypop.language._
 import com.lollypop.runtime.DatabaseManagementSystem.readExternalTable
 import com.lollypop.runtime.DatabaseObjectConfig.ExternalTableConfig
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.ExternalFilesTableRowCollection.EOF
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.errors.{FormatNotSpecified, UnsupportedFormatError}
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper._
 import lollypop.io.DataFileConversion
 import org.slf4j.LoggerFactory
 

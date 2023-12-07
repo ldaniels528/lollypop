@@ -2,11 +2,10 @@ package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_OBJECT_ORIENTED}
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
 import com.lollypop.runtime.plastics.RuntimeClass.getObjectByName
-import com.lollypop.runtime.{DynamicClassLoader, Scope}
 import lollypop.io.IOCost
 
 case class ObjectOf(className: Expression) extends ScalarFunctionCall with RuntimeExpression {

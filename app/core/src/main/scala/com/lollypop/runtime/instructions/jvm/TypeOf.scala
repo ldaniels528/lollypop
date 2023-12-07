@@ -2,10 +2,9 @@ package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_IMPERATIVE}
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.expressions.{RuntimeExpression, StringExpression}
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE1, ScalarFunctionCall}
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.util.StringRenderHelper
 import lollypop.io.IOCost
 
