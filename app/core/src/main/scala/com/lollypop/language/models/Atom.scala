@@ -29,13 +29,4 @@ object Atom {
 
   final implicit def stringToAtom(value: String): Atom = Atom(value)
 
-  final implicit class RichAtom(val expression: Instruction) extends AnyVal {
-    def asAtom: Atom = expression match {
-      case atom: Atom => atom
-      case ref: IdentifierRef => Atom(ref.name)
-      case Literal(value: String) => Atom(value)
-      case x => x.dieIllegalType()
-    }
-  }
-
 }
