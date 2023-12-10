@@ -17,11 +17,6 @@ class OSTest extends AnyFunSpec with VerificationTools {
 
   describe(classOf[OS].getSimpleName) {
 
-    it("should change the current working directory") {
-      val (scope, _, _) = "OS.chdir('./app/examples')".executeSQL(Scope())
-      assert(scope.getUniverse.system.currentDirectory contains new File("./app/examples"))
-    }
-
     it("""should compile and execute: "select 'Hello World' as message".evaluate()""") {
       val (_, _, result) =
         """|val a = "select 'Hello World'"
@@ -85,7 +80,7 @@ class OSTest extends AnyFunSpec with VerificationTools {
         s"""||--------------------------------------------|
             || line                                       |
             ||--------------------------------------------|
-            || Lollypop v${version}                          |
+            || Lollypop v$version                          |
             || ============                               |
             ||                                            |
             || ## Table of Contents                       |

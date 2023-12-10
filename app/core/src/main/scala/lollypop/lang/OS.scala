@@ -46,18 +46,6 @@ class OS(ctx: LollypopUniverse) {
   //    FILE / DIRECTORY METHODS
   //////////////////////////////////////////////////////////////////////////////
 
-  /**
-   * Returns the current working directory
-   * @return the [[File current working directory]]
-   */
-  var currentDirectory: Option[File] = None
-
-  def chdir(directory: File): Unit = {
-    if (!directory.isDirectory) dieFileNotDirectory(directory) else currentDirectory = Option(directory)
-  }
-
-  def chdir(path: String): Unit = chdir(new File(path))
-
   def compile(sourceCode: String): Instruction = ctx.compiler.compile(sourceCode)
 
   def compile(file: File): Instruction = ctx.compiler.compile(file)
