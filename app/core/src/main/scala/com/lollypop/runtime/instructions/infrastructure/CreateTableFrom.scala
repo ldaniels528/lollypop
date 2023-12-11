@@ -19,7 +19,7 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends RuntimeModifiable with ReferenceInstruction {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to create the table

@@ -7,6 +7,7 @@ import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.{SQLToColumnConversion, TableColumnSeq}
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.infrastructure.AlterTable.Alteration
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
 import lollypop.io.IOCost
@@ -25,7 +26,8 @@ import scala.language.postfixOps
  * @param ref         the [[DatabaseObjectRef table reference]]
  * @param alterations the collection of [[Alteration alterations]]
  */
-case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) extends RuntimeModifiable {
+case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration])
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     import AlterTable._

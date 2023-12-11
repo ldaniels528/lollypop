@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLAR
 import com.lollypop.language._
 import com.lollypop.language.models.View
 import com.lollypop.runtime.DatabaseManagementSystem.createVirtualTable
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -25,7 +26,8 @@ import scala.collection.mutable
  * }}}
  * @author lawrence.daniels@gmail.com
  */
-case class CreateView(ref: DatabaseObjectRef, view: View, ifNotExists: Boolean) extends RuntimeModifiable {
+case class CreateView(ref: DatabaseObjectRef, view: View, ifNotExists: Boolean)
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = createVirtualTable(ref.toNS, view, ifNotExists)

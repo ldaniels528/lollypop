@@ -4,7 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIV
 import com.lollypop.language._
 import com.lollypop.runtime.DatabaseManagementSystem.createMACRO
 import com.lollypop.runtime._
-import com.lollypop.runtime.instructions.MacroLanguageParser
+import com.lollypop.runtime.instructions.{MacroLanguageParser, ReferenceInstruction}
 import lollypop.io.IOCost
 
 /**
@@ -15,7 +15,7 @@ import lollypop.io.IOCost
  * @author lawrence.daniels@gmail.com
  */
 case class CreateMacro(ref: DatabaseObjectRef, `macro`: Macro, ifNotExists: Boolean)
-  extends RuntimeModifiable {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     MacroLanguageParser.registerMacro(`macro`)

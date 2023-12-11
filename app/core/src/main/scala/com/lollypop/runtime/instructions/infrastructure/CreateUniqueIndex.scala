@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.infrastructure
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.lollypop.language.{HelpDoc, IfNotExists, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.DatabaseManagementSystem.createUniqueIndex
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -12,7 +13,8 @@ import lollypop.io.IOCost
  * @param ifNotExists if true, the operation will not fail when the entity exists
  * @author lawrence.daniels@gmail.com
  */
-case class CreateUniqueIndex(ref: DatabaseObjectRef, ifNotExists: Boolean) extends RuntimeModifiable {
+case class CreateUniqueIndex(ref: DatabaseObjectRef, ifNotExists: Boolean)
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = IOCost(created = 1) ++ createUniqueIndex(ref.toNS, ifNotExists)

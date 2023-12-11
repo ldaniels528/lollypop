@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE
 import com.lollypop.language._
 import com.lollypop.language.models.Procedure
 import com.lollypop.runtime.DatabaseManagementSystem.createProcedure
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -28,7 +29,7 @@ import scala.collection.mutable
  * }}}
  */
 case class CreateProcedure(ref: DatabaseObjectRef, procedure: Procedure, ifNotExists: Boolean)
-  extends RuntimeModifiable {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = createProcedure(ref.toNS, procedure, ifNotExists)
