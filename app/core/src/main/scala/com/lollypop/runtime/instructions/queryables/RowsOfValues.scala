@@ -14,8 +14,6 @@ import com.lollypop.runtime.{Scope, _}
  */
 case class RowsOfValues(values: List[List[Expression]]) extends Queryable with TableExpression with TableRendering {
 
-  override def isChainable: Boolean = false
-
   override def returnType: TableType = toTableType
 
   override def toSQL: String = s"values ${values.map(lst => s"(${lst.map(_.toSQL).mkString(",")})").mkString(", ")}"
@@ -40,14 +38,17 @@ case class RowsOfValues(values: List[List[Expression]]) extends Queryable with T
     TableType(columns)
   }
 
-
 }
 
+/**
+ * Rows-Of-Values Companion
+ */
 object RowsOfValues extends QueryableParser {
 
   override def help: List[HelpDoc] = Nil
 
   override def parseQueryable(stream: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = {
+    //TODO revisit this!
     //if (understands(stream)) {
       val source: Queryable = stream match {
         // values clause?

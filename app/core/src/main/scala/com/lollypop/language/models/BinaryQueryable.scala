@@ -11,6 +11,9 @@ trait BinaryQueryable extends Queryable {
 
 }
 
+/**
+ * Binary Queryable Companion
+ */
 object BinaryQueryable {
   def unapply(q: Queryable): Option[(Queryable, Expression)] = {
     q match {
