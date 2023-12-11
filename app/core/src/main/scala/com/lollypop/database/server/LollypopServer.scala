@@ -478,7 +478,7 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
 
   private def runQuery(scope1: Scope, sql: String, limit: Option[Int]): (Scope, Route) = {
     val compiledCode = compiler.compile(sql)
-    val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS(scope1) }
+    val ns_? = compiledCode.extractReferences.lastOption.collect { case ref: DatabaseObjectRef => ref.toNS(scope1) }
     val (scope2, cost1, result1) = compiledCode.execute(scope1)
     result1 match {
       case jsValue: JsValue => (scope2, complete(jsValue))

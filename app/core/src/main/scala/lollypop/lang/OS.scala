@@ -244,7 +244,7 @@ object OS {
    */
   def execQL(sql: String)(implicit scope: Scope): QueryResponse = {
     val compiledCode = scope.getCompiler.compile(sql)
-    val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS }
+    val ns_? = compiledCode.extractReferences.lastOption.collect { case ref: DatabaseObjectRef => ref.toNS }
     val (_, _, result1) = compiledCode.execute(scope)
     result1.toQueryResponse(ns_?, limit = None)
   }
