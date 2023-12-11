@@ -1,13 +1,13 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.LifestyleExpressionsAny
+import com.lollypop.language._
 import com.lollypop.language.models.Operation.{evaluateAny, evaluateNumber}
 import com.lollypop.runtime.datatypes.Inferences.fastTypeResolve
 import com.lollypop.runtime.datatypes.Matrix
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.operators._
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassInstanceSugar
-import com.lollypop.runtime.{Scope, _}
+import com.lollypop.runtime.plastics.RuntimeClass.implicits._
+import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 import java.util.Date
@@ -17,7 +17,7 @@ import scala.language.postfixOps
 /**
  * Represents an operator expression
  */
-sealed trait Operation extends Expression with RuntimeInstruction {
+trait Operation extends Expression with RuntimeInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     this match {
@@ -52,37 +52,6 @@ sealed trait Operation extends Expression with RuntimeInstruction {
 
   def operator: String
 
-}
-
-/**
- * Represents an unary operator expression
- */
-trait UnaryOperation extends Operation {
-  def a: Expression
-
-  override def toSQL: String = a match {
-    case i: IdentifierRef => s"$operator${i.toSQL}"
-    case e => s"$operator(${e.toSQL})"
-  }
-}
-
-object UnaryOperation {
-  def unapply(o: UnaryOperation): Option[Expression] = Some(o.a)
-}
-
-/**
- * Represents a binary operator expression
- */
-trait BinaryOperation extends Operation {
-  def a: Expression
-
-  def b: Expression
-
-  override def toSQL: String = s"${a.wrapSQL} $operator ${b.wrapSQL}"
-}
-
-object BinaryOperation {
-  def unapply(o: BinaryOperation): Option[(Expression, Expression)] = Some((o.a, o.b))
 }
 
 /**
