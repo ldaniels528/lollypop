@@ -501,20 +501,10 @@ trait DatabaseManagementSystem {
  * Database Management System Companion
  */
 object DatabaseManagementSystem extends DatabaseManagementSystem {
-  private val search: String => String = _.replace("%", ".*")
-
   // remove temporary directories
   private val deletedFiles = deleteTempFiles()
   if (deletedFiles > 0) {
     LogUtil(this).info(s"Deleted $deletedFiles temporary file(s)")
-  }
-
-  /**
-   * Pattern Search With Options
-   * @param pattern the SQL-like pattern (e.g. "test%")
-   */
-  final implicit class PatternSearchWithOptions(val pattern: Option[String]) extends AnyVal {
-    @inline def like(text: String): Boolean = pattern.isEmpty || pattern.map(search).exists(text.matches)
   }
 
 }

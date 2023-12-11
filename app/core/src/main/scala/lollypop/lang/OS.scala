@@ -5,7 +5,7 @@ import com.lollypop.database.QueryResponse.QueryResultConversion
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Instruction}
 import com.lollypop.repl.ProcessRun
-import com.lollypop.runtime.DatabaseManagementSystem.{PatternSearchWithOptions, getServerRootDirectory}
+import com.lollypop.runtime.DatabaseManagementSystem.getServerRootDirectory
 import com.lollypop.runtime.DatabaseObjectConfig.implicits.RichDatabaseEntityConfig
 import com.lollypop.runtime.DatabaseObjectNS.{configExt, readConfig}
 import com.lollypop.runtime.LollypopVM.rootScope
@@ -223,6 +223,7 @@ class OS(ctx: LollypopUniverse) {
 }
 
 object OS {
+  private val search: String => String = _.replace("%", ".*")
 
   def createFileTable(): RowCollection = {
     createQueryResultTable(columns = Seq(
@@ -526,6 +527,14 @@ object OS {
         value.toInt
       }
     }
+  }
+
+  /**
+   * Pattern Search With Options
+   * @param pattern the SQL-like pattern (e.g. "test%")
+   */
+  final implicit class PatternSearchWithOptions(val pattern: Option[String]) extends AnyVal {
+    @inline def like(text: String): Boolean = pattern.isEmpty || pattern.map(search).exists(text.matches)
   }
 
 }
