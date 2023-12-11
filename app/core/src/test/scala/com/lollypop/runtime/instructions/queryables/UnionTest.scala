@@ -40,11 +40,11 @@ class UnionTest extends AnyFunSpec with VerificationTools {
               |where Industry == 'Computer Manufacturing'
               |""".stripMargin)
         assert(results == Union(
-          query0 = Select(
+          a = Select(
             fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
             from = DatabaseObjectRef("Customers"),
             where = "Industry".f === "Oil/Gas Transmission"),
-          query1 = Select(
+          b = Select(
             fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
             from = DatabaseObjectRef("Customers"),
             where = "Industry".f === "Computer Manufacturing")
@@ -63,11 +63,11 @@ class UnionTest extends AnyFunSpec with VerificationTools {
             |where Industry == 'Computer Manufacturing'
             |""".stripMargin)
       assert(results == UnionDistinct(
-        query0 = Select(
+        a = Select(
           fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
           from = DatabaseObjectRef("Customers"),
           where = "Industry".f === "Oil/Gas Transmission"),
-        query1 = Select(
+        b = Select(
           fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
           from = DatabaseObjectRef("Customers"),
           where = "Industry".f === "Computer Manufacturing")

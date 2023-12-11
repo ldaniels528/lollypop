@@ -14,6 +14,7 @@ import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RowCollection.dieNotInnerTableColumn
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.instructions.functions.Iff
@@ -532,29 +533,29 @@ package object runtime extends AppConstants {
    */
   final implicit class DatabaseObjectRefDetection(val instruction: Instruction) extends AnyVal {
     @inline
-    def detectRef: Option[DatabaseObjectRef] = {
+    def extractReferences: List[DatabaseObjectRef] = {
 
-      def recurse(op: Instruction): Option[DatabaseObjectRef] = op match {
-        case CodeBlock(ops) => ops.flatMap(recurse).lastOption
-        case d: DataObject => Option(d.ns)
-        case d: DatabaseObjectRef => Some(d)
+      def recurse(op: Instruction): List[DatabaseObjectRef] = op match {
+        case BinaryOperation(a, b) => recurse(a) ::: recurse(b)
+        case BinaryQueryable(a, b) => recurse(a) ::: recurse(b)
+        case CodeBlock(ops) => ops.flatMap(recurse)
+        case d: DataObject => List(d.ns)
+        case d: DatabaseObjectRef => List(d)
         case Describe(source) => recurse(source)
         case From(source) => recurse(source)
         case HashTag(source, _) => recurse(source)
-        case IF(_, a, b_?) => recurse(a) ?? b_?.flatMap(recurse)
-        case Iff(_, a, b) => recurse(a) ?? recurse(b)
-        case Intersect(a, b) => recurse(a) ?? recurse(b)
-        case ProcedureCall(ref, _) => Option(ref)
-        case Return(value) => value.flatMap(recurse)
-        case s: Select => s.from.flatMap(recurse)
-        case Subtraction(a, b) => recurse(a) ?? recurse(b)
-        case Switch(_, cases) => cases.flatMap(recurse).lastOption
-        case Union(a, b) => recurse(a) ?? recurse(b)
-        case UnionDistinct(a, b) => recurse(a) ?? recurse(b)
-        case _ => None
+        case IF(_, a, b_?) => recurse(a) ::: b_?.toList.flatMap(recurse)
+        case Iff(_, a, b) => recurse(a) ::: recurse(b)
+        case Inequality(a, b, _) => recurse(a) ::: recurse(b)
+        case Return(value) => value.toList.flatMap(recurse)
+        case s: Select => s.from.toList.flatMap(recurse)
+        case Switch(_, cases) => cases.flatMap { case Switch.Case(_, a) => recurse(a) }
+        case UnaryOperation(a) => recurse(a)
+        case r: ReferenceInstruction => List(r.ref)
+        case _ => Nil
       }
 
-      recurse(instruction)
+      recurse(instruction).distinct
     }
   }
 
