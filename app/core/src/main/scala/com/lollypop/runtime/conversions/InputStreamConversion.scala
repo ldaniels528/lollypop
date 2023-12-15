@@ -30,7 +30,7 @@ trait InputStreamConversion extends Conversion {
       new PrintStream(out).use(t.printStackTrace)
       convert(out.toByteArray)
     case u: URL => u.openStream()
-    case z => convert(z.toString)
+    case z => convert(String.valueOf(z))
   }
 
 }

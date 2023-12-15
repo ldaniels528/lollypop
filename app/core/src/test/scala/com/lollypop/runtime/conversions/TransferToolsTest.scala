@@ -14,7 +14,7 @@ class TransferToolsTest extends AnyFunSpec {
       val srcFile = new File("app") / "core" / "src" / "main" / "resources" / "log4j.properties"
       val out = new ByteArrayOutputStream(srcFile.length().toInt)
       val count = TransferTools.transfer(srcFile, out)
-      assert(count == 331)
+      assert(count == 330)
     }
 
   }

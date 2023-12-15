@@ -3,7 +3,7 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.instructions.expressions.TransferTo._symbol
+import com.lollypop.runtime.instructions.expressions.TransferTo.keyword
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import org.apache.commons.io.IOUtils
@@ -41,18 +41,18 @@ case class TransferTo(a: Expression, b: Expression) extends RuntimeExpression {
     })
   }
 
-  override def toSQL: String = Seq(a.toSQL, _symbol, b.toSQL).mkString(" ")
+  override def toSQL: String = Seq(a.toSQL, keyword, b.toSQL).mkString(" ")
 
 }
 
 object TransferTo extends ExpressionChainParser {
-  private val _symbol = "===>"
+  private val keyword = "===>"
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = _symbol,
+    name = keyword,
     category = CATEGORY_TRANSFORMATION,
     paradigm = PARADIGM_DECLARATIVE,
-    syntax = s"a ${_symbol} b",
+    syntax = s"a $keyword b",
     description = "A declarative way to write to OutputStream or Writer resources",
     example =
       """|import "java.io.File"
@@ -63,11 +63,11 @@ object TransferTo extends ExpressionChainParser {
 
   override def parseExpressionChain(stream: TokenStream, host: Expression)(implicit compiler: SQLCompiler): Option[TransferTo] = {
     stream match {
-      case ts if ts nextIf _symbol => for (b <- compiler.nextExpression(ts)) yield TransferTo(host, b)
+      case ts if ts nextIf keyword => for (b <- compiler.nextExpression(ts)) yield TransferTo(host, b)
       case _ => None
     }
   }
 
-  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is _symbol
+  override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is keyword
 
 }

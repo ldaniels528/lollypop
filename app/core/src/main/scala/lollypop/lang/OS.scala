@@ -21,6 +21,7 @@ import lollypop.lang.OS._
 import org.apache.commons.io.IOUtils
 
 import java.io._
+import java.net.URL
 import java.nio.Buffer
 import scala.jdk.CollectionConverters.MapHasAsScala
 import scala.sys.process.Process
@@ -108,6 +109,10 @@ class OS(ctx: LollypopUniverse) {
       ).toRow(out))
     }
     out
+  }
+
+  def getResource(name: String): URL = {
+    Option(ctx.classLoader.getResource(name)) || this.getClass.getResource(name)
   }
 
   def mkdir(directory: File): Unit = directory.mkdir()
