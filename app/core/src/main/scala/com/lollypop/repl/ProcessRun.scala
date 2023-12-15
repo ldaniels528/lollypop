@@ -60,14 +60,17 @@ object ProcessRun extends QueryableParser {
   override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ProcessRun] = {
     if (understands(ts)) {
       ts.next() match {
-        case ProcessInvocationToken(code, _, _) => Some(ProcessRun(code))
+        case ProcessInvocationToken(_, code, _, _) => Some(ProcessRun(code))
         case x => ts.dieIllegalType(x)
       }
     } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
-    ts.peek.exists(_.isInstanceOf[ProcessInvocationToken])
+    ts.peek match {
+      case Some(t: ProcessInvocationToken) => t.id == "%"
+      case _ => false
+    }
   }
 
 }

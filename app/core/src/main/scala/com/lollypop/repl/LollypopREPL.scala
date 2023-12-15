@@ -39,7 +39,8 @@ trait LollypopREPL extends InlineCompiler {
    */
   val languageParsers: List[LanguageParser] = List(
     Caret, Cat, ChDir, ColonSlashSlash, Copy, Dot, DotDot, Echo, Find, Ls, MD5Sum, MkDir, Move,
-    ProcessRun, Pwd, QuestionMark, Remove, RemoveRecursively, RmDir, Tilde, Touch, WordCount, WWW
+    ProcessPuppet, ProcessRun, Pwd, QuestionMark, Remove, RemoveRecursively, RmDir, Tilde, Touch,
+    WordCount, WWW
   )
 
   def cli(args: Array[String], scope0: Scope, console: () => String = createInteractiveConsoleReader): Scope = {

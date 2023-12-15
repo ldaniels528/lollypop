@@ -156,16 +156,16 @@ object Token {
    *  (% iostat 1 5 %)
    * }}}
    */
-  case class ProcessInvocationToken(text: String) extends Token {
+  case class ProcessInvocationToken(id: String, text: String) extends Token {
     override def value: String = text
   }
 
   object ProcessInvocationToken {
-    def apply(text: String, lineNo: Int, columnNo: Int): ProcessInvocationToken = {
-      ProcessInvocationToken(text).withLineAndColumn(lineNo, columnNo)
+    def apply(id: String, text: String, lineNo: Int, columnNo: Int): ProcessInvocationToken = {
+      ProcessInvocationToken(id, text).withLineAndColumn(lineNo, columnNo)
     }
 
-    def unapply(t: ProcessInvocationToken): Option[(String, Int, Int)] = Some((t.text, t.lineNo, t.columnNo))
+    def unapply(t: ProcessInvocationToken): Option[(String, String, Int, Int)] = Some((t.id, t.text, t.lineNo, t.columnNo))
   }
 
   case class SingleQuotedToken(text: String, value: String) extends QuotedToken {

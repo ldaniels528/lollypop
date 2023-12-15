@@ -71,7 +71,7 @@ class TokenIteratorTest extends AnyFunSpec {
       val tok = TokenIterator("Hello(%iostat 1 5%)World")
       assert(tok.toList == List(
         AlphaNumericToken(text = "Hello"),
-        ProcessInvocationToken(text = "iostat 1 5"),
+        ProcessInvocationToken(id = "%", text = "iostat 1 5"),
         AlphaNumericToken(text = "World")
       ))
     }
