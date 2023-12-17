@@ -3,13 +3,12 @@ package com.lollypop.runtime.conversions
 import com.lollypop.die
 import com.lollypop.language.dieIllegalType
 import com.lollypop.runtime.LollypopVM.rootScope
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.Inferences
 import com.lollypop.runtime.datatypes.Inferences.fromValue
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.queryables.TableRendering
+import com.lollypop.runtime.{Scope, _}
 
 import scala.language.postfixOps
 

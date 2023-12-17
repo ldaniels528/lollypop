@@ -1,13 +1,12 @@
 package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_FUNCTIONAL}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.functions.FunctionCallParserE1
-import com.lollypop.runtime.{Scope, safeCast}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.util.Date

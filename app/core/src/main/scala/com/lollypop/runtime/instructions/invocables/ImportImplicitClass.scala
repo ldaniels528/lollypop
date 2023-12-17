@@ -3,9 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_SYSTEM_TOOLS, PARADIGM_OBJECT_ORIENTED}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.plastics.RuntimeClass.getClassByName
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**
@@ -28,7 +27,7 @@ object ImportImplicitClass extends InvokableParser {
   val templateCard = "import implicit %e:target"
 
   override def help: List[HelpDoc] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     List(HelpDoc(
       name = "import implicit",
       category = CATEGORY_SYSTEM_TOOLS,

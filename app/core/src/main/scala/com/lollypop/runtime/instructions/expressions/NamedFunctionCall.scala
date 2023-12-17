@@ -1,12 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, InstructionSeqExtensions}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.ConstructorSupport
 import com.lollypop.runtime.instructions.functions.{AnonymousNamedFunction, InternalFunctionCall, NamedFunction}
-import com.lollypop.runtime.{Scope, __self__}
 import lollypop.io.IOCost
 
 /**

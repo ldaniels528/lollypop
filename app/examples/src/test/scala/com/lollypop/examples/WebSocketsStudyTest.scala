@@ -8,10 +8,9 @@ import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.stream.{Materializer, OverflowStrategy}
 import akka.{Done, NotUsed}
 import com.lollypop.die
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.{Field, RowCollection}
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.lang.Random
 import org.scalatest.funspec.AnyFunSpec

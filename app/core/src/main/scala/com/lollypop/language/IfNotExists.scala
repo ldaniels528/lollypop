@@ -3,7 +3,7 @@ package com.lollypop.language
 import com.lollypop.language.IfNotExists.IfNotExistsTemplateTag
 import com.lollypop.language.TemplateProcessor.tags.TemplateTag
 
-trait IfNotExists { self : LanguageParser =>
+trait IfNotExists { self: LanguageParser =>
 
   // add custom tag for if not exists (e.g. "%IFNE:exists" => "if not exists")
   TemplateProcessor.addTag("IFNE", IfNotExistsTemplateTag)
@@ -12,7 +12,7 @@ trait IfNotExists { self : LanguageParser =>
 
 object IfNotExists {
 
-  def nextIfNotExists(stream: TokenStream): Boolean = {
+  private def nextIfNotExists(stream: TokenStream): Boolean = {
     stream match {
       case ts if ts nextIf "if not exists" => true
       case ts => ts.dieExpectedIfNotExists()

@@ -1,14 +1,11 @@
 package lollypop.lang
 
-import com.lollypop.implicits.MagicImplicits
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{BitArrayType, Int64Type, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{Boolean2Int, INT_BYTES, LONG_BYTES, LollypopNative, Scope}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.Decoder
 import lollypop.lang.BitArray.{BitArrayExtensions, ChangeListener, bitsPerRow, computeArraySize, encodedSize, setMask, toBinary, unsetMask}
 

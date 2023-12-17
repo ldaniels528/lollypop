@@ -4,14 +4,11 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Queryable}
 import com.lollypop.runtime.DatabaseManagementSystem.readProcedure
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.devices.RecordCollectionZoo._
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.devices.{RecordStructure, RowCollection, TableColumn}
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 /**
@@ -21,7 +18,7 @@ import lollypop.io.IOCost
  * @example {{{ call getEligibleFeeds("/home/ubuntu/feeds/") }}}
  */
 case class ProcedureCall(ref: DatabaseObjectRef, args: List[Expression]) extends RuntimeInvokable
-  with Queryable with FunctionCall {
+  with ReferenceInstruction with Queryable with FunctionCall {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // get the procedure and in and OUT parameters

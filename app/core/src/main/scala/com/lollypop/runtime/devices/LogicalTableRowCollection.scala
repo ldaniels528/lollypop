@@ -1,9 +1,8 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{BLOB, IBLOB, Inferences, PointerType}
-import com.lollypop.runtime.devices.RowCollectionZoo.ColumnTableType
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
 import com.lollypop.util.LogUtil
 import lollypop.io.IOCost
 import lollypop.lang.Pointer

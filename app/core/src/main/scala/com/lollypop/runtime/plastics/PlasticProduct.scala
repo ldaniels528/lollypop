@@ -1,7 +1,6 @@
 package com.lollypop.runtime.plastics
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.jvm.DeclareClass
 import com.lollypop.runtime.plastics.Plastic.{hasOne, isEmpty}
@@ -76,7 +75,7 @@ object PlasticProduct {
           case "toString" if isEmpty(args) => s"$className${fieldValues.map(_.renderAsJson).mkString("(", ", ", ")")}"
           // _.$name(args)
           case name =>
-            val (s, _, r) = name.fx(args.map(_.v): _*).execute(scope)
+            val (s, _, r) = name.fx(args.map(_.v): _*).execute()(scope)
             scope = s
             r
         }

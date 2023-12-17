@@ -1,14 +1,12 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_TRANSFORMATION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{ColumnType, Expression}
 import com.lollypop.language.{HelpDoc, dieArgumentMismatch, dieUnsupportedConversion}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Vector.Vector
 import com.lollypop.runtime.devices.FieldMetadata
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
-import com.lollypop.runtime.{INT_BYTES, LONG_BYTES, Scope}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
 
 import java.nio.ByteBuffer
 import java.nio.ByteBuffer.{allocate, wrap}
@@ -69,7 +67,7 @@ object MatrixType extends DataTypeParser with ConstructorSupport[Matrix] {
   }
 
   override def help: List[HelpDoc] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     List(HelpDoc(
       name = "Matrix",
       category = CATEGORY_TRANSFORMATION,

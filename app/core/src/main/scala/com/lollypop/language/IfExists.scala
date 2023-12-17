@@ -12,7 +12,7 @@ trait IfExists { self : LanguageParser =>
 
 object IfExists {
 
-  def nextIfExists(stream: TokenStream): Boolean = {
+  private def nextIfExists(stream: TokenStream): Boolean = {
     stream match {
       case ts if ts nextIf "if exists" => true
       case ts => ts.dieExpectedIfExists()

@@ -2,6 +2,7 @@ package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -9,7 +10,7 @@ import lollypop.io.IOCost
  * Represents a SQL truncate statement
  * @param ref the [[DatabaseObjectRef table]] to update
  */
-case class Truncate(ref: DatabaseObjectRef) extends RuntimeModifiable {
+case class Truncate(ref: DatabaseObjectRef) extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = scope.getRowCollection(ref).setLength(newSize = 0)

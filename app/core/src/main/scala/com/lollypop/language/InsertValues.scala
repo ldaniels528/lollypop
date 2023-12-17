@@ -3,7 +3,6 @@ package com.lollypop.language
 import com.lollypop.language.InsertValues.InsertSourceTemplateTag
 import com.lollypop.language.TemplateProcessor.tags.TemplateTag
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 trait InsertValues { self: LanguageParser =>
 

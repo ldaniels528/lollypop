@@ -1,7 +1,7 @@
 package com.lollypop.database.jdbc.types
 
 import com.lollypop.database.jdbc.{JDBCTestServer, RichResult}
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.sql.DriverManager

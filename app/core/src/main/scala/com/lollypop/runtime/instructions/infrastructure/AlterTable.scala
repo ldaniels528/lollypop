@@ -1,18 +1,15 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Column, Instruction}
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.{SQLToColumnConversion, TableColumnSeq}
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.infrastructure.AlterTable.Alteration
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
-import com.lollypop.runtime.{DatabaseObjectRef, ROWID_NAME, ResourceManager, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.io.{File, FileInputStream, FileOutputStream}
@@ -29,7 +26,8 @@ import scala.language.postfixOps
  * @param ref         the [[DatabaseObjectRef table reference]]
  * @param alterations the collection of [[Alteration alterations]]
  */
-case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) extends RuntimeModifiable {
+case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration])
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     import AlterTable._
@@ -90,7 +88,7 @@ case class AlterTable(ref: DatabaseObjectRef, alterations: Seq[Alteration]) exte
   override def toSQL: String = s"alter table ${ref.toSQL} ${alterations map (_.toSQL) mkString " "}"
 
   private def overwrite(src: File, dest: File): Boolean = {
-    import com.lollypop.util.ResourceHelper.AutoClose
+    import com.lollypop.runtime._
     val buf = new Array[Byte](65536)
     new FileInputStream(src) use { in =>
       new FileOutputStream(dest) use { out =>
@@ -227,19 +225,6 @@ object AlterTable extends ModifiableParser {
    */
   case class SetLabel(description: Atom) extends Alteration {
     override def toSQL: String = s"label ${description.toSQL}"
-  }
-
-  /**
-   * Item Sequence Utilities
-   * @param items the collection of items
-   * @tparam A the item type
-   */
-  final implicit class ItemSeqUtilities[A](val items: Seq[A]) extends AnyVal {
-    @inline
-    def onlyOne(ts: TokenStream): A = items.toList match {
-      case value :: Nil => value
-      case _ => ts.dieMultipleColumnsNotSupported()
-    }
   }
 
 }

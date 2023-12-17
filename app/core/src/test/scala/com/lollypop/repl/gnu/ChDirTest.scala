@@ -1,9 +1,9 @@
 package com.lollypop.repl.gnu
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.repl.symbols.{Dot, Tilde}
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.repl.REPLFunSpec
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.repl.symbols.{Dot, Tilde}
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.operators.Div
 
 import java.io.File

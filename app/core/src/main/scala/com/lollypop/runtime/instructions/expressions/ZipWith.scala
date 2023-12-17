@@ -1,13 +1,11 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_FUNCTIONAL}
+import com.lollypop.language._
 import com.lollypop.language.models.Expression
-import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.ZipWith.keyword
 import com.lollypop.runtime.plastics.Tuples.tupleToSeq
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 case class ZipWith(exprA: Expression, exprB: Expression) extends RuntimeExpression {

@@ -1,6 +1,5 @@
 package com.lollypop.runtime
 
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

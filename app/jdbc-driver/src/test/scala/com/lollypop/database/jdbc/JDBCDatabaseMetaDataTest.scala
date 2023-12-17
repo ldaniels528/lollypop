@@ -1,9 +1,7 @@
 package com.lollypop.database
 package jdbc
 
-import com.lollypop.AppConstants._
-import com.lollypop.runtime.DatabaseObjectRef
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime.{DatabaseObjectRef, _}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.sql.DriverManager

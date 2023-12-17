@@ -5,11 +5,11 @@ import com.lollypop.language._
 import com.lollypop.language.models.ExternalTable
 import com.lollypop.runtime.DatabaseManagementSystem.createExternalTable
 import com.lollypop.runtime.DatabaseObjectConfig.ExternalTableConfig
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.infrastructure.CreateExternalTable.ExternalTableDeclaration
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 /**
@@ -19,7 +19,8 @@ import lollypop.io.IOCost
  * @param ifNotExists if true, the operation will not fail when the entity exists
  * @author lawrence.daniels@gmail.com
  */
-case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifNotExists: Boolean) extends RuntimeModifiable {
+case class CreateExternalTable(ref: DatabaseObjectRef, table: ExternalTable, ifNotExists: Boolean)
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val (sa, ca, declaration) = parseExternalTableDeclaration()

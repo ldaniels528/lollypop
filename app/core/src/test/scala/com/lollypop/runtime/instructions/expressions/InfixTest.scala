@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.jvm.ClassOf
 import com.lollypop.runtime.instructions.queryables.Select

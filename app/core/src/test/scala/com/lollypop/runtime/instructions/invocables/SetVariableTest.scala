@@ -1,8 +1,8 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.TokenStream
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models.OrderColumn
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.EQ
 import com.lollypop.runtime.instructions.invocables.SetVariableTest.{AA, BB, CC, java_util_Map}

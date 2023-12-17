@@ -1,15 +1,11 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.die
+import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.PartitionedRowCollection.PartitionedRange
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{EQ, Is}
-import com.lollypop.runtime.instructions.expressions.RuntimeExpression.RichExpression
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope, safeCast}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.nio.ByteBuffer

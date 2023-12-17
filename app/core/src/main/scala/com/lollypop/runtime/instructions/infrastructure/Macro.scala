@@ -4,9 +4,8 @@ import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.MacroLanguageParser
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 case class Macro(template: String, code: Instruction) extends RuntimeModifiable {

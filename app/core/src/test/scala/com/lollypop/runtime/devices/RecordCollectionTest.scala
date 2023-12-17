@@ -1,11 +1,10 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.{Column, ColumnType}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
-import org.scalatest.funspec.AnyFunSpec
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
+import org.scalatest.funspec.AnyFunSpec
 
 class RecordCollectionTest extends AnyFunSpec {
   implicit val scope: Scope = Scope()

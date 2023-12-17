@@ -2,8 +2,8 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.io.IOCost
+import org.scalatest.funspec.AnyFunSpec
 
 import scala.io.Source
 

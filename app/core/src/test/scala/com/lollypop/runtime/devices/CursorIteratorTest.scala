@@ -1,6 +1,6 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language._
 import com.lollypop.runtime.devices.CursorIterator.CursorIteratorRowCollection
 import com.lollypop.runtime.errors.IteratorEmptyError
 import com.lollypop.runtime.instructions.VerificationTools

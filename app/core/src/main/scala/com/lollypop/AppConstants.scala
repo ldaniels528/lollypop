@@ -10,7 +10,7 @@ trait AppConstants {
   val MAJOR_VERSION: Int = 0
   val MINOR_VERSION: Int = 1
   val MINI_VERSION: Int = 6
-  val MICRO_VERSION: Int = 5
+  val MICRO_VERSION: Int = 6
 
   val version = s"$MAJOR_VERSION.$MINOR_VERSION.$MINI_VERSION.$MICRO_VERSION"
 
@@ -18,8 +18,7 @@ trait AppConstants {
   val DEFAULT_PORT = "8233"
   val DEFAULT_DATABASE = "lollypop"
   val DEFAULT_SCHEMA = "public"
-
-  val __classpath__ = "__classpath__"
+  
   val __cost__ = "__cost__"
   val __database__ = "__database__"
   val __ec__ = "__ec__"
@@ -45,6 +44,9 @@ trait AppConstants {
   // row ID-related
   val ROWID_NAME = "__id"
   val SRC_ROWID_NAME = "__src_id"
+
+  // default name for single-column queryables
+  val singleColumnResultName = "result"
 
   // byte quantities
   val ONE_BYTE = 1
@@ -79,5 +81,3 @@ trait AppConstants {
   )
 
 }
-
-object AppConstants extends AppConstants

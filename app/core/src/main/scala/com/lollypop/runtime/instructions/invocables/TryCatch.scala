@@ -1,11 +1,9 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.language.models._
-import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.language.{HelpDoc, InvokableParser, LifestyleExpressionsAny, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

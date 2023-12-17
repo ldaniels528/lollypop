@@ -1,11 +1,10 @@
 package com.lollypop.database.jdbc.types
 
-import com.lollypop.AppConstants.DEFAULT_DATABASE
 import com.lollypop.database.jdbc.{JDBCConnection, JDBCResultSet, dieUnsupportedConversion}
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.DataType
 import com.lollypop.runtime.devices.TableColumn
-import com.lollypop.runtime.{DEFAULT_SCHEMA, DatabaseObjectNS}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import java.sql.ResultSet
 import java.{sql, util}

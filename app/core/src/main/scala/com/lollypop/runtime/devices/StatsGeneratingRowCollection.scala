@@ -2,8 +2,8 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.runtime.{ROWID, Scope}
-import org.slf4j.LoggerFactory
 import lollypop.io.IOCost
+import org.slf4j.LoggerFactory
 
 import java.text.NumberFormat
 import java.util.concurrent.atomic.AtomicInteger

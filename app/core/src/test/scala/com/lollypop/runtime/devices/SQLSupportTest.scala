@@ -1,14 +1,12 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models.{Column, ColumnType}
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
 import com.lollypop.runtime.devices.TableColumn.implicits.SQLToColumnConversion
 import com.lollypop.runtime.instructions.expressions.aggregation.{Count, Max}
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

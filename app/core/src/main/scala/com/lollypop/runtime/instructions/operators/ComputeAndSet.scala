@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.operators
 
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.models.{Expression, ModificationExpression, BinaryOperation}
-import com.lollypop.runtime.Scope
+import com.lollypop.language.models.{BinaryOperation, Expression, ModificationExpression}
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

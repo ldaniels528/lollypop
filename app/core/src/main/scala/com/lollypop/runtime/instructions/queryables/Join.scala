@@ -2,30 +2,31 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.Expression.implicits.RichAliasable
-import com.lollypop.language.models.{Condition, Queryable}
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
+import com.lollypop.language.models.{BinaryQueryable, Condition, Queryable}
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.expressions._
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import scala.language.{existentials, postfixOps}
 
 /**
-  * Base class for all Join expressions
-  * @author lawrence.daniels@gmail.com
-  */
-sealed trait Join extends Queryable {
+ * Base class for all Join expressions
+ * @author lawrence.daniels@gmail.com
+ */
+sealed trait Join extends BinaryQueryable {
 
   /**
-    * @return the join [[Queryable source]]
-    */
+   * @return the join [[Queryable source]]
+   */
   def source: Queryable
 
   /**
    * @return the join [[Condition condition]]
    */
   def condition: Condition
+
+  override def a: Queryable = source
+
+  override def b: Condition = condition
 
 }
 
@@ -92,6 +93,10 @@ object Join extends QueryableChainParser {
       case s: Select => s.copy(joins = s.joins.toList ::: List(join))
       case _ => Select(from = Option(q), joins = List(join))
     }
+  }
+
+  def unapply(join: Join): Option[(Queryable, Condition)] = {
+    Some((join.source, join.condition))
   }
 
 }

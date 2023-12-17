@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.{$, @@}
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.functions.ArgumentBlock

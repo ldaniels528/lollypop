@@ -1,15 +1,11 @@
 package com.lollypop.runtime.instructions.infrastructure
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression, FieldRef, Queryable}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.ReferenceInstruction
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.{IOCost, RowIDRange}
 
 /**

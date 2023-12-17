@@ -51,7 +51,7 @@ object ArrayExpression extends ExpressionParser {
         var elems: List[Expression] = Nil
         while (ts isnt "]") {
           compiler.nextExpression(ts).foreach(expr => elems = expr :: elems)
-          if (ts isnt "]") ts.expect(",")
+          if (ts isnt "]") ts.nextIf(",")
         }
         Some(fromValues(elems.reverse: _*))
       }

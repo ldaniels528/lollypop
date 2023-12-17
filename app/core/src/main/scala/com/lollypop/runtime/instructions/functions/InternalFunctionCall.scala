@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.functions
 
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Instruction, NamedExpression}
-import com.lollypop.runtime.instructions.expressions.AssumeExpression.EnrichedAssumeExpression
-import com.lollypop.util.StringHelper.StringEnrichment
 import com.lollypop.util.StringRenderHelper.StringRenderer
 
 /**

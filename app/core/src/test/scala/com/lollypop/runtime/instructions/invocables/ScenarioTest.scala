@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.Verify
-import com.lollypop.runtime.instructions.expressions.{Dictionary, WWW, Infix}
+import com.lollypop.runtime.instructions.expressions.{Dictionary, Infix, WWW}
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 

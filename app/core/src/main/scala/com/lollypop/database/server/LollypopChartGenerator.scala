@@ -5,7 +5,6 @@ import com.lollypop.runtime.datatypes.{BooleanType, Float64Type, StringType}
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import org.jfree.chart.plot.{PlotOrientation, RingPlot}
-import org.jfree.chart.util.TableOrder
 import org.jfree.chart.{ChartFactory, ChartUtils, JFreeChart}
 import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.general.DefaultPieDataset

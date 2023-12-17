@@ -1,9 +1,8 @@
 package com.lollypop.database.jdbc.types
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
-import com.lollypop.runtime.Scope
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.conversions.TransferTools.RichReader
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.util.DateHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
 

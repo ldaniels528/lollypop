@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.LollypopUniverse
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.DateHelper
 import lollypop.io.Nodes
 import org.scalatest.funspec.AnyFunSpec

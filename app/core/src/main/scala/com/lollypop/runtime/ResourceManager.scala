@@ -1,14 +1,13 @@
 package com.lollypop.runtime
 
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall}
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
-import com.lollypop.util.StringHelper.StringEnrichment
-import org.slf4j.LoggerFactory
 import lollypop.lang.OS
+import org.slf4j.LoggerFactory
 
 import scala.collection.concurrent.TrieMap
 import scala.util.Try

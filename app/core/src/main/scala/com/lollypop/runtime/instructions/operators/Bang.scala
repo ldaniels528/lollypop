@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.operators
 
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, UnaryOperation}
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 /**
  * Represents a bang (!) function call

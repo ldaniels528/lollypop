@@ -1,7 +1,6 @@
 package com.lollypop.repl
 
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import org.scalatest.funspec.AnyFunSpec
 
 class REPLFunSpec extends AnyFunSpec {

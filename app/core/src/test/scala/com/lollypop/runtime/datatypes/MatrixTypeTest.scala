@@ -1,8 +1,7 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.ColumnType
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.{LifestyleExpressionsAny, LollypopUniverse}
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.{LollypopVM, Scope}
 

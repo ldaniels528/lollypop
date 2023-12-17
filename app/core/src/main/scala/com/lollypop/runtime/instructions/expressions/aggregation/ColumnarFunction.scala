@@ -2,10 +2,9 @@ package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.language.models.{Expression, IdentifierRef}
 import com.lollypop.runtime.DatabaseObjectRef.SubTable
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.instructions.queryables.HashTag
+import com.lollypop.runtime.{Scope, _}
 
 /**
  * Columnar Function

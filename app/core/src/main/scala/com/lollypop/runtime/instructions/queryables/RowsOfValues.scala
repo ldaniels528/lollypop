@@ -1,23 +1,18 @@
 package com.lollypop.runtime.instructions.queryables
 
+import com.lollypop.language._
 import com.lollypop.language.models.{@@, Expression, Queryable}
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Inferences, TableType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.TableExpression
-import com.lollypop.runtime.instructions.queryables.AssumeQueryable.EnrichedAssumeQueryable
+import com.lollypop.runtime.{Scope, _}
 
 /**
  * Represents rows of values (e.g. "values (2, 5, 7, 11), (13, 17, 19, 23)")
  * @param values a list of a list of [[Expression values]]
  */
 case class RowsOfValues(values: List[List[Expression]]) extends Queryable with TableExpression with TableRendering {
-
-  override def isChainable: Boolean = false
 
   override def returnType: TableType = toTableType
 
@@ -43,14 +38,17 @@ case class RowsOfValues(values: List[List[Expression]]) extends Queryable with T
     TableType(columns)
   }
 
-
 }
 
+/**
+ * Rows-Of-Values Companion
+ */
 object RowsOfValues extends QueryableParser {
 
   override def help: List[HelpDoc] = Nil
 
   override def parseQueryable(stream: TokenStream)(implicit compiler: SQLCompiler): Option[Queryable] = {
+    //TODO revisit this!
     //if (understands(stream)) {
       val source: Queryable = stream match {
         // values clause?

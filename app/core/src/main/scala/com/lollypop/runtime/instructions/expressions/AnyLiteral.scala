@@ -1,12 +1,10 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.TokenStream
 import com.lollypop.language.models.Literal
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.datatypes.{DataType, Inferences}
 import com.lollypop.runtime.instructions.expressions.AnyLiteral.StringInterpolation
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.collection.mutable

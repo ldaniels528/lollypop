@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.LollypopUniverse
 import com.lollypop.language.models.Instruction
-import com.lollypop.util.StringHelper.StringEnrichment
+import com.lollypop.language.{LollypopUniverse, _}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

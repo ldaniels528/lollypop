@@ -1,14 +1,11 @@
 package com.lollypop.runtime.instructions.jvm
 
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_OBJECT_ORIENTED}
-import com.lollypop.language.models.Expression.implicits.AsFunctionArguments
+import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Expression, ParameterLike}
-import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.invocables.RuntimeInvokable
 import com.lollypop.runtime.plastics.Plastic
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import lollypop.lang.Null
 
@@ -51,7 +48,7 @@ object DeclareClass extends InvokableParser {
   }
 
   override def help: List[HelpDoc] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     List(HelpDoc(
       name = "class",
       category = CATEGORY_SCOPE_SESSION,

@@ -1,8 +1,8 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import com.lollypop.runtime.datatypes.Inferences.resolveType
 import com.lollypop.runtime.devices.{ExternalFilesTableRowCollection, RowCollection}
+import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
 import org.scalatest.funspec.AnyFunSpec
 
 /**

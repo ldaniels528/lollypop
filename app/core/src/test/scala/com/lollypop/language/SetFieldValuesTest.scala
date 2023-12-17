@@ -1,6 +1,5 @@
 package com.lollypop.language
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
 import com.lollypop.runtime.LollypopCompiler
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec

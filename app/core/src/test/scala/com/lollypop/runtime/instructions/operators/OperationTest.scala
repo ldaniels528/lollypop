@@ -1,8 +1,7 @@
 package com.lollypop.runtime.instructions.operators
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language._
 import com.lollypop.language.models.Instruction
-import com.lollypop.language.models.Operation.RichOperation
 import com.lollypop.runtime.instructions.operators.ComputeAndSet.ComputeAndSetSugar
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.Assertion
@@ -214,7 +213,7 @@ class OperationTest extends AnyFunSpec {
   }
 
   describe(classOf[Plus].getSimpleName) {
-    it("should equate: z + 6") (assert("z".f + 6.v == Plus("z".f, 6.v)))
+    it("should equate: z + 6")(assert("z".f + 6.v == Plus("z".f, 6.v)))
     it("should compile: 5 + 6")(compile("5 + 6", Plus(5.v, 6.v)))
     it("should decompile: 5 + 6")(decompile(Plus(5.v, 6.v), "5 + 6"))
     it("should evaluate: 5 + 6")(evaluate("5 + 6", 11))
@@ -240,12 +239,12 @@ class OperationTest extends AnyFunSpec {
   }
 
   describe(classOf[Times].getSimpleName) {
-    it("should equate: z * 4") (assert(("z".f * 4.v) == Times("z".f, 4.v)))
+    it("should equate: z * 4")(assert(("z".f * 4.v) == Times("z".f, 4.v)))
     it("should compile: 7 * 4")(compile("7 * 4", Times(7.v, 4.v)))
     it("should decompile: 7 * 4")(decompile(Times(7.v, 4.v), "7 * 4"))
     it("should evaluate: 7 * 4")(evaluate("7 * 4", 28))
 
-    it("should equate: z *= 4") (assert(("z".f *= 4.v) == Times("z".f, 4.v).doAndSet))
+    it("should equate: z *= 4")(assert(("z".f *= 4.v) == Times("z".f, 4.v).doAndSet))
     it("should compile: x *= 1")(compile("x *= 1", Times("x".f, 1.v).doAndSet))
     it("should decompile: x *= 1")(decompile(Times("x".f, 1.v).doAndSet, "x *= 1"))
     it("should evaluate: x *= 3")(evaluate(
@@ -256,12 +255,12 @@ class OperationTest extends AnyFunSpec {
   }
 
   describe(classOf[TimesTimes].getSimpleName) {
-    it("should equate: z ** 2") (assert(("z".f ** 2.v) == TimesTimes("z".f, 2.v)))
+    it("should equate: z ** 2")(assert(("z".f ** 2.v) == TimesTimes("z".f, 2.v)))
     it("should compile: 5 ** 2")(compile("5 ** 2", TimesTimes(5.v, 2.v)))
     it("should decompile: 5 ** 2")(decompile(TimesTimes(5.v, 2.v), "5 ** 2"))
     it("should evaluate: 5 ** 2")(evaluate("5 ** 2", 25))
 
-    it("should equate: z **= 4") (assert(("z".f **= 4.v) == TimesTimes("z".f, 4.v).doAndSet))
+    it("should equate: z **= 4")(assert(("z".f **= 4.v) == TimesTimes("z".f, 4.v).doAndSet))
     it("should compile: x **= 3")(compile("x **= 3", TimesTimes("x".f, 3.v).doAndSet))
     it("should decompile: x **= 7")(decompile(TimesTimes("x".f, 7.v).doAndSet, "x **= 7"))
     it("should evaluate: x **= 3")(evaluate(

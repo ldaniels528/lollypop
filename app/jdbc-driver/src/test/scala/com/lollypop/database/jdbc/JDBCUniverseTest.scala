@@ -1,6 +1,6 @@
 package com.lollypop.database.jdbc
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{BlobType, ClobType, SQLXMLType}
 import com.lollypop.runtime.instructions.VerificationTools

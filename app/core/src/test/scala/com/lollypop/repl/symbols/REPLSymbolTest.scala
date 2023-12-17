@@ -1,6 +1,6 @@
 package com.lollypop.repl.symbols
 
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.repl.REPLFunSpec
 import com.lollypop.runtime.LollypopCompiler
 import com.lollypop.runtime.instructions.invocables.SetVariableExpression

@@ -1,9 +1,8 @@
-package com.lollypop.util
+package com.lollypop.runtime
 
 import com.lollypop.language.LollypopUniverse
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.JSONSupport.JSONProductConversion
-import com.lollypop.util.JSONSupportTest.{Ticker, TickerPojo}
+import com.lollypop.runtime.JSONProductConversionTest.{Ticker, TickerPojo}
+import com.lollypop.util.DateHelper
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import spray.json.{JsArray, JsFalse, JsNumber, JsObject, JsString, JsTrue, JsValue}
@@ -12,13 +11,13 @@ import scala.beans.BeanProperty
 import scala.collection.mutable
 
 /**
- * JSON Support Test Suite
+ * JSON Product Conversion Test Suite
  * @author lawrence.daniels@gmail.com
  */
-class JSONSupportTest extends AnyFunSpec {
+class JSONProductConversionTest extends AnyFunSpec {
   implicit val ctx: LollypopUniverse = LollypopUniverse()
 
-  describe(JSONSupport.getClass.getSimpleName.replaceAll("[$]", "")) {
+  describe(classOf[JSONProductConversion[_]].getSimpleName) {
 
     it("should convert a BigDecimal to a JSON value") {
       val number = 133.0
@@ -69,9 +68,9 @@ class JSONSupportTest extends AnyFunSpec {
           Ticker(symbol = "TREE", exchange = "NASDAQ", lastSale = 56.79)
         ),
         expected = JsArray(
-          JsObject(Map("symbol" -> JsString("ABC"), "exchange" -> JsString("NYSE"), "lastSale" -> JsNumber(13.87), "_class" -> JsString("com.lollypop.util.JSONSupportTest$Ticker"))),
-          JsObject(Map("symbol" -> JsString("MEAT.OB"), "exchange" -> JsString("OTCBB"), "lastSale" -> JsNumber(0.0001), "_class" -> JsString("com.lollypop.util.JSONSupportTest$Ticker"))),
-          JsObject(Map("symbol" -> JsString("TREE"), "exchange" -> JsString("NASDAQ"), "lastSale" -> JsNumber(56.79), "_class" -> JsString("com.lollypop.util.JSONSupportTest$Ticker")))
+          JsObject(Map("symbol" -> JsString("ABC"), "exchange" -> JsString("NYSE"), "lastSale" -> JsNumber(13.87), "_class" -> JsString("com.lollypop.runtime.JSONProductConversionTest$Ticker"))),
+          JsObject(Map("symbol" -> JsString("MEAT.OB"), "exchange" -> JsString("OTCBB"), "lastSale" -> JsNumber(0.0001), "_class" -> JsString("com.lollypop.runtime.JSONProductConversionTest$Ticker"))),
+          JsObject(Map("symbol" -> JsString("TREE"), "exchange" -> JsString("NASDAQ"), "lastSale" -> JsNumber(56.79), "_class" -> JsString("com.lollypop.runtime.JSONProductConversionTest$Ticker")))
         ))
     }
 
@@ -132,7 +131,7 @@ class JSONSupportTest extends AnyFunSpec {
         item = Ticker(symbol = "TREE", exchange = "NASDAQ", lastSale = 56.79),
         expected = JsObject(Map(
           "symbol" -> JsString("TREE"), "exchange" -> JsString("NASDAQ"), "lastSale" -> JsNumber(56.79),
-          "_class" -> JsString("com.lollypop.util.JSONSupportTest$Ticker")
+          "_class" -> JsString("com.lollypop.runtime.JSONProductConversionTest$Ticker")
         )))
     }
 
@@ -143,7 +142,7 @@ class JSONSupportTest extends AnyFunSpec {
           "symbol" -> JsString("TREE"),
           "exchange" -> JsString("NASDAQ"),
           "lastSale" -> JsNumber(56.79),
-          "_class" -> JsString("com.lollypop.util.JSONSupportTest$TickerPojo")
+          "_class" -> JsString("com.lollypop.runtime.JSONProductConversionTest$TickerPojo")
         )))
     }
 
@@ -158,7 +157,7 @@ class JSONSupportTest extends AnyFunSpec {
 
 }
 
-object JSONSupportTest {
+object JSONProductConversionTest {
 
   case class Ticker(symbol: String, exchange: String, lastSale: Double)
 

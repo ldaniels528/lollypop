@@ -3,11 +3,8 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.runtime.errors.ScenarioNotFoundError
-import com.lollypop.runtime.instructions.conditions.RuntimeCondition.RichConditionAtRuntime
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
@@ -17,6 +14,17 @@ import org.slf4j.LoggerFactory
  * Feature declaration
  * @param title     the feature [[Expression title]]
  * @param scenarios the feature [[Instruction scenarios]]
+ * @example {{{
+ *   feature "State Inheritance" {
+ *     scenario 'Create a contest' {
+ *       val contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
+ *       var counter = 1
+ *       stderr <=== "contest_id = {{contest_id}}, counter = {{counter}}\n"
+ *       verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
+ *          and counter is 1
+ *     }
+ *   }
+ * }}}
  */
 case class Feature(title: Expression, scenarios: Seq[Instruction]) extends RuntimeInvokable {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -171,7 +179,7 @@ object Feature extends InvokableParser {
           |
           |// test the service
           |feature "Traveler information service" {
-          |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded into the scope
+          |    set __AUTO_EXPAND__ = true // Product classes are automatically expanded within the scope
           |    scenario "Testing that DELETE requests produce the correct result" {
           |       www delete "http://0.0.0.0:{{port}}/api/temp/examples"
           |           <~ { id: '3879ba60-827e-4535-bf4e-246ca8807ba1' }

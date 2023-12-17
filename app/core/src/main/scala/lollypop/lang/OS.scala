@@ -2,33 +2,26 @@ package lollypop.lang
 
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.QueryResponse.QueryResultConversion
-import com.lollypop.implicits.MagicImplicits
+import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FunctionCall, Instruction}
-import com.lollypop.language.{LollypopUniverse, dieFileNotDirectory}
 import com.lollypop.repl.ProcessRun
-import com.lollypop.runtime.DatabaseManagementSystem.PatternSearchWithOptions
+import com.lollypop.runtime.DatabaseManagementSystem.getServerRootDirectory
 import com.lollypop.runtime.DatabaseObjectConfig.implicits.RichDatabaseEntityConfig
 import com.lollypop.runtime.DatabaseObjectNS.{configExt, readConfig}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.LollypopVM.rootScope
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
-import com.lollypop.runtime.instructions.queryables.RuntimeQueryable.DatabaseObjectRefDetection
 import com.lollypop.util.DateHelper
-import com.lollypop.util.JVMSupport.NormalizeAny
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper.AutoClose
-import com.lollypop.util.StringHelper.StringEnrichment
 import lollypop.io.Encodable
 import lollypop.lang.OS._
 import org.apache.commons.io.IOUtils
 
 import java.io._
+import java.net.URL
 import java.nio.Buffer
 import scala.jdk.CollectionConverters.MapHasAsScala
 import scala.sys.process.Process
@@ -53,18 +46,6 @@ class OS(ctx: LollypopUniverse) {
   //////////////////////////////////////////////////////////////////////////////
   //    FILE / DIRECTORY METHODS
   //////////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Returns the current working directory
-   * @return the [[File current working directory]]
-   */
-  var currentDirectory: Option[File] = None
-
-  def chdir(directory: File): Unit = {
-    if (!directory.isDirectory) dieFileNotDirectory(directory) else currentDirectory = Option(directory)
-  }
-
-  def chdir(path: String): Unit = chdir(new File(path))
 
   def compile(sourceCode: String): Instruction = ctx.compiler.compile(sourceCode)
 
@@ -128,6 +109,10 @@ class OS(ctx: LollypopUniverse) {
       ).toRow(out))
     }
     out
+  }
+
+  def getResource(name: String): URL = {
+    Option(ctx.classLoader.getResource(name)) || this.getClass.getResource(name)
   }
 
   def mkdir(directory: File): Unit = directory.mkdir()
@@ -231,6 +216,7 @@ class OS(ctx: LollypopUniverse) {
 }
 
 object OS {
+  private val search: String => String = _.replace("%", ".*")
 
   def createFileTable(): RowCollection = {
     createQueryResultTable(columns = Seq(
@@ -251,7 +237,7 @@ object OS {
    */
   def execQL(sql: String)(implicit scope: Scope): QueryResponse = {
     val compiledCode = scope.getCompiler.compile(sql)
-    val ns_? = compiledCode.detectRef.collect { case ref: DatabaseObjectRef => ref.toNS }
+    val ns_? = compiledCode.extractReferences.lastOption.collect { case ref: DatabaseObjectRef => ref.toNS }
     val (_, _, result1) = compiledCode.execute(scope)
     result1.toQueryResponse(ns_?, limit = None)
   }
@@ -438,7 +424,8 @@ object OS {
   }
 
   private def getNameWithoutExtension(file: File): String = {
-    import com.lollypop.util.StringHelper._
+    import com.lollypop.language._
+    import com.lollypop.runtime._
     file.getName ~> { name => name.indexOfOpt(".") map (index => name.substring(0, index)) getOrElse name }
   }
 
@@ -533,6 +520,14 @@ object OS {
         value.toInt
       }
     }
+  }
+
+  /**
+   * Pattern Search With Options
+   * @param pattern the SQL-like pattern (e.g. "test%")
+   */
+  final implicit class PatternSearchWithOptions(val pattern: Option[String]) extends AnyVal {
+    @inline def like(text: String): Boolean = pattern.isEmpty || pattern.map(search).exists(text.matches)
   }
 
 }

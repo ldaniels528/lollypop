@@ -1,10 +1,10 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
+import com.lollypop.language.implicits._
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
-import com.lollypop.util.OptionHelper.implicits.risky._
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 
@@ -25,11 +25,11 @@ class IntersectTest extends AnyFunSpec with VerificationTools {
             |where Industry == 'Computer Manufacturing'
             |""".stripMargin)
       assert(results == Intersect(
-        query0 = Select(
+        a = Select(
           fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
           from = DatabaseObjectRef("Customers"),
           where = "Industry".f === "Oil/Gas Transmission"),
-        query1 = Select(
+        b = Select(
           fields = List("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
           from = DatabaseObjectRef("Customers"),
           where = "Industry".f === "Computer Manufacturing")

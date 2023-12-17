@@ -1,10 +1,9 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{Expression, Literal}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.devices.QMap
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.collection.mutable

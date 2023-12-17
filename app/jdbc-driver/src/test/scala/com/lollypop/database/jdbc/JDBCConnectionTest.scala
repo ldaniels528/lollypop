@@ -1,7 +1,7 @@
 package com.lollypop.database.jdbc
 
 import com.lollypop.database.jdbc.types.JDBCStruct
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.sql.{Connection, DriverManager}

@@ -2,14 +2,13 @@ package com.lollypop.repl
 
 import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.Token.ProcessInvocationToken
-import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, TokenStream}
+import com.lollypop.language._
 import com.lollypop.repl.ProcessRun.invoke
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{Int32Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.sys.process.Process
@@ -61,14 +60,17 @@ object ProcessRun extends QueryableParser {
   override def parseQueryable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[ProcessRun] = {
     if (understands(ts)) {
       ts.next() match {
-        case ProcessInvocationToken(code, _, _) => Some(ProcessRun(code))
+        case ProcessInvocationToken(_, code, _, _) => Some(ProcessRun(code))
         case x => ts.dieIllegalType(x)
       }
     } else None
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = {
-    ts.peek.exists(_.isInstanceOf[ProcessInvocationToken])
+    ts.peek match {
+      case Some(t: ProcessInvocationToken) => t.id == "%"
+      case _ => false
+    }
   }
 
 }

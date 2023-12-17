@@ -1,10 +1,8 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.runtime.DatabaseObjectNS
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
-import com.lollypop.runtime.conversions.TransferTools.RichInputStream
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime.{DatabaseObjectNS, _}
 import org.apache.commons.io.IOUtils
 
 import java.io._

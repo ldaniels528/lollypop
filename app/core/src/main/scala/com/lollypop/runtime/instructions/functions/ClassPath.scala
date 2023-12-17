@@ -1,5 +1,11 @@
-package com.lollypop.util
+package com.lollypop.runtime.instructions.functions
 
+import com.lollypop.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
+import com.lollypop.language.models.Expression
+import com.lollypop.runtime._
+import com.lollypop.runtime.instructions.expressions.RuntimeExpression
+import com.lollypop.runtime.instructions.functions.ClassPath.searchClassPath
+import lollypop.io.IOCost
 import org.objectweb.asm.{ClassReader, ClassVisitor, Opcodes}
 
 import java.io.File
@@ -9,9 +15,28 @@ import scala.jdk.CollectionConverters.EnumerationHasAsScala
 import scala.util.{Failure, Success, Try}
 
 /**
- * ClassPath Helper
+ * ClassPath - Searches the classpath via a class name pattern.
+ * @param pattern the [[Expression expression]] representing the regular expression as the class name pattern.
+ * @example {{{
+ *   transpose(classPath("akka[.]dispatch[.](.*)D(.*)M(.*)S(.*)"))
+ * }}}
  */
-object ClassPathHelper {
+case class ClassPath(pattern: Expression) extends ScalarFunctionCall with RuntimeExpression {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Array[String]) = {
+    pattern.pullString ~>> searchClassPath
+  }
+}
+
+/**
+ * ClassPath Companion
+ */
+object ClassPath extends FunctionCallParserE1(
+  name = "classPath",
+  category = CATEGORY_SYSTEM_TOOLS,
+  description =
+    """|Searches the classpath via a class name pattern.
+       |""".stripMargin,
+  example = """transpose(classPath("akka[.]dispatch[.](.*)D(.*)M(.*)S(.*)"))""") {
 
   def searchClassPath(pattern: String): Array[String] = {
     val classpath = System.getProperty("java.class.path")

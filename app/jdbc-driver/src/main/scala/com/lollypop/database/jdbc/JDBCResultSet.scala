@@ -3,11 +3,10 @@ package jdbc
 
 import com.lollypop.database.jdbc.JDBCResultSet.UNINITED
 import com.lollypop.database.jdbc.types._
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
-import com.lollypop.runtime.{DatabaseObjectNS, ROWID, safeCast}
-import com.lollypop.util.ByteBufferHelper.DataTypeByteBuffer
-import com.lollypop.runtime.conversions.TransferTools.{RichInputStream, RichReader}
 import lollypop.io.{Encodable, IOCost}
 
 import java.io.{InputStream, Reader}

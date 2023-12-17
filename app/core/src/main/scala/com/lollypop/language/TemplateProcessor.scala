@@ -2,18 +2,12 @@ package com.lollypop.language
 
 import com.lollypop.die
 import com.lollypop.language.ColumnTypeParser.nextColumnType
+import com.lollypop.language.TemplateProcessor.infrastructureTypes
 import com.lollypop.language.TemplateProcessor.tags._
-import com.lollypop.language.TemplateProcessor.{TokenExtensions, TokenStreamExtensions, infrastructureTypes}
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
-import com.lollypop.language.models.SourceCodeInstruction.RichSourceCodeInstruction
 import com.lollypop.language.models._
 import com.lollypop.runtime.DatabaseObjectRef
-import com.lollypop.runtime.instructions.conditions.AssumeCondition.EnrichedAssumeCondition
-import com.lollypop.runtime.instructions.expressions.AssumeExpression.EnrichedAssumeExpression
 import com.lollypop.runtime.instructions.expressions.Dictionary
 import com.lollypop.runtime.instructions.queryables.From
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.StringHelper._
 import org.slf4j.LoggerFactory
 
 import scala.collection.concurrent.TrieMap
@@ -383,7 +377,7 @@ object TemplateProcessor {
     "type",
     "view"
   )
-  private val keywords: Set[String] = (infrastructureTypes.flatMap {
+  val keywords: Set[String] = (infrastructureTypes.flatMap {
     case s if s contains " " => s.split(" ").toList
     case s => s :: Nil
   } ::: List(
@@ -560,83 +554,6 @@ object TemplateProcessor {
     case tag => KeywordTemplateTag(tag)
   }
 
-  /**
-   * Token Extensions
-   * @param token the given [[Token]]
-   */
-  final implicit class TokenExtensions[A <: Token](val token: A) extends AnyVal {
-
-    @inline def isIdentifier: Boolean = !keywords.exists(token is) && {
-      def isValidChar(c: Char): Boolean = c == '_' || c.isLetterOrDigit || (c >= 128)
-
-      val value = token.valueAsString
-      val legal_0 = (c: Char) => c == '$' || isValidChar(c)
-      val legal_1 = (c: Char) => c == '.' || (c >= '0' && c <= '9') || isValidChar(c)
-      (value.length == 1 && value.headOption.exists(c => c >= 0x80.toChar && c <= 0xff.toChar)) ||
-        (value.headOption.exists(legal_0) && value.tail.forall(legal_1))
-    }
-  }
-
-  /**
-   * TokenStream Extensions
-   * @param ts the given [[TokenStream]]
-   */
-  final implicit class TokenStreamExtensions(val ts: TokenStream) extends AnyVal {
-
-    @inline def isField: Boolean = (ts.isBackticks || ts.isIdentifier) && !ts.isFunctionCall
-
-    @inline def isFunctionCall: Boolean = (for {
-      name <- ts.peekAhead(0) if name.isIdentifier
-      paren0 <- ts.peekAhead(1) if (paren0 is "(") & (name.lineNo == paren0.lineNo)
-      _ <- ts.peekAhead(2) // paren1 or arg0
-    } yield true).contains(true)
-
-    @inline def isIdentifier: Boolean = ts.peek.exists(_.isIdentifier) && !ts.isKeyword
-
-    @inline def isKeyword: Boolean = !ts.isQuoted && !ts.isBackticks && ts.peek.exists(t => keywords.contains(t.valueAsString))
-
-    @inline
-    def isPreviousTokenOnSameLine: Boolean = {
-      (for {
-        ts0 <- ts.lookBehind(1)
-        t0 <- ts0.peek
-        t1 <- ts.peek
-      } yield t0.lineNo == t1.lineNo).contains(true)
-    }
-
-    @inline def nextIdentifier: Option[String] = if (isIdentifier) Some(ts.next().valueAsString) else None
-
-    @inline
-    def nextTableDotNotation(): DatabaseObjectRef = {
-
-      def getNameComponent(ts: TokenStream): String = {
-        if (ts.isBackticks || ts.isQuoted || ts.isText) ts.next().valueAsString else ts.dieExpectedTableNotation()
-      }
-
-      // gather the table components
-      var list: List[String] = List(getNameComponent(ts))
-      while (ts.peek.exists(_.valueAsString == ".")) {
-        ts.next()
-        list = getNameComponent(ts) :: list
-      }
-
-      // is there a column reference?
-      val path = list.reverse.mkString(".") + (if (ts.nextIf("#")) "#" + getNameComponent(ts) else "")
-
-      // return the table reference
-      DatabaseObjectRef(path)
-    }
-
-  }
-
-  final implicit class RichPeekableIterator(val iter: PeekableIterator[String]) extends AnyVal {
-    def whilst[A](cond: PeekableIterator[String] => Boolean)(f: PeekableIterator[String] => A): List[A] = {
-      var tags: List[A] = Nil
-      while (cond(iter)) tags = f(iter) :: tags
-      tags.reverse
-    }
-  }
-
   final implicit class RichStringCleanup(val s: String) extends AnyVal {
 
     /**
@@ -667,25 +584,6 @@ object TemplateProcessor {
           val delimiter = s(index)
           s.split(delimiter).map(_.trim)
       }
-    }
-  }
-
-  /**
-   * Tag Instruction With Line Numbers
-   * @param op the [[Instruction instruction]]
-   * @tparam A the instruction type
-   */
-  final implicit class TagInstructionWithLineNumbers[A <: Instruction](val op: A) extends AnyVal {
-
-    /**
-     * tag an instruction with line number and column information
-     * @param _token the [[Token token]] containing the line number and column information
-     * @return the tagged [[Instruction instruction]]
-     */
-    @inline
-    def tag(_token: Option[Token]): A = {
-      op.updateLocation(_token)
-      op
     }
   }
 

@@ -2,9 +2,8 @@ package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.HelpDoc.CATEGORY_TRANSFORMATION
 import com.lollypop.language.models.Expression
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.instructions.expressions.{DoubleExpression, RuntimeExpression}
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

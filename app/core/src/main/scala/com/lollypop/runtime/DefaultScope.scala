@@ -2,26 +2,21 @@ package com.lollypop.runtime
 
 import com.lollypop.database.QueryResponse
 import com.lollypop.die
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{LollypopUniverse, dieIllegalType, dieNoSuchColumnOrVariable, dieNoSuchFunction, dieObjectIsNotADatabaseDevice, dieUnsupportedType}
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
 import com.lollypop.runtime.Scope._
 import com.lollypop.runtime.datatypes.Inferences.fromValue
 import com.lollypop.runtime.datatypes._
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
-import com.lollypop.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
+import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import com.lollypop.runtime.instructions.functions.DataTypeConstructor
 import com.lollypop.runtime.instructions.invocables.EOL
 import com.lollypop.runtime.instructions.queryables.{TableRendering, TableVariableRef}
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.util.OptionHelper.OptionEnrichment
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.util.LogUtil
 import com.lollypop.util.StringRenderHelper.StringRenderer
-import com.lollypop.util.{ClassPathHelper, LogUtil}
 
 import java.io.{PrintWriter, StringWriter}
 import java.lang.reflect.Method
@@ -50,7 +45,7 @@ case class DefaultScope(superScope: Option[Scope] = None,
   private val specialVariables: Map[String, () => Any] = {
     val m = Map(
       __scope__ -> { () => this },
-      __classpath__ -> { () => ClassPathHelper },
+      __imports__ -> { () => getImports },
       __imports__ -> { () => getImports },
       __implicit_imports__ -> { () =>
         getImplicitMethods.map(m => m.method.getDeclaringClass.getName -> m.method.getName).groupBy(_._1)

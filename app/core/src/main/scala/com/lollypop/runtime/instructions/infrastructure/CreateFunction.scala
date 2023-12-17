@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE
 import com.lollypop.language._
 import com.lollypop.language.models.TypicalFunction
 import com.lollypop.runtime.DatabaseManagementSystem.createDurableFunction
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -15,7 +16,7 @@ import lollypop.io.IOCost
  * @author lawrence.daniels@gmail.com
  */
 case class CreateFunction(ref: DatabaseObjectRef, function: TypicalFunction, ifNotExists: Boolean)
-  extends RuntimeModifiable {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = createDurableFunction(ref.toNS, function, ifNotExists)

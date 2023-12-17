@@ -4,13 +4,11 @@ import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.repl.gnu.Cat.keyword
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.ExpressiveTypeConversion
 import com.lollypop.runtime.datatypes.StringType
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{LazyRowCollection, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.queryables.RuntimeQueryable
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import lollypop.lang.OS.ReaderIterator
 

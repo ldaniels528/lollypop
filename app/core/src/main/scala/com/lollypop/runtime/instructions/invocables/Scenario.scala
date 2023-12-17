@@ -1,15 +1,12 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language._
 import com.lollypop.language.models.{CodeBlock, Expression, Instruction, Literal}
-import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.Verification
 import com.lollypop.runtime.instructions.expressions.WWW
 import com.lollypop.runtime.instructions.invocables.Scenario.{__AUTO_EXPAND__, __KUNGFU_BASE_URL__}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**
@@ -17,6 +14,17 @@ import lollypop.io.IOCost
  * @param title         the scenario title
  * @param verifications the scenario [[Instruction verifications]]
  * @param inherits      the optional inherited scopes referenced by scenario title
+ * @example {{{
+ *   feature "State Inheritance" {
+ *     scenario 'Create a contest' {
+ *       val contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
+ *       var counter = 1
+ *       stderr <=== "contest_id = {{contest_id}}, counter = {{counter}}\n"
+ *       verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
+ *          and counter is 1
+ *     }
+ *   }
+ * }}}
  */
 case class Scenario(title: Expression,
                     verifications: Seq[Instruction],
@@ -103,27 +111,27 @@ object Scenario extends InvokableParser {
          |  scenario 'Create a contest' {
          |    val contest_id = "40d1857b-474c-4400-8f07-5e04cbacc021"
          |    var counter = 1
-         |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+         |    stderr <=== "contest_id = {{contest_id}}, counter = {{counter}}\n"
          |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
          |        and counter is 1
          |  }
          |
          |  scenario 'Create a member' {
          |    val member_id = "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
-         |    stdout <=== "member_id = {{member_id}}"
+         |    stderr <=== "member_id = {{member_id}}\n"
          |    verify member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
          |  }
          |
          |  scenario 'Inherit contest state' extends 'Create a contest' {
          |    counter = counter + 1
-         |    stdout <=== "contest_id = {{contest_id}}, counter = {{counter}}"
+         |    stderr <=== "contest_id = {{contest_id}}, counter = {{counter}}\n"
          |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
          |        and counter is 2
          |  }
          |
          |  scenario 'Inherit contest and member state' extends ['Create a contest', 'Create a member'] {
          |    counter = counter + 1
-         |    stdout <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}"
+         |    stderr <=== "contest_id = {{contest_id}}, member_id = {{member_id}}, counter = {{counter}}\n"
          |    verify contest_id is "40d1857b-474c-4400-8f07-5e04cbacc021"
          |        and member_id is "4264f8a5-6fa3-4a38-b3bb-30e2e0b826d1"
          |        and counter is 3

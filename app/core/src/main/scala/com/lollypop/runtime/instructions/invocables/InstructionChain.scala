@@ -1,10 +1,8 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
-import com.lollypop.language.TemplateProcessor.TagInstructionWithLineNumbers
+import com.lollypop.language._
 import com.lollypop.language.models.Instruction
-import com.lollypop.language.{HelpDoc, InstructionPostfixParser, SQLCompiler, TokenStream}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 /**
  * Instruction Chain
@@ -47,7 +45,7 @@ object InstructionChain extends InstructionPostfixParser {
   ))
 
   override def parseInstructionChain(stream: TokenStream, host: Instruction)(implicit compiler: SQLCompiler): Option[Instruction] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     stream match {
       case ts if ts nextIf _symbol =>
         val chainedOp = compiler.nextOpCodeOrDie(ts)

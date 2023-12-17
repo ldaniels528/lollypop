@@ -1,15 +1,14 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.TokenStream
 import com.lollypop.language.models.Expression
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
+import lollypop.lang.Pointer
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
-import lollypop.lang.Pointer
 
 import java.util.UUID
 import scala.concurrent.duration.DurationInt

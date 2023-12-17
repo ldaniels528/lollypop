@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.language.models.{$, @@}
+import com.lollypop.language.{LifestyleExpressionsAny, _}
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.{LollypopVM, Scope}
@@ -10,7 +10,7 @@ import org.scalatest.funspec.AnyFunSpec
 class ElementAtTest extends AnyFunSpec {
 
   describe(classOf[ElementAt].getSimpleName) {
-    
+
     it("should decompile models: [99, 100, 101][1]") {
       val model = ElementAt(ArrayLiteral(99.v, 100.v, 101.v), 1.v)
       assert(model.toSQL == "[99, 100, 101][1]")

@@ -2,8 +2,7 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.Queryable
 import com.lollypop.runtime.DatabaseManagementSystem.{getUpdatedTime, readVirtualTable}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, ROWID, Scope}
+import com.lollypop.runtime._
 import com.lollypop.util.LogUtil
 import lollypop.io.IOCost
 

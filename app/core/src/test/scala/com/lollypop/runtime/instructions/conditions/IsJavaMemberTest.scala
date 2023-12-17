@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.TokenStream
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec

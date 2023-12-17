@@ -9,10 +9,14 @@ import lollypop.io.IOCost
 /**
  * whenever - executes an instruction at the moment the trigger condition evaluates as true
  * @param expression the trigger [[Expression expression]]
- * @param code       the [[Instruction instruction]] to execute
+ * @param code       the [[Instruction instruction]] to execute when triggered
  * @example {{{
  * whenever n_bricks is 0
  *    stdout <=== 'n_bricks is empty\n') 
+ * }}}
+ * @example {{{
+ * whenever '^set(.*)'
+ *    stdout <=== "instruction was '{{__INSTRUCTION__}}
  * }}}
  */
 case class WhenEver(expression: Expression, code: Instruction)
@@ -33,7 +37,7 @@ object WhenEver extends InvokableParser {
       category = CATEGORY_CONCURRENCY,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
-      description = "Executes an instruction at the moment the expression evaluates as true",
+      description = "Executes an instruction at the moment the conditional expression evaluates as true",
       example =
         """|whenever n_bricks is 0 { stdout <=== "n_bricks is empty\n" }
            |stdout <=== "Setting n_bricks to 0\n"
@@ -45,7 +49,7 @@ object WhenEver extends InvokableParser {
       category = CATEGORY_CONCURRENCY,
       paradigm = PARADIGM_REACTIVE,
       syntax = templateCard,
-      description = "Executes an instruction at the moment the expression evaluates as true",
+      description = "Executes an instruction at the moment the regular expression evaluates as true",
       example =
         """|whenever '^set(.*)'
            |  stdout <=== "instruction was '{{__INSTRUCTION__}}'\n"

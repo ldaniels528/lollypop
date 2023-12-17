@@ -1,12 +1,9 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.HelpDoc.CATEGORY_CONTROL_FLOW
 import com.lollypop.language._
 import com.lollypop.language.models.Instruction
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

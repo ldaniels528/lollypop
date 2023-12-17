@@ -3,10 +3,9 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{HelpDoc, QueryableParser, SQLCompiler, SQLTemplateParams, TokenStream, dieNoResultSet}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.conversions.TableConversion.convertSeqToTable
 import com.lollypop.runtime.devices.RowCollection
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 import scala.annotation.tailrec

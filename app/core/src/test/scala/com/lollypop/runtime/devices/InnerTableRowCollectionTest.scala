@@ -1,13 +1,11 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.TokenStream
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny, TokenStream}
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType
 import com.lollypop.runtime.devices.RowCollection.getDurableInnerTable
-import com.lollypop.runtime.devices.RowCollectionZoo.ColumnTableType
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.invocables.SetAnyVariable
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, ROWID, Scope}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 

@@ -1,9 +1,8 @@
 package com.github.ldaniels528.lollypop
 
 import com.lollypop.language.dieUnsupportedConversion
-import com.lollypop.runtime.LONG_BYTES
 import com.lollypop.runtime.datatypes.{ConstructorSupportCompanion, FixedLengthNumericDataType, FunctionalType}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
+import com.lollypop.runtime.{LONG_BYTES, _}
 
 import java.nio.ByteBuffer
 import java.nio.ByteBuffer.allocate

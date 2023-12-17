@@ -1,9 +1,7 @@
 package com.lollypop.language.models
 
-import com.lollypop.language.TemplateProcessor.TokenStreamExtensions
+import com.lollypop.language._
 import com.lollypop.language.models.SourceCodeInstruction.RichSourceCodeInstruction
-import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 /**
  * Represents a Named Expression

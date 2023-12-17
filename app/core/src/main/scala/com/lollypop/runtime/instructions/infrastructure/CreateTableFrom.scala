@@ -1,12 +1,11 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.{Queryable, TableModel}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.{Field, FieldMetadata}
 import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
-import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
 import scala.collection.mutable
@@ -20,7 +19,7 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends RuntimeModifiable with ReferenceInstruction {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to create the table

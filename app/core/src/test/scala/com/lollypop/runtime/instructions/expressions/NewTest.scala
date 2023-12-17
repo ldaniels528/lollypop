@@ -1,8 +1,8 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.github.ldaniels528.lollypop.StockQuote
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.{LollypopUniverse, Template}
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.runtime.errors.InterfaceArgumentsNotSupportedError
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.queryables.Select

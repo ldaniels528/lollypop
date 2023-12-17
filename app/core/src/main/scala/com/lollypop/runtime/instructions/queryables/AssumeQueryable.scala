@@ -1,10 +1,8 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.models.{Instruction, Queryable}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
+import com.lollypop.language.models.Instruction
 import com.lollypop.runtime.devices.{Row, RowCollection}
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 case class AssumeQueryable(instruction: Instruction) extends RuntimeQueryable {
@@ -22,16 +20,4 @@ case class AssumeQueryable(instruction: Instruction) extends RuntimeQueryable {
 
   override def toSQL: String = instruction.toSQL
 
-}
-
-object AssumeQueryable {
-  final implicit class EnrichedAssumeQueryable(val instruction: Instruction) extends AnyVal {
-    @inline
-    def asQueryable: Queryable = {
-      instruction match {
-        case queryable: Queryable => queryable
-        case other => new AssumeQueryable(other)
-      }
-    }
-  }
 }

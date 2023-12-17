@@ -1,7 +1,6 @@
 package com.lollypop.language
 
 import com.lollypop.language.Token._
-import com.lollypop.util.StringHelper.StringEnrichment
 
 import java.lang.String.copyValueOf
 
@@ -19,7 +18,7 @@ class TokenIterator(input: String) extends Iterator[Token] {
     // uni-directional symbols
     "===>", "<===", "--->", "<---",
     "~>>", "<<~", "==>", "<==", "-->", "<--", "=>>",
-    "~>", "<~", "->", "<-", "=>", "(%", "%)",
+    "~>", "<~", "->", "<-", "=>", "(%", "%)", "(&", "&)",
     // assignment & conditional operators and symbols
     "&&&=", "|||=", "///=", ":::=", ":::", ">>>=", "<<<=", "---=", "@@@=", "%%%=", "???=", "+++=", "***=", "^^^=",
     "&&=", "||=", "//=", "::=", "::", ">>=", "<<=", "--=", "@@=", "%%=", "??=", "++=", "**=", "^^=",
@@ -128,7 +127,8 @@ class TokenIterator(input: String) extends Iterator[Token] {
   }
 
   private def parseProcessInvocation(): Option[ProcessInvocationToken] = {
-    parseSequence(enter = "(%", exit = "%)", f = ProcessInvocationToken.apply)
+    parseSequence(enter = "(%", exit = "%)", f = ProcessInvocationToken("%", _, _, _)) ??
+      parseSequence(enter = "(&", exit = "&)", f = ProcessInvocationToken("&", _, _, _))
   }
 
   private def parseQuotes(ch: Char): Option[QuotedToken] = {

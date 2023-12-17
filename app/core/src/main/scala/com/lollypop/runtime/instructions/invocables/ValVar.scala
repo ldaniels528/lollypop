@@ -4,11 +4,9 @@ import com.lollypop.language.ColumnTypeParser.nextColumnType
 import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, ColumnType, Instruction}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{AnyType, DataType}
 import com.lollypop.runtime.instructions.queryables.{RowsOfValues, TableLiteral}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

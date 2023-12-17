@@ -1,13 +1,12 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressionsAny, RichAliasable}
+import com.lollypop.language._
 import com.lollypop.language.models.{Condition, Expression, FieldRef}
-import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.{Row, RowCollection}
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.conditions.WhereIn.keyword
-import com.lollypop.util.OptionHelper.implicits.risky._
 import lollypop.io.IOCost
 
 /**

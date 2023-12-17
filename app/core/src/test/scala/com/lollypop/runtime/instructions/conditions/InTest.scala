@@ -1,6 +1,7 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.models.Expression.implicits._
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.instructions.queryables.Select
@@ -30,7 +31,7 @@ class InTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support select .. where in (..)") {
-      import com.lollypop.util.OptionHelper.implicits.risky._
+      import com.lollypop.runtime.implicits.risky._
       val results = compiler.compile(
         """|select Symbol, Name, Sector, Industry, SummaryQuote
            |from Customers
@@ -44,7 +45,7 @@ class InTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should support select .. where in (select ..)") {
-      import com.lollypop.util.OptionHelper.implicits.risky._
+      import com.lollypop.runtime.implicits.risky._
       val results = compiler.compile(
         """|select Symbol, Name, Sector, Industry, SummaryQuote
            |from Customers as C

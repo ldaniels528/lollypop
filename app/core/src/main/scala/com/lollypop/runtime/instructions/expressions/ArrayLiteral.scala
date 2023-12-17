@@ -1,10 +1,9 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{ArrayExpression, Expression, Literal}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionSeqExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{ArrayType, DataType, Inferences}
 import com.lollypop.runtime.plastics.Tuples.seqToArray
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

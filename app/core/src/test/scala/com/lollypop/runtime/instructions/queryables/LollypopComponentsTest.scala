@@ -1,14 +1,13 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_UNCLASSIFIED, PARADIGM_FUNCTIONAL}
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.language.{LollypopUniverse, _}
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
 import com.lollypop.runtime.instructions.functions.{FunctionCallParserE0, InternalFunctionCall}
 import com.lollypop.runtime.instructions.queryables.LollypopComponentsTest.lootBoxValues
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 import lollypop.lang.Random
 import org.scalatest.funspec.AnyFunSpec
@@ -55,7 +54,7 @@ class LollypopComponentsTest extends AnyFunSpec with VerificationTools {
     it("should install components via URL") {
       implicit val ctx: LollypopUniverse = LollypopUniverse(isServerMode = true)
       val (sa, _, rc) =
-        s"""|import implicit "com.lollypop.util.StringHelper$$StringEnrichment"
+        s"""|import implicit "${classOf[StringEnrichment].getName}"
             |lollypopComponents("/lootBox.txt".toResourceURL())
             |""".stripMargin.searchSQL(ctx.createRootScope())
       rc.tabulate().foreach(logger.info)

@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
 

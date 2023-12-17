@@ -1,17 +1,15 @@
 package com.lollypop.runtime.datatypes
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Vector.Vector
 import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.errors.{MatrixDimensionMismatchError, MatrixMustBeSquareError}
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{INT_BYTES, LONG_BYTES, LollypopNative, Scope}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
-import com.lollypop.runtime.conversions.TransferTools.EnrichedByteArray
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import com.lollypop.{LollypopException, die}
-import org.apache.commons.math3.linear._
 import lollypop.io.{Decoder, Encodable}
+import org.apache.commons.math3.linear._
 
 import java.nio.ByteBuffer
 
@@ -429,7 +427,7 @@ class Matrix(val rows: Int, val cols: Int) extends TableRendering with Encodable
   def toArray: Array[Vector] = elements.clone()
 
   override def toTable(implicit scope: Scope): RowCollection = {
-    import com.lollypop.runtime.devices.RecordCollectionZoo._
+    import com.lollypop.runtime._
     val tableType = toTableType
     val rc = createQueryResultTable(tableType.columns)
     for {

@@ -1,10 +1,8 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.TokenStream
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
-import com.lollypop.language.models.Operation._
+import com.lollypop.language.implicits._
 import com.lollypop.language.models._
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.expressions.aggregation.{Max, Min, Sum, Unique}

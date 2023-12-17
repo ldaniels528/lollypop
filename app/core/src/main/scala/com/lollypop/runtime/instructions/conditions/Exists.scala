@@ -3,9 +3,8 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.Instruction
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollection
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

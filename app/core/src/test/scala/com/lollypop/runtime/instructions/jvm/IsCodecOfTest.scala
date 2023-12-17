@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.jvm
 
-import com.lollypop.language.TokenStream
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 

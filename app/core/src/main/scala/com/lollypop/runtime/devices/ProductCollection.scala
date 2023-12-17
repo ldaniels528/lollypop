@@ -1,14 +1,12 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.language.{ColumnTypeParser, TokenStream, dieNoSuchConstructor}
+import com.lollypop.language._
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.DataType
 import com.lollypop.runtime.datatypes.Inferences.fromClass
 import com.lollypop.runtime.devices.ProductCollection.{KeyValue, toColumns}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassConstructorSugar
-import com.lollypop.runtime.{ColumnInfo, LollypopCompiler, ROWID, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import java.io.File

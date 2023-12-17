@@ -1,14 +1,12 @@
 package com.lollypop.runtime.datatypes
 
 import com.lollypop.die
-import com.lollypop.implicits.MagicImplicits
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{LollypopUniverse, dieUnsupportedType}
-import com.lollypop.runtime.LollypopNative
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.functions.Iff
 import com.lollypop.runtime.instructions.invocables.{IF, Switch}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.runtime.{LollypopNative, _}
 
 /**
  * Data Type Inferences

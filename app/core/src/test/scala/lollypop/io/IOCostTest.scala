@@ -1,6 +1,6 @@
 package lollypop.io
 
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
+import com.lollypop.runtime._
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

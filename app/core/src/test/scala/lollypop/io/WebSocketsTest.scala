@@ -1,7 +1,6 @@
 package lollypop.io
 
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import org.scalatest.funspec.AnyFunSpec
 
 class WebSocketsTest extends AnyFunSpec {

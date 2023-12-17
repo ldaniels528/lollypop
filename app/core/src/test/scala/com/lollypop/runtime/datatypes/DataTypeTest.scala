@@ -1,12 +1,9 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressionsAny
-import com.lollypop.language.models.Operation._
+import com.lollypop.language._
 import com.lollypop.language.models.{Column, ColumnType}
 import com.lollypop.runtime.datatypes.Inferences.InstructionTyping
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductClassToTableType
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

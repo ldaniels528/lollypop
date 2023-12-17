@@ -1,11 +1,8 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.die
-import com.lollypop.language.dieNoSuchColumn
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.ROWID
-import com.lollypop.util.ByteBufferHelper.{DataTypeBuffer, DataTypeByteBuffer}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.language._
+import com.lollypop.runtime.{ROWID, _}
 
 import java.nio.ByteBuffer
 import java.nio.ByteBuffer.allocate

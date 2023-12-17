@@ -1,23 +1,15 @@
 package com.lollypop.runtime
 
 import com.lollypop.LollypopException
-import com.lollypop.database.QueryResponse
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.language.models.Expression.implicits.RichAliasable
+import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.language.{LollypopUniverse, dieNoSuchColumn}
-import com.lollypop.runtime.LollypopVM.implicits.{InstructionExtensions, RichScalaAny}
-import com.lollypop.runtime.conversions.TableConversion.convertTupleToTable
-import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.infrastructure.Macro
 import com.lollypop.runtime.instructions.invocables.{SetAnyVariable, WhenEver}
-import com.lollypop.runtime.instructions.queryables.TableRendering
 import com.lollypop.runtime.instructions.{MacroLanguageParser, RuntimeInstruction}
 import com.lollypop.runtime.plastics.RuntimeClass
 import lollypop.io.IOCost
 
-import scala.annotation.tailrec
 import scala.language.postfixOps
 
 /**
@@ -25,7 +17,6 @@ import scala.language.postfixOps
  */
 object LollypopVM {
   val rootScope: Scope = LollypopUniverse().createRootScope()
-  val resultName = "result"
 
   ///////////////////////////////////////////////////////////////////////////////////////////
   //      EVALUATION METHODS
@@ -127,108 +118,6 @@ object LollypopVM {
       }
     }
     (scope, result)
-  }
-
-  object implicits {
-
-    /**
-     * LollypopVM SQL Integration
-     * @param sql the SQL statement or query
-     */
-    final implicit class LollypopVMSQL(val sql: String) extends AnyVal {
-
-      /**
-       * Executes a SQL statement or query
-       * @param scope the [[Scope scope]]
-       * @return a tuple containing the updated [[Scope scope]], [[IOCost]] and the return value
-       */
-      def executeSQL(scope: Scope): (Scope, IOCost, Any) = {
-        execute(scope, scope.getCompiler.compile(sql))
-      }
-
-      /**
-       * Executes an SQL query
-       * @param scope the [[Scope scope]]
-       * @return the potentially updated [[Scope scope]] and the resulting [[RowCollection row collection]]
-       */
-      def searchSQL(scope: Scope): (Scope, IOCost, RowCollection) = {
-        scope.getCompiler.compile(sql).search(scope)
-      }
-
-    }
-
-    /**
-     * Instruction Extensions
-     * @param instruction the [[Instruction instruction]]
-     */
-    final implicit class InstructionExtensions(val instruction: Instruction) extends AnyVal {
-
-      /**
-       * Evaluates a pure expression
-       * @return a tuple containing the updated [[Scope scope]], [[IOCost]] and the return value
-       */
-      def evaluate(): (Scope, IOCost, Any) = LollypopVM.execute(rootScope, instruction)
-
-      /**
-       * Executes an instruction
-       * @param scope the [[Scope scope]]
-       * @return a tuple containing the updated [[Scope scope]], [[IOCost]] and the return value
-       */
-      def execute(scope: Scope): (Scope, IOCost, Any) = LollypopVM.execute(scope, instruction)
-
-      /**
-       * Evaluates an [[Instruction instruction]]
-       * @param scope the [[Scope scope]]
-       * @return the potentially updated [[Scope scope]] and the resulting [[RowCollection block device]]
-       */
-      def search(scope: Scope): (Scope, IOCost, RowCollection) = {
-        LollypopVM.execute(scope, instruction) match {
-          case (aScope, aCost, qr: QueryResponse) => (aScope, aCost, qr.toRowCollection)
-          case (aScope, aCost, rc: RowCollection) => (aScope, aCost, rc)
-          case (aScope, aCost, rendering: TableRendering) => (aScope, aCost, rendering.toTable(scope))
-          case (aScope, aCost, other) => (aScope, aCost, convertTupleToTable(resultName, other))
-        }
-      }
-
-    }
-
-    /**
-     * Instruction Sequence Extensions
-     * @param instructions the collection of [[Instruction instructions]] to execute
-     */
-    final implicit class InstructionSeqExtensions(val instructions: Seq[Instruction]) extends AnyVal {
-
-      /**
-       * Evaluates a collection of instructions
-       * @return the tuple consisting of the [[Scope]], [[IOCost]] and the collection of results
-       */
-      def transform(scope0: Scope): (Scope, IOCost, List[Any]) = {
-        instructions.foldLeft[(Scope, IOCost, List[Any])]((scope0, IOCost.empty, Nil)) {
-          case ((scope, cost, list), op) => execute(scope, op) ~> { case (s, c, r) => (s, cost ++ c, list ::: List(r)) }
-        }
-      }
-
-    }
-
-    /**
-     * Unwrap Options
-     * @param item the [[Any item]]
-     */
-    final implicit class RichScalaAny(val item: Any) extends AnyVal {
-
-      @inline def unwrapOptions: Any = {
-        @tailrec
-        def recurse(value: Any): Any = value match {
-          case Some(v) => recurse(v)
-          case None => null
-          case v => v
-        }
-
-        recurse(item)
-      }
-
-    }
-
   }
 
 }

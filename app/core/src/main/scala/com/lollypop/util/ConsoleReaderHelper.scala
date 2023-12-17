@@ -1,7 +1,7 @@
 package com.lollypop.util
 
-import com.lollypop.AppConstants.{DEFAULT_DATABASE, DEFAULT_SCHEMA}
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.language._
+import com.lollypop.runtime._
 
 import scala.annotation.tailrec
 import scala.collection.mutable

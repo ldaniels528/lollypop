@@ -1,12 +1,11 @@
 package com.lollypop.runtime.devices
 
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{CLOB, TableType}
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.ResourceHelper._
+import lollypop.lang.Pointer
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.lang.Pointer
 
 class LogicalTableRowCollectionTest extends AnyFunSpec {
   private val logger = LoggerFactory.getLogger(getClass)

@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language._
+import com.lollypop.language.implicits._
 import com.lollypop.runtime.Scope
 import org.scalatest.funspec.AnyFunSpec
 

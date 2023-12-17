@@ -1,9 +1,9 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language._
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
+import com.lollypop.language.implicits._
 import com.lollypop.language.models.Literal
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.conditions.{AND, WhereIn}
 import com.lollypop.runtime.instructions.invocables.{ScopeModificationBlock, SetAnyVariable}
@@ -11,10 +11,9 @@ import com.lollypop.runtime.instructions.operators.ComputeAndSet.ComputeAndSetSu
 import com.lollypop.runtime.instructions.operators.Plus
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.OptionHelper.implicits.risky._
+import lollypop.io.{IOCost, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
-import lollypop.io.{IOCost, RowIDRange}
 
 class UpdateTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)

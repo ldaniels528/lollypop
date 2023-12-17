@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.operators
 
-import com.lollypop.language.models.{Expression, BinaryOperation}
+import com.lollypop.language.models.{BinaryOperation, Expression}
 import com.lollypop.language.{ExpressionChainParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.operators.ComputeAndSet.ComputeAndSetSugar
 

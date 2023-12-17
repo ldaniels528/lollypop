@@ -1,10 +1,8 @@
 package com.lollypop.database.jdbc
 
-import com.lollypop.runtime.DatabaseObjectRef
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.util.CalendarHelper.CalendarUtilities
+import com.lollypop.runtime.{DatabaseObjectRef, _}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.ResourceHelper._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.math.RoundingMode

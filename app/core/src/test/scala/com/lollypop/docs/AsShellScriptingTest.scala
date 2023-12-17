@@ -2,7 +2,7 @@ package com.lollypop.docs
 
 import com.lollypop.repl.LollypopREPL
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime._
 
 import java.io.{FileWriter, PrintWriter}
 

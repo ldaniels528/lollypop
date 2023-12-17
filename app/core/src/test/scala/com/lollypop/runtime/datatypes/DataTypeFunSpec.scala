@@ -1,11 +1,13 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.runtime.{Scope, readable}
+import com.lollypop.runtime.Scope
+import com.lollypop.util.DateHelper
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.nio.ByteBuffer.wrap
+import java.util.Date
 
 trait DataTypeFunSpec extends AnyFunSpec {
   protected val logger: Logger = LoggerFactory.getLogger(getClass)
@@ -50,6 +52,15 @@ trait DataTypeFunSpec extends AnyFunSpec {
     logger.info(s"expected type: $expectedType, class detected type: $columnTypeB, value detected type: $columnTypeA")
     assert(columnTypeA.name == columnTypeB.name)
     assert(columnTypeB.name == expectedType.name)
+  }
+
+  private def readable(value: Any): String = value match {
+    case null => "null"
+    case a: Array[_] =>
+      val _type = a.getClass.getComponentType.getSimpleName
+      a.map(readable).mkString(s"Array[${_type}](", ", ", ")")
+    case d: Date => s"'${DateHelper.format(d)}'"
+    case x => x.toString
   }
 
 }

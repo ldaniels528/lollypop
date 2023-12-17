@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.expressions.aggregation
 
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.instructions.expressions.aggregation.Count
 import com.lollypop.runtime.{LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 

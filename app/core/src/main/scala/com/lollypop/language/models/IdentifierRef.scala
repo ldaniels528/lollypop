@@ -1,6 +1,6 @@
 package com.lollypop.language.models
 
-import com.lollypop.util.OptionHelper.OptionEnrichment
+import com.lollypop.language._
 
 /**
  * Represents an identifier (e.g. field or variable)

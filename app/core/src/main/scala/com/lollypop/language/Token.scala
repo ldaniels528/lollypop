@@ -1,8 +1,8 @@
 package com.lollypop.language
 
 import com.lollypop.die
-import com.lollypop.implicits._
 import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
+import com.lollypop.runtime._
 
 /**
  * Represents a token
@@ -156,16 +156,16 @@ object Token {
    *  (% iostat 1 5 %)
    * }}}
    */
-  case class ProcessInvocationToken(text: String) extends Token {
+  case class ProcessInvocationToken(id: String, text: String) extends Token {
     override def value: String = text
   }
 
   object ProcessInvocationToken {
-    def apply(text: String, lineNo: Int, columnNo: Int): ProcessInvocationToken = {
-      ProcessInvocationToken(text).withLineAndColumn(lineNo, columnNo)
+    def apply(id: String, text: String, lineNo: Int, columnNo: Int): ProcessInvocationToken = {
+      ProcessInvocationToken(id, text).withLineAndColumn(lineNo, columnNo)
     }
 
-    def unapply(t: ProcessInvocationToken): Option[(String, Int, Int)] = Some((t.text, t.lineNo, t.columnNo))
+    def unapply(t: ProcessInvocationToken): Option[(String, String, Int, Int)] = Some((t.id, t.text, t.lineNo, t.columnNo))
   }
 
   case class SingleQuotedToken(text: String, value: String) extends QuotedToken {
@@ -310,15 +310,6 @@ object Token {
     }
 
     def unapply(t: TableToken): Option[(String, List[String], Int, Int)] = Some((t.text, t.value, t.lineNo, t.columnNo))
-  }
-
-  final implicit class RichToken[A <: Token](val token: A) extends AnyVal {
-    @inline
-    def withLineAndColumn(lineNo: Int, columnNo: Int): A = {
-      token.lineNo = lineNo
-      token.columnNo = columnNo
-      token
-    }
   }
 
 }

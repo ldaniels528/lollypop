@@ -1,11 +1,9 @@
 package com.lollypop.runtime.conversions
 
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.runtime.Scope
-import com.lollypop.runtime.conversions.TransferTools.RichInputStream
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes.{BLOB, DataTypeFunSpec}
 import com.lollypop.runtime.instructions.expressions.Dictionary
+import com.lollypop.runtime.{Scope, _}
 
 import java.io.File
 import scala.concurrent.duration.DurationInt

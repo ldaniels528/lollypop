@@ -4,6 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLAR
 import com.lollypop.language._
 import com.lollypop.language.models.ColumnType
 import com.lollypop.runtime.DatabaseManagementSystem.createUserType
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
@@ -20,7 +21,7 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateType(ref: DatabaseObjectRef, userType: ColumnType, ifNotExists: Boolean)
-  extends RuntimeModifiable {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = createUserType(ref.toNS, userType, ifNotExists)

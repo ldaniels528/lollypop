@@ -1,8 +1,6 @@
 package com.lollypop.database.jdbc
 
-import com.lollypop.AppConstants.{DEFAULT_DATABASE, DEFAULT_SCHEMA}
-import com.lollypop.runtime.LollypopCompiler
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime.{LollypopCompiler, _}
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File

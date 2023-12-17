@@ -2,8 +2,6 @@ package com.lollypop.language
 
 import com.lollypop.language.InsertValues.InsertSourceTemplateTag
 import com.lollypop.language.TemplateProcessor.tags._
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality.InequalityExtensions
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler}
 import org.scalatest.funspec.AnyFunSpec

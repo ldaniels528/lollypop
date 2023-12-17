@@ -1,15 +1,13 @@
 package com.lollypop.database
 
-import com.lollypop.AppConstants._
+import com.lollypop.language._
 import com.lollypop.runtime.ModelsJsonProtocol._
+import com.lollypop.runtime._
 import com.lollypop.runtime.conversions.TableConversion.convertTupleToTable
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
-import com.lollypop.runtime.devices.RowCollectionZoo.{ProductToRowCollection, createQueryResultTable}
+import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices.{RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.GraphResult
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{DataObject, DatabaseObjectNS, LollypopVM, ROWID, SRC_ROWID_NAME, Scope}
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.{IOCost, RowIDRange}
 import spray.json.RootJsonFormat
 
@@ -88,7 +86,7 @@ object QueryResponse {
         case _ids: Seq[_] if _ids.forall(_.isInstanceOf[ROWID]) =>
           val rowIds = _ids.collect { case n: ROWID => n }
           toQueryResponse(ns, IOCost(inserted = rowIds.size, rowIDs = RowIDRange(rowIds: _*)))
-        case value => toQueryResponse(ns, convertTupleToTable(columnName = LollypopVM.resultName, value), limit)
+        case value => toQueryResponse(ns, convertTupleToTable(columnName = singleColumnResultName, value), limit)
       }
     }
 

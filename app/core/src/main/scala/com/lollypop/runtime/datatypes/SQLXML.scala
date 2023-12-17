@@ -1,11 +1,8 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.AppConstants
-import com.lollypop.runtime.DatabaseObjectNS
 import com.lollypop.runtime.datatypes.SQLXML.SYSTEM_ID
 import com.lollypop.runtime.devices.RowCollectionZoo._
-import com.lollypop.util.ResourceHelper._
-import com.lollypop.runtime.conversions.TransferTools.{RichInputStream, RichReader}
+import com.lollypop.runtime.{DatabaseObjectNS, _}
 import org.apache.commons.io.IOUtils
 import org.xml.sax.InputSource
 import org.xml.sax.ext.DefaultHandler2
@@ -91,7 +88,7 @@ class SQLXML(val ns: DatabaseObjectNS, val raf: RandomAccessFile) extends ISQLXM
  * Lollypop SQL/XML Companion
  */
 object SQLXML {
-  private val SYSTEM_ID = s"Lollypop_v${AppConstants.version}"
+  private val SYSTEM_ID = s"Lollypop_v$version"
 
   def apply(): ISQLXML = {
     val ns = createTempNS()

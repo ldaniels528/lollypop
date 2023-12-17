@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.AppConstants._
 import com.lollypop.language.models.@@
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
-import com.lollypop.runtime.{DatabaseObjectNS, DatabaseObjectRef, LollypopVM, Scope}
+import com.lollypop.runtime._
 import org.scalatest.funspec.AnyFunSpec
 
 /**

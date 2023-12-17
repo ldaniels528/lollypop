@@ -1,9 +1,8 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.implicits.MagicImplicits
 import com.lollypop.language.models.CodeBlock.summarize
 import com.lollypop.language.models.{CodeBlock, Expression, Instruction}
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

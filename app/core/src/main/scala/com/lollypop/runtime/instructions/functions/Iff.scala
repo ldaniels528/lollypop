@@ -2,10 +2,9 @@ package com.lollypop.runtime.instructions.functions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models.{Condition, Expression}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition.isTrue
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
+import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
 /**

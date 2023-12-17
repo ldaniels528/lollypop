@@ -1,10 +1,9 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.dieIllegalObjectRef
+import com.lollypop.language._
 import com.lollypop.language.models.{@@, Queryable}
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.queryables.TableVariableRef
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 /**

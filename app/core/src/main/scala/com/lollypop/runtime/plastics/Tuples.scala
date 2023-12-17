@@ -20,7 +20,7 @@ object Tuples {
 
   @tailrec
   def seqToTuple(value: Any): Option[Any] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     value match {
       case array: Array[_] => seqToTuple(array.toSeq)
       case Seq(a, b) => (a, b)
@@ -49,7 +49,7 @@ object Tuples {
   }
 
   def tupleToSeq(value: Any): Option[List[Any]] = {
-    import com.lollypop.util.OptionHelper.implicits.risky._
+    import com.lollypop.runtime.implicits.risky._
     value match {
       case (a, b) => List(a, b)
       case (a, b, c) => List(a, b, c)

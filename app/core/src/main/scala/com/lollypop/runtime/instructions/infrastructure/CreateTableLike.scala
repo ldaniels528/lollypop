@@ -1,11 +1,10 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.TableModel
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.TableColumn.implicits.TableColumnToSQLColumnConversion
 import com.lollypop.runtime.instructions.ReferenceInstruction
-import com.lollypop.runtime.{DatabaseManagementSystem, DatabaseObjectRef, Scope}
-import com.lollypop.util.ResourceHelper._
 import lollypop.io.IOCost
 
 import scala.collection.mutable
@@ -19,7 +18,7 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateTableLike(ref: DatabaseObjectRef, tableModel: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean)
-  extends RuntimeModifiable with ReferenceInstruction {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val tableColumnNames = tableModel.columns.map(_.name).toSet

@@ -1,12 +1,11 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
+import com.lollypop.language._
 import com.lollypop.language.models.{Atom, View}
-import com.lollypop.language.{HelpDoc, IfNotExists, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
 import com.lollypop.runtime.DatabaseManagementSystem.{createVirtualTable, readVirtualTable}
 import com.lollypop.runtime.Scope
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
-import com.lollypop.util.OptionHelper.OptionEnrichment
 import lollypop.io.IOCost
 
 import scala.collection.mutable

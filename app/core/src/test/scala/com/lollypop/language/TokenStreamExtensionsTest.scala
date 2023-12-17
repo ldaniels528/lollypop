@@ -1,6 +1,5 @@
 package com.lollypop.language
 
-import com.lollypop.language.TemplateProcessor.TokenStreamExtensions
 import com.lollypop.language.models.Literal.implicits.NumericLiteralTokenStreamExtensions
 import org.scalatest.funspec.AnyFunSpec
 

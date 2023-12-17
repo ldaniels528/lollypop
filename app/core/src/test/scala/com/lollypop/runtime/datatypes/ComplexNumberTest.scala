@@ -1,8 +1,8 @@
 package com.lollypop.runtime.datatypes
 
+import lollypop.lang.ComplexNumber
 import lollypop.lang.ComplexNumber._
 import org.scalatest.funspec.AnyFunSpec
-import lollypop.lang.ComplexNumber
 
 /**
  * ComplexNumber Tests

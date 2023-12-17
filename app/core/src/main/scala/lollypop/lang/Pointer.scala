@@ -3,9 +3,8 @@ package lollypop.lang
 import com.lollypop.language.dieIllegalObjectRef
 import com.lollypop.language.models.AllFields.dieArgumentMismatch
 import com.lollypop.language.models.Instruction
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{DataType, PointerType}
-import com.lollypop.runtime.{LONG_BYTES, LollypopNative}
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
 import lollypop.io.Encodable
 
 import java.nio.ByteBuffer

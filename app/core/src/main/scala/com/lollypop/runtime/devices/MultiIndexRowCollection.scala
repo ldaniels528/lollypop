@@ -2,10 +2,9 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.die
 import com.lollypop.language.models.{Condition, Expression, Instruction}
-import com.lollypop.runtime.LollypopVM.implicits.InstructionExtensions
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.IndexedRowCollection.{BUCKETS, getHashIndexTableColumns}
 import com.lollypop.runtime.devices.errors.{UniqueKeyAlreadyExistsError, UniqueKeyCannotBeDisabledError}
-import com.lollypop.runtime.{DatabaseObjectNS, LollypopVM, ROWID, Scope}
 import lollypop.io.IOCost
 
 /**

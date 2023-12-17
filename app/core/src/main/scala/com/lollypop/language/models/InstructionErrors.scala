@@ -1,11 +1,10 @@
 package com.lollypop.language.models
 
 import com.lollypop.LollypopException
+import com.lollypop.language._
 import com.lollypop.runtime.ModelStringRenderer.ModelStringRendering
 import com.lollypop.runtime.datatypes.DataType
 import com.lollypop.runtime.errors._
-import com.lollypop.util.StringHelper.StringEnrichment
-import com.lollypop.util.StringRenderHelper.StringRenderer
 
 /**
  * Instruction Errors

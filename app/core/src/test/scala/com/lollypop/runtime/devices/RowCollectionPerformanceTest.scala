@@ -1,12 +1,9 @@
 package com.lollypop.runtime.devices
 
 import com.github.ldaniels528.lollypop.StockQuote.randomQuote
-import com.lollypop.implicits.MagicImplicits
-import com.lollypop.runtime.Scope
 import com.lollypop.runtime.datatypes.{DateTimeType, Float32Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RowCollectionPerformanceTest.{TestInput, TestOutput}
-import com.lollypop.util.ResourceHelper._
+import com.lollypop.runtime.{Scope, _}
 import com.lollypop.util.Tabulator
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

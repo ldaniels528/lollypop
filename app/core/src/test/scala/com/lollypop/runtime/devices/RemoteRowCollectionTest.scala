@@ -2,12 +2,11 @@ package com.lollypop.runtime.devices
 
 import com.lollypop.language.LollypopUniverse
 import com.lollypop.runtime.DatabaseObjectRef.DatabaseObjectRefRealization
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{Float64Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
 import com.lollypop.runtime.devices.RemoteRowCollection.getRemoteCollection
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
-import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
 import lollypop.io.{IOCost, Nodes, RowIDRange}
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

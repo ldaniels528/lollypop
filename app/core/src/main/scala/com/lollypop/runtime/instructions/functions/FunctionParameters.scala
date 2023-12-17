@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.functions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, RichAliasable}
+import com.lollypop.language.LifestyleExpressions
 import com.lollypop.language.models._
 import com.lollypop.runtime.instructions.expressions.NamedFunctionCall
 

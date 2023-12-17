@@ -1,7 +1,6 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.language.LollypopUniverse
-import com.lollypop.language.models.Expression.implicits.LifestyleExpressions
+import com.lollypop.language.{LollypopUniverse, _}
 import com.lollypop.runtime.datatypes.DataTypeFunSpec.FakeNews
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}

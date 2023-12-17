@@ -3,13 +3,11 @@ package com.lollypop.database.server
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.server.LollypopPage.{LollypopPageHTMLRenderer, toHTML}
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Matrix
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductToRowCollection
 import com.lollypop.runtime.devices.{Row, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions.{GraphResult, RuntimeExpression}
 import com.lollypop.runtime.instructions.queryables.TableRendering
-import com.lollypop.runtime.{LollypopVM, Scope}
-import com.lollypop.util.ResourceHelper.AutoClose
 import com.lollypop.util.StringRenderHelper
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost

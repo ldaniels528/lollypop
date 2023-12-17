@@ -1,15 +1,12 @@
 package com.lollypop.runtime.devices
 
-
-import com.lollypop.language.dieIllegalType
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
-import com.lollypop.language.models.Inequality._
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes.{DateTimeType, Float64Type, StringType}
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import org.scalatest.funspec.AnyFunSpec
 import lollypop.io.{IOCost, RowIDRange}
+import org.scalatest.funspec.AnyFunSpec
 
 class PartitionedRowCollectionTest extends AnyFunSpec {
 

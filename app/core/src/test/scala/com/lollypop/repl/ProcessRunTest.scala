@@ -1,6 +1,6 @@
 package com.lollypop.repl
 
-import com.lollypop.runtime.LollypopVM.implicits.LollypopVMSQL
+import com.lollypop.runtime._
 
 class ProcessRunTest extends REPLFunSpec {
 

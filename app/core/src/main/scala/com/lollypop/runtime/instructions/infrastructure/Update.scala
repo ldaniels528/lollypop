@@ -3,8 +3,8 @@ package com.lollypop.runtime.instructions.infrastructure
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models._
-import com.lollypop.runtime.devices.RowCollectionZoo.RichDatabaseObjectRef
-import com.lollypop.runtime.{DatabaseObjectRef, Scope}
+import com.lollypop.runtime._
+import com.lollypop.runtime.instructions.ReferenceInstruction
 import lollypop.io.IOCost
 
 /**
@@ -31,7 +31,7 @@ import lollypop.io.IOCost
  * @author lawrence.daniels@gmail.com
  */
 case class Update(ref: DatabaseObjectRef, modification: ScopeModification, condition: Option[Condition], limit: Option[Expression])
-  extends RuntimeModifiable {
+  extends ReferenceInstruction with RuntimeModifiable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = ref match {

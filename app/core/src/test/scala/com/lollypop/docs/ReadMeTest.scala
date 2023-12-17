@@ -1,10 +1,8 @@
 package com.lollypop.docs
 
-import com.lollypop.AppConstants
 import com.lollypop.language.HelpDoc
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.runtime.{Scope, version}
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime._
 
 import java.io.{File, FileWriter, PrintWriter}
 import scala.io.Source
@@ -23,7 +21,7 @@ class ReadMeTest extends DocumentGeneratorFunSpec {
       val featuredExamples: List[HelpDoc] = ctx.helpDocs.filter(_.featureTitle.nonEmpty).sortBy(_.featureTitle)
       new PrintWriter(new FileWriter(mdFile)) use { out =>
         out.println(
-          s"""|Lollypop v${AppConstants.version}
+          s"""|Lollypop v$version
               |============
               |
               |## Table of Contents

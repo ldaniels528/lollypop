@@ -1,18 +1,16 @@
 package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language._
-import com.lollypop.language.models.Expression.implicits._
-import com.lollypop.language.models.Inequality.InequalityExtensions
-import com.lollypop.language.models.Operation.RichOperation
+import com.lollypop.language.implicits._
 import com.lollypop.language.models._
 import com.lollypop.runtime.datatypes.{DateTimeType, Float32Type}
+import com.lollypop.runtime.implicits.risky._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.Dictionary
 import com.lollypop.runtime.instructions.expressions.aggregation.{Avg, Count, Unique}
 import com.lollypop.runtime.instructions.invocables._
 import com.lollypop.runtime.{DatabaseObjectRef, LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
-import com.lollypop.util.OptionHelper.implicits.risky._
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

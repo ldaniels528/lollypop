@@ -1,9 +1,8 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.implicits.MagicImplicits
+import com.lollypop.language._
 import com.lollypop.language.models.ColumnType
-import com.lollypop.language.{ColumnTypeParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.Scope
+import com.lollypop.runtime.{Scope, _}
 
 object UserDefinedDataType extends ColumnTypeParser with DataTypeParser {
 

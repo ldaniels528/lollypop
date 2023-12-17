@@ -1,8 +1,8 @@
 package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.models.Modifiable
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.TableType
-import com.lollypop.runtime.devices.RowCollectionZoo.ProductClassToTableType
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.expressions.TableExpression
 import lollypop.io.IOCost

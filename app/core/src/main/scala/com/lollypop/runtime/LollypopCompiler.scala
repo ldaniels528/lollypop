@@ -1,11 +1,9 @@
 package com.lollypop.runtime
 
-import com.lollypop.language.TemplateProcessor.{TagInstructionWithLineNumbers, TokenStreamExtensions}
 import com.lollypop.language._
 import com.lollypop.language.models._
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.functions.AnonymousNamedFunction
-import com.lollypop.util.OptionHelper.OptionEnrichment
 
 import scala.collection.mutable
 import scala.language.{existentials, postfixOps}

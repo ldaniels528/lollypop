@@ -1,9 +1,8 @@
 package com.lollypop.runtime.devices
 
 import com.lollypop.language.models.@@
+import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.{DateTimeType, Float64Type, StringType}
-import com.lollypop.runtime.devices.RecordCollectionZoo.MapToRow
-import com.lollypop.runtime.{LollypopVM, Scope}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory

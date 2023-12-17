@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.conditions
 
-import com.lollypop.language.models.Expression.implicits.{LifestyleExpressions, LifestyleExpressionsAny}
+import com.lollypop.language.{LifestyleExpressions, LifestyleExpressionsAny}
 import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Dictionary}
 import com.lollypop.runtime.{LollypopCompiler, Scope}
 import org.scalatest.funspec.AnyFunSpec

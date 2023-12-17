@@ -2,8 +2,7 @@ package com.lollypop.runtime.conversions
 
 import com.lollypop.LollypopException
 import com.lollypop.runtime.RuntimeFiles.RecursiveFileList
-import com.lollypop.runtime.conversions.TransferTools.RichReader
-import com.lollypop.util.ResourceHelper.AutoClose
+import com.lollypop.runtime._
 import org.scalatest.funspec.AnyFunSpec
 
 import java.io.{File, FileInputStream, FileReader}

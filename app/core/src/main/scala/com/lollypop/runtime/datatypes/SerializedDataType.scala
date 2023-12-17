@@ -1,7 +1,6 @@
 package com.lollypop.runtime.datatypes
 
-import com.lollypop.runtime.INT_BYTES
-import com.lollypop.util.ByteBufferHelper.DataTypeBuffer
+import com.lollypop.runtime.{INT_BYTES, _}
 import com.lollypop.util.CodecHelper.{deserialize, serialize}
 
 import java.nio.ByteBuffer
