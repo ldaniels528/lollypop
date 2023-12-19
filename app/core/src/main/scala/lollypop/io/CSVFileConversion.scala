@@ -7,7 +7,7 @@ import com.lollypop.runtime.devices.TableColumn
 
 import java.io.File
 
-object CSVConversion extends DataFileConversion {
+object CSVFileConversion extends DataFileConversion {
   private val extensions = Seq(".csv", ".psv", ".tsv")
 
   def apply(columns: Seq[TableColumn], config: ExternalTableConfig, file: File): DataFileConverter = {
