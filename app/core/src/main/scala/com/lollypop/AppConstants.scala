@@ -55,7 +55,9 @@ trait AppConstants {
   val ROW_ID_BYTES = 8
   val SHORT_BYTES = 2
 
-  // ISO8601 date constants
+  // ISO8601 date, UUID and other constants
+  val DECIMAL_NUMBER_REGEX = "^[+-]?(\\d*\\.?\\d+|\\d+\\.?\\d*)$"
+  val INTEGER_NUMBER_REGEX = "^[+-]?(\\d+)$"
   val ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
   val ISO_8601_REGEX = """^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$"""
   val JSON_DATE_FORMAT: String = ISO_8601_DATE_FORMAT
