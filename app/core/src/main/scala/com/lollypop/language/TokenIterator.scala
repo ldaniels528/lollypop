@@ -18,7 +18,7 @@ class TokenIterator(input: String) extends Iterator[Token] {
     // uni-directional symbols
     "===>", "<===", "--->", "<---",
     "~>>", "<<~", "==>", "<==", "-->", "<--", "=>>",
-    "~>", "<~", "->", "<-", "=>", "(%", "%)", "(&", "&)",
+    "~>", "<~", "->", "<-", "=>", "(%", "%)", "(&", "&)", "(?", "?)",
     // assignment & conditional operators and symbols
     "&&&=", "|||=", "///=", ":::=", ":::", ">>>=", "<<<=", "---=", "@@@=", "%%%=", "???=", "+++=", "***=", "^^^=",
     "&&=", "||=", "//=", "::=", "::", ">>=", "<<=", "--=", "@@=", "%%=", "??=", "++=", "**=", "^^=",
@@ -127,7 +127,8 @@ class TokenIterator(input: String) extends Iterator[Token] {
   }
 
   private def parseProcessInvocation(): Option[ProcessInvocationToken] = {
-    parseSequence(enter = "(%", exit = "%)", f = ProcessInvocationToken("%", _, _, _)) ??
+    parseSequence(enter = "(?", exit = "?)", f = ProcessInvocationToken("?", _, _, _)) ??
+      parseSequence(enter = "(%", exit = "%)", f = ProcessInvocationToken("%", _, _, _)) ??
       parseSequence(enter = "(&", exit = "&)", f = ProcessInvocationToken("&", _, _, _))
   }
 

@@ -308,7 +308,7 @@ object LollypopUniverse {
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,
     Namespace, NEG, NEQ, New, NodePs, Not, NotImplemented, NS, Null,
     ObjectOf, Once, OR, OrderBy,
-    Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall,
+    Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall, ProcessExec,
     Require, Reset, Return, RowsOfValues,
     ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf,
     Synchronized, Switch,

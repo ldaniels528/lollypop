@@ -579,6 +579,32 @@ package object runtime extends AppConstants {
   }
 
   /**
+   * Inline Variable Replacement
+   * @param template the string containing the variables to replace (e.g. "iostat $n $m")
+   */
+  final implicit class InlineVariableReplacement(val template: String) extends AnyVal {
+
+    def replaceVariables()(implicit scope: Scope): String = {
+      @tailrec
+      def recurse(sb: StringBuilder, previous: Int): String = {
+        val isOk = (c: Char) => c.isLetterOrDigit || c == '_'
+        sb.indexOf("$", previous) match {
+          case -1 => sb.toString()
+          case start =>
+            var end = start + 1
+            while (end < sb.length() && isOk(sb.charAt(end))) end += 1
+            val name = sb.substring(start + 1, end)
+            val value = scope.resolve(name).map(v => sb.replace(start, end, String.valueOf(v))) || sb
+            recurse(value, end)
+        }
+      }
+
+      recurse(new StringBuilder(template), previous = 0)
+    }
+
+  }
+
+  /**
    * Rich Expression
    * @param instruction the host [[Instruction instruction]]
    */
