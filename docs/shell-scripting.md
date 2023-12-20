@@ -31,7 +31,7 @@ Could you write it without consulting a search engine or manual pages? Off the c
 ```bash
 ls -lS ./app/examples/ | grep -v ^total | head -n 5
 ```
-produced:
+##### produced the following:
 ```text
 -rw-r--r--@ 1 ldaniels  staff  4990190 Nov 11 23:50 stocks-100k.csv
 -rw-r--r--@ 1 ldaniels  staff   336324 Nov 11 23:50 stocks.csv
@@ -45,7 +45,7 @@ And here's the equivalent in Lollypop:
 ```sql
 ls app/examples where not isHidden order by length desc limit 5
 ```
-produced:
+##### produced the following:
 ```sql
 |-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name            | canonicalPath                                                | lastModified             | length  | isDirectory | isFile | isHidden |
@@ -63,6 +63,7 @@ produced:
 ```sql
 find './app/examples/' where not isHidden order by length desc limit 5
 ```
+##### produced the following:
 ```sql
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name            | canonicalPath                                                                                             | lastModified             | length  | isDirectory | isFile | isHidden |
@@ -70,4 +71,70 @@ find './app/examples/' where not isHidden order by length desc limit 5
 | stocks-100k.csv | /Users/ldaniels/GitHub/lollypop/app/examples/stocks-100k.csv                                              | 2023-11-12T07:50:27.490Z | 4990190 | false       | true   | false    |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
+
+#### Let's try something practical
+
+* What if you want a list of the top 5 CPU hungry processes?
+
+```sql
+def ps() := TableArray((? ps aux ?).map(x =>
+  x.trim()
+   .replaceAll("  ", " ")
+   .split("[ ]")
+   .filter(x => not x.isEmpty())
+))
+select PID, `%CPU`, `%MEM`, STARTED, TIME, VSZ, RSS
+from (ps())
+order by `%CPU` desc
+limit 5
+```
+##### produced the following:
+```sql
+|--------------------------------------------------------------------|
+| PID   | %CPU | %MEM | STARTED | TIME       | VSZ        | RSS      |
+|--------------------------------------------------------------------|
+|  1542 | 83.6 |  0.2 | 13Dec23 | 1657:48.74 |   36408744 |   231972 |
+| 25369 | 19.1 | 10.7 | Thu09AM | 728:56.39  |  438577760 | 10803088 |
+| 21272 | 12.4 |  3.2 | 9:39AM  | 0:25.86    |  437902704 |  3271536 |
+| 28637 |  8.2 |  0.6 | Wed04PM | 414:47.08  | 1594687744 |   612032 |
+|   360 |  8.1 |  0.8 | 13Dec23 | 669:52.88  |  416009088 |   790640 |
+|--------------------------------------------------------------------|
+```
+
+#### Let's try something cool
+
+The system command `iostat 1 5` yielded the following text output:
+```text
+              disk0               disk4               disk5       cpu    load average
+    KB/t  tps  MB/s     KB/t  tps  MB/s     KB/t  tps  MB/s  us sy id   1m   5m   15m
+   37.13  105  3.80   127.34   11  1.31  1017.11    6  5.97  10  4 86  2.79 2.33 2.18
+   22.67    3  0.07     0.00    0  0.00     0.00    0  0.00   5  3 92  2.79 2.33 2.18
+    0.00    0  0.00     0.00    0  0.00     0.00    0  0.00   6  3 91  2.65 2.31 2.17
+    0.00    0  0.00     0.00    0  0.00     0.00    0  0.00   7  3 90  2.65 2.31 2.17
+    0.00    0  0.00     0.00    0  0.00     0.00    0  0.00   7  3 90  2.65 2.31 2.17
+```
+
+We could use system evaluation tags `(?` and `?)` to easily capture then parse them into a dataframe:
+```sql
+def iostat(n, m) := TableArray((? iostat $n $m ?).drop(1).map(x =>
+  x.trim()
+   .replaceAll("  ", " ")
+   .split("[ ]")
+   .filter(x => not x.isEmpty())
+))
+iostat(1, 5)
+```
+##### produced the following:
+```sql
+|--------------------------------------------------------------------------------------------------|
+| KB/t  | tps | MB/s | KB/t  | tps | MB/s | KB/t  | tps | MB/s | us | sy | id | 1m   | 5m   | 15m  |
+|--------------------------------------------------------------------------------------------------|
+| 37.19 | 105 | 3.81 | 37.19 | 105 | 3.81 | 37.19 | 105 | 3.81 | 10 |  4 | 86 | 2.62 | 2.44 | 2.43 |
+|  5.62 | 338 | 1.85 |  5.62 | 338 | 1.85 |  5.62 | 338 | 1.85 | 18 |  5 | 78 | 2.62 | 2.44 | 2.43 |
+| 22.67 |   3 | 0.07 | 22.67 |   3 | 0.07 | 22.67 |   3 | 0.07 | 11 |  4 | 85 | 2.62 | 2.44 | 2.43 |
+|   0.0 |   0 |  0.0 |   0.0 |   0 |  0.0 |   0.0 |   0 |  0.0 | 11 |  4 | 85 | 2.62 | 2.44 | 2.43 |
+|   0.0 |   0 |  0.0 |   0.0 |   0 |  0.0 |   0.0 |   0 |  0.0 | 10 |  4 | 85 | 2.62 | 2.44 | 2.43 |
+|--------------------------------------------------------------------------------------------------|
+```
+Now we have a dataframe (table) containing the metrics outputted by `iostat`
 

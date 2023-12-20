@@ -11,14 +11,14 @@ import scala.sys.process.{Process, ProcessLogger}
 
 /**
  * Represents a fully orchestrated process
- * @param code the code to execute
+ * @param sourceCode the native code/instructions (e.g. 'iostat 1 5')
  * @example {{{
  *   (& iostat 1 5 &)
  * }}}
  */
-case class ProcessPuppet(code: String) extends RuntimeExpression {
+case class ProcessPuppet(sourceCode: String) extends RuntimeExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Process) = {
-    (scope, IOCost.empty, Process(code).run(new ProcessLogger {
+    (scope, IOCost.empty, Process(sourceCode.replaceVariables()).run(new ProcessLogger {
       override def out(s: => String): Unit = scope.stdOut.println(s)
 
       override def err(s: => String): Unit = scope.stdErr.println(s)
@@ -27,7 +27,7 @@ case class ProcessPuppet(code: String) extends RuntimeExpression {
     }))
   }
 
-  override def toSQL: String = s"(&$code&)"
+  override def toSQL: String = s"(&$sourceCode&)"
 }
 
 object ProcessPuppet extends ExpressionParser {

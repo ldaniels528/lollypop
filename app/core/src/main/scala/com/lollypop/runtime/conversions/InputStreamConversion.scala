@@ -3,6 +3,7 @@ package com.lollypop.runtime.conversions
 import com.lollypop.runtime.LollypopVM.rootScope
 import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.queryables.TableRendering
+import com.lollypop.util.StringRenderHelper.StringRenderer
 
 import java.io._
 import java.net.URL
@@ -30,7 +31,7 @@ trait InputStreamConversion extends Conversion {
       new PrintStream(out).use(t.printStackTrace)
       convert(out.toByteArray)
     case u: URL => u.openStream()
-    case z => convert(String.valueOf(z))
+    case z => convert(z.render)
   }
 
 }

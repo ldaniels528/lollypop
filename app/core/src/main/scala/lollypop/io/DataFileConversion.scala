@@ -52,7 +52,7 @@ object DataFileConversion {
   }
 
   // pre-register CSV and JSON
-  registerConversion(CSVConversion)
+  registerConversion(CSVFileConversion)
   registerConversion(JSONConversion)
 
 }

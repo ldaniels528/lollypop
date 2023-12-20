@@ -4,14 +4,13 @@ import com.lollypop.language.Token.TableToken
 import com.lollypop.language.models.{Expression, FieldRef, Literal}
 import com.lollypop.language.{ExpressionParser, HelpDoc, LifestyleExpressionsAny, QueryableParser, SQLCompiler, TokenStream}
 import com.lollypop.runtime._
+import com.lollypop.runtime.conversions.CSVConversion.convertToExpression
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{RecordStructure, RowCollection, TableColumn}
 import com.lollypop.runtime.instructions.expressions._
-import com.lollypop.util.DateHelper
 import com.lollypop.util.Tabulator.tabulate
 import lollypop.io.IOCost
-import lollypop.lang.Null
 
 import scala.util.{Success, Try}
 
@@ -77,23 +76,15 @@ object TableLiteral extends QueryableParser with ExpressionParser {
 
     // translates a cell (text) into an expression
     def translate(sql: String): (Expression, DataType) = {
-      val model = sql match {
-        case s if s.isEmpty => Null()
-        case "false" => false.v
-        case "true" => true.v
-        case s if s.matches("^[+-]?(\\d+)$") => s.toLong.v
-        case s if s.matches("^[+-]?(\\d*\\.?\\d+|\\d+\\.?\\d*)$") => s.toDouble.v
-        case s if s.matches(UUID_REGEX) => Literal(UUIDType.convert(s))
-        case s if s.matches(ISO_8601_REGEX) => Literal(DateHelper(s))
-        case s =>
-          Try(compiler.compile(s)) match {
-            case Success(expr: Expression) =>
-              cleanup(expr) match {
-                case _: Unsupported => s.v
-                case z => z
-              }
-            case _ => s.v
-          }
+      val model = convertToExpression(sql) getOrElse {
+        Try(compiler.compile(sql)) match {
+          case Success(expr: Expression) =>
+            cleanup(expr) match {
+              case _: Unsupported => sql.v
+              case z => z
+            }
+          case _ => sql.v
+        }
       }
       model -> Inferences.inferType(model)
     }

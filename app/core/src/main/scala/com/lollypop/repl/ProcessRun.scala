@@ -15,7 +15,7 @@ import scala.sys.process.Process
 
 /**
  * Represents a process invocation
- * @param code the scripting code
+ * @param sourceCode the native code/instructions (e.g. 'iostat 1 5')
  * @example {{{
  *   (% iostat 1 5 %)
  * }}}
@@ -23,10 +23,12 @@ import scala.sys.process.Process
  *   (% ps aux %) limit 5
  * }}}
  */
-case class ProcessRun(code: String) extends RuntimeQueryable {
-  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = invoke(code)
+case class ProcessRun(sourceCode: String) extends RuntimeQueryable {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
+    invoke(sourceCode.replaceVariables())
+  }
 
-  override def toSQL: String = s"(%$code%)"
+  override def toSQL: String = s"(%$sourceCode%)"
 }
 
 object ProcessRun extends QueryableParser {
@@ -51,7 +53,6 @@ object ProcessRun extends QueryableParser {
     val lines = Process(code).lazyLines.flatMap(_.split("[\n]")).zipWithIndex
     implicit val rc: RowCollection = createQueryResultTable(columns)
     val cost = lines.foldLeft(IOCost.empty) { case (agg, (line, n)) =>
-      scope.getUniverse.info(f"[$n%03d] $line")
       agg ++ rc.insert(Map(columnNames zip Seq(n + 1, line): _*).toRow)
     }
     (scope, cost, rc)
