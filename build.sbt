@@ -86,7 +86,6 @@ lazy val core = (project in file("./app/core")).
     assembly / test := {},
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-      "com.typesafe.akka" %% "akka-discovery" % akkaVersion,
       "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
@@ -95,12 +94,9 @@ lazy val core = (project in file("./app/core")).
       "commons-codec" % "commons-codec" % "1.15",
       "dev.jeka" % "jeka-core" % jekaVersion,
       "org.apache.commons" % "commons-math3" % "3.6.1",
-      "org.apache.httpcomponents.client5" % "httpclient5" % "5.2.1",
-      "org.apache.httpcomponents.client5" % "httpclient5-fluent" % "5.2.1",
       "org.commonmark" % "commonmark" % "0.21.0",
       "org.jfree" % "jfreechart" % "1.5.4",
       "org.jfree" % "jfreechart-fx" % "1.0.1",
-      "org.jfree" % "jcommon" % "1.0.24",
       "org.ow2.asm" % "asm" % "9.4",
       "org.scala-lang" % "scala-reflect" % scalaAppVersion,
       "org.xerial.snappy" % "snappy-java" % snappyJavaVersion
