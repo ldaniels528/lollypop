@@ -4,21 +4,13 @@ import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLAR
 import com.lollypop.language.models.{Condition, Expression}
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.conditions.Isnt.keyword
-import com.lollypop.runtime.{Scope, _}
-import lollypop.io.IOCost
 
 /**
  * Returns true if the `a` is not exactly `b`
  * @param a the left-side [[Expression expression]]
  * @param b the right-side [[Expression expression]]
  */
-case class Isnt(a: Expression, b: Expression) extends RuntimeInequality {
-
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (sa, ca, va) = a.execute(scope)
-    val (sb, cb, vb) = b.execute(sa)
-    (sb, ca ++ cb, va != vb)
-  }
+case class Isnt(a: Expression, b: Expression) extends AbstractNotEquals {
 
   override def operator: String = keyword
 
@@ -32,7 +24,7 @@ object Isnt extends ExpressionToConditionPostParser {
   }
 
   override def help: List[HelpDoc] = List(HelpDoc(
-    name = "isnt",
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "`value` isnt `expression`",
@@ -42,7 +34,7 @@ object Isnt extends ExpressionToConditionPostParser {
          |x isnt 200
          |""".stripMargin
   ), HelpDoc(
-    name = "isnt",
+    name = keyword,
     category = CATEGORY_FILTER_MATCH_OPS,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = "`value` isnt `expression`",

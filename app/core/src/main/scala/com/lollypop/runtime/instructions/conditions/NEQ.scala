@@ -10,13 +10,7 @@ import lollypop.io.IOCost
  * @param a the left-side [[Expression expression]]
  * @param b the right-side [[Expression expression]]
  */
-case class NEQ(a: Expression, b: Expression) extends RuntimeInequality {
-
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    val (sa, ca, va) = a.execute(scope)
-    val (sb, cb, vb) = b.execute(sa)
-    (sb, ca ++ cb, va != vb)
-  }
+case class NEQ(a: Expression, b: Expression) extends AbstractNotEquals {
 
   override def operator: String = "!="
 

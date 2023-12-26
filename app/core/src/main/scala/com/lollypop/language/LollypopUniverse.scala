@@ -302,7 +302,7 @@ object LollypopUniverse {
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
     HashTag, Having, Help,
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
-    Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, IsNotNull, Isnt, IsNull,
+    Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, Isnt,
     Join,
     LessLess, LessLessLess, Let, Limit, Literal, LollypopComponents, LT, LTE,
     Macro, Matches, Max, MembersOf, Min, Minus, MinusMinus, Monadic,

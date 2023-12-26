@@ -10,8 +10,8 @@ import com.lollypop.runtime.instructions.operators._
 import com.lollypop.runtime.instructions.queryables.AssumeQueryable
 import com.lollypop.runtime.{DataObject, DatabaseObjectRef}
 import com.lollypop.util.StringRenderHelper.StringRenderer
+import lollypop.lang.Null
 
-import java.io.File
 import java.net.URL
 import scala.collection.mutable
 import scala.language.{implicitConversions, postfixOps, reflectiveCalls}
@@ -44,8 +44,6 @@ package object language {
   @inline def dieExpectedJSONObject(v: Any): Nothing = die(s"A JSON object was expected '$v' (${v.getClass.getName})")
 
   @inline def diePointerExpected(value: Any): Nothing = die(s"Expected pointer but got '$value' (${Option(value).map(_.getClass.getSimpleName).orNull})")
-
-  @inline def dieFileNotDirectory(f: File): Nothing = die(s"Path '${f.getCanonicalPath}' is not a directory")
 
   @inline def dieFileNotFound(ref: DatabaseObjectRef): Nothing = die(s"No file or directory could be determine for table '${ref.toSQL}'")
 
@@ -142,9 +140,9 @@ package object language {
 
     @inline def in(values: Expression*): Condition = IN(expr0, ArrayLiteral(values: _*))
 
-    @inline def isNotNull: Condition = IsNotNull(expr0)
+    @inline def isNotNull: Condition = expr0.isnt(Null())
 
-    @inline def isNull: Condition = IsNull(expr0)
+    @inline def isNull: Condition = expr0.is(Null())
 
   }
 

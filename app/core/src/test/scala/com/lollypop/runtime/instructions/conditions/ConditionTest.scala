@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.conditions
 import com.lollypop.language._
 import com.lollypop.language.implicits._
 import com.lollypop.runtime.Scope
+import lollypop.lang.Null
 import org.scalatest.funspec.AnyFunSpec
 
 /**
@@ -43,15 +44,15 @@ class ConditionTest extends AnyFunSpec {
     }
   }
 
-  describe(classOf[IsNotNull].getSimpleName) {
+  describe(classOf[Isnt].getSimpleName) {
     it("""should negate: IsNotNull("hello")""") {
-      assert(IsNotNull("hello").negate == IsNull("hello"))
+      assert(Isnt("hello", Null()).negate == Is("hello", Null()))
     }
   }
 
-  describe(classOf[IsNull].getSimpleName) {
+  describe(classOf[Is].getSimpleName) {
     it("""should negate: IsNull("hello")""") {
-      assert(IsNull("hello").negate == IsNotNull("hello"))
+      assert(Is("hello", Null()).negate == Isnt("hello", Null()))
     }
   }
 

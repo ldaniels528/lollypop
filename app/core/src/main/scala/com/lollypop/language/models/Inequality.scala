@@ -1,7 +1,6 @@
 package com.lollypop.language.models
 
 import com.lollypop.runtime.instructions.conditions._
-import lollypop.lang.Null
 
 /**
  * Represents an Inequality expression
@@ -30,8 +29,6 @@ object Inequality {
         case Between(expression, from, to) => List(GTE(expression, from), LTE(expression, to))
         case Betwixt(expression, from, to) => List(GTE(expression, from), LT(expression, to))
         case inequality: Inequality => inequality :: Nil
-        case IsNotNull(expression) => NEQ(expression, Null()) :: Nil
-        case IsNull(expression) => EQ(expression, Null()) :: Nil
         case Not(condition) => recurse(condition).map(_.invert)
         case OR(a, b) => recurse(a) ::: recurse(b)
         case _ => Nil
