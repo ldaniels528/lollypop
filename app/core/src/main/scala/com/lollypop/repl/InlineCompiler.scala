@@ -18,20 +18,22 @@ trait InlineCompiler {
    * @param showPrompt the prompt display function
    * @return the updated [[Scope scope]]
    */
-  @tailrec
-  final def compileOnly(scope: Scope, console: () => String, showPrompt: () => Unit): Scope = {
-    showPrompt()
-    readFromConsole(console) match {
-      // ignore blank lines
-      case "" => compileOnly(scope, console, showPrompt)
-      // quit the shell?
-      case "exit" => scope
-      // execute a complete statement?
-      case sql =>
-        val model = scope.getCompiler.compile(sql)
-        Console.println(model.asModelString)
-        compileOnly(scope, console, showPrompt)
+  def compileOnly(scope: Scope, console: () => String, showPrompt: () => Unit): Scope = {
+    @tailrec
+    def recurse(blankLines: Int): Scope = {
+      showPrompt()
+      readFromConsole(console) match {
+        // quit the routine after 2 blank lines
+        case "" => if (blankLines == 1) scope else recurse(blankLines = blankLines + 1)
+        // execute a complete statement?
+        case sql =>
+          val model = scope.getCompiler.compile(sql)
+          Console.println(model.asModelString)
+          recurse(blankLines = 0)
+      }
     }
+
+    recurse(blankLines = 0)
   }
 
 }

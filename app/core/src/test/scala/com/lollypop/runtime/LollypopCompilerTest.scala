@@ -6,6 +6,7 @@ import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.instructions.conditions._
 import com.lollypop.runtime.instructions.expressions._
 import com.lollypop.runtime.instructions.expressions.aggregation.{Max, Min, Sum, Unique}
+import lollypop.lang.Null
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec
 import org.slf4j.LoggerFactory
@@ -174,11 +175,11 @@ class LollypopCompilerTest extends AnyFunSpec {
     }
 
     it("""should parse "Sector is null" (is null)""") {
-      verify("Sector is null", IsNull("Sector".f))
+      verify("Sector is null", Is("Sector".f, Null()))
     }
 
-    it("""should parse "Sector is not null" (is not null)""") {
-      verify("Sector is not null", IsNotNull("Sector".f))
+    it("""should parse "Sector isnt null" (isnt null)""") {
+      verify("Sector isnt null", Isnt("Sector".f, Null()))
     }
 
     it("""should parse expressions containing 'and'""") {

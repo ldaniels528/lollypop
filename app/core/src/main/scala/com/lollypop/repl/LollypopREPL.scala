@@ -80,7 +80,7 @@ trait LollypopREPL extends InlineCompiler {
       // quit the shell?
       case "exit" => scope
       // switch to compile-only mode?
-      case ".:CompileOnly:." =>
+      case "...?" =>
         val newScope = Try(compileOnly(scope = scope, console = console, showPrompt = showCompilerPrompt)) match {
           case Failure(e) =>
             Console.println(s"${RED}Error:$RESET ${e.getMessage}")

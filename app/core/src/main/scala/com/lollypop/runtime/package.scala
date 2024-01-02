@@ -255,8 +255,6 @@ package object runtime extends AppConstants {
         case Matches(a, b) => Matches(f(a), f(b))
         case LT(a, b) => LT(f(a), f(b))
         case LTE(a, b) => LTE(f(a), f(b))
-        case IsNotNull(a) => IsNotNull(f(a))
-        case IsNull(a) => IsNull(f(a))
         case NEQ(a, b) => NEQ(f(a), f(b))
         case Not(c) => Not(c.transform(f))
         case OR(a, b) => OR(a.transform(f), b.transform(f))
@@ -422,8 +420,8 @@ package object runtime extends AppConstants {
       cond0 match {
         case AND(a, b) => OR(a.negate, b.negate)
         case inequality: Inequality => inequality.invert
-        case IsNotNull(a) => IsNull(a)
-        case IsNull(a) => IsNotNull(a)
+        case Isnt(a, b) => Is(a, b)
+        case Is(a, b) => Isnt(a, b)
         case Not(condition) => condition
         case OR(a, b) => AND(a.negate, b.negate)
         case condition => Not(condition)

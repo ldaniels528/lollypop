@@ -57,6 +57,10 @@ object StringRenderHelper {
 
   }
 
+  final implicit class ProductStringRenderer[A <: Product](val product: A) extends AnyVal {
+    @inline def renderProduct: String = toProductString(product)
+  }
+
   /**
    * String Renderer
    * @param item the [[Any value]] to render as a string

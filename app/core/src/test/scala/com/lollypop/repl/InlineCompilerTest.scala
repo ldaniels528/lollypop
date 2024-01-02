@@ -11,9 +11,10 @@ class InlineCompilerTest extends REPLFunSpec {
           "ls app/examples where not isHidden order by length desc limit 5",
           "cd ~/Downloads/images",
           """"Hello World 123" matches "H(.*) W(.*) \d+"""",
+          "",
           ""
         ).iterator
-        () => if (it.hasNext) it.next() else "exit"
+        () => if (it.hasNext) it.next() else ""
       }, showPrompt = () => print("-> "))
       println()
       scope.toRowCollection.tabulate().foreach(println)
