@@ -27,7 +27,7 @@ import lollypop.lang.OS.generateFileList
 case class Ls(pathExpr: Option[Expression]) extends RuntimeQueryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    (pathExpr || getCWD.v).pullFile ~>> (generateFileList(_, _.streamFiles))
+    (pathExpr || getCWD.v).pullFile map (generateFileList(_, _.streamFiles))
   }
 
   override def toSQL: String = (keyword :: pathExpr.map(_.toSQL).toList).mkString(" ")

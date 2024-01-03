@@ -19,7 +19,7 @@ import lollypop.io.IOCost
 case class TypeOf(expression: Expression) extends ScalarFunctionCall with RuntimeExpression with StringExpression {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, String) = {
-    expression.execute(scope) ~>> (v => Option(v).map(_.getClass).map(StringRenderHelper.toClassString).orNull)
+    expression.execute(scope) map (v => Option(v).map(_.getClass).map(StringRenderHelper.toClassString).orNull)
   }
 
 }

@@ -901,13 +901,13 @@ package object runtime extends AppConstants {
   final implicit class ScopeIOCostAnyConversion[T](val t: (Scope, IOCost, T)) extends AnyVal {
 
     @inline
-    def ~>>[A](f: T => A): (Scope, IOCost, A) = (t._1, t._2, f(t._3))
+    def map[A](f: T => A): (Scope, IOCost, A) = (t._1, t._2, f(t._3))
 
     @inline
-    def ~>>[A](c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (t._1, t._2 ++ c(t._2), f(t._3))
+    def map[A](c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (t._1, t._2 ++ c(t._2), f(t._3))
 
     @inline
-    def ~>>[A](s: Scope => Scope, c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (s(t._1), c(t._2), f(t._3))
+    def map[A](s: Scope => Scope, c: IOCost => IOCost, f: T => A): (Scope, IOCost, A) = (s(t._1), c(t._2), f(t._3))
 
   }
 
@@ -1033,7 +1033,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pull[A](f: Any => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      instruction.execute(scope) ~>> f
+      instruction.execute(scope) map f
     }
 
     /**
@@ -1043,7 +1043,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullArray(implicit scope: Scope): (Scope, IOCost, Array[_]) = {
-      instruction.execute(scope) ~>> ArrayType.convert
+      instruction.execute(scope) map ArrayType.convert
     }
 
     /**
@@ -1054,7 +1054,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullArray[A](f: Array[_] => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullArray(scope) ~>> f
+      pullArray(scope) map f
     }
 
     /**
@@ -1064,7 +1064,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullBoolean(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-      instruction.execute(scope) ~>> BooleanType.convert
+      instruction.execute(scope) map BooleanType.convert
     }
 
     /**
@@ -1085,7 +1085,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullByteArray[A](f: Array[Byte] => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullByteArray(scope) ~>> f
+      pullByteArray(scope) map f
     }
 
     /**
@@ -1095,7 +1095,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullDate(implicit scope: Scope): (Scope, IOCost, java.util.Date) = {
-      instruction.execute(scope) ~>> DateTimeType.convert
+      instruction.execute(scope) map DateTimeType.convert
     }
 
     /**
@@ -1107,7 +1107,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullDate[A](f: java.util.Date => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullDate(scope) ~>> f
+      pullDate(scope) map f
     }
 
     /**
@@ -1117,7 +1117,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullDictionary(implicit scope: Scope): (Scope, IOCost, QMap[String, Any]) = {
-      instruction.execute(scope) ~>> DictionaryConversion.convert
+      instruction.execute(scope) map DictionaryConversion.convert
     }
 
     /**
@@ -1127,7 +1127,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullDouble(implicit scope: Scope): (Scope, IOCost, Double) = {
-      instruction.execute(scope) ~>> Float64Type.convert
+      instruction.execute(scope) map Float64Type.convert
     }
 
     /**
@@ -1137,7 +1137,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullDuration(implicit scope: Scope): (Scope, IOCost, FiniteDuration) = {
-      instruction.execute(scope) ~>> DurationType.convert
+      instruction.execute(scope) map DurationType.convert
     }
 
     /**
@@ -1150,24 +1150,24 @@ package object runtime extends AppConstants {
         // e.g. cd games/emulators/atari/jaguar
         case op@BinaryOperation(a, b) =>
           val (sa, ca, va) = decode(sc, a)
-          decode(sa, b) ~>> (ca ++ _, va ::: op.operator :: _)
+          decode(sa, b) map (ca ++ _, va ::: op.operator :: _)
         // e.g. cd Downloads
         case IdentifierRef(name) if !scope.isDefined(name) => (scope, IOCost.empty, List(name))
         // e.g. ls ^/Documents; cd _; cd ..; www https://0.0.0.0/api?symbol=ABC
         case r: REPLSymbol => (scope, IOCost.empty, List(r.symbol))
         // anything else ...
-        case z => z.pullString ~>> (x => List(x))
+        case z => z.pullString map (x => List(x))
       }
 
       // expand special characters ('^', '~', '_', '.', '..')
-      decode(scope, instruction) ~>> (_.mkString) ~>> {
+      decode(scope, instruction) map (_.mkString) map {
         case "_" => getOldCWD
         case "." => getCWD
         case ".." => new File(getCWD).getParent
         case s if s.startsWith("^") => s.drop(1)
         case s if s.startsWith("~") => Properties.userHome + s.drop(1)
         case s => s
-      } ~>> (new File(_))
+      } map (new File(_))
     }
 
     /**
@@ -1179,7 +1179,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullFile[A](f: File => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullFile(scope) ~>> f
+      pullFile(scope) map f
     }
 
     /**
@@ -1189,7 +1189,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullFloat(implicit scope: Scope): (Scope, IOCost, Float) = {
-      instruction.execute(scope) ~>> Float32Type.convert
+      instruction.execute(scope) map Float32Type.convert
     }
 
     /**
@@ -1198,7 +1198,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullInputStream(implicit scope: Scope): (Scope, IOCost, InputStream) = {
-      instruction.execute(scope) ~>> InputStreamConversion.convert
+      instruction.execute(scope) map InputStreamConversion.convert
     }
 
     /**
@@ -1207,7 +1207,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullOutputStream(implicit scope: Scope): (Scope, IOCost, OutputStream) = {
-      instruction.execute(scope) ~>> OutputStreamConversion.convert
+      instruction.execute(scope) map OutputStreamConversion.convert
     }
 
     /**
@@ -1217,7 +1217,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullInt(implicit scope: Scope): (Scope, IOCost, Int) = {
-      instruction.execute(scope) ~>> Int32Type.convert
+      instruction.execute(scope) map Int32Type.convert
     }
 
     /**
@@ -1227,7 +1227,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullNumber(implicit scope: Scope): (Scope, IOCost, Number) = {
-      instruction.execute(scope) ~>> NumericType.convert
+      instruction.execute(scope) map NumericType.convert
     }
 
     /**
@@ -1237,7 +1237,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullNumber[A](f: Number => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullNumber(scope) ~>> f
+      pullNumber(scope) map f
     }
 
     /**
@@ -1247,7 +1247,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullString(implicit scope: Scope): (Scope, IOCost, String) = {
-      instruction.execute(scope) ~>> StringType.convert
+      instruction.execute(scope) map StringType.convert
     }
 
     /**
@@ -1259,7 +1259,7 @@ package object runtime extends AppConstants {
      */
     @inline
     def pullString[A](f: String => A)(implicit scope: Scope): (Scope, IOCost, A) = {
-      pullString(scope) ~>> f
+      pullString(scope) map f
     }
 
   }

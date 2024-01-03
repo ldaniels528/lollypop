@@ -39,9 +39,9 @@ case class WWW(method: Atom, url: Expression, body: Option[Expression] = None, h
   override def execute()(implicit scope: Scope): (Scope, IOCost, HttpResponse) = {
     method.name.toLowerCase() match {
       case "path" =>
-        getAbsoluteURL ~>> (HttpResponse(_, message = null, statusCode = 200, responseID = UUID.randomUUID()))
+        getAbsoluteURL map (HttpResponse(_, message = null, statusCode = 200, responseID = UUID.randomUUID()))
       case "uri" =>
-        getRelativeURL ~>> (HttpResponse(_, message = null, statusCode = 200, responseID = UUID.randomUUID()))
+        getRelativeURL map (HttpResponse(_, message = null, statusCode = 200, responseID = UUID.randomUUID()))
       case _method =>
         val (sa, ca, _url) = url.pullString
         val (sb, cb, _body_?) = body.map(_.pullDictionary(sa)) match {

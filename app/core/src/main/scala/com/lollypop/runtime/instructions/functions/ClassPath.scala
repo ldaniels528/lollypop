@@ -23,7 +23,7 @@ import scala.util.{Failure, Success, Try}
  */
 case class ClassPath(pattern: Expression) extends ScalarFunctionCall with RuntimeExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Array[String]) = {
-    pattern.pullString ~>> searchClassPath
+    pattern.pullString map searchClassPath
   }
 }
 

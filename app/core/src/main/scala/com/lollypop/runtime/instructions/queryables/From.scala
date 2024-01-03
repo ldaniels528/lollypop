@@ -23,8 +23,7 @@ case class From(source: Instruction) extends RuntimeQueryable {
       case x => dieIllegalType(x)
     }
 
-    val (_, cost, result) = source.execute(scope)
-    (scope, cost, recurse(result))
+    source.execute(scope).map(recurse)
   }
 
   override def toSQL: String = Seq("from", source.wrapSQL).mkString(" ")

@@ -19,7 +19,7 @@ import scala.io.Source
  */
 case class WordCount(pathExpr: Expression) extends RuntimeExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Int) = {
-    pathExpr.pullFile ~>> { file =>
+    pathExpr.pullFile map { file =>
       var count = 0
       Source.fromFile(file).use(_.foreach(_ => count += 1))
       count

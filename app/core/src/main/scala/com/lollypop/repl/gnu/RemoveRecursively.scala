@@ -18,7 +18,7 @@ import lollypop.io.IOCost
  */
 case class RemoveRecursively(path: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    path.pullFile ~>> {
+    path.pullFile map {
       case d if !d.isDirectory => d.deleteRecursively()
       case _ => false
     }

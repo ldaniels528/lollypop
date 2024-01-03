@@ -21,7 +21,7 @@ import lollypop.lang.OS.ReaderIterator
  */
 case class Cat(expression: Expression) extends RuntimeQueryable {
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    expression.pullFile ~>> { file =>
+    expression.pullFile map { file =>
       val out = createQueryResultTable(columns = Seq(TableColumn(name = keyword, `type` = StringType)))
       LazyRowCollection(out, new ReaderIterator(file).map(line => Map(keyword -> line).toRow(out)))
     }

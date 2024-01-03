@@ -34,7 +34,7 @@ class MD5SumTest extends REPLFunSpec {
         """|md5(new `java.io.File`("app/core/src/main/scala/com/lollypop/repl/gnu/MD5Sum.scala"))
            |""".stripMargin.executeSQL(createRootScope())
       info(va.mkString(", "))
-      assert(va sameElements Array[Byte](122, 99, 76, 38, -89, 24, -81, -125, 126, 87, -11, 59, 124, 28, 79, 76))
+      assert(va sameElements Array[Byte](-99, -19, -88, 87, 28, 7, -89, -81, -120, -13, 67, -20, 31, -78, 122, 5))
     }
 
   }

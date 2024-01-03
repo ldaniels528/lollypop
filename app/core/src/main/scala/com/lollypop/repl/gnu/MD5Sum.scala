@@ -21,10 +21,10 @@ import java.security.MessageDigest
  */
 case class MD5Sum(expression: Expression) extends RuntimeExpression {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Array[Byte]) = {
-    expression.execute(scope) ~>> {
+    expression.execute(scope) map {
       case f: File => new FileInputStream(f).use(_.readAllBytes())
       case z => VarBinaryType.convert(z)
-    } ~>> { bytes =>
+    } map { bytes =>
       val digest = MessageDigest.getInstance("MD5")
       digest.update(bytes)
       digest.digest()

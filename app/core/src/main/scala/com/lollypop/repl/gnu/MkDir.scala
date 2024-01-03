@@ -17,7 +17,7 @@ import lollypop.io.IOCost
  */
 case class MkDir(pathExpr: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    pathExpr.pullFile ~>> (_.mkdirs())
+    pathExpr.pullFile map (_.mkdirs())
   }
 
   override def toSQL: String = Seq(keyword, pathExpr.toSQL).mkString(" ")
