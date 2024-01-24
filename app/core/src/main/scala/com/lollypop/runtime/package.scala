@@ -1221,6 +1221,16 @@ package object runtime extends AppConstants {
     }
 
     /**
+     * Evaluates an expression converting the result to a [[Long]] value.
+     * @param scope the [[Scope scope]]
+     * @return a tuple containing the updated [[Scope]], [[IOCost]] and a [[Long]].
+     */
+    @inline
+    def pullLong(implicit scope: Scope): (Scope, IOCost, Long) = {
+      instruction.execute(scope) map Int64Type.convert
+    }
+
+    /**
      * Evaluates an expression converting the result to a [[Number]] value.
      * @param scope the [[Scope scope]]
      * @return a tuple containing the updated [[Scope]], [[IOCost]] and a [[Number]].
