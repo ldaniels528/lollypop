@@ -144,6 +144,7 @@ lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
 /**
  * @example sbt "project examples" test
  */
+val kafkaVersion = "3.6.1"
 lazy val examples = (project in file("./app/examples")).
   dependsOn(jdbc_driver).
   settings(testDependencies *).
@@ -155,7 +156,12 @@ lazy val examples = (project in file("./app/examples")).
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
     Compile / doc / scalacOptions += "-no-link-warnings",
-    autoCompilerPlugins := true)
+    autoCompilerPlugins := true,
+    libraryDependencies ++= Seq(
+      "org.apache.kafka" %% "kafka" % kafkaVersion,
+      "org.apache.kafka" % "kafka-clients" % kafkaVersion,
+      "org.jsoup" % "jsoup" % "1.15.4"
+    ))
 
 // loads the Scalajs-io root project at sbt startup
 onLoad in Global := (Command.process("project root", _: State)) compose (onLoad in Global).value
