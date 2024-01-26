@@ -17,7 +17,7 @@ import lollypop.io.IOCost
  */
 case class RmDir(pathExpr: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    pathExpr.pullFile ~>> {
+    pathExpr.pullFile map {
       case d if d.isDirectory => d.delete()
       case _ => false
     }

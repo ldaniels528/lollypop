@@ -23,7 +23,7 @@ import lollypop.lang.OS.generateFileList
 case class Find(pathExpr: Expression) extends RuntimeQueryable {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
-    pathExpr.pullFile ~>> (generateFileList(_, _.streamFilesRecursively))
+    pathExpr.pullFile map (generateFileList(_, _.streamFilesRecursively))
   }
 
   override def toSQL: String = Seq(keyword, pathExpr.toSQL).mkString(" ")

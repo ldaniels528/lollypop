@@ -2,14 +2,12 @@ package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_INFRA, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Atom, Literal, Queryable, TableModel}
+import com.lollypop.language.models.{Atom, Queryable, TableModel}
 import com.lollypop.runtime.DatabaseManagementSystem.readPhysicalTable
 import com.lollypop.runtime.datatypes.TableType.TableTypeRefExtensions
 import com.lollypop.runtime.devices.RowCollectionZoo.createTempNS
-import com.lollypop.runtime.{Scope, Variable}
+import com.lollypop.runtime.{DatabaseObjectRef, Scope, Variable}
 import lollypop.io.IOCost
-
-import scala.collection.mutable
 
 /**
  * declare table statement
@@ -26,7 +24,9 @@ import scala.collection.mutable
  * }}}
  * @author lawrence.daniels@gmail.com
  */
-case class DeclareTable(ref: Atom, tableModel: TableModel, ifNotExists: Boolean) extends RuntimeModifiable {
+case class DeclareTable(ref: Atom, tableModel: TableModel, ifNotExists: Boolean)
+  extends TableCreation {
+  protected def actionVerb: String = "declare"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val _type = tableModel.toTableType
@@ -35,18 +35,11 @@ case class DeclareTable(ref: Atom, tableModel: TableModel, ifNotExists: Boolean)
     val cost = IOCost(created = 1)
     (scope.withVariable(Variable(name = ref.name, _type, initialValue = out)), cost, cost)
   }
-
-  override def toSQL: String = {
-    val sb = new mutable.StringBuilder("declare table")
-    if (ifNotExists) sb.append(" if not exists")
-    sb.append(s" ${ref.toSQL} (${tableModel.columns.map(_.toSQL).mkString(",")})")
-    sb.toString()
-  }
-
+  
 }
 
-object DeclareTable extends ModifiableParser with IfNotExists {
-  val templateCard: String =
+object DeclareTable extends TableCreationParser {
+  override val templateCard: String =
     """|declare table ?%IFNE:exists %a:name ?like +?%L:template ?( +?%P:columns +?) %O {{
        |?%C(_|=|containing) +?%V:source
        |?partitioned +?by +?%e:partitions
@@ -69,30 +62,16 @@ object DeclareTable extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[RuntimeModifiable] = {
-    if (understands(ts)) {
-      val params = SQLTemplateParams(ts, templateCard)
-      val ifNotExists = params.indicators.get("exists").contains(true)
-      val template = params.locations.get("template")
-      val ref = params.atoms("name")
-      val table = TableModel(
-        columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
-        initialCapacity = params.expressions.get("initialCapacity").map {
-          case Literal(value: Number) => value.intValue()
-          case x => dieUnsupportedType(x)
-        },
-        partitions = params.expressions.get("partitions"))
+  protected def parseTable(params: SQLTemplateParams, table: TableModel, ifNotExists: Boolean): TableCreation = {
+    DeclareTable(ref = params.atoms("name"), table, ifNotExists)
+  }
 
-      // return the instruction
-      val op_? = template.map(DeclareTableLike(ref, table, _, ifNotExists))
-      if (op_?.nonEmpty) op_? else {
-        params.instructions.get("source") match {
-          case None => Some(DeclareTable(ref, table, ifNotExists))
-          case Some(from: Queryable) => Some(DeclareTableFrom(ref, table, from, ifNotExists))
-          case Some(_) => ts.dieExpectedQueryable()
-        }
-      }
-    } else None
+  protected def parseTableFrom(params: SQLTemplateParams, table: TableModel, from: Queryable, ifNotExists: Boolean): TableCreation = {
+    DeclareTableFrom(ref = params.atoms("name"), table, from, ifNotExists)
+  }
+
+  protected def parseTableLike(params: SQLTemplateParams, table: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean): TableCreation = {
+    DeclareTableLike(ref = params.atoms("name"), table, template, ifNotExists)
   }
 
   override def understands(ts: TokenStream)(implicit compiler: SQLCompiler): Boolean = ts is "declare table"

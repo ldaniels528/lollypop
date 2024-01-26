@@ -8,8 +8,6 @@ import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
 import lollypop.io.IOCost
 
-import scala.collection.mutable
-
 /**
  * create table ... from statement
  * @param ref         the given [[DatabaseObjectRef database object reference]]
@@ -19,7 +17,8 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends ReferenceInstruction with RuntimeModifiable {
+  extends ReferenceInstruction with TableCreation {
+  override protected def actionVerb: String = "create"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to create the table
@@ -43,11 +42,6 @@ case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from:
     (scope, cc, cc)
   }
 
-  override def toSQL: String = {
-    val sb = new mutable.StringBuilder("create table")
-    if (ifNotExists) sb.append(" if not exists")
-    sb.append(s" ${ref.toSQL} (${tableModel.columns.map(_.toSQL).mkString(",")}) containing ${from.toSQL}")
-    sb.toString()
-  }
+  override def toSQL: String = s"${super.toSQL} containing ${from.toSQL}"
 
 }

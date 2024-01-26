@@ -28,7 +28,7 @@ class CopyTest extends REPLFunSpec {
            |catch e => -1
            |finally rm 'temp.txt'
            |""".stripMargin.executeSQL(createRootScope())
-      assert(va == 6223)
+      assert(va == 6440)
     }
 
   }

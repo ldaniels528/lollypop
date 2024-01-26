@@ -20,7 +20,7 @@ import scala.util.Try
  */
 case class Touch(expression: Expression) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
-    expression.pullFile ~>> { file =>
+    expression.pullFile map { file =>
       Try(new RandomAccessFile(file, "rw").close()).isSuccess
     }
   }

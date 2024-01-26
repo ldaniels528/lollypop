@@ -41,9 +41,9 @@ class TransferToTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should write a Character Array to STDERR") {
-      """|('.' * 15) ===> stderr
+      """|['A' to 'G'] ===> stderr
          |""".stripMargin.executeSQL(ctx.createRootScope())
-      assert(ctx.system.stdErr.asString() == "...............")
+      assert(ctx.system.stdErr.asString() == "ABCDEFG")
     }
 
     it("should write a CLOB to STDERR") {

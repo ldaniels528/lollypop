@@ -26,7 +26,7 @@ case class ChDir(expression: Option[Expression]) extends RuntimeExpression {
     val prevPath = getCWD
     expression match {
       case Some(expr) =>
-        val (sa, ca, path) = expr.pullFile ~>> (_.getPath)
+        val (sa, ca, path) = expr.pullFile map (_.getPath)
         path match {
           // cd '/some/dir'
           case newPath if newPath.startsWith(File.separator) =>

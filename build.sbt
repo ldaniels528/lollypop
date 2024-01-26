@@ -6,7 +6,7 @@ import scala.language.postfixOps
 val scalaVersion_2_13 = "2.13.12"
 val scalaVersion_3_00 = "3.0.1"
 
-val appVersion = "0.1.6.8"
+val appVersion = "0.1.6.9"
 val pluginVersion = "1.0.0"
 val scalaAppVersion = scalaVersion_2_13
 
@@ -144,6 +144,7 @@ lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
 /**
  * @example sbt "project examples" test
  */
+val kafkaVersion = "3.6.1"
 lazy val examples = (project in file("./app/examples")).
   dependsOn(jdbc_driver).
   settings(testDependencies *).
@@ -155,7 +156,12 @@ lazy val examples = (project in file("./app/examples")).
     scalaVersion := scalaAppVersion,
     Compile / console / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-language:implicitConversions", "-Xlint"),
     Compile / doc / scalacOptions += "-no-link-warnings",
-    autoCompilerPlugins := true)
+    autoCompilerPlugins := true,
+    libraryDependencies ++= Seq(
+      "org.apache.kafka" %% "kafka" % kafkaVersion,
+      "org.apache.kafka" % "kafka-clients" % kafkaVersion,
+      "org.jsoup" % "jsoup" % "1.15.4"
+    ))
 
 // loads the Scalajs-io root project at sbt startup
 onLoad in Global := (Command.process("project root", _: State)) compose (onLoad in Global).value

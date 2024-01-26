@@ -43,7 +43,7 @@ case class TableArray(expression: Expression) extends ScalarFunctionCall with Ru
     }
 
     // generate the dataframe
-    expression.execute(scope) ~>> { rawValue =>
+    expression.execute(scope) map { rawValue =>
       val dataGrid = getContainer(rawValue).map(getContainer)
       val dataSet = dataGrid.tail.map(_.map(CSVConversion.convert))
       val headers = dataGrid.headOption.map(_.map(StringType.convert)) || Nil

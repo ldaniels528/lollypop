@@ -8,8 +8,6 @@ import com.lollypop.runtime.devices.{Field, FieldMetadata}
 import com.lollypop.runtime.instructions.queryables.RowsOfValues
 import lollypop.io.IOCost
 
-import scala.collection.mutable
-
 /**
  * declare table ... from statement
  * @param ref         the given [[Atom database object reference]]
@@ -19,7 +17,7 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends RuntimeModifiable {
+  extends TableCreation {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     // attempt to declare the table
@@ -39,11 +37,8 @@ case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, 
     (scope.withVariable(Variable(name = ref.name, _type, initialValue = out)), cost1, cost1)
   }
 
-  override def toSQL: String = {
-    val sb = new mutable.StringBuilder("declare table")
-    if (ifNotExists) sb.append(" if not exists")
-    sb.append(s" ${ref.toSQL} (${tableModel.columns.map(_.toSQL).mkString(",")}) containing ${from.toSQL}")
-    sb.toString()
-  }
+  override def toSQL: String = s"${super.toSQL} containing ${from.toSQL}"
+
+  protected def actionVerb: String = "declare"
 
 }
