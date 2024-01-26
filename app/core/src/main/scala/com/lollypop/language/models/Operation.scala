@@ -8,6 +8,7 @@ import com.lollypop.runtime.datatypes.{CharType, Matrix}
 import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.operators._
 import com.lollypop.runtime.plastics.RuntimeClass.implicits._
+import com.lollypop.runtime.plastics.Tuples.seqToArray
 import lollypop.io.IOCost
 
 import java.util.Date
@@ -45,7 +46,7 @@ object Operation {
       // null * x == null
       case (a, b) if a == null || b == null => null
       // arrays
-      case (a: Array[_], b: Array[_]) => (a zip b).map { case (x, y) => evaluateAny(op, x, y) }
+      case (a: Array[_], b: Array[_]) => seqToArray((a zip b).map { case (x, y) => evaluateAny(op, x, y) })
       case (a: Array[_], x) => a.map(evaluateAny(op, _, x))
       // booleans
       case (b: Boolean, n: Number) => evaluateNumber(op, b.toInt, n)

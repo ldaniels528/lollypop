@@ -227,6 +227,13 @@ class OperationTest extends AnyFunSpec {
          |x += 4
          |x
          |""".stripMargin, 5))
+
+    it("should evaluate: [2, 6, 7] + [1, 0, 0]")(evaluate(
+      """|[2, 6, 7] + [1, 0, 0]
+         |""".stripMargin, Array(3, 6, 7)))
+    it("should evaluate: typeOf([2, 6, 7] + [1, 0, 0])")(evaluate(
+      """|typeOf([2, 6, 7] + [1, 0, 0])
+         |""".stripMargin, "int[]"))
   }
 
   describe(classOf[PlusPlus].getSimpleName) {
@@ -297,7 +304,10 @@ class OperationTest extends AnyFunSpec {
 
   def evaluate(sql: String, expected: Any): Assertion = {
     val (_, _, actual) = LollypopVM.executeSQL(Scope(), sql)
-    assert(actual == expected)
+    (actual, expected) match {
+      case (a: Array[_], b: Array[_]) => assert(a sameElements b)
+      case (a, b) =>  assert(a == b)
+    }
   }
 
 }
