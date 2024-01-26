@@ -9,8 +9,6 @@ import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.{DatabaseObjectRef, Scope}
 import lollypop.io.IOCost
 
-import scala.collection.mutable
-
 /**
  * create table statement
  * @param ref         the given [[DatabaseObjectRef database object reference]]
@@ -27,24 +25,18 @@ import scala.collection.mutable
  * @author lawrence.daniels@gmail.com
  */
 case class CreateTable(ref: DatabaseObjectRef, tableModel: TableModel, ifNotExists: Boolean)
-  extends ReferenceInstruction with RuntimeModifiable {
+  extends ReferenceInstruction with TableCreation {
+  override protected def actionVerb: String = "create"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     val cost = createPhysicalTable(ref.toNS, tableModel.toTableType, ifNotExists)
     (scope, cost, cost)
   }
 
-  override def toSQL: String = {
-    val sb = new mutable.StringBuilder("create table")
-    if (ifNotExists) sb.append(" if not exists")
-    sb.append(s" ${ref.toSQL} (${tableModel.columns.map(_.toSQL).mkString(",")})")
-    sb.toString()
-  }
-
 }
 
-object CreateTable extends ModifiableParser with IfNotExists {
-  val templateCard: String =
+object CreateTable extends TableCreationParser {
+  override val templateCard: String =
     """|create table ?%IFNE:exists %L:name ?like +?%L:template ?( +?%P:columns +?) %O {{
        |?containing +?%V:source
        |?partitioned +?by +?%e:partitions
@@ -82,30 +74,16 @@ object CreateTable extends ModifiableParser with IfNotExists {
          |""".stripMargin
   ))
 
-  override def parseModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[RuntimeModifiable] = {
-    if (understands(ts)) {
-      val params = SQLTemplateParams(ts, templateCard)
-      val ifNotExists = params.indicators.get("exists").contains(true)
-      val template = params.locations.get("template")
-      val ref = params.locations("name")
-      val table = TableModel(
-        columns = params.parameters.getOrElse("columns", Nil).map(_.toColumn),
-        initialCapacity = params.expressions.get("initialCapacity").map {
-          case Literal(value: Number) => value.intValue()
-          case x => dieUnsupportedType(x)
-        },
-        partitions = params.expressions.get("partitions"))
+  protected def parseTable(params: SQLTemplateParams, table: TableModel, ifNotExists: Boolean): TableCreation = {
+    CreateTable(ref = params.locations("name"), table, ifNotExists)
+  }
 
-      // return the instruction
-      val op_? = template.map(CreateTableLike(ref, table, _, ifNotExists))
-      if (op_?.nonEmpty) op_? else {
-        params.instructions.get("source") match {
-          case None => Some(CreateTable(ref, table, ifNotExists))
-          case Some(from: Queryable) => Some(CreateTableFrom(ref, table, from, ifNotExists))
-          case Some(_) => ts.dieExpectedQueryable()
-        }
-      }
-    } else None
+  protected def parseTableFrom(params: SQLTemplateParams, table: TableModel, from: Queryable, ifNotExists: Boolean): TableCreation = {
+    CreateTableFrom(ref = params.locations("name"), table, from, ifNotExists)
+  }
+
+  protected def parseTableLike(params: SQLTemplateParams, table: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean): TableCreation = {
+    CreateTableLike(ref = params.locations("name"), table, template, ifNotExists)
   }
 
   override def understands(stream: TokenStream)(implicit compiler: SQLCompiler): Boolean = stream is "create table"
