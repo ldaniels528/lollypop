@@ -1,5 +1,6 @@
 package com.lollypop.language.models
 
+import com.lollypop.language.HelpDoc.{CATEGORY_AGG_SORT_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
 
@@ -19,7 +20,17 @@ object ArrayExpression extends ExpressionParser {
 
   def fromValues(a: Expression*): ArrayExpression = ArrayLiteral(a.toList)
 
-  override def help: List[HelpDoc] = Nil
+  override def help: List[HelpDoc] = {
+    List(HelpDoc(
+      name = "Array",
+      category = CATEGORY_AGG_SORT_OPS,
+      paradigm = PARADIGM_DECLARATIVE,
+      syntax = "[ %E:items ]",
+      description = "Separators are unnecessary between most statements",
+      example = """x = ['A', 'B', 'C', 1, 5, 7] x ++ (x + 5)""",
+      featureTitle = Some("No semicolons required")
+    ))
+  }
 
   /**
    * Parses an array expression (e.g. [1, 2, 3, 4] or ['A' to 'Z'])
