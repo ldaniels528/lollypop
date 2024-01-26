@@ -19,6 +19,9 @@ import scala.annotation.tailrec
 import scala.collection.concurrent.TrieMap
 import scala.jdk.CollectionConverters.ListHasAsScala
 
+/**
+ * JVM Runtime Class Utility
+ */
 object RuntimeClass {
   private lazy val logger = LoggerFactory.getLogger(getClass)
   private val classes = TrieMap[Class[_], ClassComponents]()
