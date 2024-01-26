@@ -40,8 +40,9 @@ import scala.util.{Failure, Success, Try}
 
 /**
  * Lollypop Server
- * @param port the port to bind
- * @param ctx  the root [[LollypopUniverse compiler context]]
+ * @param port   the provided listener port to bind
+ * @param ctx    the provided [[LollypopUniverse compiler context]]
+ * @param system the implicit [[ActorSystem actor system]]
  */
 class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
   private val logger = LoggerFactory.getLogger(getClass)
@@ -73,9 +74,7 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
       logger.error(s"Error: ${e.getMessage}", e)
   }
 
-  def close(): Unit = {
-    server.foreach(_.unbind())
-  }
+  def close(): Unit = server.foreach(_.unbind())
 
   /**
    * Creates a new API endpoint
@@ -288,12 +287,12 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
   private def routesByRemoteTableLengthServices(databaseName: String, schemaName: String, tableName: String): Route = {
     withSession(databaseName, schemaName) { (_, scope0) =>
       get {
-        // retrieve the database summary (e.g. "GET /len/shock_trade/public/StockQuotes")
+        // gets the database length (e.g. "GET /len/shock_trade/public/StockQuotes")
         val device = scope0.getRowCollection(DatabaseObjectNS(databaseName, schemaName, tableName))
         complete(device.getLength.toJson)
       } ~ put {
         extract(_.request.uri.query()) { params =>
-          // retrieve the database summary (e.g. "PUT /len/shock_trade/public/StockQuotes?size=98765")
+          // sets the database length (e.g. "PUT /len/shock_trade/public/StockQuotes?size=98765")
           val newSize: Long = params.get("size").map(_.toLong) || die("Missing query parameter 'size'")
           val device = scope0.getRowCollection(DatabaseObjectNS(databaseName, schemaName, tableName))
           complete(device.setLength(newSize).toJson)
@@ -598,7 +597,7 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
   }
 
   /**
-   * Database Table Length-specific API routes (e.g. "/shock_trade/portfolio/stocks/187")
+   * Database Table Row-specific API routes (e.g. "/shock_trade/portfolio/stocks/187")
    * @param databaseName the name of the database
    * @param schemaName   the name of the schema
    * @param tableName    the name of the table
@@ -677,9 +676,11 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
     complete(JsObject())
   }
 
-  def shutdown(hardDeadline: FiniteDuration = 5.seconds): Unit = {
-    server.foreach(_.terminate(hardDeadline))
-  }
+  /**
+   * Terminates the server
+   * @param deadline the hard deadline for shutting down (default is `5.seconds`)
+   */
+  def shutdown(deadline: FiniteDuration = 5.seconds): Unit = server.foreach(_.terminate(deadline))
 
   /**
    * Retrieves a row by ID
@@ -777,17 +778,16 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
 object LollypopServer {
   private val defaultActorPoolName = "lollypop-server"
 
-  def apply(port: Int): LollypopServer = {
-    implicit val system: ActorSystem = ActorSystem(name = defaultActorPoolName)
-    new LollypopServer(port)
-  }
-
-  def apply(port: Int, ctx: LollypopUniverse): LollypopServer = {
-    implicit val system: ActorSystem = ActorSystem(name = defaultActorPoolName)
-    new LollypopServer(port, ctx)
-  }
-
-  def apply(port: Int, ctx: LollypopUniverse, system: ActorSystem): LollypopServer = {
+  /**
+   * Creates a new Lollypop Server instance
+   * @param port   the provided port (default is 8233)
+   * @param ctx    the optionally provided [[LollypopUniverse universe]]
+   * @param system the optionally provided [[ActorSystem system]]
+   * @return a new [[LollypopServer Lollypop Server]] instance
+   */
+  def apply(port: Int = 8233,
+            ctx: LollypopUniverse = LollypopUniverse(),
+            system: ActorSystem = ActorSystem(name = defaultActorPoolName)): LollypopServer = {
     new LollypopServer(port, ctx)(system)
   }
 
@@ -795,21 +795,16 @@ object LollypopServer {
    * Main program
    * @param args the command line arguments
    */
-  def main(args: Array[String]): Unit = {
-    val defaultPort = 8233
-
+  def main(args: Array[String]): LollypopServer = {
     // display the application version
-    Console.println(s"$RESET${GREEN}QW${MAGENTA}E${RED}R${BLUE}Y Server ${CYAN}v$version$RESET")
+    Console.println(s"$RESET${GREEN}Lol${MAGENTA}ly${RED}pop${BLUE} Server ${CYAN}v$version$RESET")
     Console.println()
 
-    // get the configuration
-    val port: Int = args.toList match {
-      case port :: _ => port.toInt
-      case _ => defaultPort
-    }
-
     // start the server
-    LollypopServer(port)
+    args.toList match {
+      case Nil => LollypopServer()
+      case port :: _ => LollypopServer(port.toInt)
+    }
   }
 
 }
