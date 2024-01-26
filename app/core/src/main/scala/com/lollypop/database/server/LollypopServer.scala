@@ -130,8 +130,6 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
       // SQL/Query API routes
       // route: /q/<database> (e.g. "/q/shock_trade/portfolios")
       path("q" / Segment / Segment)(routesByDatabaseQuery) ~
-      // route: /q (e.g. "/q")
-      path("q")(routesByQuery) ~
       //
       // JDBC API routes
       // route: /jdbc/<database> (e.g. "/jdbc/stocks/portfolios")
@@ -445,28 +443,6 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
           val limit = params.get("__limit").flatMap(v => Try(v.toInt).toOption)
           entity(as[String]) { sql =>
             val (scope1, outcome) = runQuery(scope0, sql, limit)
-            cookiePair.foreach(cp => updateSession(cp.value, scope1))
-            outcome
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Database Query-specific API routes (e.g. "/q")
-   * @return the [[Route]]
-   */
-  private def routesByQuery: Route = {
-    optionalCookie(lollypopSessionID) { cookiePair =>
-      val scope = cookiePair.map(cp => getSession(cp.value)) || newSession
-
-      post {
-        extract(_.request.uri.query()) { params =>
-          // execute the SQL query (e.g. "POST /q" <~ "truncate table staging")
-          val limit = params.get("__limit").flatMap(v => Try(v.toInt).toOption)
-          entity(as[String]) { sql =>
-            val (scope1, outcome) = runQuery(scope, sql, limit)
             cookiePair.foreach(cp => updateSession(cp.value, scope1))
             outcome
           }
