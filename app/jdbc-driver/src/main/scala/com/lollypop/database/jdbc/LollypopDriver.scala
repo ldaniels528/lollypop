@@ -45,7 +45,7 @@ class LollypopDriver extends Driver {
       new DriverPropertyInfo("database", DEFAULT_DATABASE),
       new DriverPropertyInfo("schema", DEFAULT_SCHEMA),
       new DriverPropertyInfo("server", DEFAULT_HOST),
-      new DriverPropertyInfo("port", DEFAULT_PORT)
+      new DriverPropertyInfo("port", DEFAULT_PORT.toString)
     )
   }
 

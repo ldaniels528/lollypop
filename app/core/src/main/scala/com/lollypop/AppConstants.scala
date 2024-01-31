@@ -15,7 +15,7 @@ trait AppConstants {
   val version = s"$MAJOR_VERSION.$MINOR_VERSION.$MINI_VERSION.$MICRO_VERSION"
 
   val DEFAULT_HOST = "localhost"
-  val DEFAULT_PORT = "8233"
+  val DEFAULT_PORT = 8233
   val DEFAULT_DATABASE = "lollypop"
   val DEFAULT_SCHEMA = "public"
   
