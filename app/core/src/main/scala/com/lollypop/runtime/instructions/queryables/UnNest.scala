@@ -23,7 +23,7 @@ object UnNest extends FunctionCallParserE1(
   category = CATEGORY_AGG_SORT_OPS,
   paradigm = PARADIGM_DECLARATIVE,
   description =
-    "Separates the elements of a collection expression into multiple rows, or the elements of map expr into multiple rows and columns.",
+    "Explodes a column of a collection into multiple rows.",
   example =
     """|declare table stocks(symbol: String(4), exchange: String(6), transactions: Table(price: Double, transactionTime: DateTime)[5])
        |insert into @stocks (symbol, exchange, transactions)

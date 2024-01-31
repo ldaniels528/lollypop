@@ -100,7 +100,7 @@ object Each extends ExpressionParser {
     category = CATEGORY_CONTROL_FLOW,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
-    description = "Iterates over a dataframe applying a function to each entry",
+    description = "Iterates over a dataframe applying a function to each row and optionally yields a new transformed dataframe",
     example =
       """|stocks =
          ||---------------------------------------------------------|
@@ -122,7 +122,7 @@ object Each extends ExpressionParser {
     category = CATEGORY_CONTROL_FLOW,
     paradigm = PARADIGM_DECLARATIVE,
     syntax = templateCard,
-    description = "Iterates a dataframe in reverse order applying a function to each entry",
+    description = "Iterates a dataframe in reverse order applying a function to each row",
     example =
       """|stocks =
          ||----------------------------------------------------------|

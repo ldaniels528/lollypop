@@ -1,7 +1,7 @@
 package com.lollypop.language.models
 
 import com.lollypop.language._
-import com.lollypop.language.models.Operation.evaluateAny
+import com.lollypop.language.models.Operation.resolve
 import com.lollypop.runtime._
 import com.lollypop.runtime.datatypes.Inferences.fastTypeResolve
 import com.lollypop.runtime.datatypes.{CharType, Matrix}
@@ -26,7 +26,7 @@ trait Operation extends Expression with RuntimeInstruction {
       case op@BinaryOperation(a, b) =>
         val (sa, ca, va) = a.execute(scope)
         val (sb, cb, vb) = b.execute(sa)
-        val vc = evaluateAny(op, va, vb)(sb)
+        val vc = resolve(op, va, vb)(sb)
         (sb, ca ++ cb, vc)
       case x => this.dieIllegalType(x)
     }
@@ -41,34 +41,36 @@ trait Operation extends Expression with RuntimeInstruction {
  */
 object Operation {
 
-  private def evaluateAny(op: Operation, aa: Any, bb: Any)(implicit scope: Scope): Any = {
-    (aa, bb) match {
+  private def resolve(operation: Operation, aa: Any, bb: Any)(implicit scope: Scope): Any = {
+    (operation, aa, bb) match {
       // null * x == null
-      case (a, b) if a == null || b == null => null
+      case (_, a, b) if a == null || b == null => null
       // arrays
-      case (a: Array[_], b: Array[_]) => seqToArray((a zip b).map { case (x, y) => evaluateAny(op, x, y) })
-      case (a: Array[_], x) => a.map(evaluateAny(op, _, x))
+      case (_: PlusPlus, a: Array[_], b: Array[_]) => seqToArray(a concat b)
+      case (op, a: Array[_], b: Array[_]) => seqToArray((a zip b).map { case (x, y) => resolve(op, x, y) })
+      case (op, a: Array[_], n: Number) => seqToArray(a.map(resolve(op, _, n)))
+      case (op, n: Number, a: Array[_]) => seqToArray(a.map(resolve(op, n, _)))
       // booleans
-      case (b: Boolean, n: Number) => evaluateNumber(op, b.toInt, n)
-      case (n: Number, b: Boolean) => evaluateNumber(op, n, b.toInt)
+      case (op, b: Boolean, n: Number) => resolveNumberToNumber(op, b.toInt, n)
+      case (op, n: Number, b: Boolean) => resolveNumberToNumber(op, n, b.toInt)
       // chars
-      case (c: Character, n: Number) => CharType.convert(evaluateNumber(op, c.toInt, n))
-      case (n: Number, c: Character) => evaluateNumber(op, n, c.toInt)
+      case (op, c: Character, n: Number) => CharType.convert(resolveNumberToNumber(op, c.toInt, n))
+      case (op, n: Number, c: Character) => resolveNumberToNumber(op, n, c.toInt)
       // dates & durations
-      case (d: FiniteDuration, t: Date) => evaluateVM(op, t, d)
-      case (d: FiniteDuration, n: Number) => evaluateVM(op, d, n.longValue().millis)
+      case (op, d: FiniteDuration, t: Date) => resolveAnyToAny(op, t, d)
+      case (op, d: FiniteDuration, n: Number) => resolveAnyToAny(op, d, n.longValue().millis)
       // matrices
-      case (n: Number, m: Matrix) => evaluateVM(op, m, n)
+      case (op, n: Number, m: Matrix) => resolveAnyToAny(op, m, n)
       // numbers
-      case (a: Number, b: Number) => evaluateNumber(op, a, b)
+      case (op, a: Number, b: Number) => resolveNumberToNumber(op, a, b)
       // strings
-      case (x, s: String) => evaluateVM(op, String.valueOf(x), s)
+      case (op, x, s: String) => resolveAnyToAny(op, String.valueOf(x), s)
       // anything else
-      case (x, y) => evaluateVM(op, x, y)
+      case (op, x, y) => resolveAnyToAny(op, x, y)
     }
   }
 
-  private def evaluateNumber(op: Operation, aa: Number, bb: Number)(implicit scope: Scope): Any = {
+  private def resolveNumberToNumber(op: Operation, aa: Number, bb: Number)(implicit scope: Scope): Any = {
     val result = op match {
       case _: Amp => aa.longValue() & bb.longValue()
       case _: Bar => aa.longValue() | bb.longValue()
@@ -85,12 +87,12 @@ object Operation {
       case _: Times => aa.doubleValue() * bb.doubleValue()
       case _: TimesTimes => Math.pow(aa.doubleValue(), bb.doubleValue())
       case _: Up => aa.longValue() ^ bb.longValue()
-      case _ => evaluateVM(op, aa, bb)
+      case _ => resolveAnyToAny(op, aa, bb)
     }
     fastTypeResolve(aa, bb).convert(result)
   }
 
-  private def evaluateVM(op: Operation, x: Any, y: Any)(implicit scope: Scope): AnyRef = {
+  private def resolveAnyToAny(op: Operation, x: Any, y: Any)(implicit scope: Scope): AnyRef = {
     op match {
       case _: Amp => x.invokeMethod("$amp", Seq(y.v))
       case _: AmpAmp => x.invokeMethod("$amp$amp", Seq(y.v))

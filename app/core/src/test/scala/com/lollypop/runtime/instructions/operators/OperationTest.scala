@@ -87,6 +87,13 @@ class OperationTest extends AnyFunSpec {
     it("should decompile: 15 / 3")(decompile(Div(15.v, 3.v), "15 / 3"))
     it("should evaluate: 15 / 3")(evaluate("15 / 3", 5))
 
+    it("should evaluate: [2, 6, 7] / [2, 2, 7]")(evaluate(
+      """|[2, 6, 7] / [2, 2, 7]
+         |""".stripMargin, Array(1, 3, 1)))
+    it("should evaluate: typeOf([2, 6, 7] / [1, 3, 1])")(evaluate(
+      """|typeOf([2, 6, 7] / [1, 3, 1])
+         |""".stripMargin, "int[]"))
+
     it("should equate: x /= 1")(assert(("x".f /= 1.v) == Div("x".f, 1.v).doAndSet))
     it("should compile: y /= 2")(compile("y /= 2", Div("y".f, 2.v).doAndSet))
     it("should decompile: z /= 3")(decompile(Div("z".f, 3.v).doAndSet, "z /= 3"))
@@ -162,6 +169,13 @@ class OperationTest extends AnyFunSpec {
     it("should decompile: 5 - 6")(decompile(Minus(5.v, 6.v), "5 - 6"))
     it("should evaluate: 5 - 6")(evaluate("5 - 6", -1))
 
+    it("should evaluate: [2, 6, 7] - [8, 0, 1]")(evaluate(
+      """|[2, 6, 7] - [8, 0, 1]
+         |""".stripMargin, Array(-6, 6, 6)))
+    it("should evaluate: typeOf([2, 6, 7] - [1, 0, 0])")(evaluate(
+      """|typeOf([2, 6, 7] - [1, 0, 0])
+         |""".stripMargin, "int[]"))
+
     it("should equate: z -= 4")(assert(("z".f -= 4.v) == Minus("z".f, 4.v).doAndSet))
     it("should compile: x -= 10")(compile("x -= 10", Minus("x".f, 10.v).doAndSet))
     it("should decompile: x -= 10")(decompile(Minus("x".f, 10.v).doAndSet, "x -= 10"))
@@ -193,6 +207,13 @@ class OperationTest extends AnyFunSpec {
     it("should decompile: 15 % 3")(decompile(Percent(15.v, 3.v), "15 % 3"))
     it("should evaluate: 15 % 3")(evaluate("15 % 3", 0))
 
+    it("should evaluate: [9, 6, 7] % [2, 2, 3]")(evaluate(
+      """|[9, 6, 7] % [2, 2, 3]
+         |""".stripMargin, Array(1, 0, 1)))
+    it("should evaluate: typeOf([9, 6, 7] % [2, 2, 3])")(evaluate(
+      """|typeOf([9, 6, 7] % [2, 2, 3])
+         |""".stripMargin, "int[]"))
+
     it("should equate: z %= 3")(assert(("z".f %= 3.v) == Percent("z".f, 3.v).doAndSet))
     it("should compile: x %= 3")(compile("x %= 3", Percent("x".f, 3.v).doAndSet))
     it("should decompile: x %= 7")(decompile(Percent("x".f, 7.v).doAndSet, "x %= 7"))
@@ -218,6 +239,13 @@ class OperationTest extends AnyFunSpec {
     it("should decompile: 5 + 6")(decompile(Plus(5.v, 6.v), "5 + 6"))
     it("should evaluate: 5 + 6")(evaluate("5 + 6", 11))
 
+    it("should evaluate: [2, 6, 7] + [1, 0, 0]")(evaluate(
+      """|[2, 6, 7] + [1, 0, 0]
+         |""".stripMargin, Array(3, 6, 7)))
+    it("should evaluate: typeOf([2, 6, 7] + [1, 0, 0])")(evaluate(
+      """|typeOf([2, 6, 7] + [1, 0, 0])
+         |""".stripMargin, "int[]"))
+
     it("should equate: z += 6")(assert(("z".f += 6.v) == Plus("z".f, 6.v).doAndSet))
     it("should compile: x += 1")(compile("x += 1", Plus("x".f, 1.v).doAndSet))
     it("should decompile: x += 1")(decompile(Plus("x".f, 1.v).doAndSet, "x += 1"))
@@ -227,13 +255,6 @@ class OperationTest extends AnyFunSpec {
          |x += 4
          |x
          |""".stripMargin, 5))
-
-    it("should evaluate: [2, 6, 7] + [1, 0, 0]")(evaluate(
-      """|[2, 6, 7] + [1, 0, 0]
-         |""".stripMargin, Array(3, 6, 7)))
-    it("should evaluate: typeOf([2, 6, 7] + [1, 0, 0])")(evaluate(
-      """|typeOf([2, 6, 7] + [1, 0, 0])
-         |""".stripMargin, "int[]"))
   }
 
   describe(classOf[PlusPlus].getSimpleName) {
@@ -250,6 +271,13 @@ class OperationTest extends AnyFunSpec {
     it("should compile: 7 * 4")(compile("7 * 4", Times(7.v, 4.v)))
     it("should decompile: 7 * 4")(decompile(Times(7.v, 4.v), "7 * 4"))
     it("should evaluate: 7 * 4")(evaluate("7 * 4", 28))
+
+    it("should evaluate: [2, 6, 7] * [1, 2, 3]")(evaluate(
+      """|[2, 6, 7] * [1, 2, 3]
+         |""".stripMargin, Array(2, 12, 21)))
+    it("should evaluate: typeOf([2, 6, 7] * [1, 2, 3])")(evaluate(
+      """|typeOf([2, 6, 7] * [1, 2, 3])
+         |""".stripMargin, "int[]"))
 
     it("should equate: z *= 4")(assert(("z".f *= 4.v) == Times("z".f, 4.v).doAndSet))
     it("should compile: x *= 1")(compile("x *= 1", Times("x".f, 1.v).doAndSet))
