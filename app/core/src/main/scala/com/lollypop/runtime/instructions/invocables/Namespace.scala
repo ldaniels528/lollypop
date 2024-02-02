@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.invocables
 
-import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_IMPERATIVE}
+import com.lollypop.language.HelpDoc.{CATEGORY_SCOPE_SESSION, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.Expression
 import com.lollypop.runtime.{Scope, _}
@@ -31,12 +31,12 @@ case class Namespace(expression: Expression) extends RuntimeInvokable {
 }
 
 object Namespace extends InvokableParser {
-  val template: String = "%C(name|namespace|use) %e:path"
+  val template: String = "%C(_|namespace|use) %e:path"
 
   override def help: List[HelpDoc] = List(HelpDoc(
     name = "namespace",
     category = CATEGORY_SCOPE_SESSION,
-    paradigm = PARADIGM_IMPERATIVE,
+    paradigm = PARADIGM_DECLARATIVE,
     syntax = template,
     description = "Sets the active database",
     example =
