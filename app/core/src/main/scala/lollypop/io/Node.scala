@@ -4,7 +4,7 @@ import akka.http.scaladsl.Http
 import com.lollypop.database.QueryResponse
 import com.lollypop.database.clients.DatabaseClient
 import com.lollypop.database.server.LollypopServer
-import com.lollypop.language.{LollypopUniverse, _}
+import com.lollypop.language._
 import com.lollypop.runtime._
 import com.lollypop.runtime.devices.QMap
 import com.lollypop.util.ConsoleReaderHelper.{createInteractiveConsoleReader, interactWith}
@@ -16,11 +16,12 @@ import scala.util.Try
 
 /**
  * Represents a Lollypop server node
+ * @param server the provided [[LollypopServer]]
  */
-case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, server: LollypopServer) {
+case class Node(server: LollypopServer) {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val client = DatabaseClient(host, port)
-  private val scope: Scope = ctx.createRootScope()
+  private val client = DatabaseClient(server.host, server.port)
+  private val scope: Scope = server.ctx.createRootScope()
   private val startTime = System.currentTimeMillis()
   var lastCommand: Option[String] = None
 
@@ -38,13 +39,11 @@ case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, serv
    *  })
    * }}}
    */
-  def api(url: String, methods: QMap[String, Any]): Boolean = {
-    server.createAPIEndPoint(url, methods.toMap)
-  }
+  def api(url: String, methods: QMap[String, Any]): Boolean = server.createAPIEndPoint(url, methods.toMap)
 
   def awaitStartup(timeout: Duration): Node = {
     val (_, millis) = time(Await.ready(getServerBinding, timeout))
-    logger.info(f"Node($port) started in $millis%.1f msec")
+    logger.info(f"Node(${server.port}) started in $millis%.1f msec")
     this
   }
 
@@ -78,14 +77,16 @@ case class Node(ctx: LollypopUniverse, host: String = "0.0.0.0", port: Int, serv
     client.executeQuery(databaseName, schemaName, statement)
   }
 
-  def exec(statements: Array[String]): QueryResponse = {
-    exec(statements.mkString(";"))
-  }
+  def exec(statements: Array[String]): QueryResponse = exec(statements.mkString(";"))
+
+  val host: String = server.host
+
+  val port: Int = server.port
 
   def stop(): Unit = server.shutdown()
 
   def uptime: Long = System.currentTimeMillis() - startTime
 
-  override def toString: String = s"Node(\"$host\", $port)"
+  override def toString: String = s"Node(\"${server.host}\", ${server.port})"
 
 }

@@ -3,9 +3,9 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{Scope, _}
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
+import com.lollypop.runtime._
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
@@ -91,7 +91,8 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
 
     scenario.inherits match {
       case Some(titleExpr) =>
-        titleExpr.execute(scope)._3 match {
+        val (sa, ca, va) = titleExpr.execute(scope)
+        va match {
           case title: String => getReferencedScope(title, titleExpr)
           case titles: Array[String] =>
             titles.foldLeft(scope) { case (aggScope, title) =>
@@ -141,7 +142,7 @@ object Feature extends InvokableParser {
           |
           |// startup a listener node
           |node = Nodes.start()
-          |port = node.port
+          |port = node.server.port()
           |
           |// create a table
           |drop if exists Travelers

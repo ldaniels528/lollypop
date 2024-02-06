@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 class MessageProducerConsumerTest extends AnyFunSpec with VerificationTools {
   private val logger = LoggerFactory.getLogger(getClass)
   private val node = Nodes().start()
-  private val port = node.port
+  private val port = node.server.port
   val Array(databaseName, schemaName, tableName) = getTestTableName.split("[.]")
   private val table = DatabaseObjectRef(tableName)
 

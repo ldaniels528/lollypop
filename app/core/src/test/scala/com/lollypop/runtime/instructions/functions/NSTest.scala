@@ -15,7 +15,7 @@ class NSTest extends AnyFunSpec with VerificationTools {
   private val rootScope = ctx.createRootScope()
   implicit val compiler: LollypopCompiler = LollypopCompiler()
   private val node = Nodes().start()
-  private val port = node.port
+  private val port = node.server.port
 
   closeOnShutdown(node)
 

@@ -40,11 +40,16 @@ import scala.util.{Failure, Success, Try}
 
 /**
  * Lollypop Server
+ * @param host   the provided interface (e.g. "0.0.0.0")
  * @param port   the provided listener port to bind
  * @param ctx    the provided [[LollypopUniverse compiler context]]
  * @param system the implicit [[ActorSystem actor system]]
  */
-class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse())(implicit system: ActorSystem) extends AutoCloseable {
+class LollypopServer(val host: String = "0.0.0.0",
+                     val port: Int,
+                     val ctx: LollypopUniverse = LollypopUniverse())
+                    (implicit system: ActorSystem)
+  extends AutoCloseable {
   private val logger = LoggerFactory.getLogger(getClass)
   private val scopes = TrieMap[String, Scope]()
   private val apiRoutes = TrieMap[String, Map[String, Any]]()
@@ -66,7 +71,7 @@ class LollypopServer(val port: Int, val ctx: LollypopUniverse = LollypopUniverse
   import system.dispatcher
 
   // start the listener
-  val server: Future[Http.ServerBinding] = Http().newServerAt(interface = "0.0.0.0", port).bindFlow(route)
+  val server: Future[Http.ServerBinding] = Http().newServerAt(interface = host, port).bindFlow(route)
   server onComplete {
     case Success(serverBinding) =>
       logger.info(s"listening to ${serverBinding.localAddress}")
@@ -764,7 +769,7 @@ object LollypopServer {
   def apply(port: Int = 8233,
             ctx: LollypopUniverse = LollypopUniverse(),
             system: ActorSystem = ActorSystem(name = defaultActorPoolName)): LollypopServer = {
-    new LollypopServer(port, ctx)(system)
+    new LollypopServer(host = "0.0.0.0", port, ctx)(system)
   }
 
   /**

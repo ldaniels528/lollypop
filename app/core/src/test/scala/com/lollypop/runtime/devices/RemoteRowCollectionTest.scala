@@ -16,7 +16,7 @@ class RemoteRowCollectionTest extends AnyFunSpec with VerificationTools {
   private val ctx = LollypopUniverse(isServerMode = true)
   private val rootScope = ctx.createRootScope()
   private val node = new Nodes(ctx).start()
-  private val port = node.port
+  private val port = node.server.port
   private val ref = DatabaseObjectRef(getTestTableName)
 
   closeOnShutdown(node)

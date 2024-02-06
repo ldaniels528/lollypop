@@ -12,7 +12,7 @@ trait JDBCTestServer {
 
   // start the server
   val node: Node = Nodes().start()
-  val port: Int = node.port
+  val port: Int = node.server.port
   val jdbcURL: String = {
     val (databaseName, schemaName, _) = getTestTableDetails
     s"jdbc:lollypop://localhost:$port/$databaseName.$schemaName"

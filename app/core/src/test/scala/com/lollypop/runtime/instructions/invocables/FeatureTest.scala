@@ -17,7 +17,7 @@ class FeatureTest extends AnyFunSpec with VerificationTools {
 
   // start the server
   private val node = Nodes().start()
-  private val port = node.port
+  private val port = node.server.port
 
   describe(classOf[Feature].getSimpleName) {
 

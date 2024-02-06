@@ -50,7 +50,7 @@ class WebSocketsStudyTest extends AnyFunSpec {
            |// start the websocket listener
            |node = Nodes.start()
            |node.awaitStartup(Duration('1 second'))
-           |port = node.port
+           |port = node.server.port()
            |node.api('/ws/shocktrade', {
            |  ws: (message: String) => {
            |    stdout <=== message
