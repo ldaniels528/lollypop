@@ -3,7 +3,8 @@ package com.lollypop.runtime.instructions.functions
 import com.lollypop.language._
 import com.lollypop.language.models._
 import com.lollypop.runtime.conversions.ScalaConversion
-import com.lollypop.runtime.instructions.expressions.{LambdaFunctionCall, RuntimeExpression}
+import com.lollypop.runtime.instructions.RuntimeInstruction
+import com.lollypop.runtime.instructions.expressions.LambdaFunctionCall
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
@@ -16,7 +17,9 @@ import lollypop.io.IOCost
  * @example n => n + 1
  */
 case class AnonymousFunction(params: Seq[ParameterLike], code: Instruction, var origin: Option[Scope] = None)
-  extends TypicalFunction with LambdaFunction with RuntimeExpression with ScalaConversion {
+  extends TypicalFunction with LambdaFunction with ScalaConversion
+    with RuntimeInstruction
+    with ContainerInstruction {
 
   override def call(args: List[Expression]): LambdaFunctionCall = LambdaFunctionCall(this, args)
 

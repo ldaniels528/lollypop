@@ -13,7 +13,7 @@ import lollypop.io.IOCost
  * @example def factorial(n: Int): Int := iff(n <= 1, 1, n * factorial(n - 1))
  */
 case class NamedFunction(name: String, params: Seq[ParameterLike], code: Instruction, returnType_? : Option[ColumnType])
-  extends TypicalFunction with RuntimeInstruction with NamedExpression {
+  extends TypicalFunction with RuntimeInstruction with NamedExpression with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     (scope.withVariable(name, code = this, isReadOnly = true), IOCost.empty, this)

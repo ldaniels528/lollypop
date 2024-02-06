@@ -1,21 +1,23 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
-import com.lollypop.language.models.Instruction
+import com.lollypop.language.models.{ContainerInstruction, Instruction, Invokable}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.{Scope, _}
+import com.lollypop.runtime._
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import lollypop.io.IOCost
 
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Once instruction - invokes an instruction or set of instructions one-time only
+ * Invokes an instruction or set of instructions one-time only
  */
-case class Once(code: Instruction) extends RuntimeInvokable {
+case class Once(code: Instruction)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
   private val invoked = new AtomicBoolean(false)
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    if (invoked.compareAndSet(false, true)) code.execute(scope) else (scope, IOCost.empty, null)
+    if (invoked.compareAndSet(false, true)) code.execute(scope) else (scope, IOCost.empty, ())
   }
 
   override def toSQL: String = s"once ${code.toSQL}"

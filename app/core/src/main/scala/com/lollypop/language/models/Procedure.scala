@@ -5,4 +5,5 @@ package com.lollypop.language.models
  * @param params the procedure's parameters
  * @param code   the procedure's code
  */
-case class Procedure(params: Seq[ParameterLike], code: Instruction) extends TypicalFunction
+case class Procedure(params: Seq[ParameterLike], code: Instruction)
+  extends TypicalFunction with ContainerInstruction

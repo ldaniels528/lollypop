@@ -1,8 +1,9 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
-import com.lollypop.language.models.{Instruction, LambdaFunction}
+import com.lollypop.language.models.{ContainerInstruction, Instruction, Invokable, LambdaFunction}
 import com.lollypop.language.{HelpDoc, InvokableParser, LifestyleExpressionsAny, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
@@ -12,7 +13,8 @@ import lollypop.io.IOCost
  * with ns("stocks") rows => @rows where lastSale < 5
  * }}}
  */
-case class With(resource: Instruction, code: Instruction) extends RuntimeInvokable {
+case class With(resource: Instruction, code: Instruction)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     // execute the resource and code reference

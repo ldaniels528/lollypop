@@ -2,7 +2,8 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{CodeBlock, Condition, Instruction}
+import com.lollypop.language.models.{CodeBlock, Condition, ContainerInstruction, Instruction, Invokable}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
@@ -22,7 +23,8 @@ import scala.annotation.tailrec
  * } while cnt < 10
  * }}}
  */
-case class DoWhile(code: Instruction, condition: Condition) extends RuntimeInvokable {
+case class DoWhile(code: Instruction, condition: Condition)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec

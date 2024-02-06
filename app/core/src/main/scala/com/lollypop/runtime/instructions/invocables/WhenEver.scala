@@ -2,12 +2,13 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
+import com.lollypop.language.models.{ContainerInstruction, Expression, Instruction, Invokable}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.{Observable, Scope}
 import lollypop.io.IOCost
 
 /**
- * whenever - executes an instruction at the moment the trigger condition evaluates as true
+ * Executes an instruction at the moment the trigger condition evaluates as true
  * @param expression the trigger [[Expression expression]]
  * @param code       the [[Instruction instruction]] to execute when triggered
  * @example {{{
@@ -20,9 +21,9 @@ import lollypop.io.IOCost
  * }}}
  */
 case class WhenEver(expression: Expression, code: Instruction)
-  extends RuntimeInvokable with ConcurrentInstruction {
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
-    (scope.withObservable(Observable(expression, code)), IOCost.empty, null)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Unit) = {
+    (scope.withObservable(Observable(expression, code)), IOCost.empty, ())
   }
 
   override def toSQL: String = s"whenever ${expression.toSQL} ${code.toSQL}"

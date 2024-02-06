@@ -2,13 +2,14 @@ package com.lollypop.runtime.instructions.infrastructure
 
 import com.lollypop.die
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.Instruction
+import com.lollypop.language.models.{ContainerInstruction, Instruction, Modifiable}
 import com.lollypop.language.{HelpDoc, ModifiableParser, SQLCompiler, SQLTemplateParams, TokenStream}
-import com.lollypop.runtime.instructions.MacroLanguageParser
+import com.lollypop.runtime.instructions.{MacroLanguageParser, RuntimeInstruction}
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
-case class Macro(template: String, code: Instruction) extends RuntimeModifiable {
+case class Macro(template: String, code: Instruction)
+  extends Modifiable with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
     MacroLanguageParser.registerMacro(this)

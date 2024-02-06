@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Atom, Expression, Instruction, Queryable}
+import com.lollypop.language.models._
 import com.lollypop.runtime.datatypes.StringType
 import com.lollypop.runtime.devices.RowCollectionZoo._
 import com.lollypop.runtime.devices.{QMap, Row, RowCollection, TableColumn}
@@ -38,7 +38,8 @@ case class Each(variable: Atom,
                 queryable: Instruction,
                 code: Instruction,
                 isYield: Boolean = false,
-                limit: Option[Expression] = None) extends RuntimeExpression {
+                limit: Option[Expression] = None)
+  extends RuntimeExpression with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, RowCollection) = {
 
