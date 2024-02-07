@@ -106,4 +106,13 @@ object SQLTemplateParams {
    */
   def apply(ts: TokenStream, template: String)(implicit compiler: SQLCompiler): SQLTemplateParams = Template(template).process(ts)
 
+  final implicit class CodeBlockExtraction(val params: SQLTemplateParams) extends AnyVal {
+    @inline
+    def extractCode: List[Instruction] = params.instructions.get("code") match {
+      case Some(CodeBlock(statements)) => statements
+      case Some(statements) => List(statements)
+      case None => Nil
+    }
+  }
+
 }

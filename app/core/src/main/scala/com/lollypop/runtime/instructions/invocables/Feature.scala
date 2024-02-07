@@ -1,11 +1,11 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
-import com.lollypop.language.models.{CodeBlock, Condition, Expression, Instruction}
+import com.lollypop.language.models.{Condition, Expression, Instruction}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime._
 import com.lollypop.runtime.errors.ScenarioNotFoundError
 import com.lollypop.runtime.instructions.conditions.{RuntimeCondition, Verification}
-import com.lollypop.runtime._
 import com.lollypop.util.StringRenderHelper.StringRenderer
 import lollypop.io.IOCost
 import org.slf4j.LoggerFactory
@@ -95,7 +95,7 @@ case class Feature(title: Expression, scenarios: Seq[Instruction]) extends Runti
         va match {
           case title: String => getReferencedScope(title, titleExpr)
           case titles: Array[String] =>
-            titles.foldLeft(scope) { case (aggScope, title) =>
+            titles.foldLeft(sa) { case (aggScope, title) =>
               aggScope ++ getReferencedScope(title, titleExpr)
             }
           case x =>
@@ -223,11 +223,7 @@ object Feature extends InvokableParser {
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Feature] = {
     if (understands(ts)) {
       val params = SQLTemplateParams(ts, template)
-      val scenarios = params.instructions.get("code") match {
-        case Some(CodeBlock(statements)) => statements
-        case Some(statements) => List(statements)
-        case None => Nil
-      }
+      val scenarios = params.extractCode
       Some(Feature(title = params.expressions("title"), scenarios))
     } else None
   }
