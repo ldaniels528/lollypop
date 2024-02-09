@@ -77,7 +77,7 @@ case class Node(server: LollypopServer) {
     client.executeQuery(databaseName, schemaName, statement)
   }
 
-  def exec(statements: Array[String]): QueryResponse = exec(statements.mkString(";"))
+  def exec(statements: Array[String]): QueryResponse = exec(statements.mkString("\n"))
 
   val host: String = server.host
 
