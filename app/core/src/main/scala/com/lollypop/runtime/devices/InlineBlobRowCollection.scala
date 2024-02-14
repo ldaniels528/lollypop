@@ -1,6 +1,5 @@
 package com.lollypop.runtime.devices
 
-import com.lollypop.die
 import com.lollypop.runtime._
 import com.lollypop.runtime.devices.InlineBlobRowCollection.BLOB_PTR_LENGTH
 import com.lollypop.runtime.devices.RowCollection.dieColumnIndexOutOfRange
@@ -36,11 +35,7 @@ class InlineBlobRowCollection(columns: Seq[TableColumn], raf: RandomAccessFile) 
         buf.position(offset)
         buf.putLong(ptrRowID).putInt(count)
       case ((fieldBuf, column), offset) =>
-        val required = offset + fieldBuf.limit()
-        val available = buf.capacity()
-        assert(required <= available, die(s"Buffer overflow for column '${column.name}': required ($required) > available ($available)"))
-        buf.position(offset)
-        buf.put(fieldBuf)
+        putFieldBuffer(column, buf, fieldBuf, offset)
     }
     buf.flipMe()
 
@@ -120,13 +115,7 @@ class InlineBlobRowCollection(columns: Seq[TableColumn], raf: RandomAccessFile) 
     buf.putRowMetadata(RowMetadata())
     fields.zip(columns) zip columnOffsets foreach { case ((fieldBuf, column), offset) =>
       if (column.isExternal) insertBLOB(startRowID = getLength, fieldBuf)
-      else {
-        val required = offset + fieldBuf.limit()
-        val available = buf.capacity()
-        assert(required <= available, die(s"Buffer overflow for column '${column.name}': required ($required) > available ($available)"))
-        buf.position(offset)
-        buf.put(fieldBuf)
-      }
+      else putFieldBuffer(column, buf, fieldBuf, offset)
     }
     buf.flipMe()
 
