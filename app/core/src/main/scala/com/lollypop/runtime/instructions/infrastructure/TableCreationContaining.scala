@@ -9,7 +9,7 @@ import lollypop.io.IOCost
 /**
  * Table Creation From Trait
  */
-trait TableCreationFrom extends TableCreation {
+trait TableCreationContaining extends TableCreation {
 
   /**
    * @return the source [[Queryable queryable]]

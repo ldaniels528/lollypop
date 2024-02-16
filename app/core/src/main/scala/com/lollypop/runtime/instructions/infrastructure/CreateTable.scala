@@ -79,7 +79,7 @@ object CreateTable extends TableCreationParser {
   }
 
   protected def parseTableFrom(params: SQLTemplateParams, table: TableModel, from: Queryable, ifNotExists: Boolean): TableCreation = {
-    CreateTableFrom(ref = params.locations("name"), table, from, ifNotExists)
+    CreateTableContaining(ref = params.locations("name"), table, from, ifNotExists)
   }
 
   protected def parseTableLike(params: SQLTemplateParams, table: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean): TableCreation = {

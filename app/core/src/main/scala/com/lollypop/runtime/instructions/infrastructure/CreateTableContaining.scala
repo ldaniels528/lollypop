@@ -7,15 +7,21 @@ import com.lollypop.runtime.instructions.ReferenceInstruction
 import lollypop.io.IOCost
 
 /**
- * create table ... from statement
+ * create table ... containing statement
  * @param ref         the provided [[DatabaseObjectRef database object reference]]
  * @param tableModel  the provided [[TableModel table]]
  * @param from        the source [[Queryable queryable]]
  * @param ifNotExists if true, the operation will not fail when the entity exists
- * @author lawrence.daniels@gmail.com
+ * @example {{{
+ * create table if not exists SpecialSecurities (symbol: String, lastSale: Double)
+ * containing values ('AAPL', 202.11),
+ *                   ('AMD', 23.50),
+ *                   ('GOOG', 765.33),
+ *                   ('AMZN', 699.01)
+ * }}}
  */
-case class CreateTableFrom(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends ReferenceInstruction with TableCreationFrom {
+case class CreateTableContaining(ref: DatabaseObjectRef, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
+  extends ReferenceInstruction with TableCreationContaining {
   override protected def actionVerb: String = "create"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {

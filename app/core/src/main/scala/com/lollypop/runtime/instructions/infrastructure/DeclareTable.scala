@@ -22,7 +22,6 @@ import lollypop.io.IOCost
  *    lastSaleTime: Date,
  *    headlines: Table (headline: String(128), newsDate: DateTime))
  * }}}
- * @author lawrence.daniels@gmail.com
  */
 case class DeclareTable(ref: Atom, tableModel: TableModel, ifNotExists: Boolean)
   extends TableCreation {
@@ -67,7 +66,7 @@ object DeclareTable extends TableCreationParser {
   }
 
   protected def parseTableFrom(params: SQLTemplateParams, table: TableModel, from: Queryable, ifNotExists: Boolean): TableCreation = {
-    DeclareTableFrom(ref = params.atoms("name"), table, from, ifNotExists)
+    DeclareTableContaining(ref = params.atoms("name"), table, from, ifNotExists)
   }
 
   protected def parseTableLike(params: SQLTemplateParams, table: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean): TableCreation = {

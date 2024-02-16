@@ -13,7 +13,15 @@ import lollypop.io.IOCost
  * @param tableModel  the given [[TableModel table]]
  * @param template    the source/template table [[DatabaseObjectRef reference]]
  * @param ifNotExists if true, the operation will not fail when the entity exists
- * @author lawrence.daniels@gmail.com
+ * @example {{{
+ * declare table Stocks (
+ *   symbol: String(8),
+ *   exchange: Enum (AMEX, NASDAQ, NYSE, OTCBB, OTHEROTC),
+ *   lastSale: Double,
+ *   lastSaleTime: DateTime)
+ *
+ * declare table PennyStocks like Stocks (rating Int)
+ * }}}
  */
 case class DeclareTableLike(ref: Atom, tableModel: TableModel, template: DatabaseObjectRef, ifNotExists: Boolean)
   extends TableLikeCreation {
