@@ -776,7 +776,7 @@ object LollypopServer {
    * Main program
    * @param args the command line arguments
    */
-  def main(args: Array[String]): LollypopServer = {
+  def main(args: Array[String]): Unit = {
     // display the application version
     Console.println(s"$RESET${GREEN}Lol${MAGENTA}ly${RED}pop${BLUE} Server ${CYAN}v$version$RESET")
     Console.println()
