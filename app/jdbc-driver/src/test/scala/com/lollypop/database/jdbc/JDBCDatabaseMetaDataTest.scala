@@ -32,7 +32,7 @@ class JDBCDatabaseMetaDataTest extends AnyFunSpec with JDBCTestServer {
           Map("NAME" -> "database", "MAX_LEN" -> 1024, "DEFAULT_VALUE" -> DEFAULT_DATABASE, "DESCRIPTION" -> "the name of the database"),
           Map("NAME" -> "schema", "MAX_LEN" -> 1024, "DEFAULT_VALUE" -> DEFAULT_SCHEMA, "DESCRIPTION" -> "the name of the schema"),
           Map("NAME" -> "server", "MAX_LEN" -> 1024, "DEFAULT_VALUE" -> DEFAULT_HOST, "DESCRIPTION" -> "the hostname of the server"),
-          Map("NAME" -> "port", "MAX_LEN" -> 5, "DEFAULT_VALUE" -> DEFAULT_PORT, "DESCRIPTION" -> "the port of the server")
+          Map("NAME" -> "port", "MAX_LEN" -> 5, "DEFAULT_VALUE" -> DEFAULT_PORT.toString, "DESCRIPTION" -> "the port of the server")
         ))
       }
     }

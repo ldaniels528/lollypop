@@ -35,7 +35,7 @@ class WebSocketsTest extends AnyFunSpec {
            |})
            |
            |// connect to the node via websocket
-           |port = node.port
+           |port = node.server.port()
            |stdout <=== "Connecting to 127.0.0.1:{{port}}...\n"
            |ws = WebSockets("127.0.0.1", port, message => stdout <=== "client ACK: " + message)
            |ws.awaitConnection()

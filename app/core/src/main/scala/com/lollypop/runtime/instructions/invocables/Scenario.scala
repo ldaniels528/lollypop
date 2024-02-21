@@ -145,11 +145,7 @@ object Scenario extends InvokableParser {
       val params = SQLTemplateParams(ts, template)
       Some(Scenario(
         title = params.expressions("title"),
-        verifications = params.instructions.get("code") match {
-          case Some(CodeBlock(statements)) => statements
-          case Some(statements) => List(statements)
-          case None => Nil
-        },
+        verifications = params.extractCode,
         inherits = params.expressions.get("inheritance")))
     } else None
   }

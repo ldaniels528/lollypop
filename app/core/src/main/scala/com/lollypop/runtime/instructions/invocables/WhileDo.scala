@@ -2,7 +2,8 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_IMPERATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{Condition, Instruction}
+import com.lollypop.language.models.{Condition, ContainerInstruction, Instruction, Invokable}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.instructions.conditions.RuntimeCondition
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
@@ -29,7 +30,8 @@ import scala.annotation.tailrec
  * }
  * }}}
  */
-case class WhileDo(condition: Condition, code: Instruction) extends RuntimeInvokable {
+case class WhileDo(condition: Condition, code: Instruction)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope0: Scope): (Scope, IOCost, Any) = {
     @tailrec

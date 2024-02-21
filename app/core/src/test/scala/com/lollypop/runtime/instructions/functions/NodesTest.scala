@@ -122,7 +122,7 @@ class NodesTest extends AnyFunSpec with VerificationTools {
         """|namespace 'demo.subscriptions'
            |node = Nodes.start()
            |node.awaitStartup(Duration('1 second'))
-           |port = node.port
+           |port = node.server.port()
            |drop if exists subscriptions &&
            |create table subscriptions(id: RowNumber, name: String(64), startTime: DateTime, stopTime: DateTime)
            |""".stripMargin)

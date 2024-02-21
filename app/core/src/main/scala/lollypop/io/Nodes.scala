@@ -55,7 +55,7 @@ import scala.util._
 class Nodes(val ctx: LollypopUniverse) {
   private val nodes = TrieMap[Int, Node]()
 
-  def apply(port: Int, statement: String): QueryResponse = exec(port, statement)
+  def apply(port: Int): Node = getOrCreateNode(port)
 
   def exec(port: Int, statement: String): QueryResponse = {
     val node = nodes.getOrElse(port, die(s"No peer registered on port $port"))
@@ -64,9 +64,7 @@ class Nodes(val ctx: LollypopUniverse) {
 
   def getNode(port: Int): Option[Node] = nodes.get(port)
 
-  def getOrCreateNode(port: Int): Node = {
-    nodes.getOrElseUpdate(port, Node(ctx, port = port, server = LollypopServer(port, ctx)))
-  }
+  def getOrCreateNode(port: Int): Node = nodes.getOrElseUpdate(port, Node(server = LollypopServer(port, ctx)))
 
   def peers: Array[Int] = nodes.keys.toArray
 
@@ -147,7 +145,7 @@ object Nodes extends HelpIntegration {
            |  put: (id: UUID, message: String) => "put '{{message}}' ~> {{(id}}"
            |  delete: (id: UUID) => "delete {{(id}}"
            |})
-           |www post "http://0.0.0.0:{{node.port}}/api/comments/" <~ { message: "Hello World" }
+           |www post "http://0.0.0.0:{{node.server.port()}}/api/comments/" <~ { message: "Hello World" }
            |""".stripMargin
     ), HelpDoc(
       name = "Nodes",

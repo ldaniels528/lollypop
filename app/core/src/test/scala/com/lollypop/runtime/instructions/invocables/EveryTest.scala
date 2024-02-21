@@ -4,7 +4,7 @@ import com.lollypop.language._
 import com.lollypop.language.implicits._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.Infix
-import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
+import com.lollypop.runtime.{LollypopCompiler, LollypopVMSQL, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class EveryTest extends AnyFunSpec with VerificationTools {
@@ -26,7 +26,7 @@ class EveryTest extends AnyFunSpec with VerificationTools {
     }
 
     it("should asynchronously execute code") {
-      val (_, _, result) = LollypopVM.executeSQL(Scope(),
+      val (_, _, result) =
         """|var n = 0
            |val timer = every '20 millis' {
            |  n += 1
@@ -35,8 +35,8 @@ class EveryTest extends AnyFunSpec with VerificationTools {
            |Thread.sleep(Long(1000))
            |timer.cancel()
            |n
-           |""".stripMargin)
-      assert(Option(result).collect { case n: Number => n.intValue() } exists(_  >= 50))
+           |""".stripMargin.executeSQL(Scope())
+      assert(Option(result).collect { case n: Number => n.intValue() } exists (_ >= 50))
     }
 
   }

@@ -64,7 +64,7 @@ whenever received >= transactions
         stdout <=== '\nTransfer completed in {{ (System.currentTimeMillis() - startTime)/1000.0 }} seconds.\n'
 
 // establish the websocket connection
-port = node.port
+port = node.server.port()
 stdout <=== 'Connecting to ws://127.0.0.1:{{port}}/...\n'
 ws = WebSockets('127.0.0.1', port, response => { received += 1; updateProgressMeter(transactions, received, response) })
 ws.awaitConnection()

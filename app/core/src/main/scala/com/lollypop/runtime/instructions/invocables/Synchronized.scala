@@ -1,8 +1,9 @@
 package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.CATEGORY_SYSTEM_TOOLS
-import com.lollypop.language.models.{Expression, Instruction}
+import com.lollypop.language.models.{ContainerInstruction, Expression, Instruction, Invokable}
 import com.lollypop.language.{HelpDoc, InvokableParser, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
@@ -11,7 +12,8 @@ import lollypop.io.IOCost
  * @param value the value to synchronize
  * @param code  the synchronization execution code
  */
-case class Synchronized(value: Expression, code: Instruction) extends RuntimeInvokable {
+case class Synchronized(value: Expression, code: Instruction)
+  extends Invokable with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     val (sa, ca, lock) = value.execute(scope)

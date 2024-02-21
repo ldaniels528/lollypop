@@ -112,13 +112,17 @@ trait RecordStructure {
     val buf = allocate(recordSize)
     buf.putRowMetadata(RowMetadata())
     fields.zip(columns) zip columnOffsets foreach { case ((fieldBuf, column), offset) =>
-      val required = offset + fieldBuf.limit()
-      val available = buf.capacity()
-      assert(required <= available, die(s"Buffer overflow for column '${column.name}': required ($required) > available ($available)"))
-      buf.position(offset)
-      buf.put(fieldBuf)
+      putFieldBuffer(column, buf, fieldBuf, offset)
     }
     buf.flipMe()
+  }
+
+  def putFieldBuffer(column: TableColumn, buf: ByteBuffer, fieldBuf: ByteBuffer, offset: Int): ByteBuffer = {
+    val required = offset + fieldBuf.limit()
+    val available = buf.capacity()
+    assert(required <= available, die(s"Buffer overflow for column '${column.name}': required ($required) > available ($available)"))
+    buf.position(offset)
+    buf.put(fieldBuf)
   }
 
 }

@@ -3,6 +3,7 @@ package com.lollypop.runtime.instructions.invocables
 import com.lollypop.language.HelpDoc.{CATEGORY_CONTROL_FLOW, PARADIGM_FUNCTIONAL}
 import com.lollypop.language.models._
 import com.lollypop.language.{HelpDoc, InvokableParser, LifestyleExpressionsAny, SQLCompiler, SQLTemplateParams, TokenStream}
+import com.lollypop.runtime.instructions.RuntimeInstruction
 import com.lollypop.runtime.{Scope, _}
 import lollypop.io.IOCost
 
@@ -14,7 +15,8 @@ import lollypop.io.IOCost
  * @example try n /= 0 catch e => stdout <=== e.getMessage() finally n = -1
  */
 case class TryCatch(code: Instruction, onError: Instruction, `finally`: Option[Instruction] = None)
-  extends RuntimeInvokable with Expression with Queryable {
+  extends Expression with Invokable with Queryable
+    with RuntimeInstruction with ContainerInstruction {
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
     try code.execute(scope) catch {

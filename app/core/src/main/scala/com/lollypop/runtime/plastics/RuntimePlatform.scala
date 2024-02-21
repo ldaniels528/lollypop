@@ -128,7 +128,7 @@ object RuntimePlatform {
       }, returnType_? = ARRAY_TYPE)
 
       // Returns the index of the value if found in the collection: [1, 3, 5, 7, 9].contains(5)
-      arrayFunction1[Any](name = "contains", (arr, v) => arr.toSeq.contains(v), returnType_? = BOOLEAN_TYPE)
+      arrayFunction1[Any](name = "contains", (arr, v) => arr.exists(_ == v), returnType_? = BOOLEAN_TYPE)
 
       // Returns a new array; removing duplicate values from the array: [1, 3, 5, 7, 9, 7, 3, 2, 1, null].distinctValues()
       arrayFunction0(name = "distinctValues", _.distinct, returnType_? = ARRAY_TYPE)
@@ -717,6 +717,9 @@ object RuntimePlatform {
   //  Mix-ins
   ////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Zero-Argument Instruction
+   */
   private trait ZeroArguments extends Instruction {
 
     def name: String
@@ -726,6 +729,9 @@ object RuntimePlatform {
     override def toSQL: String = s"${value.toSQL}.$name()"
   }
 
+  /**
+   * One-Argument Instruction
+   */
   private trait OneArgument extends ZeroArguments {
 
     def arg1: Expression
@@ -733,6 +739,9 @@ object RuntimePlatform {
     override def toSQL: String = s"${value.toSQL}.$name(${arg1.toSQL})"
   }
 
+  /**
+   * Two-Argument Instruction
+   */
   private trait TwoArguments extends OneArgument {
 
     def arg2: Expression

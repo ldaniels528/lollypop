@@ -2,34 +2,34 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{ConcurrentInstruction, Expression, Instruction}
-import com.lollypop.runtime.{Scope, _}
+import com.lollypop.language.models.{ContainerInstruction, Expression, Instruction, Invokable}
+import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 import java.util.{Timer, TimerTask}
 
 /**
  * After statement
- * @param delay       the [[Expression delay interval]] of execution
- * @param instruction the [[Instruction command(s)]] to execute
+ * @param delay the [[Expression delay interval]] of execution
+ * @param code  the [[Instruction instruction]] to execute
  * @example {{{
  *  after Duration('2 seconds')
  *    delete from @entries where attachID is null
  * }}}
  */
-case class After(delay: Expression, instruction: Instruction)
-  extends RuntimeInvokable with ConcurrentInstruction {
+case class After(delay: Expression, code: Instruction)
+  extends RuntimeInvokable with ContainerInstruction {
   private val timer = new Timer()
 
-  override def execute()(implicit scope: Scope): (Scope, IOCost, Any) = {
+  override def execute()(implicit scope: Scope): (Scope, IOCost, Timer) = {
     val (sa, ca, _delay) = delay.pullDuration
     timer.schedule(new TimerTask {
-      override def run(): Unit = instruction.execute(scope)
+      override def run(): Unit = code.execute(scope)
     }, _delay.toMillis)
     (sa, ca, timer)
   }
 
-  override def toSQL: String = s"after ${delay.toSQL} ${instruction.toSQL}"
+  override def toSQL: String = s"after ${delay.toSQL} ${code.toSQL}"
 
 }
 
@@ -54,7 +54,7 @@ object After extends InvokableParser {
   override def parseInvokable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[After] = {
     if (understands(ts)) {
       val params = SQLTemplateParams(ts, templateCard)
-      Some(After(delay = params.expressions("delay"), instruction = params.instructions("command")))
+      Some(After(delay = params.expressions("delay"), code = params.instructions("command")))
     } else None
   }
 

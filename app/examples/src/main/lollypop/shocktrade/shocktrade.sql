@@ -43,7 +43,7 @@ include('./app/examples/src/main/lollypop/shocktrade/tables/Positions.sql')
 
 val host = '0.0.0.0'
 val node = Nodes.start()
-val port = node.port
+val port = node.server.port()
 logger.info('Started ShockTrade Demo Service on {{host}}:{{port}}...')
 
 // setup the web socket handler

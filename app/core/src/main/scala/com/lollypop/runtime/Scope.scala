@@ -26,6 +26,14 @@ trait Scope {
    */
   def apply(path: String): Option[Any]
 
+  /**
+   * Returns a value by name from the scope or the default value if the path wasn't found
+   * @param path         the name of the desired field/attribute (e.g. "employee.name.first")
+   * @param defaultValue the default value
+   * @return a value by name from the scope or the default value if the path wasn't found
+   */
+  final def getOrElse(path: String, defaultValue: => String): Any = apply(path) || defaultValue
+
   def getAliasedRows: Map[String, Row]
 
   def getAliasedSources: Map[String, RowCollection with CursorSupport]
@@ -149,8 +157,6 @@ trait Scope {
   def resolveInternalFunctionCall(functionName: String, args: List[Expression]): Option[FunctionCall]
 
   def resolveReferenceName(instruction: Instruction): String
-
-  def resolveValueReferenceName(instruction: Instruction): String
 
   /**
    * Retrieves the datasource for a table variable by name

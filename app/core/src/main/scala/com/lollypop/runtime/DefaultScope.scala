@@ -212,22 +212,19 @@ case class DefaultScope(superScope: Option[Scope] = None,
 
   override def reset(): Scope = withReturned(isReturned = false)
 
-  override def resolve(path: String, isRequired: Boolean = false): Option[Any] = {
-    val result = path match {
-      case name if name == ROWID_NAME => getCurrentRow.map(_.id)
-      case name if getAliasedSources contains name => getAliasedSources.get(name)
-      case name =>
-        getCurrentRow.flatMap(_.getField(name)) match {
-          case Some(field) => field.value
-          case None =>
-            getValueReferences.get(name) match {
-              case Some(variable) => Option(variable.value(this))
-              case None if name.startsWith("__") => specialVariables.get(name).map(_.apply())
-              case None => if (isRequired) dieNoSuchColumnOrVariable(name) else None
-            }
-        }
-    }
-    result
+  override def resolve(path: String, isRequired: Boolean = false): Option[Any] = path match {
+    case name if name == ROWID_NAME => getCurrentRow.map(_.id)
+    case name if getAliasedSources contains name => getAliasedSources.get(name)
+    case name =>
+      getCurrentRow.flatMap(_.getField(name)) match {
+        case Some(field) => field.value
+        case None =>
+          getValueReferences.get(name) match {
+            case Some(variable) => Option(variable.value(this))
+            case None if name.startsWith("__") => specialVariables.get(name).map(_.apply())
+            case None => if (isRequired) dieNoSuchColumnOrVariable(name) else None
+          }
+      }
   }
 
   override def resolveAs[A](path: String): Option[A] = resolve(path).flatMap(safeCast[A])
@@ -293,12 +290,6 @@ case class DefaultScope(superScope: Option[Scope] = None,
           }
         }
     }
-  }
-
-  override def resolveValueReferenceName(instruction: Instruction): String = instruction match {
-    case FieldRef(name) => name
-    case VariableRef(name) => name
-    case other => dieIllegalType(other)
   }
 
   override def resolveTableVariable(name: String): RowCollection = {

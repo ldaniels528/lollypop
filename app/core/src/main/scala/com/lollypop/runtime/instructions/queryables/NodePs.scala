@@ -46,8 +46,8 @@ object NodePs extends QueryableParser {
         .map { case (name, kind) => TableColumn(name, kind) })
     scope.getUniverse.nodes.peerNodes foreach { node =>
       out.insert(Map(
-        "host" -> node.host,
-        "port" -> node.port,
+        "host" -> node.server.host,
+        "port" -> node.server.port,
         "uptimeInSeconds" -> (node.uptime / 1000.0),
         "lastCommand" -> node.lastCommand).toRow(out))
     }

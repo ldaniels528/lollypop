@@ -7,15 +7,21 @@ import com.lollypop.runtime.devices.RowCollectionZoo.createTempTable
 import lollypop.io.IOCost
 
 /**
- * declare table ... from statement
+ * declare table ... containing statement
  * @param ref         the provided [[Atom database object reference]]
  * @param tableModel  the provided [[TableModel table]]
  * @param from        the source [[Queryable queryable]]
  * @param ifNotExists if true, the operation will not fail when the entity exists
- * @author lawrence.daniels@gmail.com
+ * @example {{{
+ * declare table if not exists SpecialSecurities (symbol: String, lastSale: Double)
+ * containing values ('AAPL', 202.11),
+ *                   ('AMD', 23.50),
+ *                   ('GOOG', 765.33),
+ *                   ('AMZN', 699.01)
+ * }}}
  */
-case class DeclareTableFrom(ref: Atom, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
-  extends TableCreationFrom {
+case class DeclareTableContaining(ref: Atom, tableModel: TableModel, from: Queryable, ifNotExists: Boolean)
+  extends TableCreationContaining {
   protected def actionVerb: String = "declare"
 
   override def execute()(implicit scope: Scope): (Scope, IOCost, IOCost) = {
