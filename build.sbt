@@ -1,34 +1,35 @@
-import sbt.Keys.*
 import sbt.*
+import sbt.Keys.*
 
 import scala.language.postfixOps
 
-val scalaVersion_2_13 = "2.13.12"
+val scalaVersion_2_13 = "2.13.14"
 val scalaVersion_3_00 = "3.0.1"
 
 val appVersion = "0.1.7.2"
 val pluginVersion = "1.0.0"
 val scalaAppVersion = scalaVersion_2_13
 
-val akkaVersion = "2.8.2"
-val akkaHttpVersion = "10.5.2"
+val akkaVersion = "2.8.5"
+val akkaHttpVersion = "10.5.3"
 val awsKinesisClientVersion = "1.14.10"
 val awsSDKVersion = "1.11.946"
-val commonsIOVersion = "2.11.0"
-val jekaVersion = "0.10.20"
 val liftJsonVersion = "3.4.3"
-val log4jVersion = "1.2.17"
 val scalaJsIoVersion = "0.7.0"
 val scalaTestVersion = "3.3.0-SNAP3"
-val slf4jVersion = "2.0.5"
-val snappyJavaVersion = "1.1.9.1"
+val slf4jVersion = "2.0.13"
 
 lazy val testDependencies = Seq(
   libraryDependencies ++= Seq(
-    "log4j" % "log4j" % log4jVersion,
     "org.slf4j" % "slf4j-api" % slf4jVersion,
     "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+  ))
+
+lazy val log4jTestDependencies = Seq(
+  libraryDependencies ++= Seq(
+    "log4j" % "log4j" %  "1.2.17",
+    "org.slf4j" % "slf4j-log4j12" % slf4jVersion
   ))
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +43,7 @@ lazy val testDependencies = Seq(
 lazy val root = (project in file("./app")).
   aggregate(core, jdbc_driver).
   dependsOn(core, jdbc_driver, examples).
-  settings(testDependencies *).
+  settings((log4jTestDependencies ++ testDependencies) *).
   settings(
     name := "lollypop",
     organization := "com.lollypop",
@@ -64,7 +65,7 @@ lazy val root = (project in file("./app")).
  * @example sbt "project core" test
  */
 lazy val core = (project in file("./app/core")).
-  settings(testDependencies *).
+  settings((log4jTestDependencies ++ testDependencies) *).
   settings(
     name := "core",
     organization := "com.lollypop",
@@ -90,16 +91,16 @@ lazy val core = (project in file("./app/core")).
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
-      "commons-io" % "commons-io" % commonsIOVersion,
-      "commons-codec" % "commons-codec" % "1.15",
-      "dev.jeka" % "jeka-core" % jekaVersion,
+      "commons-io" % "commons-io" % "2.16.1",
+      "commons-codec" % "commons-codec" % "1.17.0",
+      "dev.jeka" % "jeka-core" % "0.10.49",
       "org.apache.commons" % "commons-math3" % "3.6.1",
-      "org.commonmark" % "commonmark" % "0.21.0",
+      "org.commonmark" % "commonmark" % "0.22.0",
       "org.jfree" % "jfreechart" % "1.5.4",
       "org.jfree" % "jfreechart-fx" % "1.0.1",
-      "org.ow2.asm" % "asm" % "9.4",
+      "org.ow2.asm" % "asm" % "9.7",
       "org.scala-lang" % "scala-reflect" % scalaAppVersion,
-      "org.xerial.snappy" % "snappy-java" % snappyJavaVersion
+      "org.xerial.snappy" % "snappy-java" % "1.1.10.4"
     ))
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +114,7 @@ lazy val core = (project in file("./app/core")).
  */
 lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
   dependsOn(core).
-  settings(testDependencies *).
+  settings((log4jTestDependencies ++ testDependencies) *).
   settings(
     name := "jdbc-driver",
     organization := "com.lollypop.database.jdbc",
@@ -144,7 +145,7 @@ lazy val jdbc_driver = (project in file("./app/jdbc-driver")).
 /**
  * @example sbt "project examples" test
  */
-val kafkaVersion = "3.6.1"
+val kafkaVersion = "3.7.0"
 lazy val examples = (project in file("./app/examples")).
   dependsOn(jdbc_driver).
   settings(testDependencies *).
@@ -160,7 +161,9 @@ lazy val examples = (project in file("./app/examples")).
     libraryDependencies ++= Seq(
       "org.apache.kafka" %% "kafka" % kafkaVersion,
       "org.apache.kafka" % "kafka-clients" % kafkaVersion,
-      "org.jsoup" % "jsoup" % "1.15.4"
+      "org.jsoup" % "jsoup" % "1.17.2",
+      "org.apache.spark" %% "spark-core" % "3.5.1",
+      "org.apache.spark" %% "spark-sql" % "3.5.1",
     ))
 
 // loads the Scalajs-io root project at sbt startup
