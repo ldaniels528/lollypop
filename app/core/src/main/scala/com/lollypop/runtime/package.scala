@@ -16,7 +16,7 @@ import com.lollypop.runtime.devices.RowCollectionZoo.createQueryResultTable
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.instructions.ReferenceInstruction
 import com.lollypop.runtime.instructions.conditions._
-import com.lollypop.runtime.instructions.expressions.ArrayLiteral
+import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Span}
 import com.lollypop.runtime.instructions.functions.Iff
 import com.lollypop.runtime.instructions.invocables.{IF, Return, Switch}
 import com.lollypop.runtime.instructions.queryables._
@@ -1006,6 +1006,25 @@ package object runtime extends AppConstants {
       }
     }
 
+    /**
+     * Evaluates a collection of instructions
+     * @return the tuple consisting of the [[Scope]], [[IOCost]] and the collection of results
+     */
+    @inline
+    def evaluateAsArray(scope0: Scope): (Scope, IOCost, List[Any]) = {
+      instructions.foldLeft[(Scope, IOCost, List[Any])]((scope0, IOCost.empty, Nil)) {
+        case ((scope, cost, list), instruction) =>
+          instruction match {
+            case op: Span =>
+              LollypopVM.execute(scope, op) match {
+                case (s, c, array: Array[_]) => (s, cost ++ c, list ::: array.toList)
+              }
+            case op =>
+              LollypopVM.execute(scope, op) ~> { case (s, c, r) => (s, cost ++ c, list ::: List(r)) }
+          }
+      }
+    }
+
   }
 
   /**
@@ -1150,7 +1169,7 @@ package object runtime extends AppConstants {
         // e.g. cd games/emulators/atari/jaguar
         case op@BinaryOperation(a, b) =>
           val (sa, ca, va) = decode(sc, a)
-          decode(sa, b) map (ca ++ _, va ::: op.operator :: _)
+          decode(sa, b) map(ca ++ _, va ::: op.operator :: _)
         // e.g. cd Downloads
         case IdentifierRef(name) if !scope.isDefined(name) => (scope, IOCost.empty, List(name))
         // e.g. ls ^/Documents; cd _; cd ..; www https://0.0.0.0/api?symbol=ABC

@@ -40,6 +40,7 @@ object HelpDoc {
   val CATEGORY_CONTROL_FLOW = "Control Flow"
   val CATEGORY_DATAFRAMES_INFRA = "Dataframe Management"
   val CATEGORY_DATAFRAMES_IO = "Dataframe I/O"
+  val CATEGORY_MACHINE_LEARNING = "Machine Learning"
   val CATEGORY_TRANSFORMATION = "Transformation"
   val CATEGORY_JVM_REFLECTION = "JVM and Reflection"
   val CATEGORY_REPL_TOOLS = "REPL Tools"

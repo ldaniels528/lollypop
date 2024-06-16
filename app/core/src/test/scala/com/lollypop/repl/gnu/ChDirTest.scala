@@ -160,7 +160,7 @@ class ChDirTest extends REPLFunSpec {
       assert(vy == "/some/fake/path")
 
       val (_, _, vz) =
-        """|cd to/a/resource
+        """|cd 'to'/a/resource
            |pwd
            |""".stripMargin.executeSQL(sy)
       assert(vz == "/some/fake/path/to/a/resource")

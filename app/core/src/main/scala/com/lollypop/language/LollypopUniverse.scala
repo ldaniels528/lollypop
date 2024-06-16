@@ -157,8 +157,8 @@ case class LollypopUniverse(var dataTypeParsers: List[DataTypeParser] = _dataTyp
     case parser: ExpressionToConditionPostParser => parser.parseConditionChain(ts, host)
   }
 
-  def getInstructionChain(ts: TokenStream, host: Instruction)(implicit compiler: SQLCompiler): Option[Instruction] = matchInstruction(ts) {
-    case parser: InstructionPostfixParser => parser.parseInstructionChain(ts, host)
+  def getInstructionChain[A <: Instruction](ts: TokenStream, host: A)(implicit compiler: SQLCompiler): Option[Instruction] = matchInstruction(ts) {
+    case parser: InstructionPostfixParser[A] => parser.parseInstructionChain(ts, host)
   }
 
   def getModifiable(ts: TokenStream)(implicit compiler: SQLCompiler): Option[Modifiable] = matchInstruction(ts) {
@@ -291,7 +291,8 @@ object LollypopUniverse {
     RowNumberType, SQLXMLType, TableType, UserDefinedDataType, UUIDType, StringType, VarBinaryType, VarCharType, AnyType
   )
   val _languageParsers: List[LanguageParser] = List[LanguageParser](
-    After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayExpression, As, Assert, Async, Avg,
+    After, AllFields, AlterTable, Amp, AmpAmp, AND, AnonymousFunction, ApplyTo, ArrayLiteral, As, Assert, Async,
+    DecomposeTable, Avg,
     Bang, Bar, BarBar, Between, Betwixt, BooleanType,
     ClassPath, CodeBlock, ClassOf, CodecOf, ColonColon, ColonColonColon, Contains, Count, CountUnique, CreateExternalTable,
     CreateFunction, CreateIndex, CreateMacro, CreateProcedure, CreateTable, CreateType, CreateUniqueIndex, CreateView,
@@ -300,7 +301,7 @@ object LollypopUniverse {
     Each, ElementAt, EOL, EQ, Every, Exists, Expose,
     Feature, From,
     Graph, GreaterGreater, GreaterGreaterGreater, GroupBy, GT, GTE,
-    HashTag, Having, Help,
+    HashTag, Having, Help, Histogram,
     IF, Iff, Import, ImportImplicitClass, Include, Infix, IN, InsertInto, InstructionChain, InterfacesOf, Intersect,
     Into, InvokeVirtualMethod, Is, IsCodecOf, IsDefined, IsJavaMember, Isnt,
     Join,
@@ -310,7 +311,7 @@ object LollypopUniverse {
     ObjectOf, Once, OR, OrderBy,
     Pagination, Percent, PercentPercent, Plus, PlusPlus, ProcedureCall, ProcessExec,
     Require, Reset, Return, RowsOfValues,
-    ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, SpreadOperator, Subtraction, Sum, SuperClassesOf,
+    ScaleTo, Scenario, Select, SetVariable, SetVariableExpression, Span, SpreadOperator, Subtraction, Sum, SuperClassesOf,
     Synchronized, Switch,
     Table, TableArray, TableLike, TableLiteral, TableZoo, This, ThrowException, Times, TimesTimes, Trace,
     TransferFrom, TransferTo, Transpose, TryCatch, Truncate, TupleLiteral, TypeOf,

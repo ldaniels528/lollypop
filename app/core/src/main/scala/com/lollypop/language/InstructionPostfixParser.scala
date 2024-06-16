@@ -5,8 +5,8 @@ import com.lollypop.language.models.Instruction
 /**
  * Represents an Instruction Postfix Parser
  */
-trait InstructionPostfixParser extends LanguageParser {
+trait InstructionPostfixParser[T <: Instruction] extends LanguageParser {
 
-  def parseInstructionChain(ts: TokenStream, host: Instruction)(implicit compiler: SQLCompiler): Option[Instruction]
+  def parseInstructionChain(ts: TokenStream, host: T)(implicit compiler: SQLCompiler): Option[T]
 
 }

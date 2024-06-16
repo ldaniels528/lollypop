@@ -2,9 +2,9 @@ package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.HelpDoc.{CATEGORY_FILTER_MATCH_OPS, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{ArrayExpression, Expression, Instruction, Queryable}
-import com.lollypop.runtime.instructions.expressions.{ArrayFromRange, ArrayLiteral}
-import com.lollypop.runtime.{Scope, _}
+import com.lollypop.language.models.{Expression, Instruction, Queryable}
+import com.lollypop.runtime._
+import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Span}
 import lollypop.io.IOCost
 
 /**
@@ -16,8 +16,8 @@ import lollypop.io.IOCost
 case class IN(expr: Expression, source: Instruction) extends RuntimeCondition {
   override def execute()(implicit scope: Scope): (Scope, IOCost, Boolean) = {
     source match {
-      case a: ArrayFromRange.Exclusive => Betwixt(expr, a.start, a.end).execute()
-      case a: ArrayFromRange.Inclusive => Between(expr, a.start, a.end).execute()
+      case a: Span.Exclusive => Betwixt(expr, a.start, a.end).execute()
+      case a: Span.Inclusive => Between(expr, a.start, a.end).execute()
       case a: ArrayLiteral =>
         val (s1, c1, value) = expr.execute(scope)
         val (s2, c2, rows) = a.value.transform(s1)
@@ -41,7 +41,7 @@ object IN extends ExpressionToConditionPostParser {
       Option(host) map { expr =>
         ts match {
           case ts if ts is "(" => IN(expr, compiler.nextQueryOrVariableWithAlias(ts))
-          case ts if ts is "[" => IN(expr, ArrayExpression.parseExpression(ts) || ts.dieExpectedArray())
+          case ts if ts is "[" => IN(expr, ArrayLiteral.parseExpression(ts) || ts.dieExpectedArray())
           case ts => IN(expr, compiler.nextQueryOrVariableWithAlias(ts))
         }
       }

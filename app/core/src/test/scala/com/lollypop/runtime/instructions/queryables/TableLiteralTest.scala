@@ -1,6 +1,6 @@
 package com.lollypop.runtime.instructions.queryables
 
-import com.lollypop.language.{TokenIterator, _}
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices.TableColumn
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
