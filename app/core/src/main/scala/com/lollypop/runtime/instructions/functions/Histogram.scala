@@ -66,7 +66,8 @@ object Histogram extends ExpressionParser {
     syntax = templateCard,
     description = "Creates a histogram function for attribution",
     example =
-      """|Histogram(last_sale, [0, 1, 5, 10, 20, 100, 250, 1000])
+      """|last_sale = 98.99
+         |Histogram(last_sale, [0, 1, 5, 10, 20, 100, 250, 1000])
          |""".stripMargin,
     isExperimental = true
   ))

@@ -274,7 +274,7 @@ stock.toString()
 ```
 ##### Results
 ```sql
-StockQuote("ABC", "OTCBB", 0.0231, "2024-06-22T14:21:47.860Z")
+StockQuote("ABC", "OTCBB", 0.0231, "2024-06-22T14:50:44.820Z")
 ```
 <a name="Dictionary_Object_Literals"></a>
 ### Dictionary/Object Literals
@@ -326,7 +326,7 @@ DateTime().renderAsJson()
 ```
 ##### Results
 ```sql
-"2024-06-22T14:21:47.925Z"
+"2024-06-22T14:50:44.894Z"
 ```
 <a name="Matrix_and_Vector_Literals"></a>
 ### Matrix and Vector Literals
@@ -860,15 +860,15 @@ iostat(1, 5)
 ```
 ##### Results
 ```sql
-|--------------------------------------------------------|
-| KB/t  | tps | MB/s | us | sy | id | 1m   | 5m   | 15m  |
-|--------------------------------------------------------|
-|  24.2 |  23 | 0.55 |  7 |  3 | 90 | 5.13 |  3.4 | 3.49 |
-|  6.29 |  14 | 0.09 |  9 |  3 | 88 | 5.13 |  3.4 | 3.49 |
-|   4.0 |   6 | 0.02 |  8 |  3 | 88 | 5.13 |  3.4 | 3.49 |
-|  26.4 |   5 | 0.13 | 13 |  5 | 82 | 5.12 | 3.43 |  3.5 |
-| 10.86 |   7 | 0.07 |  5 |  2 | 93 | 5.12 | 3.43 |  3.5 |
-|--------------------------------------------------------|
+|---------------------------------------------------------|
+| KB/t   | tps | MB/s | us | sy | id | 1m   | 5m   | 15m  |
+|---------------------------------------------------------|
+|  24.21 |  23 | 0.55 |  7 |  3 | 90 | 1.27 | 1.61 | 2.06 |
+|    4.0 |   5 | 0.02 |  6 |  2 | 92 | 1.27 | 1.61 | 2.06 |
+| 173.78 |  27 | 4.57 | 12 |  5 | 83 | 1.27 | 1.61 | 2.06 |
+|   13.6 |  10 | 0.13 | 13 | 42 | 45 | 1.27 | 1.61 | 2.06 |
+|   5.47 |  19 |  0.1 |  3 | 48 | 49 | 1.27 | 1.61 | 2.06 |
+|---------------------------------------------------------|
 ```
 ### TableArray² (Aggregation and Sorting &#8212; Declarative) 
 *Description*: Transforms an array of an array of primitive values (Boolean, Int, String et al) into a table
@@ -888,13 +888,13 @@ limit 5
 ##### Results
 ```sql
 |-------------------------------------------------------------------|
-| PID   | %CPU | %MEM | STARTED | TIME       | VSZ        | RSS     |
+| PID   | %CPU  | %MEM | STARTED | TIME       | VSZ       | RSS     |
 |-------------------------------------------------------------------|
-| 87610 | 12.0 |  9.4 | Wed08AM | 127:12.51  |  437375360 | 9419552 |
-|   360 |  4.5 |  1.1 | 3Apr24  | 4198:32.32 |  420520720 | 1119856 |
-| 59613 |  4.5 |  5.0 | 26May24 | 159:02.30  | 1599990816 | 5072736 |
-|   363 |  3.8 |  0.2 | 3Apr24  | 19:45.26   |  410617712 |  212880 |
-|     1 |  2.9 |  0.0 | 3Apr24  | 687:14.13  |  409125344 |   28656 |
+| 87610 | 582.6 |  7.7 | Wed08AM | 135:51.84  | 437288464 | 7787024 |
+|  3597 |   3.8 |  0.1 | 7:50AM  | 0:01.04    | 412889152 |  126912 |
+|   360 |   2.1 |  1.1 | 3Apr24  | 4204:01.52 | 420547488 | 1129456 |
+|     1 |   1.8 |  0.0 | 3Apr24  | 688:13.21  | 409125344 |   28656 |
+| 12218 |   1.5 |  0.6 | 19Apr24 | 591:20.72  |  85481996 |  561452 |
 |-------------------------------------------------------------------|
 ```
 <a name="to"></a>
@@ -942,11 +942,11 @@ deck.shuffle()
 |-------------|
 | face | suit |
 |-------------|
-| 2    | ♦    |
-| K    | ♣    |
-| 8    | ♣    |
-| 3    | ♦    |
-| 9    | ♣    |
+| 6    | ♠    |
+| A    | ♦    |
+| K    | ♦    |
+| 9    | ♠    |
+| 8    | ♠    |
 |-------------|
 ```
 ### transpose³ (Aggregation and Sorting &#8212; Declarative) 
@@ -1148,7 +1148,7 @@ www post "http://0.0.0.0:{{node.server.port()}}/api/comments/" <~ { message: "He
 ```
 ##### Results
 ```sql
-HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID=fbb9ae4e-3582-4282-a057-7d0f72134937)
+HttpResponse(body="post 'Hello World'", message="OK", statusCode=200, responseID=95798a73-ed62-428f-98d0-2fe6d8946a9e)
 ```
 ### Nodes³ (Concurrency &#8212; Declarative) 
 *Description*: Opens a commandline interface to a remote Lollypop peer node.
@@ -1220,7 +1220,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -1240,7 +1240,7 @@ stdout <=== "Did it work?"
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -1274,10 +1274,10 @@ declare table if not exists TradingSystem (
 |--------------------------------------------------------------------|
 | stock_id | symbol | exchange | lastSale | lastSaleTime             |
 |--------------------------------------------------------------------|
-|        0 | MSFT   | NYSE     |    56.55 | 2024-06-22T14:21:55.058Z |
-|        1 | AAPL   | NASDAQ   |    98.55 | 2024-06-22T14:21:55.058Z |
-|        2 | AMZN   | NYSE     |    56.55 | 2024-06-22T14:21:55.059Z |
-|        3 | GOOG   | NASDAQ   |    98.55 | 2024-06-22T14:21:55.059Z |
+|        0 | MSFT   | NYSE     |    56.55 | 2024-06-22T14:50:52.355Z |
+|        1 | AAPL   | NASDAQ   |    98.55 | 2024-06-22T14:50:52.355Z |
+|        2 | AMZN   | NYSE     |    56.55 | 2024-06-22T14:50:52.355Z |
+|        3 | GOOG   | NASDAQ   |    98.55 | 2024-06-22T14:50:52.355Z |
 |--------------------------------------------------------------------|
 ```
 <a name="__"></a>
@@ -1293,7 +1293,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -1376,11 +1376,11 @@ tickers 5
 |----------------------------------------------------------|
 | exchange  | symbol | lastSale | lastSaleTime             |
 |----------------------------------------------------------|
-| NASDAQ    | KCYKX  |   4.9628 | 2024-06-22T14:21:16.746Z |
-| OTHER_OTC | EKMT   |    0.173 | 2024-06-22T14:21:19.092Z |
-| OTHER_OTC | ZOTPC  |   0.0206 | 2024-06-22T14:21:05.377Z |
-| NASDAQ    | JB     |  31.7401 | 2024-06-22T14:21:06.612Z |
-| NYSE      | NGP    |  32.2445 | 2024-06-22T14:21:22.716Z |
+| NASDAQ    | ITD    |  34.7157 | 2024-06-22T14:50:22.000Z |
+| NASDAQ    | VVFU   |  99.1836 | 2024-06-22T14:50:17.666Z |
+| OTCBB     | YKNX   |   1.2211 | 2024-06-22T14:50:12.592Z |
+| OTHER_OTC | UWODY  |   0.2368 | 2024-06-22T14:50:05.088Z |
+| NASDAQ    | EIM    |  46.1357 | 2024-06-22T14:50:01.780Z |
 |----------------------------------------------------------|
 ```
 <a name="create_procedure"></a>
@@ -1451,7 +1451,7 @@ msec(() => ¡(6))
 ```
 ##### Results
 ```sql
-Tuple2(_1=0.383917, _2=720.0)
+Tuple2(_1=0.361333, _2=720.0)
 ```
 ### def³ (Control Flow &#8212; Functional) 
 *Description*: Defines a named user-defined function
@@ -1614,7 +1614,7 @@ catch e => stdout <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -1630,7 +1630,7 @@ try connect() catch e => stderr <=== e.getMessage()
 ```
 ##### Results
 ```sql
-java.io.PrintStream@164a4705
+java.io.PrintStream@33abde31
 ```
 ##### Console Error
 ```
@@ -1649,14 +1649,14 @@ this
 |-------------------------------------------------------------------------------------------------------------|
 | name       | kind                | value                                                                    |
 |-------------------------------------------------------------------------------------------------------------|
-| WebSockets | WebSockets$         | lollypop.io.WebSockets$@6966efca                                         |
+| WebSockets | WebSockets$         | lollypop.io.WebSockets$@5ca1f591                                         |
 | n          | Integer             | -1                                                                       |
-| stdout     | PrintStream         | java.io.PrintStream@1d381a4                                              |
-| stdin      | BufferedReader      | java.io.BufferedReader@480cf971                                          |
-| stderr     | PrintStream         | java.io.PrintStream@164a4705                                             |
+| stdout     | PrintStream         | java.io.PrintStream@551de37d                                             |
+| stdin      | BufferedReader      | java.io.BufferedReader@6075b2d3                                          |
+| stderr     | PrintStream         | java.io.PrintStream@33abde31                                             |
 | OS         | OS                  | lollypop.lang.OS                                                         |
 | π          | Double              | 3.141592653589793                                                        |
-| Nodes      | Nodes               | lollypop.io.Nodes@b092ac9                                                |
+| Nodes      | Nodes               | lollypop.io.Nodes@997d532                                                |
 | e          | DivisionByZeroError | com.lollypop.runtime.errors.DivisionByZeroError: Division by zero: n / 0 |
 | Random     | Random$             | lollypop.lang.Random                                                     |
 |-------------------------------------------------------------------------------------------------------------|
@@ -2122,7 +2122,7 @@ select symbol: 'GMTQ', exchange: 'OTCBB', lastSale: 0.1111, lastSaleTime: DateTi
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| GMTQ   | OTCBB    |   0.1111 | 2024-06-22T14:21:56.649Z |
+| GMTQ   | OTCBB    |   0.1111 | 2024-06-22T14:50:53.454Z |
 |---------------------------------------------------------|
 ```
 <a name="subtract"></a>
@@ -2277,11 +2277,11 @@ stocks
 |---------------------------------------------------------|
 | symbol | exchange | lastSale | lastSaleTime             |
 |---------------------------------------------------------|
-| ISIT   | NASDAQ   | 189.3509 | 2024-06-22T14:21:56.691Z |
-| OBEA   | NASDAQ   |  99.1026 | 2024-06-22T14:21:56.691Z |
+| ISIT   | NASDAQ   | 189.3509 | 2024-06-22T14:50:53.482Z |
+| OBEA   | NASDAQ   |  99.1026 | 2024-06-22T14:50:53.483Z |
 | IJYY   | AMEX     | 190.4665 | 2023-08-05T22:34:20.280Z |
 | SMPG   | NYSE     | 184.6356 | 2023-08-05T22:34:20.282Z |
-| UKHT   | NASDAQ   |  71.1514 | 2024-06-22T14:21:56.691Z |
+| UKHT   | NASDAQ   |  71.1514 | 2024-06-22T14:50:53.483Z |
 |---------------------------------------------------------|
 ```
 ### update² (Dataframe I/O &#8212; Declarative) 
@@ -2420,12 +2420,12 @@ ns('StockQuotes')
 |----------------------------------------------------------|
 | saleDate                 | ticker | exchange  | lastSale |
 |----------------------------------------------------------|
-| 2024-06-22T14:21:56.841Z | YSZUY  | OTCBB     |   0.2355 |
-| 2024-06-22T14:21:56.841Z | DMZH   | NASDAQ    | 183.1636 |
-| 2024-06-22T14:21:56.842Z | VV     | OTCBB     |          |
-| 2024-06-22T14:21:56.842Z | TGPNF  | NYSE      |  51.6171 |
-| 2024-06-22T14:21:56.842Z | RIZA   | OTHER_OTC |   0.2766 |
-| 2024-06-22T14:21:56.842Z | JXMLB  | NASDAQ    |  91.6028 |
+| 2024-06-22T14:50:53.600Z | YSZUY  | OTCBB     |   0.2355 |
+| 2024-06-22T14:50:53.600Z | DMZH   | NASDAQ    | 183.1636 |
+| 2024-06-22T14:50:53.600Z | VV     | OTCBB     |          |
+| 2024-06-22T14:50:53.600Z | TGPNF  | NYSE      |  51.6171 |
+| 2024-06-22T14:50:53.600Z | RIZA   | OTHER_OTC |   0.2766 |
+| 2024-06-22T14:50:53.600Z | JXMLB  | NASDAQ    |  91.6028 |
 |----------------------------------------------------------|
 ```
 <a name="create_external_table"></a>
@@ -3337,7 +3337,7 @@ new `java.util.Date`()
 ```
 ##### Results
 ```sql
-2024-06-22T14:21:58.080Z
+2024-06-22T14:50:54.623Z
 ```
 ### new² (JVM and Reflection &#8212; Functional) 
 *Description*: The new operator can be used to instantiate Lollypop-defined classes.
@@ -3379,7 +3379,7 @@ objectOf('scala.Function1')
 ```
 ##### Results
 ```sql
-scala.Function1$@2211ff2a
+scala.Function1$@7b64bbad
 ```
 <a name="superClassesOf"></a>
 ### superClassesOf (JVM and Reflection &#8212; Object-Oriented) 
@@ -3449,93 +3449,12 @@ decompose table @stocks [
 *Description*: Creates a histogram function for attribution
 
 ```sql
+last_sale = 98.99
 Histogram(last_sale, [0, 1, 5, 10, 20, 100, 250, 1000])
 ```
-```scala
-com.lollypop.LollypopException: Expression expected on line 1 at 0
-	at com.lollypop.LollypopException$.apply(LollypopException.scala:11)
-	at com.lollypop.language.models.InstructionErrors.die(InstructionErrors.scala:14)
-	at com.lollypop.language.models.InstructionErrors.die$(InstructionErrors.scala:14)
-	at com.lollypop.runtime.instructions.functions.Histogram.die(Histogram.scala:17)
-	at com.lollypop.language.models.InstructionErrors.dieExpectedExpression(InstructionErrors.scala:35)
-	at com.lollypop.language.models.InstructionErrors.dieExpectedExpression$(InstructionErrors.scala:35)
-	at com.lollypop.runtime.instructions.functions.Histogram.dieExpectedExpression(Histogram.scala:17)
-	at com.lollypop.runtime.instructions.functions.Histogram.$anonfun$execute$4(Histogram.scala:33)
-	at scala.Option.getOrElse(Option.scala:201)
-	at com.lollypop.runtime.instructions.functions.Histogram.execute(Histogram.scala:33)
-	at com.lollypop.runtime.LollypopVM$.liftedTree1$1(LollypopVM.scala:34)
-	at com.lollypop.runtime.LollypopVM$.execute(LollypopVM.scala:33)
-	at com.lollypop.runtime.LollypopVM$.executeSQL(LollypopVM.scala:66)
-	at com.lollypop.docs.DocumentGeneratorFunSpec.$anonfun$invoke$6(DocumentGeneratorFunSpec.scala:70)
-	at scala.util.Try$.apply(Try.scala:217)
-	at com.lollypop.docs.DocumentGeneratorFunSpec.invoke(DocumentGeneratorFunSpec.scala:70)
-	at com.lollypop.docs.ReadMeTest.$anonfun$processCategory$5(ReadMeTest.scala:97)
-	at com.lollypop.docs.ReadMeTest.$anonfun$processCategory$5$adapted(ReadMeTest.scala:92)
-	at scala.collection.immutable.List.foreach(List.scala:334)
-	at com.lollypop.docs.ReadMeTest.$anonfun$processCategory$4(ReadMeTest.scala:92)
-	at com.lollypop.docs.ReadMeTest.$anonfun$processCategory$4$adapted(ReadMeTest.scala:90)
-	at scala.collection.immutable.List.foreach(List.scala:334)
-	at com.lollypop.docs.ReadMeTest.processCategory(ReadMeTest.scala:90)
-	at com.lollypop.docs.ReadMeTest.$anonfun$new$15(ReadMeTest.scala:72)
-	at com.lollypop.docs.ReadMeTest.$anonfun$new$15$adapted(ReadMeTest.scala:71)
-	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:619)
-	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:617)
-	at scala.collection.AbstractIterable.foreach(Iterable.scala:935)
-	at scala.collection.IterableOps$WithFilter.foreach(Iterable.scala:905)
-	at com.lollypop.docs.ReadMeTest.$anonfun$new$5(ReadMeTest.scala:71)
-	at com.lollypop.docs.ReadMeTest.$anonfun$new$5$adapted(ReadMeTest.scala:22)
-	at com.lollypop.runtime.package$AutoClose$.use$extension(package.scala:126)
-	at com.lollypop.docs.ReadMeTest.$anonfun$new$2(ReadMeTest.scala:22)
-	at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
-	at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
-	at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
-	at org.scalatest.Transformer.apply(Transformer.scala:22)
-	at org.scalatest.Transformer.apply(Transformer.scala:20)
-	at org.scalatest.funspec.AnyFunSpecLike$$anon$1.apply(AnyFunSpecLike.scala:457)
-	at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
-	at org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)
-	at org.scalatest.funspec.AnyFunSpec.withFixture(AnyFunSpec.scala:1631)
-	at org.scalatest.funspec.AnyFunSpecLike.invokeWithFixture$1(AnyFunSpecLike.scala:455)
-	at org.scalatest.funspec.AnyFunSpecLike.$anonfun$runTest$1(AnyFunSpecLike.scala:467)
-	at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
-	at org.scalatest.funspec.AnyFunSpecLike.runTest(AnyFunSpecLike.scala:467)
-	at org.scalatest.funspec.AnyFunSpecLike.runTest$(AnyFunSpecLike.scala:449)
-	at org.scalatest.funspec.AnyFunSpec.runTest(AnyFunSpec.scala:1631)
-	at org.scalatest.funspec.AnyFunSpecLike.$anonfun$runTests$1(AnyFunSpecLike.scala:500)
-	at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:413)
-	at scala.collection.immutable.List.foreach(List.scala:334)
-	at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
-	at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:390)
-	at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:427)
-	at scala.collection.immutable.List.foreach(List.scala:334)
-	at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
-	at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
-	at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
-	at org.scalatest.funspec.AnyFunSpecLike.runTests(AnyFunSpecLike.scala:500)
-	at org.scalatest.funspec.AnyFunSpecLike.runTests$(AnyFunSpecLike.scala:499)
-	at org.scalatest.funspec.AnyFunSpec.runTests(AnyFunSpec.scala:1631)
-	at org.scalatest.Suite.run(Suite.scala:1112)
-	at org.scalatest.Suite.run$(Suite.scala:1094)
-	at org.scalatest.funspec.AnyFunSpec.org$scalatest$funspec$AnyFunSpecLike$$super$run(AnyFunSpec.scala:1631)
-	at org.scalatest.funspec.AnyFunSpecLike.$anonfun$run$1(AnyFunSpecLike.scala:504)
-	at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
-	at org.scalatest.funspec.AnyFunSpecLike.run(AnyFunSpecLike.scala:504)
-	at org.scalatest.funspec.AnyFunSpecLike.run$(AnyFunSpecLike.scala:503)
-	at org.scalatest.funspec.AnyFunSpec.run(AnyFunSpec.scala:1631)
-	at org.scalatest.tools.SuiteRunner.run(SuiteRunner.scala:45)
-	at org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13(Runner.scala:1320)
-	at org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13$adapted(Runner.scala:1314)
-	at scala.collection.immutable.List.foreach(List.scala:334)
-	at org.scalatest.tools.Runner$.doRunRunRunDaDoRunRun(Runner.scala:1314)
-	at org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24(Runner.scala:993)
-	at org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24$adapted(Runner.scala:971)
-	at org.scalatest.tools.Runner$.withClassLoaderAndDispatchReporter(Runner.scala:1480)
-	at org.scalatest.tools.Runner$.runOptionallyWithPassFailReporter(Runner.scala:971)
-	at org.scalatest.tools.Runner$.run(Runner.scala:798)
-	at org.scalatest.tools.Runner.run(Runner.scala)
-	at org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.runScalaTest2or3(ScalaTestRunner.java:43)
-	at org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.main(ScalaTestRunner.java:26)
-
+##### Results
+```sql
+4
 ```
 <a name="REPL_Tools"></a>
 ## REPL Tools Examples
@@ -3555,9 +3474,9 @@ com.lollypop.LollypopException: Expression expected on line 1 at 0
 |------------------------------------------------------------|
 |          1 |               disk0       cpu    load average |
 |          2 |     KB/t  tps  MB/s  us sy id   1m   5m   15m |
-|          3 |    24.20   23  0.55   7  3 90  5.03 3.44 3.50 |
-|          4 |     0.00    0  0.00   7  2 91  5.03 3.44 3.50 |
-|          5 |     0.00    0  0.00   8  3 90  5.03 3.44 3.50 |
+|          3 |    24.21   23  0.55   7  3 90  1.61 1.67 2.07 |
+|          4 |     0.00    0  0.00   2  1 97  1.61 1.67 2.07 |
+|          5 |     0.00    0  0.00   4  2 95  1.61 1.67 2.07 |
 |------------------------------------------------------------|
 ```
 <a name="_"></a>
@@ -3569,7 +3488,7 @@ com.lollypop.LollypopException: Expression expected on line 1 at 0
 ```
 ##### Results
 ```sql
-scala.sys.process.ProcessImpl$SimpleProcess@59c808fe
+scala.sys.process.ProcessImpl$SimpleProcess@4a5b38e6
 ```
 <a name="_"></a>
 ### (?¹ (REPL Tools &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
@@ -3586,20 +3505,20 @@ iostat(1, 5)
 |-----------------------------------------------|
 |               disk0       cpu    load average |
 |     KB/t  tps  MB/s  us sy id   1m   5m   15m |
-|    24.20   23  0.55   7  3 90  5.03 3.44 3.50 |
-|     4.00    1  0.00   5 12 83  4.63 3.38 3.48 |
-|     6.60  285  1.83   5 49 46  4.63 3.38 3.48 |
-|    20.57   21  0.42  11 31 58  4.63 3.38 3.48 |
-|   246.55   47 11.28   4  2 94  4.63 3.38 3.48 |
+|    24.21   23  0.55   7  3 90  1.61 1.67 2.07 |
+|    64.66  595 37.60   2  2 96  1.61 1.67 2.07 |
+|    64.52  298 18.77   2  2 96  1.61 1.67 2.07 |
+|     5.00    4  0.02   3  1 96  1.72 1.69 2.08 |
+|     0.00    0  0.00   3  2 96  1.72 1.69 2.08 |
 |-----------------------------------------------|
 ```
 ##### Console Output
 ```
 disk0       cpu    load average
     KB/t  tps  MB/s  us sy id   1m   5m   15m
-   24.20   23  0.55   7  3 90  5.03 3.44 3.50
-    4.00    1  0.00   5 11 83  4.63 3.38 3.48
-    6.60  284  1.83   5 49 46  4.63 3.38 3.48
+   24.21   23  0.55   7  3 90  1.61 1.67 2.07
+   64.66  594 37.53   2  2 96  1.61 1.67 2.07
+   64.52  298 18.76   2  2 96  1.61 1.67 2.07
 ```
 ### (?² (REPL Tools &#8212; Declarative) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Invokes a native process from the host operating system
@@ -3614,10 +3533,10 @@ from ps() limit 5
 | output                                                                                                    |
 |-----------------------------------------------------------------------------------------------------------|
 | USER               PID  %CPU %MEM      VSZ    RSS   TT  STAT STARTED      TIME COMMAND                    |
-| _windowserver      360  19.7  1.1 420529616 1119920   ??  Rs    3Apr24 4198:34.14 /System/Library/Pr ...  |
-| ldaniels         87610  19.0  9.4 437415840 9460336   ??  S    Wed08AM 127:25.05 /Applications/Intel ...  |
-| ldaniels         59613  13.0  5.0 1599987680 5082064   ??  S    26May24 159:05.06 /Applications/GitH ...  |
-| ldaniels         59592   7.3  0.2 1587352960 202368   ??  S    26May24  37:56.01 /Applications/GitHu ...  |
+| ldaniels         87610  11.4  7.7 437287888 7787072   ??  S    Wed08AM 135:55.96 /Applications/Intel ...  |
+| _windowserver      360   9.8  1.1 420536576 1130096   ??  Rs    3Apr24 4204:02.12 /System/Library/Pr ...  |
+| root                 1   2.9  0.0 409125344  28656   ??  Ss    3Apr24 688:13.61 /sbin/launchd             |
+| ldaniels         12218   2.4  0.6 85481996 561452   ??  S    19Apr24 591:20.99 /Users/ldaniels/Libra ...  |
 |-----------------------------------------------------------------------------------------------------------|
 ```
 <a name="cat"></a>
@@ -3692,7 +3611,7 @@ val `count` =
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -3780,10 +3699,10 @@ find docs limit 5
 | name                    | canonicalPath                                                       | lastModified             | length | isDirectory | isFile | isHidden |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | .DS_Store               | /Users/ldaniels/GitHub/lollypop/docs/.DS_Store                      | 2024-06-13T22:54:28.015Z |   6148 | false       | true   | true     |
-| Travelers.png           | /Users/ldaniels/GitHub/lollypop/docs/images/Travelers.png           | 2024-06-22T14:21:57.797Z |  18784 | false       | true   | false    |
-| Small_Caps.png          | /Users/ldaniels/GitHub/lollypop/docs/images/Small_Caps.png          | 2024-06-22T14:21:57.546Z |  27554 | false       | true   | false    |
-| Exchange_Exposure.png   | /Users/ldaniels/GitHub/lollypop/docs/images/Exchange_Exposure.png   | 2024-06-22T14:21:55.511Z |  26520 | false       | true   | false    |
-| Powered_By_Lollypop.png | /Users/ldaniels/GitHub/lollypop/docs/images/Powered_By_Lollypop.png | 2024-06-22T14:21:47.845Z |  26480 | false       | true   | false    |
+| Travelers.png           | /Users/ldaniels/GitHub/lollypop/docs/images/Travelers.png           | 2024-06-22T14:50:54.426Z |  18784 | false       | true   | false    |
+| Small_Caps.png          | /Users/ldaniels/GitHub/lollypop/docs/images/Small_Caps.png          | 2024-06-22T14:50:54.225Z |  27381 | false       | true   | false    |
+| Exchange_Exposure.png   | /Users/ldaniels/GitHub/lollypop/docs/images/Exchange_Exposure.png   | 2024-06-22T14:50:52.738Z |  26520 | false       | true   | false    |
+| Powered_By_Lollypop.png | /Users/ldaniels/GitHub/lollypop/docs/images/Powered_By_Lollypop.png | 2024-06-22T14:50:44.801Z |  26480 | false       | true   | false    |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 <a name="ls"></a>
@@ -3801,22 +3720,22 @@ ls
 | .DS_Store           | /Users/ldaniels/GitHub/lollypop/.DS_Store           | 2024-06-13T22:55:36.905Z |  10244 | false       | true   | true     |
 | app                 | /Users/ldaniels/GitHub/lollypop/app                 | 2023-11-03T20:22:06.270Z |    224 | true        | false  | false    |
 | LICENSE             | /Users/ldaniels/GitHub/lollypop/LICENSE             | 2023-10-18T21:42:27.686Z |   1073 | false       | true   | false    |
-| test1.json          | /Users/ldaniels/GitHub/lollypop/test1.json          | 2024-06-22T14:19:51.101Z |     12 | false       | true   | false    |
+| test1.json          | /Users/ldaniels/GitHub/lollypop/test1.json          | 2024-06-22T14:37:19.918Z |     12 | false       | true   | false    |
 | target              | /Users/ldaniels/GitHub/lollypop/target              | 2023-11-24T20:42:51.377Z |    288 | true        | false  | false    |
 | .bsp                | /Users/ldaniels/GitHub/lollypop/.bsp                | 2023-10-19T16:00:17.226Z |     96 | true        | false  | true     |
-| vin-mapping.json    | /Users/ldaniels/GitHub/lollypop/vin-mapping.json    | 2024-06-22T14:19:53.039Z |   1345 | false       | true   | false    |
+| vin-mapping.json    | /Users/ldaniels/GitHub/lollypop/vin-mapping.json    | 2024-06-22T14:37:21.835Z |   1345 | false       | true   | false    |
 | docs                | /Users/ldaniels/GitHub/lollypop/docs                | 2024-06-16T15:27:07.640Z |    160 | true        | false  | false    |
 | rebuild.sh          | /Users/ldaniels/GitHub/lollypop/rebuild.sh          | 2023-11-06T19:36:01.005Z |    227 | false       | true   | false    |
 | stock_quotes_output | /Users/ldaniels/GitHub/lollypop/stock_quotes_output | 2024-06-06T14:29:26.592Z |    224 | true        | false  | false    |
-| README.md           | /Users/ldaniels/GitHub/lollypop/README.md           | 2024-06-22T14:22:04.989Z | 139698 | false       | true   | false    |
+| README.md           | /Users/ldaniels/GitHub/lollypop/README.md           | 2024-06-22T14:51:01.201Z | 135413 | false       | true   | false    |
 | project             | /Users/ldaniels/GitHub/lollypop/project             | 2024-06-16T15:27:07.640Z |    256 | true        | false  | false    |
 | kafka.properties    | /Users/ldaniels/GitHub/lollypop/kafka.properties    | 2024-06-16T15:27:07.640Z |    322 | false       | true   | false    |
-| .gitignore          | /Users/ldaniels/GitHub/lollypop/.gitignore          | 2024-06-22T14:16:39.623Z |    667 | false       | true   | true     |
+| .gitignore          | /Users/ldaniels/GitHub/lollypop/.gitignore          | 2024-06-22T14:28:04.055Z |    667 | false       | true   | true     |
 | StartDevEnv.sql     | /Users/ldaniels/GitHub/lollypop/StartDevEnv.sql     | 2024-06-16T15:27:07.566Z |    558 | false       | true   | false    |
 | lollypop_db         | /Users/ldaniels/GitHub/lollypop/lollypop_db         | 2024-02-05T18:37:04.701Z |    160 | true        | false  | false    |
-| .git                | /Users/ldaniels/GitHub/lollypop/.git                | 2024-06-22T14:21:43.676Z |    576 | true        | false  | true     |
-| build.sbt           | /Users/ldaniels/GitHub/lollypop/build.sbt           | 2024-06-22T14:19:41.274Z |   6610 | false       | true   | false    |
-| .idea               | /Users/ldaniels/GitHub/lollypop/.idea               | 2024-06-22T14:19:49.013Z |    544 | true        | false  | true     |
+| .git                | /Users/ldaniels/GitHub/lollypop/.git                | 2024-06-22T14:28:37.107Z |    544 | true        | false  | true     |
+| build.sbt           | /Users/ldaniels/GitHub/lollypop/build.sbt           | 2024-06-22T14:28:04.062Z |   6610 | false       | true   | false    |
+| .idea               | /Users/ldaniels/GitHub/lollypop/.idea               | 2024-06-22T14:50:42.950Z |    544 | true        | false  | true     |
 |-------------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 ### ls² (REPL Tools &#8212; Declarative) 
@@ -3940,11 +3859,11 @@ nps
 |-----------------------------------------------------------------------------------------------------------------------------------------------|
 | host    | port  | uptimeInSeconds | lastCommand                                                                                               |
 |-----------------------------------------------------------------------------------------------------------------------------------------------|
-| 0.0.0.0 | 13007 |               0 | this where kind is 'Table'                                                                                |
-| 0.0.0.0 | 15885 |              10 |                                                                                                           |
-| 0.0.0.0 | 15207 |              10 | \nfrom (\n|-------------------------------------------------------|\n| ticker | market | lastSale |  ...  |
-| 0.0.0.0 | 14119 |              10 |                                                                                                           |
-| 0.0.0.0 |  8123 |              10 | x = 1\ny = 2\nz = x + y\nz                                                                                |
+| 0.0.0.0 | 12753 |               8 | x = 1\ny = 2\nz = x + y\nz                                                                                |
+| 0.0.0.0 |  8765 |               0 | this where kind is 'Table'                                                                                |
+| 0.0.0.0 | 12188 |               8 |                                                                                                           |
+| 0.0.0.0 | 10409 |               9 | \nfrom (\n|-------------------------------------------------------|\n| ticker | market | lastSale |  ...  |
+| 0.0.0.0 | 11731 |               9 |                                                                                                           |
 |-----------------------------------------------------------------------------------------------------------------------------------------------|
 ```
 <a name="pwd"></a>
@@ -3975,7 +3894,7 @@ val `count` =
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -4011,7 +3930,7 @@ val `count` =
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -4094,7 +4013,7 @@ HttpResponse(body="<!doctype html>
 </div>
 </body>
 </html>
-", message="OK", statusCode=200, responseID=78913f12-94a4-48cd-b2a3-1fe5bb76f14d)
+", message="OK", statusCode=200, responseID=61e025c0-c089-4930-93b1-ba5e07fdbd00)
 ```
 ### www² (REPL Tools &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URL based on a relative path.
@@ -4104,7 +4023,7 @@ www path('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID=4a88be0e-caab-4367-8ecd-b3b76f37bd18)
+HttpResponse(body=null, message=null, statusCode=200, responseID=f1d089f8-2f3a-4b10-8294-79b9054ec991)
 ```
 ### www³ (REPL Tools &#8212; Reactive) <img src="./docs/images/flask.svg" width="24" height="24">
 *Description*: Returns a URI based on a relative path.
@@ -4114,7 +4033,7 @@ www uri('users')
 ```
 ##### Results
 ```sql
-HttpResponse(body=null, message=null, statusCode=200, responseID=20481e24-3716-47bd-8bed-97df9ccbdee3)
+HttpResponse(body=null, message=null, statusCode=200, responseID=d587dbd0-6656-477a-b933-00e59d55c3c9)
 ```
 <a name="Scope_and_Session"></a>
 ## Scope and Session Examples
@@ -4309,13 +4228,13 @@ this
 | name       | kind           | value                            |
 |----------------------------------------------------------------|
 | Random     | Random$        | lollypop.lang.Random             |
-| WebSockets | WebSockets$    | lollypop.io.WebSockets$@6966efca |
-| stdout     | PrintStream    | java.io.PrintStream@1d381a4      |
-| stdin      | BufferedReader | java.io.BufferedReader@480cf971  |
-| stderr     | PrintStream    | java.io.PrintStream@164a4705     |
+| WebSockets | WebSockets$    | lollypop.io.WebSockets$@5ca1f591 |
+| stdout     | PrintStream    | java.io.PrintStream@551de37d     |
+| stdin      | BufferedReader | java.io.BufferedReader@6075b2d3  |
+| stderr     | PrintStream    | java.io.PrintStream@33abde31     |
 | OS         | OS             | lollypop.lang.OS                 |
 | π          | Double         | 3.141592653589793                |
-| Nodes      | Nodes          | lollypop.io.Nodes@b092ac9        |
+| Nodes      | Nodes          | lollypop.io.Nodes@997d532        |
 |----------------------------------------------------------------|
 ```
 <a name="val"></a>
@@ -4364,7 +4283,7 @@ DateTime()
 ```
 ##### Results
 ```sql
-2024-06-22T14:22:05.356Z
+2024-06-22T14:51:01.490Z
 ```
 <a name="help"></a>
 ### help¹ (System Tools &#8212; Declarative) 
@@ -4511,7 +4430,7 @@ include('./app/examples/src/main/lollypop/Stocks.sql')
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -4519,11 +4438,11 @@ Sampling 5 quotes:
 ---------------------------------------------------------|
  exchange | symbol | lastSale | lastSaleTime             |
 ---------------------------------------------------------|
- OTCBB    | HEKP   |   2.0324 | 2024-06-22T14:21:50.926Z |
- NASDAQ   | PVJXJ  |  19.1141 | 2024-06-22T14:21:18.538Z |
- OTCBB    | MQNOB  |   2.8192 | 2024-06-22T14:21:07.143Z |
- NASDAQ   | UNFQ   |  48.5573 | 2024-06-22T14:21:38.528Z |
- OTCBB    | YJEKZ  |   1.2246 | 2024-06-22T14:21:13.982Z |
+ NYSE     | IIWK   |  48.4107 | 2024-06-22T14:50:53.143Z |
+ AMEX     | IGEEE  |  85.1837 | 2024-06-22T14:50:04.040Z |
+ NYSE     | RR     |  95.6549 | 2024-06-22T14:50:25.743Z |
+ AMEX     | GUA    |  20.9158 | 2024-06-22T14:50:46.732Z |
+ NASDAQ   | BI     |   8.5773 | 2024-06-22T14:50:37.407Z |
 ---------------------------------------------------------|
 ```
 <a name="lollypopComponents"></a>
@@ -4616,8 +4535,8 @@ true
 ```
 ##### Console Error
 ```
-[0.000291ms] AnyLiteral 1 ~> 1 <Integer>
-[0.430708ms] SetAnyVariable set x = 1 ~> null <null>
+[0.000292ms] AnyLiteral 1 ~> 1 <Integer>
+[0.467000ms] SetAnyVariable set x = 1 ~> null <null>
 ```
 ### assert² (Testing - Unit/Integration &#8212; Procedural) 
 *Description*: Assertion: if the expression evaluates to false, an exception is thrown.
@@ -4631,7 +4550,7 @@ catch e =>
 ```
 ##### Results
 ```sql
-java.io.PrintStream@164a4705
+java.io.PrintStream@33abde31
 ```
 ##### Console Error
 ```
@@ -4842,7 +4761,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
@@ -4859,7 +4778,7 @@ f ===> stdout
 ```
 ##### Results
 ```sql
-java.io.PrintStream@1d381a4
+java.io.PrintStream@551de37d
 ```
 ##### Console Output
 ```
