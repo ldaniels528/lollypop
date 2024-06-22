@@ -60,7 +60,7 @@ trait Inferences {
     def recurse(opCode: Instruction): DataType = opCode match {
       case q: LollypopNative => q.returnType
       // specific
-      case ArrayFromRange(a, b) => ArrayType(componentType = resolveType(inferType(a), inferType(b)))
+      case Span(a, b) => ArrayType(componentType = resolveType(inferType(a), inferType(b)))
       case CodeBlock(ops) => ops.lastOption.map(recurse) || AnyType
       case IF(_, onTrue, onFalse) => ifA(onTrue, onFalse)
       case Iff(_, onTrue, onFalse) => ifB(onTrue, onFalse)

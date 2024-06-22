@@ -7,7 +7,7 @@ import com.lollypop.language.models.Instruction
 /**
  * Instruction Chain
  */
-object InstructionChain extends InstructionPostfixParser {
+object InstructionChain extends InstructionPostfixParser[Instruction] {
   private val _symbol = "&&"
 
   /**

@@ -7,7 +7,7 @@ import com.lollypop.runtime.instructions.functions.{AnonymousFunction, FunctionA
 import com.lollypop.runtime.instructions.jvm.DeclareClass
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
-import com.lollypop.runtime.{Scope, _}
+import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 /**

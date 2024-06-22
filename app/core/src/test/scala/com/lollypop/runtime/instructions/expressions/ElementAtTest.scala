@@ -1,7 +1,7 @@
 package com.lollypop.runtime.instructions.expressions
 
 import com.lollypop.language.models.{$, @@}
-import com.lollypop.language.{LifestyleExpressionsAny, _}
+import com.lollypop.language._
 import com.lollypop.runtime.datatypes._
 import com.lollypop.runtime.devices._
 import com.lollypop.runtime.{LollypopVM, Scope}

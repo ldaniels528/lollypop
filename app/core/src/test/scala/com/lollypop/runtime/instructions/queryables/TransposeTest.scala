@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.language._
 import com.lollypop.runtime.instructions.VerificationTools
-import com.lollypop.runtime.instructions.expressions.ArrayFromRange
+import com.lollypop.runtime.instructions.expressions.{ArrayLiteral, Span}
 import com.lollypop.runtime.{LollypopCompiler, LollypopVM, Scope}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec
@@ -15,11 +15,11 @@ class TransposeTest extends AnyFunSpec with VerificationTools {
 
     it("should compile SQL to a model") {
       val model = LollypopCompiler().compile("transpose(items: [1 to 5])")
-      assert(model == Transpose(ArrayFromRange.Inclusive(1.v, 5.v).as("items")))
+      assert(model == Transpose(ArrayLiteral(Span.Inclusive(1.v, 5.v).as("items"))))
     }
 
     it("should decompile a model to SQL") {
-      val model = Transpose(ArrayFromRange.Inclusive(1.v, 5.v).as("items"))
+      val model = Transpose(ArrayLiteral(Span.Inclusive(1.v, 5.v).as("items")))
       assert(model.toSQL == "transpose([1 to 5])")
     }
 

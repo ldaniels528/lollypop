@@ -1,7 +1,6 @@
 package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language._
-import com.lollypop.language.implicits._
 import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime.instructions.queryables.Select
@@ -40,7 +39,7 @@ class InTest extends AnyFunSpec with VerificationTools {
       assert(results == Select(
         fields = Seq("Symbol".f, "Name".f, "Sector".f, "Industry".f, "SummaryQuote".f),
         from = DatabaseObjectRef("Customers"),
-        where = IN("IPOYear".f, ArrayLiteral("2000", "2001", "2003", "2008", "2019"))
+        where = IN("IPOYear".f, ArrayLiteral.from("2000", "2001", "2003", "2008", "2019"))
       ))
     }
 

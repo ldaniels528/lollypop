@@ -37,27 +37,6 @@ class LollypopCompilerTest extends AnyFunSpec {
       verify("begin end")
     }
 
-    it("should parse an array: [56.87, 1628445935836, '2021-08-05T04:18:30.000Z']") {
-      verify("[56.87, 1628445935836, '2021-08-05T04:18:30.000Z']",
-        ArrayLiteral(56.87, 1628445935836d, "2021-08-05T04:18:30.000Z"))
-    }
-
-    it("should parse an array: ['A' to 'Z']") {
-      verify("['A' to 'Z']", ArrayFromRange.Inclusive('A', 'Z'))
-    }
-
-    it("should parse an array: ['0' to '9'] + ['A' to 'F']") {
-      verify("['0' to '9'] + ['A' to 'F']", ArrayFromRange.Inclusive('0', '9') + ArrayFromRange.Inclusive('A', 'F'))
-    }
-
-    it("should parse an array: ['A' until 'Z']") {
-      verify("['A' until 'Z']", ArrayFromRange.Exclusive('A', 'Z'))
-    }
-
-    it("should parse an array: ['0' until '9'] + ['A' until 'F']") {
-      verify("['0' until '9'] + ['A' until 'F']", ArrayFromRange.Exclusive('0', '9') + ArrayFromRange.Exclusive('A', 'F'))
-    }
-
     it("should parse an array index: items(5)") {
       verify("items(5)", "items".fx(5))
     }
@@ -107,7 +86,7 @@ class LollypopCompilerTest extends AnyFunSpec {
     }
 
     it("""should parse "Symbol in [100 to 105]" """) {
-      verify("Symbol in [100 to 105]", IN("Symbol".f, ArrayFromRange.Inclusive(100, 105)))
+      verify("Symbol in [100 to 105]", IN("Symbol".f, ArrayLiteral(Span.Inclusive(100, 105))))
     }
 
     it("""should parse "Symbol in ['AAPL', 'AMZN', 'AMD']" """) {

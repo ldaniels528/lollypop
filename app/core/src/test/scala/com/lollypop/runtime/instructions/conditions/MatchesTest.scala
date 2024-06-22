@@ -6,20 +6,16 @@ import com.lollypop.runtime.{LollypopVM, Scope}
 import org.scalatest.funspec.AnyFunSpec
 
 class MatchesTest extends AnyFunSpec {
-  implicit val rootScope: Scope =
-    LollypopVM.executeSQL(Scope(),
-      """|isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
-         |isNumber = x => x.isNumber()
-         |isString = x => x.isString()
-         |""".stripMargin)._1
 
   describe(classOf[Matches].getSimpleName) {
 
     it("""should evaluate true: matches("hello", "h.*llo")""") {
+      implicit val scope: Scope = rootScope
       assert(Matches("hello", "h.*llo").isTrue)
     }
 
     it("""should evaluate false: matches("hello!", "h.*llo")""") {
+      implicit val scope: Scope = rootScope
       assert(Matches("hello!", "h.*llo").isFalse)
     }
 
@@ -123,6 +119,14 @@ class MatchesTest extends AnyFunSpec {
       assert(result == false)
     }
 
+  }
+
+  private def rootScope: Scope = {
+    LollypopVM.executeSQL(Scope(),
+      """|isExchange = x => x in ['NYSE', 'AMEX', 'NASDAQ', 'OTCBB']
+         |isNumber = x => x.isNumber()
+         |isString = x => x.isString()
+         |""".stripMargin)._1
   }
 
 }
