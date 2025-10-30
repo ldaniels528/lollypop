@@ -7,7 +7,7 @@
 import "java.lang.Math"
 
 faces = transpose(face: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"])
-suits = transpose(suit: ["♠", "♦", "♥", "♣"])
+suits = transpose(suit: ["♥️", "♦️", "♣️", "♠️"])
 deck = faces * suits
 player = tableLike(deck)
 dealer = tableLike(deck)
@@ -55,11 +55,11 @@ def faceUp(face, suit) := {
     faceR = iff(face.length() < 2, " " + face, face)
 """
 ┌─────────┐
-│ {{faceL}}    {{suit}} │
+│ {{faceL}}   {{suit}} │
 │         │
-│    {{suit}}    │
+│   {{suit}}    │
 │         │
-│ {{suit}}    {{faceR}} │
+│ {{suit}}   {{faceR}} │
 └─────────┘
 """
 }
@@ -103,7 +103,7 @@ while(isAlive) {
     betFactor = 1.0
 
     def showSeparator(stdout) := {
-        separator = ("¤" * 120) + "\n"
+        separator = ("※" * 120) + "\n"
         stdout <=== ("\n" + separator)
         stdout <=== " Player: {{__userName__}} \t Credit: ${{money}} \t Bet: ${{bet}} \t Round: {{level}} \n"
         stdout <=== (separator + "\n")
@@ -170,13 +170,13 @@ while(isAlive) {
     if (dealerIntelligence(true)) showGameTable(stdout)
 
     // decide who won - https://www.officialgamerules.org/blackjack
-    if (dealerScore() == playerScore()) roundCompleted(stdout, "Draw.", 0)
-    else if (playerScore() == 21) roundCompleted(stdout, "You Win!! - Player BlackJack!", 1.5 * bet)
-    else if (dealerScore() == 21) roundCompleted(stdout, "You Lose - Dealer BlackJack!", -bet)
-    else if (dealerScore() > 21) roundCompleted(stdout, "You Win!! - Dealer Busts: {{dealerScore()}}", bet)
-    else if (playerScore() > 21) roundCompleted(stdout, "You Lose - Player Busts: {{playerScore()}}", -bet)
-    else if (playerScore() > dealerScore()) roundCompleted(stdout, "You Win!! - {{playerScore()}} vs. {{dealerScore()}}", -bet)
-    else roundCompleted(stdout, "You Lose - {{dealerScore()}} vs. {{playerScore()}}", -bet)
+    if (dealerScore() == playerScore()) roundCompleted(stdout, "🤝Draw.", 0)
+    else if (playerScore() == 21) roundCompleted(stdout, "👍You Win!! - Player BlackJack!", 1.5 * bet)
+    else if (dealerScore() == 21) roundCompleted(stdout, "👎You Lose - Dealer BlackJack!", -bet)
+    else if (dealerScore() > 21) roundCompleted(stdout, "👍You Win!! - Dealer Busts: {{dealerScore()}}", bet)
+    else if (playerScore() > 21) roundCompleted(stdout, "👎You Lose - Player Busts: {{playerScore()}}", -bet)
+    else if (playerScore() > dealerScore()) roundCompleted(stdout, "👍You Win!! - {{playerScore()}} vs. {{dealerScore()}}", -bet)
+    else roundCompleted(stdout, "👎You Lose - {{dealerScore()}} vs. {{playerScore()}}", -bet)
     level += 1
 }
 

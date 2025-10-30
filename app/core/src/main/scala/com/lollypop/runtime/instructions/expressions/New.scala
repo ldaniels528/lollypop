@@ -3,11 +3,11 @@ package com.lollypop.runtime.instructions.expressions
 import com.lollypop.language.HelpDoc.{CATEGORY_JVM_REFLECTION, PARADIGM_FUNCTIONAL}
 import com.lollypop.language._
 import com.lollypop.language.models.{Atom, Expression}
+import com.lollypop.runtime._
 import com.lollypop.runtime.instructions.functions.{AnonymousFunction, FunctionArguments}
 import com.lollypop.runtime.instructions.jvm.DeclareClass
 import com.lollypop.runtime.plastics.RuntimeClass
 import com.lollypop.runtime.plastics.RuntimeClass.implicits.RuntimeClassNameAtomConstructorSugar
-import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 /**

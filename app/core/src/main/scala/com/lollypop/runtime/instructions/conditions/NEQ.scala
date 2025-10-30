@@ -2,8 +2,6 @@ package com.lollypop.runtime.instructions.conditions
 
 import com.lollypop.language.models.Expression
 import com.lollypop.language.{ExpressionToConditionPostParser, HelpDoc, SQLCompiler, TokenStream}
-import com.lollypop.runtime.{Scope, _}
-import lollypop.io.IOCost
 
 /**
  * SQL: `a` is not equal to `b`

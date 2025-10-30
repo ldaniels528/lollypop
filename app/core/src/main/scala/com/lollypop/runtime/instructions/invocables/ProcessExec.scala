@@ -4,7 +4,7 @@ import com.lollypop.language.HelpDoc.{CATEGORY_REPL_TOOLS, PARADIGM_DECLARATIVE}
 import com.lollypop.language.Token.ProcessInvocationToken
 import com.lollypop.language.{ExpressionParser, HelpDoc, SQLCompiler, TokenStream}
 import com.lollypop.runtime.instructions.expressions.RuntimeExpression
-import com.lollypop.runtime.{Scope, InlineVariableReplacement}
+import com.lollypop.runtime.{InlineVariableReplacement, Scope}
 import lollypop.io.IOCost
 
 import scala.sys.process.Process

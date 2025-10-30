@@ -1,6 +1,5 @@
 package com.lollypop.database.jdbc
 
-import com.lollypop.runtime.instructions.VerificationTools
 import com.lollypop.runtime.{DatabaseObjectRef, _}
 import com.lollypop.util.DateHelper
 import org.scalatest.funspec.AnyFunSpec

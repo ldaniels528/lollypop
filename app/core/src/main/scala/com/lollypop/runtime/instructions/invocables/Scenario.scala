@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_TESTING, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{CodeBlock, Expression, Instruction, Literal}
+import com.lollypop.language.models.{Expression, Instruction, Literal}
 import com.lollypop.runtime.instructions.conditions.Verification
 import com.lollypop.runtime.instructions.expressions.WWW
 import com.lollypop.runtime.instructions.invocables.Scenario.{__AUTO_EXPAND__, __KUNGFU_BASE_URL__}

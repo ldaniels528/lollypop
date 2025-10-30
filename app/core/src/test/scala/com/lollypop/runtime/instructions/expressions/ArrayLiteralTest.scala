@@ -1,8 +1,8 @@
 package com.lollypop.runtime.instructions.expressions
 
-import com.lollypop.language.{TokenStream, _}
 import com.lollypop.language.implicits._
 import com.lollypop.language.models.Expression
+import com.lollypop.language.{TokenStream, _}
 import com.lollypop.runtime.LollypopCompiler
 import org.scalatest.Assertion
 import org.scalatest.funspec.AnyFunSpec

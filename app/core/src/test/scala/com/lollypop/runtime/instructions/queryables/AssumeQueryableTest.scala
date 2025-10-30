@@ -2,8 +2,8 @@ package com.lollypop.runtime.instructions.queryables
 
 import com.lollypop.LollypopException
 import com.lollypop.language._
-import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import com.lollypop.runtime._
+import com.lollypop.runtime.instructions.expressions.ArrayLiteral
 import org.scalatest.funspec.AnyFunSpec
 
 class AssumeQueryableTest extends AnyFunSpec {

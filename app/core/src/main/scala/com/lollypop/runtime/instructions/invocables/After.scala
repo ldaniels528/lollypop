@@ -2,7 +2,7 @@ package com.lollypop.runtime.instructions.invocables
 
 import com.lollypop.language.HelpDoc.{CATEGORY_CONCURRENCY, PARADIGM_REACTIVE}
 import com.lollypop.language._
-import com.lollypop.language.models.{ContainerInstruction, Expression, Instruction, Invokable}
+import com.lollypop.language.models.{ContainerInstruction, Expression, Instruction}
 import com.lollypop.runtime._
 import lollypop.io.IOCost
 

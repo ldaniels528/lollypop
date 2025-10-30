@@ -13,8 +13,8 @@ object StockQuotesConverter {
       .getOrCreate()
 
     // import spark implicits for DataFrame operations
-    import spark.implicits._
     import org.apache.spark.sql.functions._
+    import spark.implicits._
 
     // read some stock quotes
     val quotesDF: DataFrame = spark.read

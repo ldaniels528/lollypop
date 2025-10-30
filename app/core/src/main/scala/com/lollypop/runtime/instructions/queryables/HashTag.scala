@@ -3,10 +3,10 @@ package com.lollypop.runtime.instructions.queryables
 import com.lollypop.language.HelpDoc.{CATEGORY_DATAFRAMES_IO, PARADIGM_DECLARATIVE}
 import com.lollypop.language._
 import com.lollypop.language.models.{Expression, FieldRef, NamedExpression}
+import com.lollypop.runtime._
 import com.lollypop.runtime.devices.RowCollection
 import com.lollypop.runtime.devices.RowCollectionZoo.{createQueryResultTable, createTempTable}
 import com.lollypop.runtime.instructions.expressions.ArrayLiteral
-import com.lollypop.runtime._
 import lollypop.io.IOCost
 
 import scala.language.{existentials, postfixOps}

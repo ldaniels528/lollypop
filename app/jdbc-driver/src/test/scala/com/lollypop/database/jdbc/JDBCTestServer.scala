@@ -1,6 +1,5 @@
 package com.lollypop.database.jdbc
 
-import com.lollypop.runtime.instructions.VerificationTools.closeOnShutdown
 import lollypop.io.{Node, Nodes}
 import org.slf4j.{Logger, LoggerFactory}
 
